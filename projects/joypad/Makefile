@@ -2,14 +2,14 @@
 #	Project settings #
 ####################
 
-FILECUE = $(shell cygpath -u c:\temp\joypad.cue)
-FILEISO = $(shell cygpath -u c:\temp\joypad.iso)
-FILEZIP = $(shell cygpath -u c:\temp\joypad.zip)
+FILECUE = $(shell cygpath -u $(TEMP)\joypad.cue)
+FILEISO = $(shell cygpath -u $(TEMP)\joypad.iso)
+FILEZIP = $(shell cygpath -u $(TEMP)\joypad.zip)
 ISONAME = joypad.iso
 
 ###################
 #	Global settings #
-###################
+###################Ò
 
 FILEPRG = test.prg
 FILESPRITE = SPR.cd
@@ -66,6 +66,7 @@ PADBYTE = 0xFF
 
 OBJS = $(TMPDIR)/crt0_$(OUTPUT).o
 OBJS := $(OBJS) $(TMPDIR)/main.o
+
 LIBS = -lneocore -lDATlib -lprocess -lc -lgcc
 
 #####################
@@ -98,6 +99,7 @@ test.prg : test.o
 endif
 
 test.o : $(OBJS)
+
 	$(LD) -L$(LIBDIR) $(CCFLAGS) $(LDFLAGS) $(OBJS) $(LIBS) -o $@
 
 $(TMPDIR)/%.o: %.c

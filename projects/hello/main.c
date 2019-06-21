@@ -34,7 +34,7 @@ int main(void) {
     loggerPositionSet(7, 20);
     loggerInfo("NEOCORE BY DAVID VANDENSTEEN");
 
-    /* logger is an easy way to write a text with coordinate constraint "less" */
+    /* logger is an easy way to write a text without coordinate constraint */
 
     SCClose();
   };
