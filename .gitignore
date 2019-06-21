@@ -1,0 +1,10 @@
+.vscode
+SPR.cd
+char.bin
+maps.s
+output.map
+palettes.s
+test.o
+test.prg
+externs.h
+as.exe.stackdump
