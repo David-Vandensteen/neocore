@@ -1,12 +1,9 @@
 /*
 	David Vandensteen
 	2019
-    <dvandensteen@gmail.com>
+  <dvandensteen@gmail.com>
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <DATlib.h>
 #include <neocore.h>
 
 typedef struct bkp_ram_info {
@@ -38,6 +35,6 @@ int main(void) {
 
     SCClose();
   };
-	SCClose();
+  SCClose();
   return 0;
 }
