@@ -18,7 +18,7 @@ function copyFile([boolean] $_exit, [String] $_src, [String] $_dest){
 }
 
 function copyCrt{
-  copyFile 0 "$env:appdata\neocore\neodev-sdk\src\system\common_crt0_cd.s"  projects\$projectName
+  copyFile 0 scaffolding\common_crt0_cd.s projects\$projectName
   copyFile 0 scaffolding\crt0_cd.s projects\$projectName
 }
 
