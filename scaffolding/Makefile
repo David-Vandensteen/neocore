@@ -2,16 +2,18 @@
 #	Project settings #
 ####################
 
-FILECUE = $(shell cygpath -u $(TEMP)\/*projectName*/.cue)
-FILEISO = $(shell cygpath -u $(TEMP)\/*projectName*/.iso)
-FILEZIP = $(shell cygpath -u $(TEMP)\/*projectName*/.zip)
-ISONAME = /*projectName*/.iso
+PROJECTNAME = /*projectName*/
+
+FILECUE = $(shell cygpath -u $(TEMP)\$(PROJECTNAME).cue)
+FILEISO = $(shell cygpath -u $(TEMP)\$(PROJECTNAME).iso)
+FILEZIP = $(shell cygpath -u $(TEMP)\$(PROJECTNAME).zip)
+ISONAME = $(PROJECTNAME).iso
 
 ###################
 #	Global settings #
 ###################Ò
 
-FILEPRG = test.prg
+FILEPRG = $(PROJECTNAME).prg
 FILESPRITE = SPR.cd
 NEOBUILDDATA = $(shell cygpath -u $(APPDATA))/neocore
 NEOBUILDTEMP = $(shell cygpath -u $(TEMP))/neocore
@@ -94,11 +96,11 @@ dev_p1.rom : test.o
 	copy dev_p1.rom c:\mamesrc\mame\roms\bmdev\dev.bin /y
 
 else
-test.prg : test.o
+$(FILEPRG) : $(PROJECTNAME).o
 	$(OBJC) -O binary $< $@
 endif
 
-test.o : $(OBJS)
+$(PROJECTNAME).o : $(OBJS)
 
 	$(LD) -L$(LIBDIR) $(CCFLAGS) $(LDFLAGS) $(OBJS) $(LIBS) -o $@
 
@@ -116,10 +118,10 @@ run: zip
 # TODO raine parametric position
 	powershell -ExecutionPolicy Bypass -File ..\..\scripts\raine-start.ps1 $(shell cygpath -w $(RAINE)) $(shell cygpath -w $(FILEZIP))
 
-zip: test.prg iso
+zip: $(FILEPRG) iso
 	$(ZIP) -j $(shell cygpath -u $(FILEZIP)) $(NEOBUILDTEMP)/iso/*
 
-iso: test.prg
+iso: $(FILEPRG)
 	echo Try to kill raine32.exe process...
 	powershell "try { taskkill /IM raine32.exe /f } catch { }; exit 0"
 
@@ -146,9 +148,10 @@ clean:
 
 	$(RM) -f $(shell cygpath -u $(TEMP))/*.o
 	$(RM) -f palettes.pal
-	$(RM) -f test.o
-	$(RM) -f test.prg
+	$(RM) -f $(PROJECTNAME).o
+	$(RM) -f $(FILEPRG)
 	$(RM) -f test.fix
+	$(RM) -f $(PROJECTNAME).fix
 	$(RM) -f test.spr
 	$(RM) -f dev_p1.rom
 	$(RM) -f output.map
