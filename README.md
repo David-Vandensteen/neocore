@@ -10,7 +10,8 @@ Makefile have easy rules (make sprite, make zip, make iso, make cue, make run...
 ```cmd
 install.bat
 ```
-This script download sdk, emulator (Raine), CD structure template ...all you need for make a Necore project
+This script download sdk, emulator (Raine), CD structure template ... everything you need to do a Neo Geo project      
+
 
 #
 
