@@ -4,9 +4,11 @@
 
 PROJECTNAME = /*projectName*/
 
-FILECUE = $(shell cygpath -u $(TEMP)\$(PROJECTNAME).cue)
-FILEISO = $(shell cygpath -u $(TEMP)\$(PROJECTNAME).iso)
-FILEZIP = $(shell cygpath -u $(TEMP)\$(PROJECTNAME).zip)
+NEOBUILDTEMP = $(shell cygpath -u $(TEMP))/neocore/$(PROJECTNAME)
+
+FILECUE = $(shell cygpath -u $(NEOBUILDTEMP)\$(PROJECTNAME).cue)
+FILEISO = $(shell cygpath -u $(NEOBUILDTEMP)\$(PROJECTNAME).iso)
+FILEZIP = $(shell cygpath -u $(NEOBUILDTEMP)\$(PROJECTNAME).zip)
 ISONAME = $(PROJECTNAME).iso
 
 ###################
@@ -16,7 +18,6 @@ ISONAME = $(PROJECTNAME).iso
 FILEPRG = $(PROJECTNAME).prg
 FILESPRITE = SPR.cd
 NEOBUILDDATA = $(shell cygpath -u $(APPDATA))/neocore
-NEOBUILDTEMP = $(shell cygpath -u $(TEMP))/neocore
 RAINE = $(NEOBUILDDATA)/raine/raine32.exe
 CDTEMPLATE = $(NEOBUILDDATA)/cd_template
 
@@ -66,8 +67,8 @@ PADBYTE = 0xFF
 # Object Files and Libraries #
 ##############################
 
-OBJS = $(TMPDIR)/crt0_$(OUTPUT).o
-OBJS := $(OBJS) $(TMPDIR)/main.o
+OBJS = $(NEOBUILDTEMP)/crt0_$(OUTPUT).o
+OBJS := $(OBJS) $(NEOBUILDTEMP)/main.o
 
 LIBS = -lneocore -lDATlib -lprocess -lc -lgcc
 
@@ -96,7 +97,9 @@ dev_p1.rom : test.o
 	copy dev_p1.rom c:\mamesrc\mame\roms\bmdev\dev.bin /y
 
 else
+
 $(FILEPRG) : $(PROJECTNAME).o
+	$(MKDIR) -p $(NEOBUILDTEMP)
 	$(OBJC) -O binary $< $@
 endif
 
@@ -104,11 +107,14 @@ $(PROJECTNAME).o : $(OBJS)
 
 	$(LD) -L$(LIBDIR) $(CCFLAGS) $(LDFLAGS) $(OBJS) $(LIBS) -o $@
 
-$(TMPDIR)/%.o: %.c
+$(NEOBUILDTEMP)/%.o: %.c
+	$(MKDIR) -p $(NEOBUILDTEMP)
 	$(CC) -I$(INCDIR) $(CCFLAGS) -c $< -o $@
 
-$(TMPDIR)/%.o: %.s
+$(NEOBUILDTEMP)/%.o: %.s
+	$(MKDIR) -p $(NEOBUILDTEMP)
 	$(AS) $(ASFLAGS) $< -o $@
+
 
 sprite:
 	BuildChar.exe "chardata.xml"

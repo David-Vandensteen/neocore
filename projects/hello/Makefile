@@ -2,19 +2,22 @@
 #	Project settings #
 ####################
 
-FILECUE = $(shell cygpath -u $(TEMP)\hello.cue)
-FILEISO = $(shell cygpath -u $(TEMP)\hello.iso)
-FILEZIP = $(shell cygpath -u $(TEMP)\hello.zip)
-ISONAME = hello.iso
+PROJECTNAME = hello
+
+NEOBUILDTEMP = $(shell cygpath -u $(TEMP))/neocore/$(PROJECTNAME)
+
+FILECUE = $(shell cygpath -u $(NEOBUILDTEMP)\$(PROJECTNAME).cue)
+FILEISO = $(shell cygpath -u $(NEOBUILDTEMP)\$(PROJECTNAME).iso)
+FILEZIP = $(shell cygpath -u $(NEOBUILDTEMP)\$(PROJECTNAME).zip)
+ISONAME = $(PROJECTNAME).iso
 
 ###################
 #	Global settings #
 ###################Ò
 
-FILEPRG = test.prg
+FILEPRG = $(PROJECTNAME).prg
 FILESPRITE = SPR.cd
 NEOBUILDDATA = $(shell cygpath -u $(APPDATA))/neocore
-NEOBUILDTEMP = $(shell cygpath -u $(TEMP))/neocore
 RAINE = $(NEOBUILDDATA)/raine/raine32.exe
 CDTEMPLATE = $(NEOBUILDDATA)/cd_template
 
@@ -64,8 +67,8 @@ PADBYTE = 0xFF
 # Object Files and Libraries #
 ##############################
 
-OBJS = $(TMPDIR)/crt0_$(OUTPUT).o
-OBJS := $(OBJS) $(TMPDIR)/main.o
+OBJS = $(NEOBUILDTEMP)/crt0_$(OUTPUT).o
+OBJS := $(OBJS) $(NEOBUILDTEMP)/main.o
 
 LIBS = -lneocore -lDATlib -lprocess -lc -lgcc
 
@@ -94,19 +97,24 @@ dev_p1.rom : test.o
 	copy dev_p1.rom c:\mamesrc\mame\roms\bmdev\dev.bin /y
 
 else
-test.prg : test.o
+
+$(FILEPRG) : $(PROJECTNAME).o
+	$(MKDIR) -p $(NEOBUILDTEMP)
 	$(OBJC) -O binary $< $@
 endif
 
-test.o : $(OBJS)
+$(PROJECTNAME).o : $(OBJS)
 
 	$(LD) -L$(LIBDIR) $(CCFLAGS) $(LDFLAGS) $(OBJS) $(LIBS) -o $@
 
-$(TMPDIR)/%.o: %.c
+$(NEOBUILDTEMP)/%.o: %.c
+	$(MKDIR) -p $(NEOBUILDTEMP)
 	$(CC) -I$(INCDIR) $(CCFLAGS) -c $< -o $@
 
-$(TMPDIR)/%.o: %.s
+$(NEOBUILDTEMP)/%.o: %.s
+	$(MKDIR) -p $(NEOBUILDTEMP)
 	$(AS) $(ASFLAGS) $< -o $@
+
 
 sprite:
 	BuildChar.exe "chardata.xml"
@@ -116,10 +124,10 @@ run: zip
 # TODO raine parametric position
 	powershell -ExecutionPolicy Bypass -File ..\..\scripts\raine-start.ps1 $(shell cygpath -w $(RAINE)) $(shell cygpath -w $(FILEZIP))
 
-zip: test.prg iso
+zip: $(FILEPRG) iso
 	$(ZIP) -j $(shell cygpath -u $(FILEZIP)) $(NEOBUILDTEMP)/iso/*
 
-iso: test.prg
+iso: $(FILEPRG)
 	echo Try to kill raine32.exe process...
 	powershell "try { taskkill /IM raine32.exe /f } catch { }; exit 0"
 
@@ -146,9 +154,10 @@ clean:
 
 	$(RM) -f $(shell cygpath -u $(TEMP))/*.o
 	$(RM) -f palettes.pal
-	$(RM) -f test.o
-	$(RM) -f test.prg
+	$(RM) -f $(PROJECTNAME).o
+	$(RM) -f $(FILEPRG)
 	$(RM) -f test.fix
+	$(RM) -f $(PROJECTNAME).fix
 	$(RM) -f test.spr
 	$(RM) -f dev_p1.rom
 	$(RM) -f output.map
