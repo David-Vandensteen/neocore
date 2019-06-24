@@ -1,5 +1,5 @@
 # Neocore
-Library &amp; toolchain for Neo Geo develop.
+Library &amp; toolchain for Neo Geo CD develop.
 
 Neocore provide high level functions over Neo Dev Kit (by Fabrice Martinez, Jeff Kurtz, al) & DATLib 0.2 (by HPMAN) 
 Makefile have easy rules (make sprite, make zip, make iso, make cue, make run...)   
@@ -10,7 +10,12 @@ Makefile have easy rules (make sprite, make zip, make iso, make cue, make run...
 ```cmd
 install.bat
 ```
-This script download sdk, emulator (Raine), CD structure template ... everything you need to do a Neo Geo project      
+This script download sdk, emulator (Raine), CD structure template ... everything you need to do a Neo Geo CD project      
+After install, all is available from   
+```cmd
+%appdata%\neocore   
+```
+
 
 
 #
@@ -40,6 +45,10 @@ Now compile and run it:
 ```cmd
 cd projects\myfirst
 make run
+```
+The compiled resources output folder is:   
+```cmd
+%temp%\neocore\myfirst   
 ```
 
 I'm writing Neocore for make my shoot em up game   
