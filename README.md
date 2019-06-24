@@ -41,5 +41,7 @@ Now compile and run it:
 cd projects\myfirst
 make run
 ```
-Neocore by David Vandensteen
+
+I'm writing Neocore for make my shoot em up game   
+(Flamble) http://azertyvorte.free.fr
 #
