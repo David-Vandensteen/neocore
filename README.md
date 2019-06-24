@@ -10,7 +10,7 @@ Makefile have easy rules (make sprite, make zip, make iso, make cue, make run...
 ```cmd
 install.bat
 ```
-This script download sdk, emulator (Raine), CD structure template ... everything you need to do a Neo Geo project   
+This script download sdk, emulator (Raine), CD structure template ... everything you need to do a Neo Geo CD project   
 After install, all is available from %appdata%\neocore   
 
 
