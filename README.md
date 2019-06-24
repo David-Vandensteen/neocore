@@ -43,5 +43,7 @@ make run
 ```
 
 I'm writing Neocore for make my shoot em up game   
-(Flamble) http://azertyvorte.free.fr
+(Flamble) http://azertyvorte.free.fr/flamble
+
+Maybe my code can help you !!!
 #
