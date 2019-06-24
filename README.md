@@ -11,8 +11,10 @@ Makefile have easy rules (make sprite, make zip, make iso, make cue, make run...
 install.bat
 ```
 This script download sdk, emulator (Raine), CD structure template ... everything you need to do a Neo Geo CD project   
-After install, all is available from %appdata%\neocore   
-
+After install, all is available from   
+```cmd
+%appdata%\neocore   
+```
 
 
 #
@@ -44,5 +46,7 @@ cd projects\myfirst
 make run
 ```
 The compiled resources output folder is:   
+```cmd
 %temp%\neocore\myfirst   
+```
 #
