@@ -35,8 +35,8 @@ pushd projects\hello && make run && popd
 make init-project
 Project name : myfirst
 ```
-A new folder (projects\\myfirst) has been scaffolded
-Now compile and run this project:
+A new folder (projects\\myfirst) has been scaffolded   
+Now compile and run it:
 ```cmd
 cd projects\myfirst
 make run
