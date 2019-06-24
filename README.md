@@ -1,7 +1,7 @@
 # Neocore
 Library &amp; toolchain for Neo Geo develop.
 
-Neocore provide high level functions over Neo Dev Kit & DATLib 0.2   
+Neocore provide high level functions over Neo Dev Kit (by Fabrice Martinez, Jeff Kurtz, al) & DATLib 0.2 (by HPMAN) 
 Makefile have easy rules (make sprite, make zip, make iso, make cue, make run...)   
 
 #
@@ -42,4 +42,8 @@ cd projects\myfirst
 make run
 ```
 
+I'm writing Neocore for make my shoot em up game   
+(Flamble) http://azertyvorte.free.fr/flamble
+
+Maybe my code can help you !!!
 #
