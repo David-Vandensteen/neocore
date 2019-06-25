@@ -91,17 +91,9 @@ FIXFILES = $(BASEDIR)/src/shared/fix_font.bmp
 # Make rules #
 ##############
 
-ifeq ($(OUTPUT),cart)
-dev_p1.rom : test.o
-	$(OBJC) --gap-fill=$(PADBYTE) -R .data -O binary $< $@
-	copy dev_p1.rom c:\mamesrc\mame\roms\bmdev\dev.bin /y
-
-else
-
 $(FILEPRG) : $(PROJECTNAME).o
 	$(MKDIR) -p $(NEOBUILDTEMP)
 	$(OBJC) -O binary $< $@
-endif
 
 $(PROJECTNAME).o : $(OBJS)
 
