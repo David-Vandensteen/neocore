@@ -34,11 +34,19 @@ function configureMain{
   copyFile 0 scaffolding\main.c projects\$projectName
 }
 
+function makeInit{
+  Write-Host "$projectName make init"
+  pushd projects\$projectName
+  & make init
+  popd
+}
+
 function _main{
   createFolder projects\$projectName
   copyCrt
   configureMakefile
   configureMain
+  makeInit
 }
 
 _main

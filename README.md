@@ -1,8 +1,20 @@
 # Neocore
-Library &amp; toolchain for Neo Geo develop.
+Library &amp; toolchain for Neo Geo CD develop.
 
-Neocore provide high level functions over Neo Dev Kit (by Fabrice Martinez, Jeff Kurtz, al) & DATLib 0.2 (by HPMAN) 
-Makefile have easy rules (make sprite, make zip, make iso, make cue, make run...)   
+I'm **David Vandensteen** and i'm writing Neocore for make my shoot em up game on Neo Geo CD   
+(**Flamble**) http://azertyvortex.free.fr/flamble
+
+Neocore provide high level functions over Neo Dev Kit (**Fabrice Martinez, Jeff Kurtz, al**) & DATLib 0.2 (**HPMAN**)    
+My Makefile have easy rules (make sprite, make zip, make iso, make cue, make run...)   
+
+I share my tools and my code, these could possibly help your projects on this platform !!!   
+
+***Lot of thing is under development and unoptimized ...***   
+***I'm not responsible for any software damage on your computer***   
+
+Licence: MIT   
+(c) 2019 [David Vandensteen <dvandensteen@gmail.com>]
+
 
 #
 
@@ -10,7 +22,12 @@ Makefile have easy rules (make sprite, make zip, make iso, make cue, make run...
 ```cmd
 install.bat
 ```
-This script download sdk, emulator (Raine), CD structure template ... everything you need to do a Neo Geo project      
+This script download sdk, emulator (Raine), CD structure template ... everything you need to do a Neo Geo CD project      
+After install, all is available from   
+```cmd
+%appdata%\neocore   
+```
+
 
 
 #
@@ -41,9 +58,18 @@ Now compile and run it:
 cd projects\myfirst
 make run
 ```
+The compiled resources output folder is:   
+```cmd
+%temp%\neocore\myfirst   
+```
 
-I'm writing Neocore for make my shoot em up game   
-(Flamble) http://azertyvorte.free.fr/flamble
+## Project clean rebuild
+```cmd
+pushd projects\hello && make clean && make init && make && popd
+```
+#
+**soon sample dev:**  
+Sprites, scroller, collision, mini shoot em up ...
 
-Maybe my code can help you !!!
+
 #
