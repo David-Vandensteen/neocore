@@ -68,7 +68,7 @@ The compiled resources output folder is:
 pushd projects\hello && make clean && make init && make && popd
 ```
 #
-**soon sample devv:**  
+**soon sample dev:**  
 Sprites, scroller, collision, mini shoot em up ...
 
 
