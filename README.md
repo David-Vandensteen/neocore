@@ -51,6 +51,11 @@ The compiled resources output folder is:
 %temp%\neocore\myfirst   
 ```
 
+## Project clean rebuild
+```cmd
+pushd projects\hello && make clean && make init && make && popd
+```
+
 I'm writing Neocore for make my shoot em up game   
 (Flamble) http://azertyvorte.free.fr/flamble
 
