@@ -4,8 +4,8 @@ Library &amp; toolchain for Neo Geo CD develop.
 I'm **David Vandensteen** and i'm writing Neocore for make my shoot em up game on Neo Geo CD   
 (**Flamble**) http://azertyvortex.free.fr/flamble
 
-Neocore provide high level functions over Neo Dev Kit (**Fabrice Martinez, Jeff Kurtz, al**) & DATLib 0.2 (**HPMAN**) 
-Makefile have easy rules (make sprite, make zip, make iso, make cue, make run...)   
+Neocore provide high level functions over Neo Dev Kit (**Fabrice Martinez, Jeff Kurtz, al**) & DATLib 0.2 (**HPMAN**)    
+My Makefile have easy rules (make sprite, make zip, make iso, make cue, make run...)   
 
 I share my tools and my code, these could possibly help your projects on this platform !!!   
 
