@@ -99,7 +99,6 @@ dev_p1.rom : test.o
 else
 
 $(FILEPRG) : $(PROJECTNAME).o
-	$(MKDIR) -p $(NEOBUILDTEMP)
 	$(OBJC) -O binary $< $@
 endif
 
@@ -108,13 +107,13 @@ $(PROJECTNAME).o : $(OBJS)
 	$(LD) -L$(LIBDIR) $(CCFLAGS) $(LDFLAGS) $(OBJS) $(LIBS) -o $@
 
 $(NEOBUILDTEMP)/%.o: %.c
-	$(MKDIR) -p $(NEOBUILDTEMP)
 	$(CC) -I$(INCDIR) $(CCFLAGS) -c $< -o $@
 
 $(NEOBUILDTEMP)/%.o: %.s
-	$(MKDIR) -p $(NEOBUILDTEMP)
 	$(AS) $(ASFLAGS) $< -o $@
 
+init:
+	$(MKDIR) -p $(NEOBUILDTEMP)
 
 sprite:
 	BuildChar.exe "chardata.xml"
