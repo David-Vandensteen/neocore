@@ -29,7 +29,7 @@ int main(void) {
 
     /* force a position */
     loggerPositionSet(7, 20);
-    loggerInfo("NEOCORE BY DAVID VANDENSTEEN");
+    loggerInfo("DAVID VANDENSTEEN");
 
     /* logger is an easy way to write a text without coordinate constraint */
 
