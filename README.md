@@ -12,7 +12,8 @@ I share my tools and my code, these could possibly help your projects on this pl
 ***Lot of thing is under development and unoptimized ...***   
 ***I'm not responsible for any software damage on your computer***   
 
-Licence: MIT
+Licence: MIT   
+(c) 2019 [David Vandensteen <dvandensteen@gmail.com>]
 
 
 #
