@@ -36,8 +36,6 @@ After install, all is available from
 ```cmd
 mak
 ```
-setPath override the path variable (to resolve make and extra bin)
-
 #
 
 ## Make Hello
