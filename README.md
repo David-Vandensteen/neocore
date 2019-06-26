@@ -34,8 +34,7 @@ After install, all is available from
 
 ## Compiling the lib
 ```cmd
-setPath.bat
-make
+mak
 ```
 setPath override the path variable (to resolve make and extra bin)
 
@@ -43,20 +42,20 @@ setPath override the path variable (to resolve make and extra bin)
 
 ## Make Hello
 ```cmd
-pushd projects\hello && make run && popd
+pushd projects\hello && mak run && popd
 ```
 #
 
 ## Make your first project
 ```cmd
-make init-project
+mak init-project
 Project name : myfirst
 ```
 A new folder (projects\\myfirst) has been scaffolded   
 Now compile and run it:
 ```cmd
 cd projects\myfirst
-make run
+mak run
 ```
 The compiled resources output folder is:   
 ```cmd
@@ -65,7 +64,7 @@ The compiled resources output folder is:
 
 ## Project clean rebuild
 ```cmd
-pushd projects\hello && make clean && make init && make && popd
+pushd projects\hello && mak clean && mak init && mak && popd
 ```
 #
 **soon sample dev:**  
