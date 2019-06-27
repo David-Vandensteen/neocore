@@ -79,7 +79,12 @@ mak clean-build-run
 cd projects\hello 
 mak hot-reload
 ```
+When emalator is started, edit projects\hello\main.c and remove **loggerInfo("DAVID VANDENSTEEN");** for example.   
+The hot-reload process will rebuild & run your project autmaticaly.
 
+Some problems currently:
+* The process is not a real watcher (he rebuild if folder size change)
+* When you break this process, path ist not restored (close & reopen a new terminal)
 
 
 #
