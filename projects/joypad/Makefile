@@ -167,7 +167,5 @@ clean:
 
 clean-build: clean init sprite $(FILEPRG)
 
-clean-build-run: clean-build run
-
 hot-reload:
 	powershell -ExecutionPolicy Bypass -File ..\..\scripts\neocore-hot-reload.ps1
