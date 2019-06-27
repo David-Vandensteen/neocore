@@ -22,13 +22,11 @@ Licence: MIT
 ```cmd
 install.bat
 ```
-This script download sdk, emulator (Raine), CD structure template ... everything you need to do a Neo Geo CD project      
+The install script download sdk, emulator (Raine), CD structure template ... everything you need to do a Neo Geo CD project      
 After install, all is available from   
 ```cmd
 %appdata%\neocore   
 ```
-
-
 
 #
 
@@ -36,6 +34,9 @@ After install, all is available from
 ```cmd
 mak
 ```
+mak overwrite path environement variable during the execution...   
+its avoid collisions with other bin, sdk, gcc...   
+
 #
 
 ## Make Hello
