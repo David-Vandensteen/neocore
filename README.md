@@ -41,7 +41,8 @@ its avoid collisions with other bin, sdk, gcc...
 
 ## Make Hello
 ```cmd
-pushd projects\hello && mak run && popd
+cd projects\hello
+mak run
 ```
 #
 
@@ -62,9 +63,25 @@ The compiled resources output folder is:
 ```
 
 ## Project clean rebuild
+### Rebuild all
 ```cmd
-pushd projects\hello && mak clean-build && popd
+cd projects\hello 
+mak clean-build
 ```
+### Rebuild all & run
+```cmd
+cd projects\hello 
+mak clean-build-run
+```
+
+## "Hot reload"
+```cmd
+cd projects\hello 
+mak hot-reload
+```
+
+
+
 #
 **soon sample dev:**  
 Sprites, scroller, collision, mini shoot em up ...
