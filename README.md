@@ -83,8 +83,8 @@ When emalator is started, edit projects\hello\main.c and remove **loggerInfo("DA
 The hot-reload process will rebuild & run your project autmaticaly.
 
 Some problems currently:
-* The process is not a real watcher (he rebuild if folder size change)
-* When you break this process, path ist not restored (close & reopen a new terminal)
+* The process is not a real watcher (the rebuild is trigger if the folder size change)
+* When you break this process, path is not restored in the current terminal (close & reopen a new terminal)
 
 
 #
