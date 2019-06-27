@@ -81,6 +81,7 @@ mak hot-reload
 ```
 Wait the running of emulator and edit projects\hello\main.c   
 Remove **loggerInfo("DAVID VANDENSTEEN");** (for example)   
+Save the file
 
 The hot-reload process will rebuild & run your project automaticaly.
 
