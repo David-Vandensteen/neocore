@@ -108,8 +108,8 @@ init:
 	$(MKDIR) -p $(NEOBUILDTEMP)
 
 sprite:
-	BuildChar.exe "chardata.xml"
-	CharSplit.exe char.bin -cd SPR
+#	BuildChar.exe "chardata.xml"
+#	CharSplit.exe char.bin -cd SPR
 
 run: zip
 # TODO raine parametric position
@@ -157,5 +157,9 @@ clean:
 	$(RM) -f ${FILEISO}
 	$(RM) -f ${FILEZIP}
 
+clean-build: clean init sprite $(FILEPRG)
+
+clean-build-run: clean-build run
+
 hot-reload:
-	powershell -ExecutionPolicy Bypass -File ..\..\scripts\neocore-hot-reload.ps1
+	powershell -ExecutionPolicy Bypass -File ..\..\scripts\neocore-hot-reload.ps1 .
