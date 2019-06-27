@@ -34,7 +34,7 @@ After install, all is available from
 ```cmd
 mak
 ```
-mak overwrite path environement variable during the execution...   
+mak overwrite path environement variable during the compilation.   
 its avoid collisions with other bin, sdk, gcc...   
 
 #
@@ -63,7 +63,7 @@ The compiled resources output folder is:
 
 ## Project clean rebuild
 ```cmd
-pushd projects\hello && mak clean && mak init && mak && popd
+pushd projects\hello && mak clean-build && popd
 ```
 #
 **soon sample dev:**  
