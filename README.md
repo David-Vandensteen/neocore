@@ -71,7 +71,7 @@ mak clean-build
 ### Rebuild all & run
 ```cmd
 cd projects\hello 
-mak clean-build-run
+mak clean-build run
 ```
 
 ## "Hot reload"
