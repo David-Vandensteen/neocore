@@ -66,10 +66,16 @@ PADBYTE = 0xFF
 ##############################
 # Object Files and Libraries #
 ##############################
-SRC_C= $(NEOBUILDTEMP)/$(wildcard *.c)
+SRC_C= $(wildcard *.c)
 
 OBJS = $(NEOBUILDTEMP)/crt0_$(OUTPUT).o
-OBJS += $(SRC_C:.c=.o)
+ifeq ($(PROJECTNAME), flamble)
+	OBJS := $(OBJS) $(NEOBUILDTEMP)/palettes.o
+	OBJS := $(OBJS) $(NEOBUILDTEMP)/maps.o
+endif
+
+#OBJS += $(NEOBUILDTEMP)/$(SRC_C)$(SRC_C:.c=.o)
+OBJS += $(patsubst %.c,$(NEOBUILDTEMP)/%.o,$(wildcard *.c))
 
 LIBS = -lneocore -lDATlib -lprocess -lc -lgcc
 
@@ -109,8 +115,8 @@ init:
 	$(MKDIR) -p $(NEOBUILDTEMP)
 
 sprite:
-#	BuildChar.exe "chardata.xml"
-#	CharSplit.exe char.bin -cd SPR
+	BuildChar.exe "chardata.xml"
+	CharSplit.exe char.bin -cd SPR
 
 run: zip
 # TODO raine parametric position
@@ -127,7 +133,7 @@ iso: $(FILEPRG)
 	$(MKDIR) -p $(NEOBUILDTEMP)/iso
 	$(CP) -f $(CDTEMPLATE)/* $(NEOBUILDTEMP)/iso
 	$(CP) -f $(FILEPRG) $(NEOBUILDTEMP)/iso/DEMO.PRG
-#	$(CP) -f $(FILESPRITE) $(NEOBUILDTEMP)/iso/DEMO.SPR
+	$(CP) -f $(FILESPRITE) $(NEOBUILDTEMP)/iso/DEMO.SPR
 	$(MKISOFS) -o $(FILEISO) -pad $(NEOBUILDTEMP)/iso
 
 cue:
@@ -165,4 +171,3 @@ hot-reload:
 
 test:
 	echo $(OBJS)
-	echo $(OBJTEST)
