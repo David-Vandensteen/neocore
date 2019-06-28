@@ -2,7 +2,7 @@
 #	Project settings #
 ####################
 
-PROJECTNAME = joypad
+PROJECTNAME = $(PROJECT)
 
 NEOBUILDTEMP = $(shell cygpath -u $(TEMP))/neocore/$(PROJECTNAME)
 
@@ -66,9 +66,10 @@ PADBYTE = 0xFF
 ##############################
 # Object Files and Libraries #
 ##############################
+SRC_C= $(NEOBUILDTEMP)/$(wildcard *.c)
 
 OBJS = $(NEOBUILDTEMP)/crt0_$(OUTPUT).o
-OBJS := $(OBJS) $(NEOBUILDTEMP)/main.o
+OBJS += $(SRC_C:.c=.o)
 
 LIBS = -lneocore -lDATlib -lprocess -lc -lgcc
 
@@ -91,16 +92,8 @@ FIXFILES = $(BASEDIR)/src/shared/fix_font.bmp
 # Make rules #
 ##############
 
-ifeq ($(OUTPUT),cart)
-dev_p1.rom : test.o
-	$(OBJC) --gap-fill=$(PADBYTE) -R .data -O binary $< $@
-	copy dev_p1.rom c:\mamesrc\mame\roms\bmdev\dev.bin /y
-
-else
-
 $(FILEPRG) : $(PROJECTNAME).o
 	$(OBJC) -O binary $< $@
-endif
 
 $(PROJECTNAME).o : $(OBJS)
 
@@ -167,7 +160,9 @@ clean:
 
 clean-build: clean init sprite $(FILEPRG)
 
-clean-build-run: clean-build run
-
 hot-reload:
-	powershell -ExecutionPolicy Bypass -File ..\..\scripts\neocore-hot-reload.ps1
+	powershell -ExecutionPolicy Bypass -File ..\..\scripts\neocore-hot-reload.ps1 .
+
+test:
+	echo $(OBJS)
+	echo $(OBJTEST)

@@ -71,7 +71,7 @@ mak clean-build
 ### Rebuild all & run
 ```cmd
 cd projects\hello 
-mak clean-build-run
+mak clean-build run
 ```
 
 ## "Hot reload"
@@ -81,12 +81,23 @@ mak hot-reload
 ```
 Wait the running of emulator and edit projects\hello\main.c   
 Remove **loggerInfo("DAVID VANDENSTEEN");** (for example)   
+Save the file
 
 The hot-reload process will rebuild & run your project automaticaly.
 
 Some problems currently:
 * The process is not a real watcher (the rebuild is trigger only if the folder size change)
 * When you break this process, path is not restored in the current terminal (close & reopen a new terminal)
+
+## Make ISO
+```cmd
+cd projects\hello 
+mak iso
+```
+The iso file is generate at:
+```cmd
+%temp%\neocore\hello\hello.iso   
+```
 
 
 #
