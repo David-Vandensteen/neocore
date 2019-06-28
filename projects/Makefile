@@ -2,7 +2,7 @@
 #	Project settings #
 ####################
 
-PROJECTNAME = hello
+PROJECTNAME = $(PROJECT)
 
 NEOBUILDTEMP = $(shell cygpath -u $(TEMP))/neocore/$(PROJECTNAME)
 
@@ -66,9 +66,10 @@ PADBYTE = 0xFF
 ##############################
 # Object Files and Libraries #
 ##############################
+SRC_C= $(NEOBUILDTEMP)/$(wildcard *.c)
 
 OBJS = $(NEOBUILDTEMP)/crt0_$(OUTPUT).o
-OBJS := $(OBJS) $(NEOBUILDTEMP)/main.o
+OBJS += $(SRC_C:.c=.o)
 
 LIBS = -lneocore -lDATlib -lprocess -lc -lgcc
 
@@ -161,3 +162,7 @@ clean-build: clean init sprite $(FILEPRG)
 
 hot-reload:
 	powershell -ExecutionPolicy Bypass -File ..\..\scripts\neocore-hot-reload.ps1 .
+
+test:
+	echo $(OBJS)
+	echo $(OBJTEST)
