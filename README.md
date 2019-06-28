@@ -32,7 +32,8 @@ After install, all is available from
 
 ## Compiling the lib
 ```cmd
-mak
+mak init
+mak install
 ```
 mak overwrite path environement variable during the compilation.   
 its avoid collisions with other bin, sdk, gcc...   
