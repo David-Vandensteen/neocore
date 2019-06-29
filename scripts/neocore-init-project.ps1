@@ -21,6 +21,7 @@ function copyFiles{
   copyFile 0 scaffolding\common_crt0_cd.s projects\$projectName
   copyFile 0 scaffolding\crt0_cd.s projects\$projectName
   copyFile 0 scaffolding\mak.bat projects\$projectName
+  copyFile 0 scaffolding\chardata.xml projects\$projectName
 }
 
 function configureMakefile{
@@ -50,6 +51,8 @@ function makeInit{
 
 function _main{
   createFolder projects\$projectName
+  createFolder projects\$projectName\assets
+  createFolder projects\$projectName\assets\gfx
   copyFiles
   #configureMakefile
   configureMak
