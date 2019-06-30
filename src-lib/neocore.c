@@ -102,21 +102,21 @@ aSpritePhysic aSpritePhysicDisplay(spriteInfo *si, paletteInfo *pali, box b, sho
   return rt;
 }
 
-aSpritePhysic aSpritePhysicDisplayAutobox(spriteInfo *si, paletteInfo *pali, short posX, short posY,  WORD height, short edge, WORD anim) {
+aSpritePhysic aSpritePhysicDisplayAutobox(spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD height, WORD anim) {
   aSpritePhysic rt;
   rt.as = aSpriteDisplay(si, pali, posX, posY, anim);
   rt.box = boxMake(
-    posX - edge,
-    posY - edge,
+    posX,
+    posY,
 
-    (posX + ((rt.as.tileWidth) << 4) + edge),
-    posY - edge,
+    (posX + ((rt.as.tileWidth) << 4)),
+    posY,
 
-    (posX + ((rt.as.tileWidth) << 4) + edge),
-    (posY + height + edge),
+    (posX + ((rt.as.tileWidth) << 4)),
+    (posY + height),
 
-    posX - edge,
-    (posY + (height + edge))
+    posX,
+    (posY + (height))
   );
   rt.flashing = false;
   rt.flashingFreq = 0;

@@ -115,7 +115,8 @@ struct picturePhysic {
 };
 
 aSpritePhysic aSpritePhysicDisplay(spriteInfo *si, paletteInfo *pali, box b, short posX, short posY, WORD anim);
-aSpritePhysic aSpritePhysicDisplayAutobox(spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD height, short edge, WORD anim);
+//aSpritePhysic aSpritePhysicDisplayAutobox(spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD height, short edge, WORD anim);
+aSpritePhysic aSpritePhysicDisplayAutobox(spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD height, WORD anim);
 void          aSpritePhysicShow(aSpritePhysic *asp, BOOL pvisible);
 void          aSpritePhysicFlash(aSpritePhysic *asp, BOOL pflash, WORD freq);
 void          aSpritePhysicFlashUpdate(aSpritePhysic *asp);
