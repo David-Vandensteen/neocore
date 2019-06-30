@@ -13,7 +13,7 @@ int main(void) {
   aSpritePhysic player;
   picturePhysic asteroid;
   gpuInit();
-  player = aSpritePhysicDisplayAutobox(&player_sprite, &player_sprite_Palettes, 10, 10, 8, 0, PLAYER_SPRITE_ANIM_IDLE);
+  player = aSpritePhysicDisplayAutobox(&player_sprite, &player_sprite_Palettes, 10, 10, 8, PLAYER_SPRITE_ANIM_IDLE);
   asteroid = picturePhysicDisplayAutobox(&asteroid_sprite, &asteroid_sprite_Palettes, 100, 100);
   while(1) {
     waitVBlank();
@@ -38,7 +38,7 @@ int main(void) {
     }
     aSpritePhysicFlashUpdate(&player);
 
-    aSpriteAnimate(&player);
+    aSpriteAnimate(&player.as);
     SCClose();
   };
 	SCClose();
