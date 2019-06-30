@@ -62,12 +62,27 @@ The compiled resources output folder is:
 %temp%\neocore\myfirst   
 ```
 
+## Sprite
+```cmd
+cd projects\sprite
+mak sprite
+mak
+```
+
 ## Project clean rebuild
 ### Rebuild all
 ```cmd
 cd projects\hello 
 mak clean-build
 ```
+Or
+```cmd
+cd projects\hello 
+mak clean
+mak init
+mak
+```
+
 ### Rebuild all & run
 ```cmd
 cd projects\hello 
