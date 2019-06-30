@@ -64,7 +64,7 @@ The compiled resources output folder is:
 
 ## Sprite
 ```cmd
-cd projects\sprite
+cd projects\collide
 mak sprite
 mak
 ```
