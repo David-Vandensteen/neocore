@@ -69,7 +69,8 @@ PADBYTE = 0xFF
 SRC_C= $(wildcard *.c)
 
 OBJS = $(NEOBUILDTEMP)/crt0_$(OUTPUT).o
-ifeq ($(PROJECTNAME), flamble)
+
+ifneq ("$(wildcard $(FILESPRITE))","")
 	OBJS := $(OBJS) $(NEOBUILDTEMP)/palettes.o
 	OBJS := $(OBJS) $(NEOBUILDTEMP)/maps.o
 endif
