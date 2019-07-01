@@ -15,8 +15,8 @@ ISONAME = $(PROJECTNAME).iso
 #	Global settings #
 ###################Ò
 
-FILEPRG = $(PROJECTNAME).prg
-FILESPRITE = SPR.cd
+FILEPRG = $(NEOBUILDTEMP)/$(PROJECTNAME).prg
+FILESPRITE = $(NEOBUILDTEMP)/SPR
 NEOBUILDDATA = $(shell cygpath -u $(APPDATA))/neocore
 RAINE = $(NEOBUILDDATA)/raine/raine32.exe
 CDTEMPLATE = $(NEOBUILDDATA)/cd_template
@@ -70,7 +70,7 @@ SRC_C= $(wildcard *.c)
 
 OBJS = $(NEOBUILDTEMP)/crt0_$(OUTPUT).o
 
-ifneq ("$(wildcard $(FILESPRITE))","")
+ifneq ("$(wildcard $(FILESPRITE).cd)","")
 	OBJS := $(OBJS) $(NEOBUILDTEMP)/palettes.o
 	OBJS := $(OBJS) $(NEOBUILDTEMP)/maps.o
 endif
@@ -85,7 +85,7 @@ LIBS = -lneocore -lDATlib -lprocess -lc -lgcc
 #####################
 
 ASFLAGS = -m68000 --register-prefix-optional
-LDFLAGS = -Wl,-T$(BASEDIR)/src/system/neo$(OUTPUT).x -Xlinker -Map=output.map
+LDFLAGS = -Wl,-T$(BASEDIR)/src/system/neo$(OUTPUT).x -Xlinker -Map=$(NEOBUILDTEMP)/output.map
 CCFLAGS = -m68000 -O3 -Wall -fomit-frame-pointer -ffast-math -fno-builtin -nostartfiles -nodefaultlibs -D__$(OUTPUT)__
 ARFLAGS = cr
 DEBUG = -g
@@ -100,11 +100,11 @@ FIXFILES = $(BASEDIR)/src/shared/fix_font.bmp
 ##############
 
 $(FILEPRG) : $(PROJECTNAME).o
-	$(OBJC) -O binary $< $@
+	$(OBJC) -O binary $(NEOBUILDTEMP)/$< $@
 
 $(PROJECTNAME).o : $(OBJS)
 
-	$(LD) -L$(LIBDIR) $(CCFLAGS) $(LDFLAGS) $(OBJS) $(LIBS) -o $@
+	$(LD) -L$(LIBDIR) $(CCFLAGS) $(LDFLAGS) $(OBJS) $(LIBS) -o $(NEOBUILDTEMP)/$@
 
 $(NEOBUILDTEMP)/%.o: %.c
 	$(CC) -I$(INCDIR) $(CCFLAGS) -c $< -o $@
@@ -117,7 +117,8 @@ init:
 
 sprite:
 	BuildChar.exe "chardata.xml"
-	CharSplit.exe char.bin -cd SPR
+	CharSplit.exe char.bin -cd $(shell cygpath -w $(FILESPRITE))
+	$(RM) -f char.bin
 
 run: zip
 # TODO raine parametric position
@@ -134,7 +135,7 @@ iso: $(FILEPRG)
 	$(MKDIR) -p $(NEOBUILDTEMP)/iso
 	$(CP) -f $(CDTEMPLATE)/* $(NEOBUILDTEMP)/iso
 	$(CP) -f $(FILEPRG) $(NEOBUILDTEMP)/iso/DEMO.PRG
-	$(CP) -f $(FILESPRITE) $(NEOBUILDTEMP)/iso/DEMO.SPR
+	$(CP) -f $(FILESPRITE).cd $(NEOBUILDTEMP)/iso/DEMO.SPR
 	$(MKISOFS) -o $(FILEISO) -pad $(NEOBUILDTEMP)/iso
 
 cue:
@@ -169,6 +170,3 @@ clean-build: clean init sprite $(FILEPRG)
 
 hot-reload:
 	powershell -ExecutionPolicy Bypass -File ..\..\scripts\neocore-hot-reload.ps1 .
-
-test:
-	echo $(OBJS)
