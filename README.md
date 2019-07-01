@@ -14,7 +14,7 @@ I share my tools and my code, these could possibly help your projects on this pl
 
 Licence: MIT   
 (c) 2019 [David Vandensteen <dvandensteen@gmail.com>]
-
+Graphics by **Grass**
 
 #
 
@@ -36,6 +36,9 @@ mak
 ```
 mak overwrite path environement variable during the compilation.   
 its avoid collisions with other bin, sdk, gcc...   
+
+Every time you pull or change branch, thinking to rebuild the lib
+Whenever you pull or change branches, consider you need rebuilding the library.
 
 #
 
@@ -118,6 +121,5 @@ The iso file is generate at:
 #
 **soon sample dev:**  
 Sprites, scroller, collision, mini shoot em up ...
-
 
 #
