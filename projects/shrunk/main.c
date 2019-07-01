@@ -14,15 +14,19 @@ int main(void) { // TODO palette index
   BYTE logo1_shrunk_x = 0;
   BYTE logo2_shrunk_y = 0;
   gpuInit();
+  paletteDisableAutoinc(); /* logo1, logo2 & logo3 use the same palette ... disable auto counter */
   logo1 = pictureDisplay(&logo_sprite, &logo_sprite_Palettes, 10, 10);
   logo2 = pictureDisplay(&logo_sprite, &logo_sprite_Palettes, 10, 60);
   logo3 = pictureDisplay(&logo_sprite, &logo_sprite_Palettes, 10, 110);
+  paletteEnableAutoinc();
+
   while(1) {
     waitVBlank();
     if (DAT_frameCounter % 10 == 0) logo1_shrunk_x++;
     logo2_shrunk_y++;
     pictureShrunk(&logo1, &logo_sprite, shrunkForge(logo1_shrunk_x, 0xFF));
     pictureShrunk(&logo2, &logo_sprite, shrunkForge(0XF, logo2_shrunk_y));
+    pictureShrunk(&logo3, &logo_sprite, shrunkPropTableGet(DAT_frameCounter));
     SCClose();
   };
 	SCClose();
