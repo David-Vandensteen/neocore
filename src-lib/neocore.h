@@ -179,6 +179,8 @@ void          pictureShrunk(picture *p, pictureInfo *pi, WORD shrunk_value);
 void          picturesShow(picture *p, WORD max, BOOL visible);
 void          picture5Show(picture5 *pics, BOOL visible);
 picture       pictureDisplay(pictureInfo *pi, paletteInfo *pali, short posX, short posY);
+void          paletteDisableAutoinc();
+void          paletteEnableAutoinc();
 BYTE          paletteGetIndex();
 BYTE          paletteSetIndex(BYTE index);
 WORD          pictureGetSpriteIndexAutoinc(pictureInfo *pi);
@@ -199,6 +201,8 @@ WORD        shrunkRange(WORD addr_start, WORD addr_end, WORD shrunk_value);
 WORD        shrunkPropTableGet(WORD index); // TODO rename shrunkGetPropTable ?
 char        sinTableGet(WORD index);
 scroller    scrollerDisplay(scrollerInfo *si, paletteInfo *pali, short posX, short posY);
+void        spriteDisableAutoinc();
+void        spriteEnableAutoinc();
 WORD        spriteGetIndex();
 void        spriteSetIndex(WORD index);
 WORD        scrollerGetSpriteIndexAutoinc(scrollerInfo *si);
