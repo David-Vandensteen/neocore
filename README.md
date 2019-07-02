@@ -5,7 +5,7 @@ I'm **David Vandensteen** and i write Neocore for my shoot em up game on Neo Geo
 (**Flamble**) http://azertyvortex.free.fr/flamble
 
 Neocore provide high level functions over Neo Dev Kit (**Fabrice Martinez, Jeff Kurtz, al**) & DATLib 0.2 (**HPMAN**)    
-My Makefile have easy rules (make sprite, make zip, make iso, make cue, make run...)   
+The Makefile provides many rules (make sprite, make zip, make iso, make cue, make run, make hot-reload...)   
 
 I share my tools and my code, these could possibly help your projects on this platform !!!   
 
