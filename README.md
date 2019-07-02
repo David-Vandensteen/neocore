@@ -116,10 +116,6 @@ The iso file is generate at:
 ```cmd
 %temp%\neocore\hello\hello.iso   
 ```
-
-
 #
-**soon sample dev:**  
-Sprites, scroller, collision, mini shoot em up ...
+** See more samples in projects folder **
 
-#
