@@ -57,6 +57,7 @@
 #define LOGGER_Y_INIT   2
 
 #define FIX(value) value * 65536
+#define RAND(value) rand() % value
 
 
 enum direction { NONE, UP, DOWN, LEFT, RIGHT };
