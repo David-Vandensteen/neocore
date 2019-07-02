@@ -117,5 +117,5 @@ The iso file is generate at:
 %temp%\neocore\hello\hello.iso   
 ```
 #
-** See more samples in projects folder **
+***See more samples in projects folder***
 
