@@ -99,12 +99,12 @@ FIXFILES = $(BASEDIR)/src/shared/fix_font.bmp
 # Make rules #
 ##############
 
-$(FILEPRG) : $(PROJECTNAME).o
-	$(OBJC) -O binary $(NEOBUILDTEMP)/$< $@
+$(FILEPRG) : $(NEOBUILDTEMP)/$(PROJECTNAME).o
+	$(OBJC) -O binary $< $@
 
-$(PROJECTNAME).o : $(OBJS)
+$(NEOBUILDTEMP)/$(PROJECTNAME).o : $(OBJS)
 
-	$(LD) -L$(LIBDIR) $(CCFLAGS) $(LDFLAGS) $(OBJS) $(LIBS) -o $(NEOBUILDTEMP)/$@
+	$(LD) -L$(LIBDIR) $(CCFLAGS) $(LDFLAGS) $(OBJS) $(LIBS) -o $@
 
 $(NEOBUILDTEMP)/%.o: %.c
 	$(CC) -I$(INCDIR) $(CCFLAGS) -c $< -o $@
@@ -152,19 +152,11 @@ clean:
 	echo Try to kill raine32.exe process...
 	powershell "try { taskkill /IM raine32.exe /f } catch { }; exit 0"
 
-	$(RM) -f $(shell cygpath -u $(TEMP))/*.o
-	$(RM) -f palettes.pal
-	$(RM) -f $(PROJECTNAME).o
-	$(RM) -f $(FILEPRG)
-	$(RM) -f test.fix
-	$(RM) -f $(PROJECTNAME).fix
-	$(RM) -f test.spr
-	$(RM) -f dev_p1.rom
-	$(RM) -f output.map
+	$(RM) -rf $(NEOBUILDTEMP)/*
 	$(RM) -rf $(NEOBUILDTEMP)
-	$(RM) -f ${FILECUE}
-	$(RM) -f ${FILEISO}
-	$(RM) -f ${FILEZIP}
+	$(RM) -f palettes.s
+	$(RM) -f maps.s
+	$(RM) -f externs.h
 
 clean-build: clean init sprite $(FILEPRG)
 
