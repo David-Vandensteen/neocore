@@ -1,7 +1,7 @@
-## Samples   
+# Neocore Samples   
 
-projects\sprite   
-![](https://media.giphy.com/media/TLfbmyW3523z24WONz/giphy.gif)   
+![](https://media.giphy.com/media/TLfbmyW3523z24WONz/giphy.gif)
+![](https://media.giphy.com/media/iFUh5AEPD4XfvpsvJh/giphy.gif)   
 
 # Neocore
 Library &amp; toolchain for Neo Geo CD develop.
