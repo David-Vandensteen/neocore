@@ -1,4 +1,6 @@
 # Neocore Samples   
+collide, shrunking, sprite ...   
+
 ![](https://media.giphy.com/media/TLfbmyW3523z24WONz/giphy.gif)
 ![](https://media.giphy.com/media/iFUh5AEPD4XfvpsvJh/giphy.gif)
 ![](https://media.giphy.com/media/MCu8B9ZEZVBeBMgOF9/giphy.gif)   
