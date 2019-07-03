@@ -1,3 +1,8 @@
+## Samples   
+
+projects\sprite   
+![](https://media.giphy.com/media/TLfbmyW3523z24WONz/giphy.gif)   
+
 # Neocore
 Library &amp; toolchain for Neo Geo CD develop.
 
@@ -115,10 +120,6 @@ The iso file is generate at:
 ```cmd
 %temp%\neocore\hello\hello.iso   
 ```
-## Samples   
-
-projects\sprite   
-![](https://media.giphy.com/media/TLfbmyW3523z24WONz/giphy.gif)   
 
 ***See more samples in projects folder***
 
