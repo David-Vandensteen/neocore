@@ -7,6 +7,24 @@ function collide{
   popd
 }
 
+function collide-complex{
+  pushd ..\projects\collide-complex
+  .\mak.bat clean
+  .\mak.bat init
+  .\mak.bat sprite
+  .\mak.bat
+  popd
+}
+
+function collide-multiple{
+  pushd ..\projects\collide-multiple
+  .\mak.bat clean
+  .\mak.bat init
+  .\mak.bat sprite
+  .\mak.bat
+  popd
+}
+
 function hello{
   pushd ..\projects\hello
   .\mak.bat clean
@@ -43,6 +61,8 @@ function sprite{
 
 function _main{
   collide
+  collide-complex
+  collide-multiple
   hello
   joypad
   shrunk
