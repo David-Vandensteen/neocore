@@ -25,6 +25,14 @@ function collide-multiple{
   popd
 }
 
+function fixed-value{
+  pushd ..\projects\collide-multiple
+  .\mak.bat clean
+  .\mak.bat init
+  .\mak.bat
+  popd
+}
+
 function hello{
   pushd ..\projects\hello
   .\mak.bat clean
@@ -63,6 +71,7 @@ function _main{
   collide
   collide-complex
   collide-multiple
+  fixed-value
   hello
   joypad
   shrunk
