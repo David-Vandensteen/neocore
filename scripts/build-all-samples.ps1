@@ -1,3 +1,4 @@
+# TODO factorize, trap errorlevel
 function collide{
   pushd ..\projects\collide
   .\mak.bat clean
