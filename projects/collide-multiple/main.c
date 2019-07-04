@@ -1,6 +1,7 @@
 #include <neocore.h>
 #include "externs.h"
 
+#define ASTEROID_MAX  10
 typedef struct bkp_ram_info {
 	WORD debug_dips;
 	BYTE stuff[254];
@@ -11,10 +12,15 @@ bkp_ram_info bkp_data;
 
 int main(void) {
   aSpritePhysic player;
-  picturePhysic asteroid;
+  picturePhysic asteroids[ASTEROID_MAX];
+  box *asteroids_box[ASTEROID_MAX];
+  BYTE i = 0;
   gpuInit();
   player = aSpritePhysicDisplayAutobox(&player_sprite, &player_sprite_Palettes, 10, 10, 8, PLAYER_SPRITE_ANIM_IDLE);
-  asteroid = picturePhysicDisplayAutobox(&asteroid_sprite, &asteroid_sprite_Palettes, 100, 100);
+  for (i = 0; i < ASTEROID_MAX; i++) {
+    asteroids[i] = picturePhysicDisplayAutobox(&asteroid_sprite, &asteroid_sprite_Palettes, RAND(300), RAND(200));
+    asteroids_box[i] = &asteroids[i].box;
+  }
   while(1) {
     waitVBlank();
     joypadUpdate();
@@ -30,10 +36,12 @@ int main(void) {
       aSpriteSetAnim(&player.as, PLAYER_SPRITE_ANIM_DOWN);
     }
     if (!joypadIsDown() && !joypadIsUp()) { aSpriteSetAnim(&player.as, PLAYER_SPRITE_ANIM_IDLE); }
-
-    (boxCollide(&player.box, &asteroid.box)) ? aSpritePhysicFlash(&player, true, 5) : aSpritePhysicFlash(&player, false, 0);
+    if (boxesCollide(&player.box, asteroids_box, ASTEROID_MAX)) {
+      aSpritePhysicFlash(&player, true, 5);
+    } else {
+      aSpritePhysicFlash(&player, false, 0);
+    }
     aSpritePhysicFlashUpdate(&player);
-
     aSpriteAnimate(&player.as);
     SCClose();
   };
