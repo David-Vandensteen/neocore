@@ -31,11 +31,7 @@ int main(void) {
     }
     if (!joypadIsDown() && !joypadIsUp()) { aSpriteSetAnim(&player.as, PLAYER_SPRITE_ANIM_IDLE); }
 
-    if (boxCollide(&player.box, &asteroid.box)) {
-      aSpritePhysicFlash(&player, true, 5);
-    } else {
-      aSpritePhysicFlash(&player, false, 0);
-    }
+    (boxCollide(&player.box, &asteroid.box)) ? aSpritePhysicFlash(&player, true, 5) : aSpritePhysicFlash(&player, false, 0);
     aSpritePhysicFlashUpdate(&player);
 
     aSpriteAnimate(&player.as);
