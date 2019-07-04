@@ -135,7 +135,9 @@ iso: $(FILEPRG)
 	$(MKDIR) -p $(NEOBUILDTEMP)/iso
 	$(CP) -f $(CDTEMPLATE)/* $(NEOBUILDTEMP)/iso
 	$(CP) -f $(FILEPRG) $(NEOBUILDTEMP)/iso/DEMO.PRG
+ifneq ("$(wildcard $(FILESPRITE).cd)","")
 	$(CP) -f $(FILESPRITE).cd $(NEOBUILDTEMP)/iso/DEMO.SPR
+endif
 	$(MKISOFS) -o $(FILEISO) -pad $(NEOBUILDTEMP)/iso
 
 cue:
