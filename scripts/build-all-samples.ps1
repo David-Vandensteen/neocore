@@ -39,6 +39,10 @@ function hello{
   .\mak.bat clean
   .\mak.bat init
   .\mak.bat
+  if ($LASTEXITCODE -ne 0) {
+    Write-Error "mak error..."
+    break
+  }
   popd
 }
 
@@ -69,14 +73,14 @@ function sprite{
 }
 
 function _main{
-  collide
-  collide-complex
-  collide-multiple
-  fixed-value
+  #collide
+  #collide-complex
+  #collide-multiple
+  #fixed-value
   hello
-  joypad
-  shrunk
-  sprite
+  #joypad
+  #shrunk
+  #sprite
 }
 
 _main
