@@ -1,86 +1,26 @@
 # TODO factorize, trap errorlevel
-function collide{
-  pushd ..\projects\collide
+function compileProject($name, $withSprite) {
+  pushd ..\projects\$name
   .\mak.bat clean
+  if ($LASTEXITCODE -ne 0) { Write-Host "break"; Write-Host $env:error; break }
   .\mak.bat init
-  .\mak.bat sprite
+  if ($LASTEXITCODE -ne 0) { break }
+  if ($withSprite) { .\mak.bat sprite }
+  if ($LASTEXITCODE -ne 0) { break }
   .\mak.bat
-  popd
-}
-
-function collide-complex{
-  pushd ..\projects\collide-complex
-  .\mak.bat clean
-  .\mak.bat init
-  .\mak.bat sprite
-  .\mak.bat
-  popd
-}
-
-function collide-multiple{
-  pushd ..\projects\collide-multiple
-  .\mak.bat clean
-  .\mak.bat init
-  .\mak.bat sprite
-  .\mak.bat
-  popd
-}
-
-function fixed-value{
-  pushd ..\projects\collide-multiple
-  .\mak.bat clean
-  .\mak.bat init
-  .\mak.bat
-  popd
-}
-
-function hello{
-  pushd ..\projects\hello
-  .\mak.bat clean
-  .\mak.bat init
-  .\mak.bat
-  if ($LASTEXITCODE -ne 0) {
-    Write-Error "mak error..."
-    break
-  }
-  popd
-}
-
-function joypad{
-  pushd ..\projects\hello
-  .\mak.bat clean
-  .\mak.bat init
-  .\mak.bat
-  popd
-}
-
-function shrunk{
-  pushd ..\projects\shrunk
-  .\mak.bat clean
-  .\mak.bat init
-  .\mak.bat sprite
-  .\mak.bat
-  popd
-}
-
-function sprite{
-  pushd ..\projects\sprite
-  .\mak.bat clean
-  .\mak.bat init
-  .\mak.bat sprite
-  .\mak.bat
+  if ($LASTEXITCODE -ne 0) { break }
   popd
 }
 
 function _main{
-  #collide
-  #collide-complex
-  #collide-multiple
-  #fixed-value
-  hello
-  #joypad
-  #shrunk
-  #sprite
+  compileProject "collide" 1
+  compileProject "collide-complex" 1
+  compileProject "collide-multiple" 1
+  compileProject "fixed-value"
+  compileProject "hello"
+  compileProject 'joypad'
+  compileProject "shrunk" 1
+  compileProject "sprite" 1
 }
 
 _main
