@@ -47,7 +47,7 @@ mak
 mak overwrite path environment variable during the compilation.   
 its avoid collisions with other bin, sdk, gcc...   
    
-Whenever you pull or change branches, consider you need rebuilding the library.
+**Whenever you pull or change branches, consider you need rebuilding the library.**
 
 #
 
