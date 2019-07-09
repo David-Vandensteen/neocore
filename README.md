@@ -4,6 +4,9 @@ collide, shrunking, sprite ...
 ![](https://media.giphy.com/media/TLfbmyW3523z24WONz/giphy.gif)
 ![](https://media.giphy.com/media/iFUh5AEPD4XfvpsvJh/giphy.gif)
 ![](https://media.giphy.com/media/MCu8B9ZEZVBeBMgOF9/giphy.gif)   
+   
+***See more samples in projects folder***   
+
 
 # Neocore
 Library &amp; toolchain for Neo Geo CD develop.
@@ -41,10 +44,10 @@ After install, all is available from
 ```cmd
 mak
 ```
-mak overwrite path environement variable during the compilation.   
+mak overwrite path environment variable during the compilation.   
 its avoid collisions with other bin, sdk, gcc...   
    
-Whenever you pull or change branches, consider you need rebuilding the library.
+**Whenever you pull or change branches, consider you need rebuilding the library.**
 
 #
 
@@ -122,6 +125,4 @@ The iso file is generate at:
 ```cmd
 %temp%\neocore\hello\hello.iso   
 ```
-
-***See more samples in projects folder***
 
