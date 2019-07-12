@@ -17,6 +17,8 @@ static BYTE laser1_shrunk_x = 0xF;
 static FIXED laser1_position[2] = { FIX(0), FIX(20) };
 static FIXED laser2_position[2] = { FIX(0), FIX(130) };
 
+static WORD shrunkTableIndex = 0;
+
 static void display();
 static void update();
 static void update_laser1();
@@ -34,8 +36,11 @@ static void display() {
 static void update() {
   // if (DAT_frameCounter % 5 == 0) update_laser1();
   // if (DAT_frameCounter % 30 == 0) update_laser2();
-  update_laser2();
   loggerInit();
+  loggerShort("X : ", laser2.posX);
+  loggerShort("Y : ", laser2.posY);
+  joypadUpdateEdge();
+  if(joypadIsStart()) update_laser2();
 }
 
 static void update_laser1() {
@@ -51,7 +56,8 @@ static void update_laser1() {
 }
 
 static void update_laser2() {
-  pictureShrunkCentroid(&laser2, &laser_sprite, shrunkPropTableGet(DAT_frameCounter));
+  pictureShrunkCentroid(&laser2, &laser_sprite, shrunkPropTableGet(shrunkTableIndex));
+  shrunkTableIndex++;
   // TODO add to the git tools for make tables
 }
 
@@ -59,9 +65,17 @@ static void pictureShrunkCentroid(picture *p, pictureInfo *pi, WORD shrunk_value
   // loggerByte("SHRUNK X : ", shrunk_value >> 8);
   // loggerByte("SHRUNK Y : ", (BYTE)shrunk_value);
   FIXED pos[2] = { FIX(p->posX), FIX(p->posY) };
-  pos[X] += FIX((320 DIV32));
   pictureShrunk(p, pi, shrunk_value);
+
+  // trim x
+  pos[X] = FIX(( (160) - ((shrunk_value >> 8) MULT8)) );
+  //
+
+  // trim y
+  pos[Y] = FIX(130 - ((BYTE)shrunk_value / 16) );
+  //
   pictureSetPos(p, fixtoi(pos[X]), fixtoi(pos[Y]));
+
 }
 
 int main(void) {
