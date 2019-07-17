@@ -1,5 +1,5 @@
 @echo off
-set PROJECT=collide-complex
+set PROJECT=shrunk-centroid
 set backupPath=%path%
 set NEODEV=%appdata%\neocore\neodev-sdk
 path=%NEODEV%\m68k\bin;%appdata%\neocore\bin;%windir%\System32;%windir%\System32\WindowsPowerShell\v1.0\

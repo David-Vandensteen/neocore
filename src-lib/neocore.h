@@ -59,6 +59,8 @@
 #define FIX(value) value * 65536
 #define RAND(value) rand() % value
 
+#define SHRUNK_EXTRACT_X(value) value >> 8
+#define SHRUNK_EXTRACT_Y(value) (BYTE)value
 
 enum direction { NONE, UP, DOWN, LEFT, RIGHT };
 
@@ -180,6 +182,7 @@ void          pictureShrunk(picture *p, pictureInfo *pi, WORD shrunk_value);
 void          picturesShow(picture *p, WORD max, BOOL visible);
 void          picture5Show(picture5 *pics, BOOL visible);
 picture       pictureDisplay(pictureInfo *pi, paletteInfo *pali, short posX, short posY);
+void          pictureShrunkCentroid(picture *p, pictureInfo *pi, short centerPosX, short centerPosY, WORD shrunk_value);
 void          paletteDisableAutoinc();
 void          paletteEnableAutoinc();
 BYTE          paletteGetIndex();
@@ -208,6 +211,8 @@ WORD        spriteGetIndex();
 void        spriteSetIndex(WORD index);
 WORD        scrollerGetSpriteIndexAutoinc(scrollerInfo *si);
 void        scrollerMove(scroller *sc, short x, short y);
+short       shrunkCentroidGetTranslatedX(short centerPosX, WORD tileWidth, BYTE shrunkX);
+short       shrunkCentroidGetTranslatedY(short centerPosY, WORD tileHeight, BYTE shrunkY);
 
 DWORD inline waitVbl(WORD nb);
 #endif
