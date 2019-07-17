@@ -3,10 +3,7 @@
   <setup>
     <starting_tile>256</starting_tile>
   </setup>
-  <pict id="laser_sprite">
-    <file>assets\gfx\laser.png</file>
-  </pict>
-  <pict id="dot_sprite">
-    <file>assets\gfx\dot.png</file>
+  <pict id="logo_sprite">
+    <file>assets\gfx\logo.png</file>
   </pict>
 </chardata>
