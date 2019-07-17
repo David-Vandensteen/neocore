@@ -20,6 +20,7 @@ function _main{
   compileProject "hello"
   compileProject 'joypad'
   compileProject "shrunk" 1
+  compileProject "shrunk-centroid" 1
   compileProject "sprite" 1
 }
 
