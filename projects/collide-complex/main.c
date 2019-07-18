@@ -3,6 +3,8 @@
 
 #define PEAK_MASK_VECTOR_MAX 6
 
+// TODO improve neocore collision detection (bug on top of peak)
+
 typedef struct bkp_ram_info {
 	WORD debug_dips;
 	BYTE stuff[254];
@@ -19,6 +21,7 @@ static short peak_position[2] = { 100, 80 };
 static void init_mask();
 static void init();
 static void display();
+static void display_mask_debug();
 static void update();
 static void update_player();
 
@@ -29,23 +32,31 @@ static void init() {
 static void display() {
   player = aSpritePhysicDisplayAutobox(&player_sprite, &player_sprite_Palettes, 10, 10, 8, PLAYER_SPRITE_ANIM_IDLE);
   peak = picturePhysicDisplayAutobox(&peak_sprite, &peak_sprite_Palettes, peak_position[X], peak_position[Y]);
+  display_mask_debug();
+}
+
+static void display_mask_debug() {
+  BYTE i = 0;
+  for (i = 0; i < PEAK_MASK_VECTOR_MAX; i++) {
+    pictureDisplay(&dot_sprite, &dot_sprite_Palettes, peak_mask[i].x, peak_mask[i].y);
+  }
 }
 
 static void init_mask() {
-  peak_mask[0].x = 50 + peak_position[X];
+  peak_mask[0].x = 53 + peak_position[X];
   peak_mask[0].y = 5 + peak_position[Y];
 
   peak_mask[1].x = 67 + peak_position[X];
-  peak_mask[1].y = 5; + peak_position[Y];
+  peak_mask[1].y = 5 + peak_position[Y];
 
   peak_mask[2].x = 70 + peak_position[X];
   peak_mask[2].y = 80 + peak_position[Y];
 
   peak_mask[3].x = 80 + peak_position[X];
-  peak_mask[3].y = 130 + peak_position[Y];
+  peak_mask[3].y = 136 + peak_position[Y];
 
-  peak_mask[4].x = 10 + peak_position[X];
-  peak_mask[4].y = 130 + peak_position[Y];
+  peak_mask[4].x = 6 + peak_position[X];
+  peak_mask[4].y = 136 + peak_position[Y];
 
   peak_mask[5].x = 35 + peak_position[X];
   peak_mask[5].y = 55 + peak_position[Y];
