@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<chardata>
+  <setup>
+    <starting_tile>256</starting_tile>
+  </setup>
+  <pict id="laser_sprite">
+    <file>assets\gfx\logo.png</file>
+    <flips>xyz</flips>
+  </pict>
+</chardata>
