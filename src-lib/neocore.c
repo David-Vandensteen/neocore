@@ -9,6 +9,7 @@
 #include <input.h>
 #include <stdio.h>
 #include <neocore.h>
+#include <math.h>
 //#include "externs.h"
 
 
@@ -618,6 +619,15 @@ void pictureShrunk(picture *p, pictureInfo *pi, WORD shrunk_value) {
   shrunkRange(0x8000 + p->baseSprite, 0x8000 + p->baseSprite + pi->tileWidth, shrunk_value);
 }
 
+void pictureShrunkCentroid(picture *p, pictureInfo *pi, short centerPosX, short centerPosY, WORD shrunk_value) {
+  pictureShrunk(p, pi, shrunk_value);
+  pictureSetPos(p,
+    shrunkCentroidGetTranslatedX(centerPosX, pi->tileWidth, SHRUNK_EXTRACT_X(shrunk_value)),
+    shrunkCentroidGetTranslatedY(centerPosY, pi->tileHeight, SHRUNK_EXTRACT_Y(shrunk_value))
+  );
+}
+
+
 /* TODO
 void maskDisplay(picture pic[], vec2short vec[], BYTE vector_max) {
   BYTE i = 0;
@@ -732,6 +742,18 @@ WORD shrunkRange(WORD addr_start, WORD addr_end, WORD shrunk_value) {
 
 WORD shrunkPropTableGet(WORD index) {
   return shrunk_table_prop[index];
+}
+
+short shrunkCentroidGetTranslatedX(short centerPosX, WORD tileWidth, BYTE shrunkX) {
+  FIXED newX = FIX(centerPosX);
+  newX -= (shrunkX + 1) * FIX((tileWidth MULT8) / 0x10);
+  return fixtoi(newX);
+}
+
+short shrunkCentroidGetTranslatedY(short centerPosY, WORD tileHeight, BYTE shrunkY) {
+  FIXED newY = FIX(centerPosY);
+  newY -= shrunkY * FIX((tileHeight MULT8) / 0xFF);
+  return fixtoi(newY);
 }
 
 char sinTableGet(WORD index) {
