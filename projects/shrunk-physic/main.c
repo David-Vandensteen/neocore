@@ -1,4 +1,5 @@
 #include <neocore.h>
+#include <math.h>
 #include "player.h"
 #include "externs.h"
 
@@ -22,6 +23,16 @@ static void display();
 static void update();
 
 static void boxShrunk(box *b, WORD shrunkValue) {
+  FIXED newX = FIX(b->p0.x);
+  FIXED stepX = FIX(b->width / 0x10);
+  FIXED trimX = (SHRUNK_EXTRACT_X(shrunkValue)) * stepX;
+  b->p0.x = fixtoi(newX - trimX);
+  //loggerInit();
+  //loggerShort("NEWX ", fixtoi(newX));
+  //loggerShort("STEPX ", fixtoi(stepX));
+  //loggerShort("TRIMX ", fixtoi(trimX));
+
+  /*
   b->p0.x = shrunkCentroidGetTranslatedX(b->p0.x, b->width / 8, SHRUNK_EXTRACT_X(shrunkValue));
   b->p0.y = shrunkCentroidGetTranslatedY(b->p0.y, b->height / 8, SHRUNK_EXTRACT_Y(shrunkValue));
 
@@ -33,6 +44,7 @@ static void boxShrunk(box *b, WORD shrunkValue) {
 
   b->p3.x = shrunkCentroidGetTranslatedX(b->p3.x, b->width / 8, SHRUNK_EXTRACT_X(shrunkValue));
   b->p3.y = shrunkCentroidGetTranslatedY(b->p3.y, b->height / 8, SHRUNK_EXTRACT_Y(shrunkValue));
+  */
 }
 
 
