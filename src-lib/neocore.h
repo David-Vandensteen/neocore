@@ -89,6 +89,10 @@ struct box {
   vec2short p2;
   vec2short p3;
   vec2short p4;
+  short width;
+  short height;
+  short widthOffset;
+  short heightOffset;
 };
 
 typedef struct picture5 picture5;
@@ -117,9 +121,12 @@ struct picturePhysic {
   BOOL visible;
 };
 
-aSpritePhysic aSpritePhysicDisplay(spriteInfo *si, paletteInfo *pali, box b, short posX, short posY, WORD anim);
-//aSpritePhysic aSpritePhysicDisplayAutobox(spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD height, short edge, WORD anim);
+void          aSpritePhysicDisplay(aSpritePhysic *asp, spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD anim);
+
+// TODO to deprecated
 aSpritePhysic aSpritePhysicDisplayAutobox(spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD height, WORD anim);
+//
+
 void          aSpritePhysicShow(aSpritePhysic *asp, BOOL pvisible);
 void          aSpritePhysicFlash(aSpritePhysic *asp, BOOL pflash, WORD freq);
 void          aSpritePhysicFlashUpdate(aSpritePhysic *asp);
@@ -133,7 +140,11 @@ WORD          aSpriteGetSpriteIndexAutoinc(spriteInfo *si);
 
 BYTE      boxesCollide(box *b, box *boxes[], BYTE box_max);
 BOOL      boxCollide(box *b1, box *b2);
+
+// TODO to deprecated boxMake
 box       boxMake(short p0x, short p0y, short p1x, short p1y, short p2x, short p2y, short p3x, short p3y);
+
+void      boxInit(box *b, short width, short height, short widthOffset, short heightOffset);
 void      boxUpdate(box *b, short x, short y);
 void      boxDebugUpdate(picture5 *pics, box *box);
 picture5  boxDisplay(box *box);
@@ -174,8 +185,12 @@ void inline loggerSpriteInfo(char *label, spriteInfo *si);
 void inline loggerBox(char *label, box *b);
 void inline loggerPictureInfo(char *label, pictureInfo *pi);
 
+// TODO to deprecated
 picturePhysic picturePhysicAutobox(pictureInfo *pi, paletteInfo *pali, short posX, short posY);
 picturePhysic picturePhysicDisplayAutobox(pictureInfo *pi, paletteInfo *pali, short posX, short posY);
+//
+
+void          picturePhysicDisplay(picturePhysic *pp, pictureInfo *pi, paletteInfo *pali, short posX, short posY);
 void          picturePhysicSetPos(picturePhysic *pp, short x, short y);
 void          picturePhysicMove(picturePhysic *pp, short x, short y);
 void          pictureShrunk(picture *p, pictureInfo *pi, WORD shrunk_value);

@@ -99,13 +99,12 @@ void inline static autoInc(){
 JOYPAD
 
 //
-aSpritePhysic aSpritePhysicDisplay(spriteInfo *si, paletteInfo *pali, box b, short posX, short posY, WORD anim) {
-  aSpritePhysic rt;
-  rt.as = aSpriteDisplay(si, pali, posX, posY, anim);
-  rt.box = b;
-  return rt;
+void aSpritePhysicDisplay(aSpritePhysic *asp, spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD anim) {
+  asp->as = aSpriteDisplay(si, pali, posX, posY, anim);
+  boxUpdate(&asp->box, posX, posY);
 }
 
+// TODO to deprecated
 aSpritePhysic aSpritePhysicDisplayAutobox(spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD height, WORD anim) {
   aSpritePhysic rt;
   rt.as = aSpriteDisplay(si, pali, posX, posY, anim);
@@ -244,6 +243,13 @@ BOOL boxCollide(box *b1, box *b2) { // TODO return a frixion vector
     } else { return false; }
 }
 
+void boxInit(box *b, short width, short height, short widthOffset, short heightOffset) {
+  b->width = width;
+  b->height = height;
+  b->widthOffset = widthOffset;
+  b->heightOffset = heightOffset;
+}
+
 box boxMake(short p0x, short p0y, short p1x, short p1y, short p2x, short p2y, short p3x, short p3y) {
   box rt;
   rt.p0.x = p0x;
@@ -260,6 +266,7 @@ box boxMake(short p0x, short p0y, short p1x, short p1y, short p2x, short p2y, sh
 }
 
 void boxUpdate(box *b, short x, short y) {
+  /*
   if (x != b->p0.x) {
     b->p1.x += (x - b->p0.x);
     b->p2.x += (x - b->p0.x);
@@ -272,6 +279,21 @@ void boxUpdate(box *b, short x, short y) {
     b->p3.y += (y - b->p0.y);
     b->p0.y = y; // TODO
   }
+  b->p4.x = b->p0.x + ((b->p1.x - b->p0.x) DIV2);
+  b->p4.y = b->p0.y + ((b->p3.y - b->p0.y) DIV2);
+  */
+  b->p0.x = x + b->widthOffset;
+  b->p0.y = y + b->heightOffset;
+
+  b->p1.x = b->p0.x + b->width;
+  b->p1.y = b->p0.y;
+
+  b->p2.x = b->p1.x;
+  b->p2.y = b->p1.y + b->height;
+
+  b->p3.x = b->p0.x;
+  b->p3.y = b->p2.y;
+
   b->p4.x = b->p0.x + ((b->p1.x - b->p0.x) DIV2);
   b->p4.y = b->p0.y + ((b->p3.y - b->p0.y) DIV2);
 }
@@ -487,15 +509,24 @@ void inline loggerBox(char *label, box *b) {
   loggerInfo(label);
   loggerShort("P0X", (short)b->p0.x);
   loggerShort("P0Y", (short)b->p0.y);
-  loggerInfo(" ");
+  loggerInfo("");
   loggerShort("P1X", (short)b->p1.x);
   loggerShort("P1Y", (short)b->p1.y);
-  loggerInfo(" ");
+  loggerInfo("");
   loggerShort("P2X", (short)b->p2.x);
   loggerShort("P2Y", (short)b->p2.y);
-  loggerInfo(" ");
+  loggerInfo("");
   loggerShort("P3X", (short)b->p3.x);
   loggerShort("P3Y", (short)b->p3.y);
+  loggerInfo("");
+  loggerShort("P4X", (short)b->p4.x);
+  loggerShort("P4Y", (short)b->p4.y);
+  loggerInfo("");
+  loggerShort("WIDTH ", b->width);
+  loggerShort("HEIGHT ", b->height);
+  loggerInfo("");
+  loggerShort("WIDTH OFFSET ", b->widthOffset);
+  loggerShort("HEIGHT OFFSET ", b->heightOffset);
   #endif
 }
 
@@ -509,6 +540,12 @@ void inline loggerPictureInfo(char *label, pictureInfo *pi) {
   #endif
 }
 
+void picturePhysicDisplay(picturePhysic *pp, pictureInfo *pi, paletteInfo *pali, short posX, short posY) {
+  pp->p = pictureDisplay(pi, pali, posX, posY); // TODO refactoring this func
+  boxUpdate(&pp->box, posX, posY);  
+}
+
+//TODO To deprecated
 picturePhysic picturePhysicDisplayAutobox(pictureInfo *pi, paletteInfo *pali, short posX, short posY) {
   picturePhysic rt;
   rt.p = pictureDisplay(pi, pali, posX, posY);
