@@ -16,6 +16,7 @@ void player_init();
 void player_update();
 void player_display();
 void player_collide(box *b);
+void player_collides(box *boxes[], BYTE box_max);
 aSpritePhysic *player_get();
 
 #endif

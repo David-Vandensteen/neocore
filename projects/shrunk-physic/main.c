@@ -3,21 +3,14 @@
 #include "player.h"
 #include "externs.h"
 
-// TODO neocore macro NEOCORE_INIT or maybe just move this code in neocore ...
-typedef struct bkp_ram_info {
-  WORD debug_dips;
-  BYTE stuff[254];
-  //256 bytes
-} bkp_ram_info;
-
-bkp_ram_info bkp_data;
-//
+NEOCORE_INIT
 
 static vec2short laser_position, boss_position;
 static picturePhysic laser, boss;
 static BYTE shrunk_x;
 static WORD shrunk_y = 0;
 static box laser_box_origin, boss_box_origin;
+static box *boxes_collide_to_test[2];
 
 static picture5 laser_box_pics, boss_box_pics;
 
@@ -36,6 +29,8 @@ static void boxShrunk(box *b, box *bOrigin, WORD shrunkValue) {
   // TODO improve precision
 
   // TODO consider box offsets
+
+  // TODO compute box point 4 (center)
 
   // TODO move the code to neocore
 
@@ -75,6 +70,8 @@ static void init() {
   player_init();
   boxInit(&laser.box, 320, 80, 0, 0);
   boxInit(&boss.box, 160, 128, 0, 0);
+  boxes_collide_to_test[0] = &laser.box;
+  boxes_collide_to_test[1] = &boss.box;
 }
 
 static void display() {
@@ -85,22 +82,9 @@ static void display() {
   BOXCOPY(&boss.box, &boss_box_origin);
   BOXCOPY(&laser.box, &laser_box_origin);
 
-  // TODO neocore function to init, display boxdebug
-  paletteDisableAutoinc();
-  laser_box_pics.pic0 = pictureDisplay(&dot_sprite, &dot_sprite_Palettes, laser.box.p0.x, laser.box.p0.y);
-  laser_box_pics.pic1 = pictureDisplay(&dot_sprite, &dot_sprite_Palettes, laser.box.p1.x, laser.box.p1.y);
-  laser_box_pics.pic2 = pictureDisplay(&dot_sprite, &dot_sprite_Palettes, laser.box.p2.x, laser.box.p2.y);
-  laser_box_pics.pic3 = pictureDisplay(&dot_sprite, &dot_sprite_Palettes, laser.box.p3.x, laser.box.p3.y);
-  //laser_box_pics.pic4 = pictureDisplay(&dot_sprite, &dot_sprite_Palettes, laser.box.p4.x, laser.box.p4.y);
-
-//  /*
-  boss_box_pics.pic0 = pictureDisplay(&dot_sprite, &dot_sprite_Palettes, boss.box.p0.x, boss.box.p0.y);
-  boss_box_pics.pic1 = pictureDisplay(&dot_sprite, &dot_sprite_Palettes, boss.box.p1.x, boss.box.p1.y);
-  boss_box_pics.pic2 = pictureDisplay(&dot_sprite, &dot_sprite_Palettes, boss.box.p2.x, boss.box.p2.y);
-  boss_box_pics.pic3 = pictureDisplay(&dot_sprite, &dot_sprite_Palettes, boss.box.p3.x, boss.box.p3.y);
-  paletteEnableAutoinc();
-  //boss_box_pics.pic4 = pictureDisplay(&dot_sprite, &dot_sprite_Palettes, boss.box.p4.x, boss.box.p4.y);
-//  */
+  boxDisplay(&laser_box_pics, &laser.box, &dot_sprite, &dot_sprite_Palettes);
+  // TODO pallete inc
+  boxDisplay(&boss_box_pics, &boss.box, &dot_sprite, &dot_sprite_Palettes);
 }
 
 static void update() {
@@ -121,8 +105,7 @@ static void update() {
     if (shrunk_y >= 0xFF) shrunk_y = 0;
   }
   player_update();
-  player_collide(&laser.box); // TODO player_collides
-  player_collide(&boss.box);
+  player_collides(boxes_collide_to_test, 2);
 }
 
 int main(void) {

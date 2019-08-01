@@ -43,6 +43,13 @@ void player_collide(box *b) {
   if (boxCollide(b, &player.box)) aSpritePhysicFlash(&player, true, 5);
 }
 
+void player_collides(box *boxes[], BYTE box_max) {
+  BYTE i = 0;
+  for (i = 0; i < box_max; i++) {
+    player_collide(boxes[i]);
+  }
+}
+
 aSpritePhysic *player_get() {
   return &player;
 }
