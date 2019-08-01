@@ -2,6 +2,7 @@
   David Vandensteen
   2019
 */
+#include <neocore.h>
 #ifndef PLAYER_H
 #define PLAYER_H
 
@@ -15,5 +16,6 @@ void player_init();
 void player_update();
 void player_display();
 void player_collide(box *b);
+aSpritePhysic *player_get();
 
 #endif

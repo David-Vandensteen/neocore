@@ -43,3 +43,6 @@ void player_collide(box *b) {
   if (boxCollide(b, &player.box)) aSpritePhysicFlash(&player, true, 5);
 }
 
+aSpritePhysic *player_get() {
+  return &player;
+}

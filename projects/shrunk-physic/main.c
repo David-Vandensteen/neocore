@@ -3,6 +3,7 @@
 #include "player.h"
 #include "externs.h"
 
+// TODO neocore macro NEOCORE_INIT or maybe just move this code in neocore ...
 typedef struct bkp_ram_info {
   WORD debug_dips;
   BYTE stuff[254];
@@ -10,69 +11,118 @@ typedef struct bkp_ram_info {
 } bkp_ram_info;
 
 bkp_ram_info bkp_data;
+//
 
-static vec2short laser_position;
-static picturePhysic laser;
+static vec2short laser_position, boss_position;
+static picturePhysic laser, boss;
 static BYTE shrunk_x;
+static WORD shrunk_y = 0;
+static box laser_box_origin, boss_box_origin;
 
-static void boxShrunk(box *b, WORD shrunkValue);
+static picture5 laser_box_pics, boss_box_pics;
 
+static void boxShrunk(box *b, box *bOrigin, WORD shrunkValue); // TODO move in neocore
 
 static void init();
 static void display();
 static void update();
 
-static void boxShrunk(box *b, WORD shrunkValue) {
-  FIXED newX = FIX(b->p0.x);
-  FIXED stepX = FIX(b->width / 0x10);
-  FIXED trimX = (SHRUNK_EXTRACT_X(shrunkValue)) * stepX;
-  b->p0.x = fixtoi(newX - trimX);
-  //loggerInit();
-  //loggerShort("NEWX ", fixtoi(newX));
-  //loggerShort("STEPX ", fixtoi(stepX));
-  //loggerShort("TRIMX ", fixtoi(trimX));
+static void boxShrunk(box *b, box *bOrigin, WORD shrunkValue) {
+  // TODO optim.
+  // if i can read the shrunk VRAM value, i can compute the origin box...
 
-  /*
-  b->p0.x = shrunkCentroidGetTranslatedX(b->p0.x, b->width / 8, SHRUNK_EXTRACT_X(shrunkValue));
-  b->p0.y = shrunkCentroidGetTranslatedY(b->p0.y, b->height / 8, SHRUNK_EXTRACT_Y(shrunkValue));
+  // TODO optim. use bitshifting mult and div
 
-  b->p1.x = shrunkCentroidGetTranslatedX(b->p1.x, b->width / 8, SHRUNK_EXTRACT_X(shrunkValue));
-  b->p1.y = shrunkCentroidGetTranslatedY(b->p1.y, b->height / 8, SHRUNK_EXTRACT_Y(shrunkValue));
+  // TODO improve precision
 
-  b->p2.x = shrunkCentroidGetTranslatedX(b->p2.x, b->width / 8, SHRUNK_EXTRACT_X(shrunkValue));
-  b->p2.y = shrunkCentroidGetTranslatedY(b->p2.y, b->height / 8, SHRUNK_EXTRACT_Y(shrunkValue));
+  // TODO consider box offsets
 
-  b->p3.x = shrunkCentroidGetTranslatedX(b->p3.x, b->width / 8, SHRUNK_EXTRACT_X(shrunkValue));
-  b->p3.y = shrunkCentroidGetTranslatedY(b->p3.y, b->height / 8, SHRUNK_EXTRACT_Y(shrunkValue));
-  */
+  // TODO move the code to neocore
+
+  BYTE shrunk_x = SHRUNK_EXTRACT_X(shrunkValue);
+  BYTE pix_step_x = bOrigin->width / 16;
+  BYTE trim_x = (((15 - shrunk_x) * pix_step_x) / 2) + 8;
+
+  int trim_y;
+  FIXED shrunk_y = FIX(SHRUNK_EXTRACT_Y(shrunkValue));
+  FIXED pix_step_y = FIX((float)bOrigin->height / (float)256); // TODO hmmm float
+  FIXED shrunk_y_multiplicator = fsub(FIX(255), shrunk_y);
+  shrunk_y_multiplicator = fmul(shrunk_y_multiplicator, pix_step_y);
+  trim_y = fixtoi(shrunk_y_multiplicator);
+  trim_y /= 2;
+  trim_y += 1;
+
+  b->p0.x = bOrigin->p0.x + trim_x - (bOrigin->width / 2);
+  b->p0.y = bOrigin->p0.y + trim_y - (bOrigin->height / 2);
+
+  b->p1.x = bOrigin->p1.x - trim_x - (bOrigin->width / 2);
+  b->p1.y = bOrigin->p1.y + trim_y - (bOrigin->height / 2);
+
+  b->p2.x = bOrigin->p2.x - trim_x - (bOrigin->width / 2);
+  b->p2.y = bOrigin->p2.y - trim_y - (bOrigin->height / 2);
+
+  b->p3.x = bOrigin->p3.x + trim_x - (bOrigin->width / 2);
+  b->p3.y = bOrigin->p3.y - trim_y - (bOrigin->height / 2);
 }
 
 
 static void init() {
   laser_position.x = 160;
-  laser_position.y = 100;
+  laser_position.y = 180;
+  boss_position.x = 160;
+  boss_position.y = 60;
   shrunk_x = 0;
   player_init();
-  boxInit(&laser.box, 320, (laser_sprite.tileHeight MULT8), 0, 0);
+  boxInit(&laser.box, 320, 80, 0, 0);
+  boxInit(&boss.box, 160, 128, 0, 0);
 }
 
 static void display() {
-  picturePhysicDisplay(&laser, &laser_sprite, &laser_sprite_Palettes, 100, 100);
+  picturePhysicDisplay(&laser, &laser_sprite, &laser_sprite_Palettes, laser_position.x, laser_position.y);
   player_display();
+  picturePhysicDisplay(&boss, &boss_city_sprite, &boss_city_sprite_Palettes, boss_position.x, boss_position.y);
+
+  BOXCOPY(&boss.box, &boss_box_origin);
+  BOXCOPY(&laser.box, &laser_box_origin);
+
+  // TODO neocore function to init, display boxdebug
+  paletteDisableAutoinc();
+  laser_box_pics.pic0 = pictureDisplay(&dot_sprite, &dot_sprite_Palettes, laser.box.p0.x, laser.box.p0.y);
+  laser_box_pics.pic1 = pictureDisplay(&dot_sprite, &dot_sprite_Palettes, laser.box.p1.x, laser.box.p1.y);
+  laser_box_pics.pic2 = pictureDisplay(&dot_sprite, &dot_sprite_Palettes, laser.box.p2.x, laser.box.p2.y);
+  laser_box_pics.pic3 = pictureDisplay(&dot_sprite, &dot_sprite_Palettes, laser.box.p3.x, laser.box.p3.y);
+  //laser_box_pics.pic4 = pictureDisplay(&dot_sprite, &dot_sprite_Palettes, laser.box.p4.x, laser.box.p4.y);
+
+//  /*
+  boss_box_pics.pic0 = pictureDisplay(&dot_sprite, &dot_sprite_Palettes, boss.box.p0.x, boss.box.p0.y);
+  boss_box_pics.pic1 = pictureDisplay(&dot_sprite, &dot_sprite_Palettes, boss.box.p1.x, boss.box.p1.y);
+  boss_box_pics.pic2 = pictureDisplay(&dot_sprite, &dot_sprite_Palettes, boss.box.p2.x, boss.box.p2.y);
+  boss_box_pics.pic3 = pictureDisplay(&dot_sprite, &dot_sprite_Palettes, boss.box.p3.x, boss.box.p3.y);
+  paletteEnableAutoinc();
+  //boss_box_pics.pic4 = pictureDisplay(&dot_sprite, &dot_sprite_Palettes, boss.box.p4.x, boss.box.p4.y);
+//  */
 }
 
 static void update() {
-  loggerInit();
-  loggerBox("LASER BOX", &laser.box);
-  if (DAT_frameCounter % 10 == 0) {
-    pictureShrunkCentroid(&laser.p, &laser_sprite, laser_position.x, laser_position.y, shrunkForge(shrunk_x, 0xFF)); // centroid position
+  joypadUpdateEdge();
+  if (DAT_frameCounter % 5 == 0) {
+    loggerInit();
+    //loggerBox("BOSS BOX ", &boss.box);
+    //shrunk_x = 0xF;
+    pictureShrunkCentroid(&laser.p, &laser_sprite, laser_position.x, laser_position.y, shrunkForge(shrunk_x, shrunk_y)); // centroid position
+    pictureShrunkCentroid(&boss.p, &boss_city_sprite, boss_position.x, boss_position.y, shrunkForge(shrunk_x, shrunk_y)); // centroid position
     shrunk_x++;
-    // boxUpdate(&laser.box, laser.p.posX, laser.p.posY); // real position
-    boxShrunk(&laser.box, shrunkForge(shrunk_x, 0xFF));
+    shrunk_y++;
+    boxShrunk(&laser.box, &laser_box_origin, shrunkForge(shrunk_x, shrunk_y));
+    boxShrunk(&boss.box, &boss_box_origin, shrunkForge(shrunk_x, shrunk_y));
+    boxDebugUpdate(&laser_box_pics, &laser.box);
+    boxDebugUpdate(&boss_box_pics, &boss.box);
     if (shrunk_x >= 0xF) shrunk_x = 0;
+    if (shrunk_y >= 0xFF) shrunk_y = 0;
   }
   player_update();
-  player_collide(&laser.box);
+  player_collide(&laser.box); // TODO player_collides
+  player_collide(&boss.box);
 }
 
 int main(void) {
