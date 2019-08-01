@@ -10,8 +10,6 @@
 #include <stdio.h>
 #include <neocore.h>
 #include <math.h>
-//#include "externs.h"
-
 
 // STATIC
 
@@ -542,7 +540,7 @@ void inline loggerPictureInfo(char *label, pictureInfo *pi) {
 
 void picturePhysicDisplay(picturePhysic *pp, pictureInfo *pi, paletteInfo *pali, short posX, short posY) {
   pp->p = pictureDisplay(pi, pali, posX, posY); // TODO refactoring this func
-  boxUpdate(&pp->box, posX, posY);  
+  boxUpdate(&pp->box, posX, posY);
 }
 
 //TODO To deprecated

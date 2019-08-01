@@ -14,6 +14,13 @@
 #define NEOCORE_H
 #include <DATlib.h>
 
+#define NEOCORE_INIT \
+  typedef struct bkp_ram_info { \
+    WORD debug_dips; \
+    BYTE stuff[254]; \
+  } bkp_ram_info; \
+  bkp_ram_info bkp_data;
+
 #define __ALIGN1__      __attribute__ ((aligned (1)))
 #define __ALIGN2__      __attribute__ ((aligned (2)))
 #define __ALIGN4__      __attribute__ ((aligned (4)))
