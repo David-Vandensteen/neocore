@@ -56,6 +56,8 @@
 #define LOGGER_X_INIT   1
 #define LOGGER_Y_INIT   2
 
+#define BOXCOPY(bFrom, bTo)   memcpy(bTo, bFrom, sizeof(box))
+
 #define FIX(value) value * 65536
 #define RAND(value) rand() % value
 
