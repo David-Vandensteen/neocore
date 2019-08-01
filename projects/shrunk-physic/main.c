@@ -1,3 +1,7 @@
+/*
+  David Vandensteen
+  2019
+*/
 #include <neocore.h>
 #include <math.h>
 #include "player.h"
@@ -24,8 +28,6 @@ static void boxShrunk(box *b, box *bOrigin, WORD shrunkValue) {
   // TODO optim.
   // if i can read the shrunk VRAM value, i can compute the origin box...
 
-  // TODO optim. use bitshifting mult and div
-
   // TODO improve precision
 
   // TODO consider box offsets
@@ -35,8 +37,8 @@ static void boxShrunk(box *b, box *bOrigin, WORD shrunkValue) {
   // TODO move the code to neocore
 
   BYTE shrunk_x = SHRUNK_EXTRACT_X(shrunkValue);
-  BYTE pix_step_x = bOrigin->width / 16;
-  BYTE trim_x = (((15 - shrunk_x) * pix_step_x) / 2) + 8;
+  BYTE pix_step_x = (bOrigin->width DIV16);
+  BYTE trim_x = (((15 - shrunk_x) * pix_step_x) DIV2) + 8;
 
   int trim_y;
   FIXED shrunk_y = FIX(SHRUNK_EXTRACT_Y(shrunkValue));
@@ -44,22 +46,21 @@ static void boxShrunk(box *b, box *bOrigin, WORD shrunkValue) {
   FIXED shrunk_y_multiplicator = fsub(FIX(255), shrunk_y);
   shrunk_y_multiplicator = fmul(shrunk_y_multiplicator, pix_step_y);
   trim_y = fixtoi(shrunk_y_multiplicator);
-  trim_y /= 2;
+  trim_y =  (trim_y DIV2);
   trim_y += 1;
 
-  b->p0.x = bOrigin->p0.x + trim_x - (bOrigin->width / 2);
-  b->p0.y = bOrigin->p0.y + trim_y - (bOrigin->height / 2);
+  b->p0.x = bOrigin->p0.x + trim_x - (bOrigin->width DIV2);
+  b->p0.y = bOrigin->p0.y + trim_y - (bOrigin->height DIV2);
 
-  b->p1.x = bOrigin->p1.x - trim_x - (bOrigin->width / 2);
-  b->p1.y = bOrigin->p1.y + trim_y - (bOrigin->height / 2);
+  b->p1.x = bOrigin->p1.x - trim_x - (bOrigin->width DIV2);
+  b->p1.y = bOrigin->p1.y + trim_y - (bOrigin->height DIV2);
 
-  b->p2.x = bOrigin->p2.x - trim_x - (bOrigin->width / 2);
-  b->p2.y = bOrigin->p2.y - trim_y - (bOrigin->height / 2);
+  b->p2.x = bOrigin->p2.x - trim_x - (bOrigin->width DIV2);
+  b->p2.y = bOrigin->p2.y - trim_y - (bOrigin->height DIV2);
 
-  b->p3.x = bOrigin->p3.x + trim_x - (bOrigin->width / 2);
-  b->p3.y = bOrigin->p3.y - trim_y - (bOrigin->height / 2);
+  b->p3.x = bOrigin->p3.x + trim_x - (bOrigin->width DIV2);
+  b->p3.y = bOrigin->p3.y - trim_y - (bOrigin->height DIV2);
 }
-
 
 static void init() {
   laser_position.x = 160;
