@@ -156,7 +156,9 @@ box       boxMake(short p0x, short p0y, short p1x, short p1y, short p2x, short p
 void      boxInit(box *b, short width, short height, short widthOffset, short heightOffset);
 void      boxUpdate(box *b, short x, short y);
 void      boxDebugUpdate(picture5 *pics, box *box);
-picture5  boxDisplay(box *box);
+void      boxDisplay(picture5 *pics, box *box, pictureInfo *pi, paletteInfo *pali);
+
+// deprecated ?
 void      boxResize(box *box, short edge);
 
 void inline clearVram();

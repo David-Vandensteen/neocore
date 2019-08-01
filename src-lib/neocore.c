@@ -304,18 +304,17 @@ void boxDebugUpdate(picture5 *pics, box *box) {
   pictureSetPos(&pics->pic4, box->p4.x, box->p4.y);
 }
 
-/* TODO
-picture5 boxDisplay(box *box) {
-  picture5 rt;
-  rt.pic0 = pictureDisplay(&dot_img, &dot_img_Palettes, box->p0.x, box->p0.y);
-  rt.pic1 = pictureDisplay(&dot_img, &dot_img_Palettes, box->p1.x, box->p1.y);
-  rt.pic2 = pictureDisplay(&dot_img, &dot_img_Palettes, box->p2.x, box->p2.y);
-  rt.pic3 = pictureDisplay(&dot_img, &dot_img_Palettes, box->p3.x, box->p3.y);
-  rt.pic4 = pictureDisplay(&dot_img, &dot_img_Palettes, box->p4.x, box->p4.y);
-  return rt;
+void boxDisplay(picture5 *pics, box *box, pictureInfo *pi, paletteInfo *pali) {
+  paletteDisableAutoinc();
+  pics->pic0 = pictureDisplay(pi, pali, box->p0.x, box->p0.y);
+  pics->pic1 = pictureDisplay(pi, pali, box->p1.x, box->p1.y);
+  pics->pic2 = pictureDisplay(pi, pali, box->p2.x, box->p2.y);
+  pics->pic3 = pictureDisplay(pi, pali, box->p3.x, box->p3.y);
+  paletteEnableAutoinc();
+  pics->pic4 = pictureDisplay(pi, pali, box->p4.x, box->p4.y);
 }
-*/
 
+// TODO deprecated ?
 void boxResize(box *box, short edge) {
   box->p0.x -= edge;
   box->p0.y -= edge;
