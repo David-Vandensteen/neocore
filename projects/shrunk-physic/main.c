@@ -32,13 +32,11 @@ static void boxShrunk(box *b, box *bOrigin, WORD shrunkValue) {
 
   // TODO consider box offsets
 
-  // TODO compute box point 4 (center)
-
   // TODO move the code to neocore
 
   BYTE shrunk_x = SHRUNK_EXTRACT_X(shrunkValue);
   BYTE pix_step_x = (bOrigin->width DIV16);
-  BYTE trim_x = (((15 - shrunk_x) * pix_step_x) DIV2) + 8;
+  BYTE trim_x = (((15 - shrunk_x) * pix_step_x) DIV2);
 
   int trim_y;
   FIXED shrunk_y = FIX(SHRUNK_EXTRACT_Y(shrunkValue));
@@ -60,6 +58,9 @@ static void boxShrunk(box *b, box *bOrigin, WORD shrunkValue) {
 
   b->p3.x = bOrigin->p3.x + trim_x - (bOrigin->width DIV2);
   b->p3.y = bOrigin->p3.y - trim_y - (bOrigin->height DIV2);
+
+  b->p4.x = b->p0.x + ((b->p1.x - b->p0.x) DIV2);
+  b->p4.y = b->p0.y + ((b->p3.y - b->p0.y) DIV2);
 }
 
 static void init() {
@@ -77,8 +78,10 @@ static void init() {
 
 static void display() {
   picturePhysicDisplay(&laser, &laser_sprite, &laser_sprite_Palettes, laser_position.x, laser_position.y);
-  player_display();
+  pictureShrunkCentroid(&laser.p, &laser_sprite, laser_position.x, laser_position.y, shrunkForge(shrunk_x, shrunk_y)); // centroid position
   picturePhysicDisplay(&boss, &boss_city_sprite, &boss_city_sprite_Palettes, boss_position.x, boss_position.y);
+  pictureShrunkCentroid(&boss.p, &boss_city_sprite, boss_position.x, boss_position.y, shrunkForge(shrunk_x, shrunk_y)); // centroid position
+  player_display();
 
   BOXCOPY(&boss.box, &boss_box_origin);
   BOXCOPY(&laser.box, &laser_box_origin);
@@ -92,16 +95,14 @@ static void update() {
   joypadUpdateEdge();
   if (DAT_frameCounter % 5 == 0) {
     loggerInit();
-    //loggerBox("BOSS BOX ", &boss.box);
-    //shrunk_x = 0xF;
     pictureShrunkCentroid(&laser.p, &laser_sprite, laser_position.x, laser_position.y, shrunkForge(shrunk_x, shrunk_y)); // centroid position
     pictureShrunkCentroid(&boss.p, &boss_city_sprite, boss_position.x, boss_position.y, shrunkForge(shrunk_x, shrunk_y)); // centroid position
-    shrunk_x++;
-    shrunk_y++;
     boxShrunk(&laser.box, &laser_box_origin, shrunkForge(shrunk_x, shrunk_y));
     boxShrunk(&boss.box, &boss_box_origin, shrunkForge(shrunk_x, shrunk_y));
     boxDebugUpdate(&laser_box_pics, &laser.box);
     boxDebugUpdate(&boss_box_pics, &boss.box);
+    shrunk_x++;
+    shrunk_y++;
     if (shrunk_x >= 0xF) shrunk_x = 0;
     if (shrunk_y >= 0xFF) shrunk_y = 0;
   }
