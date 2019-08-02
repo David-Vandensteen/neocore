@@ -2,13 +2,8 @@
 #include "externs.h"
 
 #define ASTEROID_MAX  10
-typedef struct bkp_ram_info {
-	WORD debug_dips;
-	BYTE stuff[254];
-	//256 bytes
-} bkp_ram_info;
 
-bkp_ram_info bkp_data;
+NEOCORE_INIT
 
 int main(void) {
   aSpritePhysic player;
@@ -16,9 +11,11 @@ int main(void) {
   box *asteroids_box[ASTEROID_MAX];
   BYTE i = 0;
   gpuInit();
-  player = aSpritePhysicDisplayAutobox(&player_sprite, &player_sprite_Palettes, 10, 10, 8, PLAYER_SPRITE_ANIM_IDLE);
+  boxInit(&player.box, 48, 16, 0, 0);
+  aSpritePhysicDisplay(&player, &player_sprite, &player_sprite_Palettes, 10, 10, PLAYER_SPRITE_ANIM_IDLE);
   for (i = 0; i < ASTEROID_MAX; i++) {
-    asteroids[i] = picturePhysicDisplayAutobox(&asteroid_sprite, &asteroid_sprite_Palettes, RAND(300), RAND(200));
+    boxInit(&asteroids[i].box, 8, 8, 0, 0);
+    picturePhysicDisplay(&asteroids[i], &asteroid_sprite, &asteroid_sprite_Palettes, RAND(300), RAND(200));
     asteroids_box[i] = &asteroids[i].box;
   }
   while(1) {
@@ -45,6 +42,6 @@ int main(void) {
     aSpriteAnimate(&player.as);
     SCClose();
   };
-	SCClose();
+  SCClose();
   return 0;
 }
