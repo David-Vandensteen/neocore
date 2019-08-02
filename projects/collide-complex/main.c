@@ -5,17 +5,11 @@
 
 // TODO improve neocore collision detection (bug on top of peak)
 
-typedef struct bkp_ram_info {
-	WORD debug_dips;
-	BYTE stuff[254];
-	//256 bytes
-} bkp_ram_info;
-
-bkp_ram_info bkp_data;
+NEOCORE_INIT
 
 static vec2short peak_mask[PEAK_MASK_VECTOR_MAX];
 static aSpritePhysic player;
-static picturePhysic peak;
+static picture peak;
 static short peak_position[2] = { 100, 80 };
 
 static void init_mask();
@@ -27,18 +21,20 @@ static void update_player();
 
 static void init() {
   init_mask();
+  boxInit(&player.box, 48, 16, 0, 0);
 }
 
 static void display() {
-  player = aSpritePhysicDisplayAutobox(&player_sprite, &player_sprite_Palettes, 10, 10, 8, PLAYER_SPRITE_ANIM_IDLE);
-  peak = picturePhysicDisplayAutobox(&peak_sprite, &peak_sprite_Palettes, peak_position[X], peak_position[Y]);
+  pictureDisplay(&peak,&peak_sprite, &peak_sprite_Palettes, peak_position[X], peak_position[Y]);
+  aSpritePhysicDisplay(&player, &player_sprite, &player_sprite_Palettes, 10, 10, PLAYER_SPRITE_ANIM_IDLE);
   display_mask_debug();
 }
 
 static void display_mask_debug() {
   BYTE i = 0;
+  picture p;
   for (i = 0; i < PEAK_MASK_VECTOR_MAX; i++) {
-    pictureDisplay(&dot_sprite, &dot_sprite_Palettes, peak_mask[i].x, peak_mask[i].y);
+    pictureDisplay(&p, &dot_sprite, &dot_sprite_Palettes, peak_mask[i].x, peak_mask[i].y);
   }
 }
 
@@ -93,6 +89,6 @@ int main(void) {
     update();
     SCClose();
   };
-	SCClose();
+  SCClose();
   return 0;
 }

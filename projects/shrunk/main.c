@@ -1,13 +1,7 @@
 #include <neocore.h>
 #include "externs.h"
 
-typedef struct bkp_ram_info {
-	WORD debug_dips;
-	BYTE stuff[254];
-	//256 bytes
-} bkp_ram_info;
-
-bkp_ram_info bkp_data;
+NEOCORE_INIT
 
 int main(void) {
   picture logo1, logo2, logo3;
@@ -17,13 +11,13 @@ int main(void) {
   loggerInit();
   paletteDisableAutoinc(); /* logo1, logo2 & logo3 use the same palette ... disable auto counter */
   loggerInfo("HORIZONTAL SHRUNK");
-  logo1 = pictureDisplay(&logo_sprite, &logo_sprite_Palettes, 10, 20);
+  pictureDisplay(&logo1, &logo_sprite, &logo_sprite_Palettes, 10, 20);
   loggerPositionSet(1, 10);
   loggerInfo("VERTICAL SHRUNK");
-  logo2 = pictureDisplay(&logo_sprite, &logo_sprite_Palettes, 10, 80);
+  pictureDisplay(&logo2, &logo_sprite, &logo_sprite_Palettes, 10, 80);
   loggerPositionSet(1, 19);
   loggerInfo("PROPORTIONAL SHRUNK");
-  logo3 = pictureDisplay(&logo_sprite, &logo_sprite_Palettes, 10, 150);
+  pictureDisplay(&logo3, &logo_sprite, &logo_sprite_Palettes, 10, 150);
   paletteEnableAutoinc();
 
   while(1) {
@@ -35,6 +29,6 @@ int main(void) {
     pictureShrunk(&logo3, &logo_sprite, shrunkPropTableGet(DAT_frameCounter & SHRUNK_TABLE_PROP_SIZE)); /* neocore provide a precalculated table for keep "aspect ratio" */
     SCClose();
   };
-	SCClose();
+  SCClose();
   return 0;
 }

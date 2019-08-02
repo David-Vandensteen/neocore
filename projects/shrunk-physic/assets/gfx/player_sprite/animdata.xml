@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<animations>
+  <animation name="IDLE" repeats="0" link="IDLE">
+    <step frame="player_sprite_0000" x="0" y="0" t="5" />
+    <step frame="player_sprite_0001" x="0" y="0" t="5" />
+    <step frame="player_sprite_0002" x="0" y="0" t="5" />
+    <step frame="player_sprite_0001" x="0" y="0" t="5" />
+  </animation>
+  <animation name="UP" repeats="0" link="">
+    <step frame="player_sprite_0003" x="0" y="0" t="5" />
+  </animation>
+  <animation name="DOWN" repeats="0" link="">
+    <step frame="player_sprite_0004" x="0" y="0" t="5" />
+  </animation>
+</animations>

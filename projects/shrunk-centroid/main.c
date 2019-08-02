@@ -1,13 +1,7 @@
 #include <neocore.h>
 #include "externs.h"
 
-typedef struct bkp_ram_info {
-	WORD debug_dips;
-	BYTE stuff[254];
-	//256 bytes
-} bkp_ram_info;
-
-bkp_ram_info bkp_data;
+NEOCORE_INIT
 
 #define LOGO1_POSITION_CENTER_X_INIT 160
 #define LOGO3_POSITION_CENTER_Y_INIT 100
@@ -40,10 +34,10 @@ static void init() {
 
 static void display() {
   paletteDisableAutoinc();
-  logo1 = pictureDisplay(&logo_sprite, &logo_sprite_Palettes, logo1_position_center.x, logo1_position_center.y);
-  logo3 = pictureDisplay(&logo_sprite, &logo_sprite_Palettes, logo3_position_center.x, logo3_position_center.y);
+  pictureDisplay(&logo1, &logo_sprite, &logo_sprite_Palettes, logo1_position_center.x, logo1_position_center.y);
+  pictureDisplay(&logo3, &logo_sprite, &logo_sprite_Palettes, logo3_position_center.x, logo3_position_center.y);
   paletteEnableAutoinc();
-  logo2 = pictureDisplay(&logo_sprite, &logo_sprite_Palettes, logo2_position_center.x, logo2_position_center.y);
+  pictureDisplay(&logo2, &logo_sprite, &logo_sprite_Palettes, logo2_position_center.x, logo2_position_center.y);
   loggerInfo("HORIZONTAL SHRUNK");
   loggerPositionSet(1, 11);
   loggerInfo("VERTICAL SHRUNK");

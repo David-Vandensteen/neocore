@@ -14,6 +14,13 @@
 #define NEOCORE_H
 #include <DATlib.h>
 
+#define NEOCORE_INIT \
+  typedef struct bkp_ram_info { \
+    WORD debug_dips; \
+    BYTE stuff[254]; \
+  } bkp_ram_info; \
+  bkp_ram_info bkp_data;
+
 #define __ALIGN1__      __attribute__ ((aligned (1)))
 #define __ALIGN2__      __attribute__ ((aligned (2)))
 #define __ALIGN4__      __attribute__ ((aligned (4)))
@@ -56,6 +63,8 @@
 #define LOGGER_X_INIT   1
 #define LOGGER_Y_INIT   2
 
+#define BOXCOPY(bFrom, bTo)   memcpy(bTo, bFrom, sizeof(box))
+
 #define FIX(value) value * 65536
 #define RAND(value) rand() % value
 
@@ -89,6 +98,10 @@ struct box {
   vec2short p2;
   vec2short p3;
   vec2short p4;
+  short width;
+  short height;
+  short widthOffset;
+  short heightOffset;
 };
 
 typedef struct picture5 picture5;
@@ -117,9 +130,7 @@ struct picturePhysic {
   BOOL visible;
 };
 
-aSpritePhysic aSpritePhysicDisplay(spriteInfo *si, paletteInfo *pali, box b, short posX, short posY, WORD anim);
-//aSpritePhysic aSpritePhysicDisplayAutobox(spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD height, short edge, WORD anim);
-aSpritePhysic aSpritePhysicDisplayAutobox(spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD height, WORD anim);
+void          aSpritePhysicDisplay(aSpritePhysic *asp, spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD anim);
 void          aSpritePhysicShow(aSpritePhysic *asp, BOOL pvisible);
 void          aSpritePhysicFlash(aSpritePhysic *asp, BOOL pflash, WORD freq);
 void          aSpritePhysicFlashUpdate(aSpritePhysic *asp);
@@ -128,15 +139,21 @@ void          aSpritePhysicSetPos(aSpritePhysic *asp, short x, short y);
 void          aSpritePhysicMove(aSpritePhysic *asp, short x, short y);
 void          aSpriteShrunk(aSprite *as, spriteInfo *si, WORD shrunk_value);
 void          aSpriteShowNeocore(aSprite *as, BOOL visible);
-aSprite       aSpriteDisplay(spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD anim);
+void          aSpriteDisplay(aSprite *as, spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD anim);
 WORD          aSpriteGetSpriteIndexAutoinc(spriteInfo *si);
 
 BYTE      boxesCollide(box *b, box *boxes[], BYTE box_max);
 BOOL      boxCollide(box *b1, box *b2);
+
+// TODO to deprecated boxMake
 box       boxMake(short p0x, short p0y, short p1x, short p1y, short p2x, short p2y, short p3x, short p3y);
+
+void      boxInit(box *b, short width, short height, short widthOffset, short heightOffset);
 void      boxUpdate(box *b, short x, short y);
 void      boxDebugUpdate(picture5 *pics, box *box);
-picture5  boxDisplay(box *box);
+void      boxDisplay(picture5 *pics, box *box, pictureInfo *pi, paletteInfo *pali);
+
+// deprecated ?
 void      boxResize(box *box, short edge);
 
 void inline clearVram();
@@ -174,14 +191,13 @@ void inline loggerSpriteInfo(char *label, spriteInfo *si);
 void inline loggerBox(char *label, box *b);
 void inline loggerPictureInfo(char *label, pictureInfo *pi);
 
-picturePhysic picturePhysicAutobox(pictureInfo *pi, paletteInfo *pali, short posX, short posY);
-picturePhysic picturePhysicDisplayAutobox(pictureInfo *pi, paletteInfo *pali, short posX, short posY);
+void          picturePhysicDisplay(picturePhysic *pp, pictureInfo *pi, paletteInfo *pali, short posX, short posY);
 void          picturePhysicSetPos(picturePhysic *pp, short x, short y);
 void          picturePhysicMove(picturePhysic *pp, short x, short y);
 void          pictureShrunk(picture *p, pictureInfo *pi, WORD shrunk_value);
 void          picturesShow(picture *p, WORD max, BOOL visible);
 void          picture5Show(picture5 *pics, BOOL visible);
-picture       pictureDisplay(pictureInfo *pi, paletteInfo *pali, short posX, short posY);
+void          pictureDisplay(picture *p, pictureInfo *pi, paletteInfo *pali, short posX, short posY);
 void          pictureShrunkCentroid(picture *p, pictureInfo *pi, short centerPosX, short centerPosY, WORD shrunk_value);
 void          paletteDisableAutoinc();
 void          paletteEnableAutoinc();
@@ -204,7 +220,7 @@ void inline shrunk(WORD addr, WORD shrunk_value);
 WORD        shrunkRange(WORD addr_start, WORD addr_end, WORD shrunk_value);
 WORD        shrunkPropTableGet(WORD index); // TODO rename shrunkGetPropTable ?
 char        sinTableGet(WORD index);
-scroller    scrollerDisplay(scrollerInfo *si, paletteInfo *pali, short posX, short posY);
+void        scrollerDisplay(scroller *s, scrollerInfo *si, paletteInfo *pali, short posX, short posY);
 void        spriteDisableAutoinc();
 void        spriteEnableAutoinc();
 WORD        spriteGetIndex();
