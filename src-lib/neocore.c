@@ -261,22 +261,6 @@ box boxMake(short p0x, short p0y, short p1x, short p1y, short p2x, short p2y, sh
 }
 
 void boxUpdate(box *b, short x, short y) {
-  /*
-  if (x != b->p0.x) {
-    b->p1.x += (x - b->p0.x);
-    b->p2.x += (x - b->p0.x);
-    b->p3.x += (x - b->p0.x);
-    b->p0.x = x; // TODO
-  }
-  if (y != b->p0.y) {
-    b->p1.y += (y - b->p0.y);
-    b->p2.y += (y - b->p0.y);
-    b->p3.y += (y - b->p0.y);
-    b->p0.y = y; // TODO
-  }
-  b->p4.x = b->p0.x + ((b->p1.x - b->p0.x) DIV2);
-  b->p4.y = b->p0.y + ((b->p3.y - b->p0.y) DIV2);
-  */
   b->p0.x = x + b->widthOffset;
   b->p0.y = y + b->heightOffset;
 
@@ -309,6 +293,45 @@ void boxDisplay(picture5 *pics, box *box, pictureInfo *pi, paletteInfo *pali) {
   pictureDisplay(&pics->pic3, pi, pali, box->p3.x, box->p3.y);
   paletteEnableAutoinc();
   pictureDisplay(&pics->pic4, pi, pali, box->p4.x, box->p4.y);
+}
+
+void boxShrunk(box *b, box *bOrigin, WORD shrunkValue) {
+  // TODO optim.
+  // if i can read the shrunk VRAM value, i can compute the origin box...
+
+  // TODO improve precision
+
+  // TODO consider box offsets
+
+  // TODO move the code to neocore
+
+  BYTE shrunk_x = SHRUNK_EXTRACT_X(shrunkValue);
+  BYTE pix_step_x = (bOrigin->width DIV16);
+  BYTE trim_x = (((15 - shrunk_x) * pix_step_x) DIV2);
+
+  int trim_y;
+  FIXED shrunk_y = FIX(SHRUNK_EXTRACT_Y(shrunkValue));
+  FIXED pix_step_y = FIX((float)bOrigin->height / (float)256); // TODO hmmm float
+  FIXED shrunk_y_multiplicator = fsub(FIX(255), shrunk_y);
+  shrunk_y_multiplicator = fmul(shrunk_y_multiplicator, pix_step_y);
+  trim_y = fixtoi(shrunk_y_multiplicator);
+  trim_y =  (trim_y DIV2);
+  trim_y += 1;
+
+  b->p0.x = bOrigin->p0.x + trim_x - (bOrigin->width DIV2);
+  b->p0.y = bOrigin->p0.y + trim_y - (bOrigin->height DIV2);
+
+  b->p1.x = bOrigin->p1.x - trim_x - (bOrigin->width DIV2);
+  b->p1.y = bOrigin->p1.y + trim_y - (bOrigin->height DIV2);
+
+  b->p2.x = bOrigin->p2.x - trim_x - (bOrigin->width DIV2);
+  b->p2.y = bOrigin->p2.y - trim_y - (bOrigin->height DIV2);
+
+  b->p3.x = bOrigin->p3.x + trim_x - (bOrigin->width DIV2);
+  b->p3.y = bOrigin->p3.y - trim_y - (bOrigin->height DIV2);
+
+  b->p4.x = b->p0.x + ((b->p1.x - b->p0.x) DIV2);
+  b->p4.y = b->p0.y + ((b->p3.y - b->p0.y) DIV2);
 }
 
 // TODO deprecated ?
@@ -534,33 +557,38 @@ void inline loggerPictureInfo(char *label, pictureInfo *pi) {
   #endif
 }
 
+void picturePhysicShrunkCentroidDo(picturePhysicShrunkCentroid *pps, WORD shrunk) {
+  pictureShrunkCentroid(&pps->pp.p, pps->pi, pps->positionCenter.x, pps->positionCenter.y, shrunk);
+  boxShrunk(&pps->pp.box, &pps->boxOrigin, shrunk);
+}
+
+void pictureShrunkCentroidDisplay(picturePhysicShrunkCentroid *pps, WORD shrunk) {
+  picturePhysicDisplay(&pps->pp, pps->pi, pps->pali, pps->positionCenter.x, pps->positionCenter.y);
+  pictureShrunkCentroid(&pps->pp.p, pps->pi, pps->positionCenter.x, pps->positionCenter.y, shrunk);
+  BOXCOPY(&pps->pp.box, &pps->boxOrigin);
+}
+
+void picturePhysicShrunkCentroidInit(picturePhysicShrunkCentroid *pps, pictureInfo *pi, paletteInfo *pali, short xCenter, short yCenter) {
+  pps->pi = pi;
+  pps->pali = pali;
+  pps->positionCenter.x = xCenter;
+  pps->positionCenter.y = yCenter;
+}
+
+void picturePhysicShrunkCentroidSetPos(box *boxOrigin, short x, short y) {
+  boxUpdate(boxOrigin, x, y);
+}
+
+void picturePhysicShrunkCentroidMove(picturePhysicShrunkCentroid *pps, short xShift, short yShift) {
+  pps->positionCenter.x += xShift;
+  pps->positionCenter.y += yShift;
+  picturePhysicShrunkCentroidSetPos(&pps->boxOrigin, pps->positionCenter.x, pps->positionCenter.y);
+}
+
 void picturePhysicDisplay(picturePhysic *pp, pictureInfo *pi, paletteInfo *pali, short posX, short posY) {
   pictureDisplay(&pp->p, pi, pali, posX, posY); // TODO refactoring this func
   boxUpdate(&pp->box, posX, posY);
 }
-
-//TODO To deprecated
-/*
-picturePhysic picturePhysicDisplayAutobox(pictureInfo *pi, paletteInfo *pali, short posX, short posY) {
-  picturePhysic rt;
-  rt.p = pictureDisplay(pi, pali, posX, posY);
-  rt.box = boxMake(
-    posX,
-    posY,
-
-    posX + ((pi->tileWidth) << 4),
-    posY,
-
-    posX + ((pi->tileWidth) << 4),
-    posY + ((pi->tileHeight) << 4),
-
-    posX,
-    posY + ((pi->tileHeight) << 4)
-  );
-  rt.visible = true;
-  return rt;
-}
-*/
 
 void picturePhysicSetPos(picturePhysic *pp, short x, short y) {
   pictureSetPos(&pp->p, x, y);

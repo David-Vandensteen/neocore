@@ -13,6 +13,7 @@
 #ifndef NEOCORE_H
 #define NEOCORE_H
 #include <DATlib.h>
+#include <math.h>
 
 #define NEOCORE_INIT \
   typedef struct bkp_ram_info { \
@@ -130,6 +131,15 @@ struct picturePhysic {
   BOOL visible;
 };
 
+typedef struct picturePhysicShrunkCentroid picturePhysicShrunkCentroid;
+struct picturePhysicShrunkCentroid {
+  picturePhysic pp;
+  pictureInfo *pi;
+  paletteInfo *pali;
+  vec2short positionCenter;
+  box boxOrigin;
+};
+
 void          aSpritePhysicDisplay(aSpritePhysic *asp, spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD anim);
 void          aSpritePhysicShow(aSpritePhysic *asp, BOOL pvisible);
 void          aSpritePhysicFlash(aSpritePhysic *asp, BOOL pflash, WORD freq);
@@ -152,6 +162,7 @@ void      boxInit(box *b, short width, short height, short widthOffset, short he
 void      boxUpdate(box *b, short x, short y);
 void      boxDebugUpdate(picture5 *pics, box *box);
 void      boxDisplay(picture5 *pics, box *box, pictureInfo *pi, paletteInfo *pali);
+void      boxShrunk(box *b, box *bOrigin, WORD shrunkValue);
 
 // deprecated ?
 void      boxResize(box *box, short edge);
@@ -190,6 +201,13 @@ void inline loggerAsprite(char *label, aSprite *as);
 void inline loggerSpriteInfo(char *label, spriteInfo *si);
 void inline loggerBox(char *label, box *b);
 void inline loggerPictureInfo(char *label, pictureInfo *pi);
+
+void          picturePhysicShrunkCentroidInit(picturePhysicShrunkCentroid *pps, pictureInfo *pi, paletteInfo *pali, short xCenter, short yCenter);
+void          picturePhysicShrunkCentroidSetPos(box *boxOrigin, short x, short y);
+void          picturePhysicShrunkCentroidMove(picturePhysicShrunkCentroid *pps, short xShift, short yShift);
+void          picturePhysicShrunkCentroidDo(picturePhysicShrunkCentroid *pps, WORD shrunk);
+void          pictureShrunkCentroidDisplay(picturePhysicShrunkCentroid *pps, WORD shrunk);
+
 
 void          picturePhysicDisplay(picturePhysic *pp, pictureInfo *pi, paletteInfo *pali, short posX, short posY);
 void          picturePhysicSetPos(picturePhysic *pp, short x, short y);
