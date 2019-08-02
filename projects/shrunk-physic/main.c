@@ -9,11 +9,18 @@
 
 NEOCORE_INIT
 
-static vec2short laser_position, boss_position;
-static picturePhysic laser, boss;
+typedef struct picturePhysicShrunkCentroid picturePhysicShrunkCentroid;
+struct picturePhysicShrunkCentroid {
+  picturePhysic pp;
+  pictureInfo *pi;
+  paletteInfo *pali;
+  vec2short positionCenter;
+  box boxOrigin;
+};
+
+static picturePhysicShrunkCentroid laser, boss;
 static BYTE shrunk_x;
 static WORD shrunk_y = 0;
-static box laser_box_origin, boss_box_origin;
 static box *boxes_collide_to_test[2];
 
 static picture5 laser_box_pics, boss_box_pics;
@@ -23,6 +30,34 @@ static void boxShrunk(box *b, box *bOrigin, WORD shrunkValue); // TODO move in n
 static void init();
 static void display();
 static void update();
+
+void picturePhysicShrunkCentroidInit(picturePhysicShrunkCentroid *pps, pictureInfo *pi, paletteInfo *pali, short xCenter, short yCenter) {
+  pps->pi = pi;
+  pps->pali = pali;
+  pps->positionCenter.x = xCenter;
+  pps->positionCenter.y = yCenter;
+}
+
+void picturePhysicShrunkCentroidSetPos(box *boxOrigin, short x, short y) {
+  boxUpdate(boxOrigin, x, y);
+}
+
+void picturePhysicShrunkCentroidMove(picturePhysicShrunkCentroid *pps, short xShift, short yShift) {
+  pps->positionCenter.x += xShift;
+  pps->positionCenter.y += yShift;
+  picturePhysicShrunkCentroidSetPos(&pps->boxOrigin, pps->positionCenter.x, pps->positionCenter.y);
+}
+
+void picturePhysicShrunkCentroidDo(picturePhysicShrunkCentroid *pps, WORD shrunk) {
+  pictureShrunkCentroid(&pps->pp.p, pps->pi, pps->positionCenter.x, pps->positionCenter.y, shrunk);
+  boxShrunk(&pps->pp.box, &pps->boxOrigin, shrunk);
+}
+
+void pictureShrunkCentroidDisplay(picturePhysicShrunkCentroid *pps, WORD shrunk) {
+  picturePhysicDisplay(&pps->pp, pps->pi, pps->pali, pps->positionCenter.x, pps->positionCenter.y);
+  pictureShrunkCentroid(&pps->pp.p, pps->pi, pps->positionCenter.x, pps->positionCenter.y, shrunk);
+  BOXCOPY(&pps->pp.box, &pps->boxOrigin);
+}
 
 static void boxShrunk(box *b, box *bOrigin, WORD shrunkValue) {
   // TODO optim.
@@ -64,45 +99,48 @@ static void boxShrunk(box *b, box *bOrigin, WORD shrunkValue) {
 }
 
 static void init() {
-  laser_position.x = 160;
-  laser_position.y = 180;
-  boss_position.x = 160;
-  boss_position.y = 60;
+  picturePhysicShrunkCentroidInit(&laser, &laser_sprite, &laser_sprite_Palettes, 160, 180);
+  picturePhysicShrunkCentroidInit(&boss, &boss_city_sprite, &boss_city_sprite_Palettes, 160, 60);
+
   shrunk_x = 0;
   player_init();
-  boxInit(&laser.box, 320, 80, 0, 0);
-  boxInit(&boss.box, 160, 128, 0, 0);
-  boxes_collide_to_test[0] = &laser.box;
-  boxes_collide_to_test[1] = &boss.box;
+  boxInit(&laser.pp.box, 320, 80, 0, 0);
+  boxInit(&boss.pp.box, 160, 128, 0, 0);
+  boxes_collide_to_test[0] = &laser.pp.box;
+  boxes_collide_to_test[1] = &boss.pp.box;
 }
 
 static void display() {
-  picturePhysicDisplay(&laser, &laser_sprite, &laser_sprite_Palettes, laser_position.x, laser_position.y);
-  pictureShrunkCentroid(&laser.p, &laser_sprite, laser_position.x, laser_position.y, shrunkForge(shrunk_x, shrunk_y)); // centroid position
-  picturePhysicDisplay(&boss, &boss_city_sprite, &boss_city_sprite_Palettes, boss_position.x, boss_position.y);
-  pictureShrunkCentroid(&boss.p, &boss_city_sprite, boss_position.x, boss_position.y, shrunkForge(shrunk_x, shrunk_y)); // centroid position
+  pictureShrunkCentroidDisplay(&laser, shrunkForge(shrunk_x, shrunk_y));
+  pictureShrunkCentroidDisplay(&boss, shrunkForge(shrunk_x, shrunk_y));
   player_display();
 
-  BOXCOPY(&boss.box, &boss_box_origin);
-  BOXCOPY(&laser.box, &laser_box_origin);
-
-  boxDisplay(&laser_box_pics, &laser.box, &dot_sprite, &dot_sprite_Palettes);
+  boxDisplay(&laser_box_pics, &laser.pp.box, &dot_sprite, &dot_sprite_Palettes);
   // TODO pallete inc
-  boxDisplay(&boss_box_pics, &boss.box, &dot_sprite, &dot_sprite_Palettes);
+  boxDisplay(&boss_box_pics, &boss.pp.box, &dot_sprite, &dot_sprite_Palettes);
 }
 
 static void update() {
   joypadUpdateEdge();
   if (DAT_frameCounter % 5 == 0) {
     loggerInit();
-    pictureShrunkCentroid(&laser.p, &laser_sprite, laser_position.x, laser_position.y, shrunkForge(shrunk_x, shrunk_y)); // centroid position
-    pictureShrunkCentroid(&boss.p, &boss_city_sprite, boss_position.x, boss_position.y, shrunkForge(shrunk_x, shrunk_y)); // centroid position
-    boxShrunk(&laser.box, &laser_box_origin, shrunkForge(shrunk_x, shrunk_y));
-    boxShrunk(&boss.box, &boss_box_origin, shrunkForge(shrunk_x, shrunk_y));
-    boxDebugUpdate(&laser_box_pics, &laser.box);
-    boxDebugUpdate(&boss_box_pics, &boss.box);
+    picturePhysicShrunkCentroidDo(&laser, shrunkForge(shrunk_x, shrunk_y));
+    picturePhysicShrunkCentroidDo(&boss, shrunkForge(shrunk_x, shrunk_y));
+    boxDebugUpdate(&laser_box_pics, &laser.pp.box);
+    boxDebugUpdate(&boss_box_pics, &boss.pp.box);
+
+    /* Set Pos
+    laser.positionCenter.x++;
+    picturePhysicShrunkCentroidSetPos(&laser.boxOrigin, laser.positionCenter.x, laser.positionCenter.y);
+    */
+
+    /* Move
+    picturePhysicShrunkCentroidMove(&laser, 1, 1);
+    */
+
     shrunk_x++;
     shrunk_y++;
+
     if (shrunk_x >= 0xF) shrunk_x = 0;
     if (shrunk_y >= 0xFF) shrunk_y = 0;
   }
