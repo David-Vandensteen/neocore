@@ -1,20 +1,16 @@
 #include <neocore.h>
 #include "externs.h"
 
-typedef struct bkp_ram_info {
-	WORD debug_dips;
-	BYTE stuff[254];
-	//256 bytes
-} bkp_ram_info;
-
-bkp_ram_info bkp_data;
+NEOCORE_INIT
 
 int main(void) {
   aSpritePhysic player;
   picturePhysic asteroid;
   gpuInit();
-  player = aSpritePhysicDisplayAutobox(&player_sprite, &player_sprite_Palettes, 10, 10, 8, PLAYER_SPRITE_ANIM_IDLE);
-  asteroid = picturePhysicDisplayAutobox(&asteroid_sprite, &asteroid_sprite_Palettes, 100, 100);
+  boxInit(&player.box, 48, 16, 0, 0);
+  boxInit(&asteroid.box, (asteroid_sprite.tileWidth MULT8), 32, 0, 0);
+  aSpritePhysicDisplay(&player, &player_sprite, &player_sprite_Palettes, 10, 10, PLAYER_SPRITE_ANIM_IDLE);
+  picturePhysicDisplay(&asteroid, &asteroid_sprite, &asteroid_sprite_Palettes, 100, 100);
   while(1) {
     waitVBlank();
     joypadUpdate();
@@ -37,6 +33,6 @@ int main(void) {
     aSpriteAnimate(&player.as);
     SCClose();
   };
-	SCClose();
+  SCClose();
   return 0;
 }
