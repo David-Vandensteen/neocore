@@ -306,12 +306,12 @@ void boxDebugUpdate(picture5 *pics, box *box) {
 
 void boxDisplay(picture5 *pics, box *box, pictureInfo *pi, paletteInfo *pali) {
   paletteDisableAutoinc();
-  pics->pic0 = pictureDisplay(pi, pali, box->p0.x, box->p0.y);
-  pics->pic1 = pictureDisplay(pi, pali, box->p1.x, box->p1.y);
-  pics->pic2 = pictureDisplay(pi, pali, box->p2.x, box->p2.y);
-  pics->pic3 = pictureDisplay(pi, pali, box->p3.x, box->p3.y);
+  pictureDisplay(&pics->pic0, pi, pali, box->p0.x, box->p0.y);
+  pictureDisplay(&pics->pic1, pi, pali, box->p1.x, box->p1.y);
+  pictureDisplay(&pics->pic2, pi, pali, box->p2.x, box->p2.y);
+  pictureDisplay(&pics->pic3, pi, pali, box->p3.x, box->p3.y);
   paletteEnableAutoinc();
-  pics->pic4 = pictureDisplay(pi, pali, box->p4.x, box->p4.y);
+  pictureDisplay(&pics->pic4, pi, pali, box->p4.x, box->p4.y);
 }
 
 // TODO deprecated ?
@@ -538,11 +538,12 @@ void inline loggerPictureInfo(char *label, pictureInfo *pi) {
 }
 
 void picturePhysicDisplay(picturePhysic *pp, pictureInfo *pi, paletteInfo *pali, short posX, short posY) {
-  pp->p = pictureDisplay(pi, pali, posX, posY); // TODO refactoring this func
+  pictureDisplay(&pp->p, pi, pali, posX, posY); // TODO refactoring this func
   boxUpdate(&pp->box, posX, posY);
 }
 
 //TODO To deprecated
+/*
 picturePhysic picturePhysicDisplayAutobox(pictureInfo *pi, paletteInfo *pali, short posX, short posY) {
   picturePhysic rt;
   rt.p = pictureDisplay(pi, pali, posX, posY);
@@ -562,6 +563,7 @@ picturePhysic picturePhysicDisplayAutobox(pictureInfo *pi, paletteInfo *pali, sh
   rt.visible = true;
   return rt;
 }
+*/
 
 void picturePhysicSetPos(picturePhysic *pp, short x, short y) {
   pictureSetPos(&pp->p, x, y);
@@ -579,6 +581,25 @@ void picturesShow(picture *p, WORD max, BOOL visible) {
   }
 }
 
+void pictureDisplay(picture *p, pictureInfo *pi, paletteInfo *pali, short posX, short posY) {
+  pictureInit(
+    p,
+    pi,
+    pictureGetSpriteIndexAutoinc(pi),
+    paletteGetIndex(),
+    posX,
+    posY,
+    FLIP_NONE
+  );
+
+  palJobPut(
+    paletteGetIndexAutoinc(pali),
+    pali->palCount,
+    pali->data
+  );
+}
+
+/*
 picture pictureDisplay(pictureInfo *pi, paletteInfo *pali, short posX, short posY) {
   picture rt;
   pictureInit(
@@ -598,6 +619,7 @@ picture pictureDisplay(pictureInfo *pi, paletteInfo *pali, short posX, short pos
   );
   return rt;
 }
+*/
 
 void paletteDisableAutoinc() {
   palette_autoinc = false;

@@ -197,8 +197,8 @@ void inline loggerBox(char *label, box *b);
 void inline loggerPictureInfo(char *label, pictureInfo *pi);
 
 // TODO to deprecated
-picturePhysic picturePhysicAutobox(pictureInfo *pi, paletteInfo *pali, short posX, short posY);
-picturePhysic picturePhysicDisplayAutobox(pictureInfo *pi, paletteInfo *pali, short posX, short posY);
+//picturePhysic picturePhysicAutobox(pictureInfo *pi, paletteInfo *pali, short posX, short posY);
+//picturePhysic picturePhysicDisplayAutobox(pictureInfo *pi, paletteInfo *pali, short posX, short posY);
 //
 
 void          picturePhysicDisplay(picturePhysic *pp, pictureInfo *pi, paletteInfo *pali, short posX, short posY);
@@ -207,7 +207,8 @@ void          picturePhysicMove(picturePhysic *pp, short x, short y);
 void          pictureShrunk(picture *p, pictureInfo *pi, WORD shrunk_value);
 void          picturesShow(picture *p, WORD max, BOOL visible);
 void          picture5Show(picture5 *pics, BOOL visible);
-picture       pictureDisplay(pictureInfo *pi, paletteInfo *pali, short posX, short posY);
+//picture       pictureDisplay(pictureInfo *pi, paletteInfo *pali, short posX, short posY);
+void          pictureDisplay(picture *p, pictureInfo *pi, paletteInfo *pali, short posX, short posY);
 void          pictureShrunkCentroid(picture *p, pictureInfo *pi, short centerPosX, short centerPosY, WORD shrunk_value);
 void          paletteDisableAutoinc();
 void          paletteEnableAutoinc();
