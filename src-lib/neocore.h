@@ -131,11 +131,6 @@ struct picturePhysic {
 };
 
 void          aSpritePhysicDisplay(aSpritePhysic *asp, spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD anim);
-
-// TODO to deprecated
-aSpritePhysic aSpritePhysicDisplayAutobox(spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD height, WORD anim);
-//
-
 void          aSpritePhysicShow(aSpritePhysic *asp, BOOL pvisible);
 void          aSpritePhysicFlash(aSpritePhysic *asp, BOOL pflash, WORD freq);
 void          aSpritePhysicFlashUpdate(aSpritePhysic *asp);
@@ -144,7 +139,7 @@ void          aSpritePhysicSetPos(aSpritePhysic *asp, short x, short y);
 void          aSpritePhysicMove(aSpritePhysic *asp, short x, short y);
 void          aSpriteShrunk(aSprite *as, spriteInfo *si, WORD shrunk_value);
 void          aSpriteShowNeocore(aSprite *as, BOOL visible);
-aSprite       aSpriteDisplay(spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD anim);
+void          aSpriteDisplay(aSprite *as, spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD anim);
 WORD          aSpriteGetSpriteIndexAutoinc(spriteInfo *si);
 
 BYTE      boxesCollide(box *b, box *boxes[], BYTE box_max);
@@ -196,18 +191,12 @@ void inline loggerSpriteInfo(char *label, spriteInfo *si);
 void inline loggerBox(char *label, box *b);
 void inline loggerPictureInfo(char *label, pictureInfo *pi);
 
-// TODO to deprecated
-//picturePhysic picturePhysicAutobox(pictureInfo *pi, paletteInfo *pali, short posX, short posY);
-//picturePhysic picturePhysicDisplayAutobox(pictureInfo *pi, paletteInfo *pali, short posX, short posY);
-//
-
 void          picturePhysicDisplay(picturePhysic *pp, pictureInfo *pi, paletteInfo *pali, short posX, short posY);
 void          picturePhysicSetPos(picturePhysic *pp, short x, short y);
 void          picturePhysicMove(picturePhysic *pp, short x, short y);
 void          pictureShrunk(picture *p, pictureInfo *pi, WORD shrunk_value);
 void          picturesShow(picture *p, WORD max, BOOL visible);
 void          picture5Show(picture5 *pics, BOOL visible);
-//picture       pictureDisplay(pictureInfo *pi, paletteInfo *pali, short posX, short posY);
 void          pictureDisplay(picture *p, pictureInfo *pi, paletteInfo *pali, short posX, short posY);
 void          pictureShrunkCentroid(picture *p, pictureInfo *pi, short centerPosX, short centerPosY, WORD shrunk_value);
 void          paletteDisableAutoinc();
@@ -231,7 +220,7 @@ void inline shrunk(WORD addr, WORD shrunk_value);
 WORD        shrunkRange(WORD addr_start, WORD addr_end, WORD shrunk_value);
 WORD        shrunkPropTableGet(WORD index); // TODO rename shrunkGetPropTable ?
 char        sinTableGet(WORD index);
-scroller    scrollerDisplay(scrollerInfo *si, paletteInfo *pali, short posX, short posY);
+void        scrollerDisplay(scroller *s, scrollerInfo *si, paletteInfo *pali, short posX, short posY);
 void        spriteDisableAutoinc();
 void        spriteEnableAutoinc();
 WORD        spriteGetIndex();

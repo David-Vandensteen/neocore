@@ -98,32 +98,8 @@ JOYPAD
 
 //
 void aSpritePhysicDisplay(aSpritePhysic *asp, spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD anim) {
-  asp->as = aSpriteDisplay(si, pali, posX, posY, anim);
+  aSpriteDisplay(&asp->as, si, pali, posX, posY, anim);
   boxUpdate(&asp->box, posX, posY);
-}
-
-// TODO to deprecated
-aSpritePhysic aSpritePhysicDisplayAutobox(spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD height, WORD anim) {
-  aSpritePhysic rt;
-  rt.as = aSpriteDisplay(si, pali, posX, posY, anim);
-  rt.box = boxMake(
-    posX,
-    posY,
-
-    (posX + ((rt.as.tileWidth) << 4)),
-    posY,
-
-    (posX + ((rt.as.tileWidth) << 4)),
-    (posY + height),
-
-    posX,
-    (posY + (height))
-  );
-  rt.flashing = false;
-  rt.flashingFreq = 0;
-  rt.visible = true;
-  rt.height = height;
-  return rt;
 }
 
 void aSpritePhysicShow(aSpritePhysic *asp, BOOL pvisible) {
@@ -182,6 +158,26 @@ void aSpriteShowNeocore(aSprite *as, BOOL visible) {
   }
 }
 
+void aSpriteDisplay(aSprite *as, spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD anim) {
+  aSpriteInit(
+    as,
+    si,
+		aSpriteGetSpriteIndexAutoinc(si),
+    paletteGetIndex(),
+    posX,
+    posY,
+    anim,
+    FLIP_NONE
+  );
+
+  palJobPut(
+    paletteGetIndexAutoinc(pali),
+    pali->palCount,
+    pali->data
+  );
+  aSpriteSetAnim(as, anim);
+}
+/*
 aSprite aSpriteDisplay(spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD anim) {
   aSprite rt;
   aSpriteInit(
@@ -203,6 +199,7 @@ aSprite aSpriteDisplay(spriteInfo *si, paletteInfo *pali, short posX, short posY
   aSpriteSetAnim(&rt, anim);
   return rt;
 }
+*/
 
 WORD aSpriteGetSpriteIndexAutoinc(spriteInfo *si) {
   WORD rt = sprite_index;
@@ -741,6 +738,23 @@ void spriteSetIndex(WORD index) {
 	sprite_index = index;
 }
 
+void scrollerDisplay(scroller *s, scrollerInfo *si, paletteInfo *pali, short posX, short posY) {
+  scrollerInit(
+    s,
+    si,
+    scrollerGetSpriteIndexAutoinc(si),
+    paletteGetIndex(),
+    posX,
+    posY
+  );
+  palJobPut(
+    paletteGetIndexAutoinc(pali),
+    pali->palCount,
+    pali->data
+  );
+}
+
+/*
 scroller scrollerDisplay(scrollerInfo *si, paletteInfo *pali, short posX, short posY) {
   scroller rt;
   scrollerInit(
@@ -758,6 +772,7 @@ scroller scrollerDisplay(scrollerInfo *si, paletteInfo *pali, short posX, short 
   );
   return rt;
 }
+*/
 
 void scrollerMove(scroller *sc, short x, short y) {
   scrollerSetPos(sc, sc->scrlPosX + x, sc->scrlPosY + y);
