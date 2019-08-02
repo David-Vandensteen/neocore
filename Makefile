@@ -1,4 +1,3 @@
-
 INC = $(NEODEV)/m68k/include
 LIB = $(NEODEV)/m68k/lib
 
@@ -13,8 +12,7 @@ install: neocore
 
 neocore:
 	$(CP) -f src-lib\neocore.h $(INC)
-	gcc -I$(INC) -m68000 -O3 -Wall -fomit-frame-pointer -ffast-math -fno-builtin -nostartfiles -nodefaultlibs -D__cd__ -c src-lib\neocore.c -o $(LIB)\libneocore.a
-
+	gcc -I$(INC) -m68000 -O3 -Wall -fomit-frame-pointer -ffast-math -fno-builtin -nostartfiles -nodefaultlibs -D__cd__ -c src-lib\neocore.c -o  $(LIB)\libneocore.a
 
 clean:
 	$(RM) -f $(LIB)\libneocore.a
