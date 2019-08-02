@@ -216,7 +216,7 @@ vec2byte  vec2byteMake(BYTE x, BYTE y);
 BOOL      vectorsCollide(box *box, vec2short vec[], BYTE vector_max);
 
 WORD        shrunkForge(BYTE xc, BYTE yc);
-void inline shrunk(WORD addr, WORD shrunk_value);
+void inline shrunkAddr(WORD addr, WORD shrunk_value);
 WORD        shrunkRange(WORD addr_start, WORD addr_end, WORD shrunk_value);
 WORD        shrunkPropTableGet(WORD index); // TODO rename shrunkGetPropTable ?
 char        sinTableGet(WORD index);

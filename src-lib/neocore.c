@@ -788,7 +788,7 @@ WORD scrollerGetSpriteIndexAutoinc(scrollerInfo *si) {
   return rt;
 }
 
-void inline shrunk(WORD addr, WORD shrunk_value) {
+void inline shrunkAddr(WORD addr, WORD shrunk_value) {
   SC234Put(addr, shrunk_value);
 }
 
