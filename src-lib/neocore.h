@@ -243,8 +243,8 @@ WORD        spriteGetIndex();
 void        spriteSetIndex(WORD index);
 WORD        scrollerGetSpriteIndexAutoinc(scrollerInfo *si);
 void        scrollerMove(scroller *sc, short x, short y);
-short       shrunkCentroidGetTranslatedX(short centerPosX, WORD tileWidth, BYTE shrunkX);
-short       shrunkCentroidGetTranslatedY(short centerPosY, WORD tileHeight, BYTE shrunkY);
+int         shrunkCentroidGetTranslatedX(short centerPosX, WORD tileWidth, BYTE shrunkX);
+int         shrunkCentroidGetTranslatedY(short centerPosY, WORD tileHeight, BYTE shrunkY);
 
 DWORD inline waitVbl(WORD nb);
 #endif

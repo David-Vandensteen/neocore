@@ -801,13 +801,13 @@ WORD shrunkPropTableGet(WORD index) {
   return shrunk_table_prop[index];
 }
 
-short shrunkCentroidGetTranslatedX(short centerPosX, WORD tileWidth, BYTE shrunkX) {
+int shrunkCentroidGetTranslatedX(short centerPosX, WORD tileWidth, BYTE shrunkX) {
   FIXED newX = FIX(centerPosX);
   newX -= (shrunkX + 1) * FIX((tileWidth MULT8) / 0x10);
   return fixtoi(newX);
 }
 
-short shrunkCentroidGetTranslatedY(short centerPosY, WORD tileHeight, BYTE shrunkY) {
+int shrunkCentroidGetTranslatedY(short centerPosY, WORD tileHeight, BYTE shrunkY) {
   FIXED newY = FIX(centerPosY);
   newY -= shrunkY * FIX((tileHeight MULT8) / 0xFF);
   return fixtoi(newY);
