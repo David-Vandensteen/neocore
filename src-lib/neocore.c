@@ -624,28 +624,6 @@ void pictureDisplay(picture *p, pictureInfo *pi, paletteInfo *pali, short posX, 
   );
 }
 
-/*
-picture pictureDisplay(pictureInfo *pi, paletteInfo *pali, short posX, short posY) {
-  picture rt;
-  pictureInit(
-    &rt,
-    pi,
-    pictureGetSpriteIndexAutoinc(pi),
-    paletteGetIndex(),
-    posX,
-    posY,
-    FLIP_NONE
-  );
-
-  palJobPut(
-    paletteGetIndexAutoinc(pali),
-    pali->palCount,
-    pali->data
-  );
-  return rt;
-}
-*/
-
 void paletteDisableAutoinc() {
   palette_autoinc = false;
 }
