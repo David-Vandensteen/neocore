@@ -203,7 +203,7 @@ void inline loggerBox(char *label, box *b);
 void inline loggerPictureInfo(char *label, pictureInfo *pi);
 
 void          picturePhysicShrunkCentroidInit(picturePhysicShrunkCentroid *pps, pictureInfo *pi, paletteInfo *pali, short xCenter, short yCenter);
-void          picturePhysicShrunkCentroidSetPos(box *boxOrigin, short x, short y);
+void          picturePhysicShrunkCentroidSetPos(picturePhysicShrunkCentroid *pps, short x, short y);
 void          picturePhysicShrunkCentroidMove(picturePhysicShrunkCentroid *pps, short xShift, short yShift);
 void          picturePhysicShrunkCentroidUpdate(picturePhysicShrunkCentroid *pps, WORD shrunk);
 void          picturePhysicShrunkCentroidDisplay(picturePhysicShrunkCentroid *pps, WORD shrunk);

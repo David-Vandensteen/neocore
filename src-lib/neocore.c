@@ -575,14 +575,14 @@ void picturePhysicShrunkCentroidInit(picturePhysicShrunkCentroid *pps, pictureIn
   pps->positionCenter.y = yCenter;
 }
 
-void picturePhysicShrunkCentroidSetPos(box *boxOrigin, short x, short y) {
-  boxUpdate(boxOrigin, x, y);
+void picturePhysicShrunkCentroidSetPos(picturePhysicShrunkCentroid *pps, short x, short y) {
+  pps->positionCenter.x = x;
+  pps->positionCenter.y = y;
+  boxUpdate(&pps->boxOrigin, x, y);
 }
 
 void picturePhysicShrunkCentroidMove(picturePhysicShrunkCentroid *pps, short xShift, short yShift) {
-  pps->positionCenter.x += xShift;
-  pps->positionCenter.y += yShift;
-  picturePhysicShrunkCentroidSetPos(&pps->boxOrigin, pps->positionCenter.x, pps->positionCenter.y);
+  picturePhysicShrunkCentroidSetPos(pps, pps->positionCenter.x + xShift, pps->positionCenter.y + yShift);
 }
 
 void picturePhysicDisplay(picturePhysic *pp, pictureInfo *pi, paletteInfo *pali, short posX, short posY) {
