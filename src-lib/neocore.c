@@ -557,7 +557,7 @@ void inline loggerPictureInfo(char *label, pictureInfo *pi) {
   #endif
 }
 
-void picturePhysicShrunkCentroidDo(picturePhysicShrunkCentroid *pps, WORD shrunk) {
+void picturePhysicShrunkCentroidUpdate(picturePhysicShrunkCentroid *pps, WORD shrunk) {
   pictureShrunkCentroid(&pps->pp.p, pps->pi, pps->positionCenter.x, pps->positionCenter.y, shrunk);
   boxShrunk(&pps->pp.box, &pps->boxOrigin, shrunk);
 }

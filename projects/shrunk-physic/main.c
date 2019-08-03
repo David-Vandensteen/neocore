@@ -49,8 +49,8 @@ static void update() {
   joypadUpdateEdge();
   if (DAT_frameCounter % 5 == 0) {
     loggerInit();
-    picturePhysicShrunkCentroidDo(&laser, shrunkForge(shrunk_x, shrunk_y));
-    picturePhysicShrunkCentroidDo(&boss, shrunkForge(shrunk_x, shrunk_y));
+    picturePhysicShrunkCentroidUpdate(&laser, shrunkForge(shrunk_x, shrunk_y));
+    picturePhysicShrunkCentroidUpdate(&boss, shrunkForge(shrunk_x, shrunk_y));
     boxDebugUpdate(&laser_box_pics, &laser.pp.box);
     boxDebugUpdate(&boss_box_pics, &boss.pp.box);
 
