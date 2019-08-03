@@ -562,7 +562,7 @@ void picturePhysicShrunkCentroidDo(picturePhysicShrunkCentroid *pps, WORD shrunk
   boxShrunk(&pps->pp.box, &pps->boxOrigin, shrunk);
 }
 
-void pictureShrunkCentroidDisplay(picturePhysicShrunkCentroid *pps, WORD shrunk) {
+void picturePhysicShrunkCentroidDisplay(picturePhysicShrunkCentroid *pps, WORD shrunk) {
   picturePhysicDisplay(&pps->pp, pps->pi, pps->pali, pps->positionCenter.x, pps->positionCenter.y);
   pictureShrunkCentroid(&pps->pp.p, pps->pi, pps->positionCenter.x, pps->positionCenter.y, shrunk);
   BOXCOPY(&pps->pp.box, &pps->boxOrigin);
@@ -781,26 +781,6 @@ void scrollerDisplay(scroller *s, scrollerInfo *si, paletteInfo *pali, short pos
     pali->data
   );
 }
-
-/*
-scroller scrollerDisplay(scrollerInfo *si, paletteInfo *pali, short posX, short posY) {
-  scroller rt;
-  scrollerInit(
-    &rt,
-    si,
-    scrollerGetSpriteIndexAutoinc(si),
-    paletteGetIndex(),
-    posX,
-    posY
-  );
-  palJobPut(
-    paletteGetIndexAutoinc(pali),
-    pali->palCount,
-    pali->data
-  );
-  return rt;
-}
-*/
 
 void scrollerMove(scroller *sc, short x, short y) {
   scrollerSetPos(sc, sc->scrlPosX + x, sc->scrlPosY + y);

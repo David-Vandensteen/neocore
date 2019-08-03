@@ -36,8 +36,8 @@ static void init() {
 }
 
 static void display() {
-  pictureShrunkCentroidDisplay(&laser, shrunkForge(shrunk_x, shrunk_y));
-  pictureShrunkCentroidDisplay(&boss, shrunkForge(shrunk_x, shrunk_y));
+  picturePhysicShrunkCentroidDisplay(&laser, shrunkForge(shrunk_x, shrunk_y));
+  picturePhysicShrunkCentroidDisplay(&boss, shrunkForge(shrunk_x, shrunk_y));
   player_display();
 
   boxDisplay(&laser_box_pics, &laser.pp.box, &dot_sprite, &dot_sprite_Palettes);

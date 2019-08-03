@@ -206,7 +206,7 @@ void          picturePhysicShrunkCentroidInit(picturePhysicShrunkCentroid *pps, 
 void          picturePhysicShrunkCentroidSetPos(box *boxOrigin, short x, short y);
 void          picturePhysicShrunkCentroidMove(picturePhysicShrunkCentroid *pps, short xShift, short yShift);
 void          picturePhysicShrunkCentroidDo(picturePhysicShrunkCentroid *pps, WORD shrunk);
-void          pictureShrunkCentroidDisplay(picturePhysicShrunkCentroid *pps, WORD shrunk);
+void          picturePhysicShrunkCentroidDisplay(picturePhysicShrunkCentroid *pps, WORD shrunk);
 
 
 void          picturePhysicDisplay(picturePhysic *pp, pictureInfo *pi, paletteInfo *pali, short posX, short posY);
