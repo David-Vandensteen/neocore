@@ -9,30 +9,21 @@ static void init();
 static void display();
 static void update();
 
-static void flash(aSprite *as, WORD freq);
+static picture pic;
 
 static void init() {
   player_init();
 }
 
 static void display() {
+  pictureDisplay(&pic, &laser_sprite, &laser_sprite_Palettes, 100, 200);
   player_display();
 }
 
 static void update() {
   player_update();
-  flash(player_get(), 10);
-}
-
-static void flash(aSprite *as, WORD freq) {
-  if (DAT_frameCounter % freq) {
-    aSpriteShow(as)
-  } else {
-    if (DAT_frameCounter % ((freq MULT2) + (freq DIV2))) {
-      aSpriteHide(as);
-      clearSprites(as->baseSprite, as->tileWidth);
-    }
-  }
+  aSpriteFlash(&player_get()->as, 8);
+  pictureFlash(&pic, 8);
 }
 
 int main(void) {
