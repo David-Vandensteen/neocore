@@ -207,6 +207,16 @@ WORD aSpriteGetSpriteIndexAutoinc(spriteInfo *si) {
   return rt;
 }
 
+void aSpriteFlash(aSprite *as, BYTE freq) {
+  if (DAT_frameCounter % freq == 0) {
+    aSpriteShow(as);
+  }
+  if (DAT_frameCounter % ((freq MULT2) + (freq DIV2)) == 0) {
+    aSpriteHide(as);
+  }
+}
+
+
 BYTE boxesCollide(box *b, box *boxes[], BYTE box_max) {
   BYTE rt = false;
   BYTE i = 0;
@@ -623,6 +633,16 @@ void pictureDisplay(picture *p, pictureInfo *pi, paletteInfo *pali, short posX, 
     pali->data
   );
 }
+
+void pictureFlash(picture *p, BYTE freq) {
+  if (DAT_frameCounter % freq == 0) {
+    pictureShow(p);
+  }
+  if (DAT_frameCounter % ((freq MULT2) + (freq DIV2)) == 0) {
+    pictureHide(p);
+  }
+}
+
 
 void paletteDisableAutoinc() {
   palette_autoinc = false;

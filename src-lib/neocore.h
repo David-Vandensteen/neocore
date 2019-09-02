@@ -72,7 +72,9 @@
 #define SHRUNK_EXTRACT_X(value) value >> 8
 #define SHRUNK_EXTRACT_Y(value) (BYTE)value
 
+// overwrite aSpriteHide DAT macro
 #undef aSpriteHide(as)
+#define aSpriteHide(as)            { (as)->flags|=0x0080; clearSprites(as->baseSprite, as->tileWidth); }
 #define aSpriteHideDAT(as)         { (as)->flags|=0x0080; }
 
 enum direction { NONE, UP, DOWN, LEFT, RIGHT };
@@ -154,6 +156,8 @@ void          aSpriteShrunk(aSprite *as, spriteInfo *si, WORD shrunk_value);
 void          aSpriteShowNeocore(aSprite *as, BOOL visible);
 void          aSpriteDisplay(aSprite *as, spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD anim);
 WORD          aSpriteGetSpriteIndexAutoinc(spriteInfo *si);
+void          aSpriteFlash(aSprite *as, BYTE freq);
+
 
 BYTE      boxesCollide(box *b, box *boxes[], BYTE box_max);
 BOOL      boxCollide(box *b1, box *b2);
@@ -218,12 +222,14 @@ void          picturesShow(picture *p, WORD max, BOOL visible);
 void          picture5Show(picture5 *pics, BOOL visible);
 void          pictureDisplay(picture *p, pictureInfo *pi, paletteInfo *pali, short posX, short posY);
 void          pictureShrunkCentroid(picture *p, pictureInfo *pi, short centerPosX, short centerPosY, WORD shrunk_value);
+void          pictureFlash(picture *p, BYTE freq);
 void          paletteDisableAutoinc();
 void          paletteEnableAutoinc();
 BYTE          paletteGetIndex();
 BYTE          paletteSetIndex(BYTE index);
 WORD          pictureGetSpriteIndexAutoinc(pictureInfo *pi);
 BYTE          paletteGetIndexAutoinc(paletteInfo *pali);
+
 
 void maskDisplay(picture pic[], vec2short vec[], BYTE vector_max); // TODO rename ? (vectorsDisplay)
 void maskUpdate(short x, short y, vec2short vec[], vec2short offset[], BYTE vector_max); // TODO rename ? (vectorsDebug)
