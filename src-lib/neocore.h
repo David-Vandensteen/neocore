@@ -72,6 +72,9 @@
 #define SHRUNK_EXTRACT_X(value) value >> 8
 #define SHRUNK_EXTRACT_Y(value) (BYTE)value
 
+#undef aSpriteHide(as)
+#define aSpriteHideDAT(as)         { (as)->flags|=0x0080; }
+
 enum direction { NONE, UP, DOWN, LEFT, RIGHT };
 
 typedef struct vec2int vec2int;
