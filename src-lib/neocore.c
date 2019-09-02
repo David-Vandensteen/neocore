@@ -152,7 +152,7 @@ void aSpriteShowNeocore(aSprite *as, BOOL visible) {
     break;
 
     case false:
-    aSpriteHide(as);
+    aSpriteHideDAT(as);
     clearSprites(as->baseSprite, as->tileWidth);
     break;
   }
