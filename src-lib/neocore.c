@@ -208,11 +208,13 @@ WORD aSpriteGetSpriteIndexAutoinc(spriteInfo *si) {
 }
 
 void aSpriteFlash(aSprite *as, BYTE freq) {
-  if (DAT_frameCounter % freq == 0) {
-    aSpriteShow(as);
-  }
-  if (DAT_frameCounter % ((freq MULT2) + (freq DIV2)) == 0) {
-    aSpriteHide(as);
+  if (freq != 0) {
+    if (DAT_frameCounter % freq == 0) {
+      aSpriteShow(as);
+    }
+    if (DAT_frameCounter % ((freq MULT2) + (freq DIV2)) == 0) {
+      aSpriteHide(as);
+    }
   }
 }
 
@@ -635,11 +637,13 @@ void pictureDisplay(picture *p, pictureInfo *pi, paletteInfo *pali, short posX, 
 }
 
 void pictureFlash(picture *p, BYTE freq) {
-  if (DAT_frameCounter % freq == 0) {
-    pictureShow(p);
-  }
-  if (DAT_frameCounter % ((freq MULT2) + (freq DIV2)) == 0) {
-    pictureHide(p);
+  if (freq != 0) {
+    if (DAT_frameCounter % freq == 0) {
+      pictureShow(p);
+    }
+    if (DAT_frameCounter % ((freq MULT2) + (freq DIV2)) == 0) {
+      pictureHide(p);
+    }
   }
 }
 

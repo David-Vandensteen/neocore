@@ -22,8 +22,8 @@ static void display() {
 
 static void update() {
   player_update();
-  aSpriteFlash(&player_get()->as, 8);
-  pictureFlash(&pic, 8);
+  aSpriteFlash(&player_get()->as, 0);
+  pictureFlash(&pic, 0);
 }
 
 int main(void) {
