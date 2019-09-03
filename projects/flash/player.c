@@ -31,12 +31,11 @@ void player_update() {
   }
   if (!joypadIsDown() && !joypadIsUp()) { aSpriteSetAnim(&player.as, PLAYER_SPRITE_ANIM_IDLE); }
   aSpriteAnimate(&player.as);
-  if (DAT_frameCounter % 60 == 0) aSpritePhysicFlash(&player, false, 0);
-  aSpritePhysicFlashUpdate(&player);
+  if (DAT_frameCounter % 60 == 0) aSpriteFlash(&player.as, false);
 }
 
 void player_collide(box *b) {
-  if (boxCollide(b, &player.box)) aSpritePhysicFlash(&player, true, 5);
+  if (boxCollide(b, &player.box)) aSpriteFlash(&player.as, 4);
 }
 
 void player_collides(box *boxes[], BYTE box_max) {

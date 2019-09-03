@@ -123,9 +123,6 @@ typedef struct aSpritePhysic aSpritePhysic;
 struct aSpritePhysic {
   aSprite as; //50 bytes
   box box;
-  BOOL flashing;
-  BOOL visible;
-  WORD flashingFreq;
   WORD height;
 };
 
@@ -146,14 +143,10 @@ struct picturePhysicShrunkCentroid {
 };
 
 void          aSpritePhysicDisplay(aSpritePhysic *asp, spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD anim);
-void          aSpritePhysicShow(aSpritePhysic *asp, BOOL pvisible);
-void          aSpritePhysicFlash(aSpritePhysic *asp, BOOL pflash, WORD freq);
-void          aSpritePhysicFlashUpdate(aSpritePhysic *asp);
 void          aSpritePhysicCollide(aSpritePhysic *asp, box *box); // TODO not implementd ??? needed ???
 void          aSpritePhysicSetPos(aSpritePhysic *asp, short x, short y);
 void          aSpritePhysicMove(aSpritePhysic *asp, short x, short y);
 void          aSpriteShrunk(aSprite *as, spriteInfo *si, WORD shrunk_value);
-void          aSpriteShowNeocore(aSprite *as, BOOL visible);
 void          aSpriteDisplay(aSprite *as, spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD anim);
 WORD          aSpriteGetSpriteIndexAutoinc(spriteInfo *si);
 void          aSpriteFlash(aSprite *as, BYTE freq);
@@ -218,8 +211,8 @@ void          picturePhysicDisplay(picturePhysic *pp, pictureInfo *pi, paletteIn
 void          picturePhysicSetPos(picturePhysic *pp, short x, short y);
 void          picturePhysicMove(picturePhysic *pp, short x, short y);
 void          pictureShrunk(picture *p, pictureInfo *pi, WORD shrunk_value);
-void          picturesShow(picture *p, WORD max, BOOL visible);
-void          picture5Show(picture5 *pics, BOOL visible);
+void          picturesShow(picture *p, WORD max, BOOL visible); // TODO deprecated, implement picturesHide, picturesShow, pictureHide, pictureShow
+void          picture5Show(picture5 *pics, BOOL visible); // TODO deprecated
 void          pictureDisplay(picture *p, pictureInfo *pi, paletteInfo *pali, short posX, short posY);
 void          pictureShrunkCentroid(picture *p, pictureInfo *pi, short centerPosX, short centerPosY, WORD shrunk_value);
 void          pictureFlash(picture *p, BYTE freq);

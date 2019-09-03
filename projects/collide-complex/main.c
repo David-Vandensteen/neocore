@@ -71,8 +71,7 @@ static void update_player() {
     aSpriteSetAnim(&player.as, PLAYER_SPRITE_ANIM_DOWN);
   }
   if (!joypadIsDown() && !joypadIsUp()) { aSpriteSetAnim(&player.as, PLAYER_SPRITE_ANIM_IDLE); }
-  (vectorsCollide(&player.box, peak_mask, PEAK_MASK_VECTOR_MAX)) ? aSpritePhysicFlash(&player, true, 5) : aSpritePhysicFlash(&player, false, 0);
-  aSpritePhysicFlashUpdate(&player);
+  (vectorsCollide(&player.box, peak_mask, PEAK_MASK_VECTOR_MAX)) ? aSpriteFlash(&player.as, 4) : aSpriteFlash(&player.as, false);
   aSpriteAnimate(&player.as);
 }
 

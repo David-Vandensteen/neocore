@@ -1,4 +1,7 @@
 # TODO factorize, trap errorlevel
+# TODO test errorlevel break
+
+
 function compileProject($name, $withSprite) {
   pushd ..\projects\$name
   .\mak.bat clean
@@ -17,6 +20,7 @@ function _main{
   compileProject "collide-complex" 1
   compileProject "collide-multiple" 1
   compileProject "fixed-value"
+  compileProject "flash" 1
   compileProject "hello"
   compileProject 'joypad'
   compileProject "shrunk-centroid" 1

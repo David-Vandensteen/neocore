@@ -21,8 +21,6 @@ static void init();
 static void display();
 static void update();
 
-
-
 static void init() {
   picturePhysicShrunkCentroidInit(&laser, &laser_sprite, &laser_sprite_Palettes, 160, 180);
   picturePhysicShrunkCentroidInit(&boss, &boss_city_sprite, &boss_city_sprite_Palettes, 160, 60);

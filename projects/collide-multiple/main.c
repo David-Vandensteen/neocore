@@ -33,12 +33,7 @@ int main(void) {
       aSpriteSetAnim(&player.as, PLAYER_SPRITE_ANIM_DOWN);
     }
     if (!joypadIsDown() && !joypadIsUp()) { aSpriteSetAnim(&player.as, PLAYER_SPRITE_ANIM_IDLE); }
-    if (boxesCollide(&player.box, asteroids_box, ASTEROID_MAX)) {
-      aSpritePhysicFlash(&player, true, 5);
-    } else {
-      aSpritePhysicFlash(&player, false, 0);
-    }
-    aSpritePhysicFlashUpdate(&player);
+    (boxesCollide(&player.box, asteroids_box, ASTEROID_MAX)) ? aSpriteFlash(&player.as, 4) : aSpriteFlash(&player.as, false);
     aSpriteAnimate(&player.as);
     SCClose();
   };

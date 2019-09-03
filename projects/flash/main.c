@@ -11,6 +11,10 @@ static void update();
 
 static picture pic;
 
+// TODO patch neocore
+static void aSpriteIsVisible();
+//
+
 static void init() {
   player_init();
 }
