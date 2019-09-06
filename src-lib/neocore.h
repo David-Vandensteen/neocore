@@ -150,7 +150,7 @@ void          aSpriteShrunk(aSprite *as, spriteInfo *si, WORD shrunk_value);
 void          aSpriteDisplay(aSprite *as, spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD anim);
 WORD          aSpriteGetSpriteIndexAutoinc(spriteInfo *si);
 void          aSpriteFlash(aSprite *as, BYTE freq);
-
+BOOL          aSpriteIsVisible(aSprite *as);
 
 BYTE      boxesCollide(box *b, box *boxes[], BYTE box_max);
 BOOL      boxCollide(box *b1, box *b2);

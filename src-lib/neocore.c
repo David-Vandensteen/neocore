@@ -139,16 +139,18 @@ WORD aSpriteGetSpriteIndexAutoinc(spriteInfo *si) {
 void aSpriteFlash(aSprite *as, BYTE freq) {
   if (freq != 0) {
     if (DAT_frameCounter % freq == 0) {
-      aSpriteShow(as);
+      if (aSpriteIsVisible(as)) {
+        aSpriteHide(as);
+      } else {
+        aSpriteShow(as);
+      }
     }
-    if (DAT_frameCounter % ((freq MULT2) + (freq DIV2)) == 0) {
-      aSpriteHide(as);
-    }
-  } else {
-    aSpriteShow(as);
   }
 }
 
+BOOL aSpriteIsVisible(aSprite *as) {
+  return (as->flags | (0x0080 == 0)) ? false : true;
+}
 
 BYTE boxesCollide(box *b, box *boxes[], BYTE box_max) {
   BYTE rt = false;
