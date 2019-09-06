@@ -11,17 +11,10 @@ static void update();
 
 static picture pic;
 
-// TODO patch neocore
-// #define aSpriteHide(as)		{(as)->flags|=0x0080;}
-// #define aSpriteShow(as)		{(as)->flags&=0xff7f;(as)->flags|=0x0002;}
-
-static void aSpriteIsVisible(aSprite *as) {
-  loggerInit();
-  loggerWord("FLAGS: ", as->flags);
-  ((as->flags | 0x0080 == 0)) ? loggerInfo("VISIBLE FALSE") : loggerInfo("VISIBLE TRUE");
-
+//TODO patch neocore
+static BOOL pictureIsVisible(picture *p) {
+  return (p->posY < 0) ? false : true;
 }
-//
 
 static void init() {
   player_init();
@@ -33,10 +26,12 @@ static void display() {
 }
 
 static void update() {
+  loggerInit();
   player_update();
-  aSpriteFlash(&player_get()->as, 30);
-  pictureFlash(&pic, 4);
-  aSpriteIsVisible(&player_get()->as);
+  // aSpriteFlash(&player_get()->as, 30);
+  // pictureFlash(&pic, 4);
+  pictureHide(&pic);
+  loggerWord("VISIBLE : ", pictureIsVisible(&pic));
 }
 
 int main(void) {
