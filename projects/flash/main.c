@@ -31,7 +31,10 @@ static void update() {
   // aSpriteFlash(&player_get()->as, 30);
   // pictureFlash(&pic, 4);
   pictureHide(&pic);
-  loggerWord("VISIBLE : ", pictureIsVisible(&pic));
+  // loggerWord("VISIBLE : ", pictureIsVisible(&pic));
+  loggerWord("SP INDEX: ", player_get()->as.baseSprite);
+  loggerWord("SP INFO: ", MEMWORD(0x8200 + 21));
+  loggerWord("SP INFO: ", MEMWORD(0x8200 + 20));
 }
 
 int main(void) {
