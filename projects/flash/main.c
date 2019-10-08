@@ -3,13 +3,17 @@
 #include "player.h"
 #include "externs.h"
 
+// #define pictureHide(p) { short x = (p)->posX; short y = (p)->posY; pictureSetPos(p, -128, -128); (p)->posX = x; (p)->posY = y; } // overwrite DATlib func
+
 NEOCORE_INIT
+
 
 static void init();
 static void display();
 static void update();
 
 static picture pic;
+static BOOL toogle_visibility = false;
 
 //TODO patch neocore
 static BOOL pictureIsVisible(picture *p) {
@@ -26,15 +30,24 @@ static void display() {
 }
 
 static void update() {
-  loggerInit();
+  BYTE i = 0;
+  WORD val = 0;
   player_update();
   // aSpriteFlash(&player_get()->as, 30);
   // pictureFlash(&pic, 4);
-  pictureHide(&pic);
+  if (DAT_frameCounter % 60 == 0) {
+    loggerInit();
+    loggerShort("PX : ", pic.posX);
+    loggerShort("PY : ", pic.posY);
+    if (toogle_visibility) {
+      pictureShow(&pic);
+    } else {
+      pictureHide(&pic);
+    }
+    toogle_visibility = !toogle_visibility;
+  }
+  // pictureHide(&pic);
   // loggerWord("VISIBLE : ", pictureIsVisible(&pic));
-  loggerWord("SP INDEX: ", player_get()->as.baseSprite);
-  loggerWord("SP INFO: ", MEMWORD(0x8200 + 21));
-  loggerWord("SP INFO: ", MEMWORD(0x8200 + 20));
 }
 
 int main(void) {
