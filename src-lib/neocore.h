@@ -64,8 +64,8 @@
 #define LOGGER_X_INIT   1
 #define LOGGER_Y_INIT   2
 
-#define HIDE_X  50
-#define HIDE_Y  50
+// #define HIDE_X  50
+// #define HIDE_Y  50
 
 #define BOXCOPY(bFrom, bTo)   memcpy(bTo, bFrom, sizeof(box))
 
@@ -81,8 +81,8 @@
 #define aSpriteHideDAT(as)         { (as)->flags|=0x0080; }
 
 // overwrite pictureHide, pictureShow DAT func
-#define pictureHide(p) { short x = (p)->posX; short y = (p)->posY; pictureSetPos(p, HIDE_X, HIDE_Y); (p)->posX = x; (p)->posY = y; loggerInfo("OVER PHIDE"); }
-#define pictureShow(p) { pictureSetPos(p, (p)->posX, (p)->posY); loggerInfo("OVER PSHOW"); }
+// #define pictureHide(p) { short x = (p)->posX; short y = (p)->posY; pictureSetPos(p, HIDE_X, HIDE_Y); (p)->posX = x; (p)->posY = y; loggerInfo("OVER PHIDE"); }
+// #define pictureShow(p) { pictureSetPos(p, (p)->posX, (p)->posY); loggerInfo("OVER PSHOW"); }
 
 enum direction { NONE, UP, DOWN, LEFT, RIGHT };
 
