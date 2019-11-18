@@ -91,30 +91,30 @@ void inline static autoInc(){
 JOYPAD
 
 //
-void aSpritePhysicDisplay(aSpritePhysic *asp, spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD anim) {
-  aSpriteDisplay(&asp->as, si, pali, posX, posY, anim);
-  boxUpdate(&asp->box, posX, posY);
+void animated_sprite_physic_display(aSpritePhysic *asp, spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD anim) {
+  animated_sprite_display(&asp->as, si, pali, posX, posY, anim);
+  box_update(&asp->box, posX, posY);
 }
 
-void aSpritePhysicSetPos(aSpritePhysic *asp, short x, short y) {
+void animated_sprite_physic_set_position(aSpritePhysic *asp, short x, short y) {
   aSpriteSetPos(&asp->as, x, y);
-  boxUpdate(&asp->box, x, y);
+  box_update(&asp->box, x, y);
 }
 
-void aSpritePhysicMove(aSpritePhysic *asp, short x, short y) {
+void animated_sprite_physic_move(aSpritePhysic *asp, short x, short y) {
   aSpriteMove(&asp->as, x, y);
-  boxUpdate(&asp->box, asp->as.posX, asp->as.posY);
+  box_update(&asp->box, asp->as.posX, asp->as.posY);
 }
 
-void aSpriteShrunk(aSprite *as, spriteInfo *si, WORD shrunk_value) {
+void animated_sprite_physic_shrunk(aSprite *as, spriteInfo *si, WORD shrunk_value) {
 	shrunkRange(0x8000 + as->baseSprite, 0x8000 + as->baseSprite + si->maxWidth, shrunk_value);
 }
 
-void aSpriteDisplay(aSprite *as, spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD anim) {
+void animated_sprite_display(aSprite *as, spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD anim) {
   aSpriteInit(
     as,
     si,
-		aSpriteGetSpriteIndexAutoinc(si),
+		animated_sprite_index_auto(si),
     paletteGetIndex(),
     posX,
     posY,
@@ -130,16 +130,16 @@ void aSpriteDisplay(aSprite *as, spriteInfo *si, paletteInfo *pali, short posX, 
   aSpriteSetAnim(as, anim);
 }
 
-WORD aSpriteGetSpriteIndexAutoinc(spriteInfo *si) {
+WORD animated_sprite_index_auto(spriteInfo *si) {
   WORD rt = sprite_index;
   if (sprite_autoinc) sprite_index += si->maxWidth;
   return rt;
 }
 
-void aSpriteFlash(aSprite *as, BYTE freq) {
+void animated_sprite_flash(aSprite *as, BYTE freq) {
   if (freq != 0) {
     if (DAT_frameCounter % freq == 0) {
-      if (aSpriteIsVisible(as)) {
+      if (animated_sprite_is_visible(as)) {
         aSpriteHide(as);
       } else {
         aSpriteShow(as);
@@ -148,11 +148,11 @@ void aSpriteFlash(aSprite *as, BYTE freq) {
   }
 }
 
-BOOL aSpriteIsVisible(aSprite *as) {
+BOOL animated_sprite_is_visible(aSprite *as) {
   return (as->flags | (0x0080 == 0)) ? false : true;
 }
 
-BYTE boxesCollide(box *b, box *boxes[], BYTE box_max) {
+BYTE boxes_collide(box *b, box *boxes[], BYTE box_max) {
   BYTE rt = false;
   BYTE i = 0;
   for (i = 0; i < box_max; i++) {
@@ -169,7 +169,7 @@ BYTE boxesCollide(box *b, box *boxes[], BYTE box_max) {
   return rt;
 }
 
-BOOL boxCollide(box *b1, box *b2) { // TODO return a frixion vector
+BOOL box_collide(box *b1, box *b2) { // TODO return a frixion vector
   if(
       b1->p1.x >= b2->p0.x
           &&
@@ -183,7 +183,7 @@ BOOL boxCollide(box *b1, box *b2) { // TODO return a frixion vector
     } else { return false; }
 }
 
-void boxInit(box *b, short width, short height, short widthOffset, short heightOffset) {
+void box_init(box *b, short width, short height, short widthOffset, short heightOffset) {
   b->width = width;
   b->height = height;
   b->widthOffset = widthOffset;
@@ -205,7 +205,7 @@ box boxMake(short p0x, short p0y, short p1x, short p1y, short p2x, short p2y, sh
   return rt;
 }
 
-void boxUpdate(box *b, short x, short y) {
+void box_update(box *b, short x, short y) {
   b->p0.x = x + b->widthOffset;
   b->p0.y = y + b->heightOffset;
 
@@ -310,7 +310,7 @@ void inline fixPrintNeocore(int x, int y, char *label){
   fixPrint(x, y, 0, 0, label);
 }
 
-void inline gpuInit() {
+void inline gpu_init() {
   backgroundColor(0x7000); //BG color
   clearFixLayer();
   initGfx();
@@ -523,7 +523,7 @@ void picturePhysicShrunkCentroidInit(picturePhysicShrunkCentroid *pps, pictureIn
 void picturePhysicShrunkCentroidSetPos(picturePhysicShrunkCentroid *pps, short x, short y) {
   pps->positionCenter.x = x;
   pps->positionCenter.y = y;
-  boxUpdate(&pps->boxOrigin, x, y);
+  box_update(&pps->boxOrigin, x, y);
 }
 
 void picturePhysicShrunkCentroidMove(picturePhysicShrunkCentroid *pps, short xShift, short yShift) {
@@ -532,12 +532,12 @@ void picturePhysicShrunkCentroidMove(picturePhysicShrunkCentroid *pps, short xSh
 
 void picturePhysicDisplay(picturePhysic *pp, pictureInfo *pi, paletteInfo *pali, short posX, short posY) {
   pictureDisplay(&pp->p, pi, pali, posX, posY); // TODO refactoring this func
-  boxUpdate(&pp->box, posX, posY);
+  box_update(&pp->box, posX, posY);
 }
 
 void picturePhysicSetPos(picturePhysic *pp, short x, short y) {
   pictureSetPos(&pp->p, x, y);
-  boxUpdate(&pp->box, x, y);
+  box_update(&pp->box, x, y);
 }
 
 void picturesShow(picture *p, WORD max, BOOL visible) {
@@ -630,7 +630,7 @@ void picture5Show(picture5 *pics, BOOL visible) {
 
 void picturePhysicMove(picturePhysic *pp, short x, short y) {
   pictureMove(&pp->p, x, y);
-  boxUpdate(&pp->box, pp->p.posX, pp->p.posY);
+  box_update(&pp->box, pp->p.posX, pp->p.posY);
 }
 
 void pictureShrunk(picture *p, pictureInfo *pi, WORD shrunk_value) {

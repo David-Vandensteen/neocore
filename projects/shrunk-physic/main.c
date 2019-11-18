@@ -27,8 +27,8 @@ static void init() {
 
   shrunk_x = 0;
   player_init();
-  boxInit(&laser.pp.box, 320, 80, 0, 0);
-  boxInit(&boss.pp.box, 160, 128, 0, 0);
+  box_init(&laser.pp.box, 320, 80, 0, 0);
+  box_init(&boss.pp.box, 160, 128, 0, 0);
   boxes_collide_to_test[0] = &laser.pp.box;
   boxes_collide_to_test[1] = &boss.pp.box;
 }
@@ -72,7 +72,7 @@ static void update() {
 }
 
 int main(void) {
-  gpuInit();
+  gpu_init();
   init();
   display();
   while(1) {

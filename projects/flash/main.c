@@ -44,7 +44,7 @@ static void update() {
 }
 
 int main(void) {
-  gpuInit();
+  gpu_init();
   init();
   display();
   while(1) {

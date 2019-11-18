@@ -84,7 +84,7 @@ static void update_logo3() { // Verical
 }
 
 int main(void) {
-  gpuInit();
+  gpu_init();
   init();
   display();
   while(1) {

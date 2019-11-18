@@ -7,7 +7,7 @@ int main(void) {
   picture logo1, logo2, logo3;
   BYTE logo1_shrunk_x = 0;
   BYTE logo2_shrunk_y = 0;
-  gpuInit();
+  gpu_init();
   loggerInit();
   paletteDisableAutoinc(); /* logo1, logo2 & logo3 use the same palette ... disable auto counter */
   loggerInfo("HORIZONTAL SHRUNK");

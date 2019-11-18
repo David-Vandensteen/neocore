@@ -10,11 +10,11 @@ int main(void) {
   picturePhysic asteroids[ASTEROID_MAX];
   box *asteroids_box[ASTEROID_MAX];
   BYTE i = 0;
-  gpuInit();
-  boxInit(&player.box, 48, 16, 0, 0);
-  aSpritePhysicDisplay(&player, &player_sprite, &player_sprite_Palettes, 10, 10, PLAYER_SPRITE_ANIM_IDLE);
+  gpu_init();
+  box_init(&player.box, 48, 16, 0, 0);
+  animated_sprite_physic_display(&player, &player_sprite, &player_sprite_Palettes, 10, 10, PLAYER_SPRITE_ANIM_IDLE);
   for (i = 0; i < ASTEROID_MAX; i++) {
-    boxInit(&asteroids[i].box, 8, 8, 0, 0);
+    box_init(&asteroids[i].box, 8, 8, 0, 0);
     picturePhysicDisplay(&asteroids[i], &asteroid_sprite, &asteroid_sprite_Palettes, RAND(300), RAND(200));
     asteroids_box[i] = &asteroids[i].box;
   }
@@ -22,18 +22,18 @@ int main(void) {
     waitVBlank();
     joypadUpdate();
 
-    if (joypadIsLeft() && player.as.posX > 0) { aSpritePhysicMove(&player, -1, 0); }
-    if (joypadIsRight() && player.as.posX < 280) { aSpritePhysicMove(&player, 1, 0); }
+    if (joypadIsLeft() && player.as.posX > 0) { animated_sprite_physic_move(&player, -1, 0); }
+    if (joypadIsRight() && player.as.posX < 280) { animated_sprite_physic_move(&player, 1, 0); }
     if (joypadIsUp() && player.as.posY > 0) {
-      aSpritePhysicMove(&player, 0, -1);
+      animated_sprite_physic_move(&player, 0, -1);
       aSpriteSetAnim(&player.as, PLAYER_SPRITE_ANIM_UP);
     }
     if (joypadIsDown() && player.as.posY < 200) {
-      aSpritePhysicMove(&player, 0, 1);
+      animated_sprite_physic_move(&player, 0, 1);
       aSpriteSetAnim(&player.as, PLAYER_SPRITE_ANIM_DOWN);
     }
     if (!joypadIsDown() && !joypadIsUp()) { aSpriteSetAnim(&player.as, PLAYER_SPRITE_ANIM_IDLE); }
-    (boxesCollide(&player.box, asteroids_box, ASTEROID_MAX)) ? aSpriteFlash(&player.as, 4) : aSpriteFlash(&player.as, false);
+    (boxes_collide(&player.box, asteroids_box, ASTEROID_MAX)) ? animated_sprite_flash(&player.as, 4) : animated_sprite_flash(&player.as, false);
     aSpriteAnimate(&player.as);
     SCClose();
   };

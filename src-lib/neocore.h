@@ -162,11 +162,11 @@ void          aSpriteFlash(aSprite *as, BYTE freq);
 BOOL          aSpriteIsVisible(aSprite *as);
 
 // New signatures
-void          animated_physic_sprite_display(aSpritePhysic *asp, spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD anim);
-void          animated_physic_sprite_collide(aSpritePhysic *asp, box *box); // TODO not implementd ??? needed ???
-void          animated_physic_sprite_set_position(aSpritePhysic *asp, short x, short y);
-void          animated_physic_sprite_move(aSpritePhysic *asp, short x, short y);
-void          animated_physic_sprite_shrunk(aSprite *as, spriteInfo *si, WORD shrunk_value);
+void          animated_sprite_physic_display(aSpritePhysic *asp, spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD anim);
+void          animated_sprite_physic_collide(aSpritePhysic *asp, box *box); // TODO not implementd ??? needed ???
+void          animated_sprite_physic_set_position(aSpritePhysic *asp, short x, short y);
+void          animated_sprite_physic_move(aSpritePhysic *asp, short x, short y);
+void          animated_sprite_physic_shrunk(aSprite *as, spriteInfo *si, WORD shrunk_value);
 
 void          animated_sprite_display(aSprite *as, spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD anim);
 WORD          animated_sprite_index_auto(spriteInfo *si);
@@ -186,22 +186,39 @@ BOOL      box_collide(box *b1, box *b2);
 // TODO to deprecated boxMake
 box       boxMake(short p0x, short p0y, short p1x, short p1y, short p2x, short p2y, short p3x, short p3y);
 
+// todo deprecated
 void      boxInit(box *b, short width, short height, short widthOffset, short heightOffset);
 void      boxUpdate(box *b, short x, short y);
 void      boxDebugUpdate(picture5 *pics, box *box);
 void      boxDisplay(picture5 *pics, box *box, pictureInfo *pi, paletteInfo *pali);
 void      boxShrunk(box *b, box *bOrigin, WORD shrunkValue);
 
+// new signatures
+void      box_init(box *b, short width, short height, short widthOffset, short heightOffset);
+void      box_update(box *b, short x, short y);
+void      box_debug_update(picture5 *pics, box *box);
+void      box_display(picture5 *pics, box *box, pictureInfo *pi, paletteInfo *pali);
+void      box_shrunk(box *b, box *bOrigin, WORD shrunkValue);
+
+
 // deprecated ?
 void      boxResize(box *box, short edge);
 
+// todo deprecated
 void inline clearVram();
+
+void inline clear_vram();
+
 
 void inline fixPrintNeocore(int x, int y, char *label);
 
 void inline gpuInit();
+void inline gpu_init();
+
 
 BOOL isVectorLeft(short x, short y, short v1x, short v1y, short v2x, short v2y);
+BOOL vector_is_left(short x, short y, short v1x, short v1y, short v2x, short v2y);
+
 
 void                  joypadUpdate();
 void                  joypadUpdateEdge();
