@@ -59,18 +59,18 @@ static void init_mask() {
 }
 
 static void update_player() {
-  joypadUpdate();
-  if (joypadIsLeft() && player.as.posX > 0) { animated_sprite_physic_move(&player, -1, 0); }
-  if (joypadIsRight() && player.as.posX < 280) { animated_sprite_physic_move(&player, 1, 0); }
-  if (joypadIsUp() && player.as.posY > 0) {
+  joypad_update();
+  if (joypad_is_left() && player.as.posX > 0) { animated_sprite_physic_move(&player, -1, 0); }
+  if (joypad_is_right() && player.as.posX < 280) { animated_sprite_physic_move(&player, 1, 0); }
+  if (joypad_is_up() && player.as.posY > 0) {
     animated_sprite_physic_move(&player, 0, -1);
     aSpriteSetAnim(&player.as, PLAYER_SPRITE_ANIM_UP);
   }
-  if (joypadIsDown() && player.as.posY < 200) {
+  if (joypad_is_down() && player.as.posY < 200) {
     animated_sprite_physic_move(&player, 0, 1);
     aSpriteSetAnim(&player.as, PLAYER_SPRITE_ANIM_DOWN);
   }
-  if (!joypadIsDown() && !joypadIsUp()) { aSpriteSetAnim(&player.as, PLAYER_SPRITE_ANIM_IDLE); }
+  if (!joypad_is_down() && !joypad_is_up()) { aSpriteSetAnim(&player.as, PLAYER_SPRITE_ANIM_IDLE); }
   (vectorsCollide(&player.box, peak_mask, PEAK_MASK_VECTOR_MAX)) ? animated_sprite_flash(&player.as, 4) : animated_sprite_flash(&player.as, false);
   aSpriteAnimate(&player.as);
 }

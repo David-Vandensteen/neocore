@@ -38,19 +38,19 @@ static void display() {
   picturePhysicShrunkCentroidDisplay(&boss, shrunkForge(shrunk_x, shrunk_y));
   player_display();
 
-  boxDisplay(&laser_box_pics, &laser.pp.box, &dot_sprite, &dot_sprite_Palettes);
+  box_display(&laser_box_pics, &laser.pp.box, &dot_sprite, &dot_sprite_Palettes);
   // TODO pallete inc
-  boxDisplay(&boss_box_pics, &boss.pp.box, &dot_sprite, &dot_sprite_Palettes);
+  box_display(&boss_box_pics, &boss.pp.box, &dot_sprite, &dot_sprite_Palettes);
 }
 
 static void update() {
-  joypadUpdateEdge();
+  joypad_update_edge();
   if (DAT_frameCounter % 5 == 0) {
     loggerInit();
     picturePhysicShrunkCentroidUpdate(&laser, shrunkForge(shrunk_x, shrunk_y));
     picturePhysicShrunkCentroidUpdate(&boss, shrunkForge(shrunk_x, shrunk_y));
-    boxDebugUpdate(&laser_box_pics, &laser.pp.box);
-    boxDebugUpdate(&boss_box_pics, &boss.pp.box);
+    box_debug_update(&laser_box_pics, &laser.pp.box);
+    box_debug_update(&boss_box_pics, &boss.pp.box);
 
     /* Set Pos
     laser.positionCenter.x++;

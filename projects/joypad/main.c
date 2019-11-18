@@ -14,17 +14,17 @@ int main(void) {
     waitVBlank();
     loggerInit();
     loggerInfo("INTERACT WITH JOYPAD ...");
-    joypadUpdateEdge();
-    joypadDebug(); /* display which control is actived */
+    joypad_update_edge();
+    joypad_debug(); /* display which control is actived */
 
-    if (joypadIsUp()) loggerInfo("ITS UP !");
-    if (joypadIsDown()) loggerInfo("ITS DOWN !");
-    if (joypadIsLeft()) loggerInfo("ITS LEFT !");
-    if (joypadIsRight()) loggerInfo("ITS RIGHT !");
-    if (joypadIsA()) loggerInfo("ITS A !");
-    if (joypadIsB()) loggerInfo("ITS B !");
-    if (joypadIsC()) loggerInfo("ITS C !");
-    if (joypadIsD()) loggerInfo("ITS D !");
+    if (joypad_is_up()) loggerInfo("ITS UP !");
+    if (joypad_is_down()) loggerInfo("ITS DOWN !");
+    if (joypad_is_left()) loggerInfo("ITS LEFT !");
+    if (joypad_is_right()) loggerInfo("ITS RIGHT !");
+    if (joypad_is_a()) loggerInfo("ITS A !");
+    if (joypad_is_b()) loggerInfo("ITS B !");
+    if (joypad_is_c()) loggerInfo("ITS C !");
+    if (joypad_is_d()) loggerInfo("ITS D !");
 
     SCClose();
   };

@@ -17,19 +17,19 @@ void player_display() {
 }
 
 void player_update() {
-  joypadUpdate();
+  joypad_update();
 
-  if (joypadIsLeft() && player.as.posX > PLAYER_MIN_X) { animated_sprite_physic_move(&player, -1, 0); }
-  if (joypadIsRight() && player.as.posX < PLAYER_MAX_X) { animated_sprite_physic_move(&player, 1, 0); }
-  if (joypadIsUp() && player.as.posY > PLAYER_MIN_Y) {
+  if (joypad_is_left() && player.as.posX > PLAYER_MIN_X) { animated_sprite_physic_move(&player, -1, 0); }
+  if (joypad_is_right() && player.as.posX < PLAYER_MAX_X) { animated_sprite_physic_move(&player, 1, 0); }
+  if (joypad_is_up() && player.as.posY > PLAYER_MIN_Y) {
     animated_sprite_physic_move(&player, 0, -1);
     aSpriteSetAnim(&player.as, PLAYER_SPRITE_ANIM_UP);
   }
-  if (joypadIsDown() && player.as.posY < PLAYER_MAX_Y) {
+  if (joypad_is_down() && player.as.posY < PLAYER_MAX_Y) {
     animated_sprite_physic_move(&player, 0, 1);
     aSpriteSetAnim(&player.as, PLAYER_SPRITE_ANIM_DOWN);
   }
-  if (!joypadIsDown() && !joypadIsUp()) { aSpriteSetAnim(&player.as, PLAYER_SPRITE_ANIM_IDLE); }
+  if (!joypad_is_down() && !joypad_is_up()) { aSpriteSetAnim(&player.as, PLAYER_SPRITE_ANIM_IDLE); }
   aSpriteAnimate(&player.as);
   if (DAT_frameCounter % 60 == 0) animated_sprite_flash(&player.as, false);
 }

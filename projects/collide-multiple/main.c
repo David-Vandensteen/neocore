@@ -20,19 +20,19 @@ int main(void) {
   }
   while(1) {
     waitVBlank();
-    joypadUpdate();
+    joypad_update();
 
-    if (joypadIsLeft() && player.as.posX > 0) { animated_sprite_physic_move(&player, -1, 0); }
-    if (joypadIsRight() && player.as.posX < 280) { animated_sprite_physic_move(&player, 1, 0); }
-    if (joypadIsUp() && player.as.posY > 0) {
+    if (joypad_is_left() && player.as.posX > 0) { animated_sprite_physic_move(&player, -1, 0); }
+    if (joypad_is_right() && player.as.posX < 280) { animated_sprite_physic_move(&player, 1, 0); }
+    if (joypad_is_up() && player.as.posY > 0) {
       animated_sprite_physic_move(&player, 0, -1);
       aSpriteSetAnim(&player.as, PLAYER_SPRITE_ANIM_UP);
     }
-    if (joypadIsDown() && player.as.posY < 200) {
+    if (joypad_is_down() && player.as.posY < 200) {
       animated_sprite_physic_move(&player, 0, 1);
       aSpriteSetAnim(&player.as, PLAYER_SPRITE_ANIM_DOWN);
     }
-    if (!joypadIsDown() && !joypadIsUp()) { aSpriteSetAnim(&player.as, PLAYER_SPRITE_ANIM_IDLE); }
+    if (!joypad_is_down() && !joypad_is_up()) { aSpriteSetAnim(&player.as, PLAYER_SPRITE_ANIM_IDLE); }
     (boxes_collide(&player.box, asteroids_box, ASTEROID_MAX)) ? animated_sprite_flash(&player.as, 4) : animated_sprite_flash(&player.as, false);
     aSpriteAnimate(&player.as);
     SCClose();

@@ -190,21 +190,6 @@ void box_init(box *b, short width, short height, short widthOffset, short height
   b->heightOffset = heightOffset;
 }
 
-box boxMake(short p0x, short p0y, short p1x, short p1y, short p2x, short p2y, short p3x, short p3y) {
-  box rt;
-  rt.p0.x = p0x;
-  rt.p0.y = p0y;
-  rt.p1.x = p1x;
-  rt.p1.y = p1y;
-  rt.p2.x = p2x;
-  rt.p2.y = p2y;
-  rt.p3.x = p3x;
-  rt.p3.y = p3y;
-  rt.p4.x = p0x + ((p1x - p0x) DIV2);
-  rt.p4.y = p0y + ((p3y - p0y) DIV2);
-  return rt;
-}
-
 void box_update(box *b, short x, short y) {
   b->p0.x = x + b->widthOffset;
   b->p0.y = y + b->heightOffset;
@@ -222,7 +207,7 @@ void box_update(box *b, short x, short y) {
   b->p4.y = b->p0.y + ((b->p3.y - b->p0.y) DIV2);
 }
 
-void boxDebugUpdate(picture5 *pics, box *box) {
+void box_debug_update(picture5 *pics, box *box) {
   pictureSetPos(&pics->pic0, box->p0.x, box->p0.y);
   pictureSetPos(&pics->pic1, box->p1.x, box->p1.y);
   pictureSetPos(&pics->pic2, box->p2.x, box->p2.y);
@@ -230,7 +215,7 @@ void boxDebugUpdate(picture5 *pics, box *box) {
   pictureSetPos(&pics->pic4, box->p4.x, box->p4.y);
 }
 
-void boxDisplay(picture5 *pics, box *box, pictureInfo *pi, paletteInfo *pali) {
+void box_display(picture5 *pics, box *box, pictureInfo *pi, paletteInfo *pali) {
   paletteDisableAutoinc();
   pictureDisplay(&pics->pic0, pi, pali, box->p0.x, box->p0.y);
   pictureDisplay(&pics->pic1, pi, pali, box->p1.x, box->p1.y);
@@ -240,7 +225,7 @@ void boxDisplay(picture5 *pics, box *box, pictureInfo *pi, paletteInfo *pali) {
   pictureDisplay(&pics->pic4, pi, pali, box->p4.x, box->p4.y);
 }
 
-void boxShrunk(box *b, box *bOrigin, WORD shrunkValue) {
+void box_shrunk(box *b, box *bOrigin, WORD shrunkValue) {
   // TODO optim.
   // if i can read the shrunk VRAM value, i can compute the origin box...
 
@@ -294,7 +279,7 @@ void boxResize(box *box, short edge) {
   box->p3.y += edge;
 }
 
-void inline clearVram() { // TODO diable interrupt
+void inline clear_vram() { // TODO diable interrupt
   WORD addr = 0x0000;
   WORD addr_end = 0x8FFF;
   for (addr = addr; addr <= addr_end; addr++) {
@@ -306,7 +291,7 @@ void inline clearVram() { // TODO diable interrupt
   waitVbl(10);
 }
 
-void inline fixPrintNeocore(int x, int y, char *label){
+void inline fix_print_neocore(int x, int y, char *label){
   fixPrint(x, y, 0, 0, label);
 }
 
@@ -329,36 +314,36 @@ BOOL isVectorLeft(short x, short y, short v1x, short v1y, short v2x, short v2y) 
   return rt;
 }
 
-void inline joypadDebug() {
+void inline joypad_debug() {
   JOYPAD_READ
-  if (joypadIsStart()) {  fixPrintNeocore(10, 11,  "JOYPAD START"); }
-  if (joypadIsUp())	   {  fixPrintNeocore(10, 11,  "JOYPAD UP   "); }
-  if (joypadIsDown())	 {  fixPrintNeocore(10, 11,  "JOYPAD DOWN "); }
-  if (joypadIsLeft())	 {  fixPrintNeocore(10, 11,  "JOYPAD LEFT "); }
-  if (joypadIsRight()) {  fixPrintNeocore(10, 11,  "JOYPAD RIGHT"); }
-  if (joypadIsA())     {  fixPrintNeocore(10, 11,  "JOYPAD A    "); }
-  if (joypadIsB())     {  fixPrintNeocore(10, 11,  "JOYPAD B    "); }
-  if (joypadIsC())     {  fixPrintNeocore(10, 11,  "JOYPAD C    "); }
-  if (joypadIsD())     {  fixPrintNeocore(10, 11,  "JOYPAD D    "); }
+  if (joypad_is_start()) {  fix_print_neocore(10, 11,  "JOYPAD START"); }
+  if (joypad_is_up())	   {  fix_print_neocore(10, 11,  "JOYPAD UP   "); }
+  if (joypad_is_down())	 {  fix_print_neocore(10, 11,  "JOYPAD DOWN "); }
+  if (joypad_is_left())	 {  fix_print_neocore(10, 11,  "JOYPAD LEFT "); }
+  if (joypad_is_right()) {  fix_print_neocore(10, 11,  "JOYPAD RIGHT"); }
+  if (joypad_is_a())     {  fix_print_neocore(10, 11,  "JOYPAD A    "); }
+  if (joypad_is_b())     {  fix_print_neocore(10, 11,  "JOYPAD B    "); }
+  if (joypad_is_c())     {  fix_print_neocore(10, 11,  "JOYPAD C    "); }
+  if (joypad_is_d())     {  fix_print_neocore(10, 11,  "JOYPAD D    "); }
 }
 
-void joypadUpdate() {
+void joypad_update() {
   JOYPAD_READ
 }
 
-void joypadUpdateEdge() {
+void joypad_update_edge() {
   JOYPAD_READ_EDGE
 }
 
-BOOL joypadIsUp()     { return (JOYPAD_IS_UP)     ? (true) : (false); }
-BOOL joypadIsDown()   { return (JOYPAD_IS_DOWN)   ? (true) : (false); }
-BOOL joypadIsLeft()   { return (JOYPAD_IS_LEFT)   ? (true) : (false); }
-BOOL joypadIsRight()  { return (JOYPAD_IS_RIGHT)  ? (true) : (false); }
-BOOL joypadIsStart()  { return (JOYPAD_IS_START)  ? (true) : (false); }
-BOOL joypadIsA()      { return (JOYPAD_IS_A)      ? (true) : (false); }
-BOOL joypadIsB()      { return (JOYPAD_IS_B)      ? (true) : (false); }
-BOOL joypadIsC()      { return (JOYPAD_IS_C)      ? (true) : (false); }
-BOOL joypadIsD()      { return (JOYPAD_IS_D)      ? (true) : (false); }
+BOOL joypad_is_up()     { return (JOYPAD_IS_UP)     ? (true) : (false); }
+BOOL joypad_is_down()   { return (JOYPAD_IS_DOWN)   ? (true) : (false); }
+BOOL joypad_is_left()   { return (JOYPAD_IS_LEFT)   ? (true) : (false); }
+BOOL joypad_is_right()  { return (JOYPAD_IS_RIGHT)  ? (true) : (false); }
+BOOL joypad_is_start()  { return (JOYPAD_IS_START)  ? (true) : (false); }
+BOOL joypad_is_a()      { return (JOYPAD_IS_A)      ? (true) : (false); }
+BOOL joypad_is_b()      { return (JOYPAD_IS_B)      ? (true) : (false); }
+BOOL joypad_is_c()      { return (JOYPAD_IS_C)      ? (true) : (false); }
+BOOL joypad_is_d()      { return (JOYPAD_IS_D)      ? (true) : (false); }
 
 void loggerInit() {
   #ifdef LOGGER_ON
@@ -504,7 +489,7 @@ void inline loggerPictureInfo(char *label, pictureInfo *pi) {
 
 void picturePhysicShrunkCentroidUpdate(picturePhysicShrunkCentroid *pps, WORD shrunk) {
   pictureShrunkCentroid(&pps->pp.p, pps->pi, pps->positionCenter.x, pps->positionCenter.y, shrunk);
-  boxShrunk(&pps->pp.box, &pps->boxOrigin, shrunk);
+  box_shrunk(&pps->pp.box, &pps->boxOrigin, shrunk);
 }
 
 void picturePhysicShrunkCentroidDisplay(picturePhysicShrunkCentroid *pps, WORD shrunk) {
