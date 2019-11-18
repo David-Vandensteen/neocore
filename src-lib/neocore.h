@@ -149,6 +149,8 @@ struct picturePhysicShrunkCentroid {
   box boxOrigin;
 };
 
+
+// TODO Deprecated
 void          aSpritePhysicDisplay(aSpritePhysic *asp, spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD anim);
 void          aSpritePhysicCollide(aSpritePhysic *asp, box *box); // TODO not implementd ??? needed ???
 void          aSpritePhysicSetPos(aSpritePhysic *asp, short x, short y);
@@ -159,8 +161,27 @@ WORD          aSpriteGetSpriteIndexAutoinc(spriteInfo *si);
 void          aSpriteFlash(aSprite *as, BYTE freq);
 BOOL          aSpriteIsVisible(aSprite *as);
 
+// New signatures
+void          animated_physic_sprite_display(aSpritePhysic *asp, spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD anim);
+void          animated_physic_sprite_collide(aSpritePhysic *asp, box *box); // TODO not implementd ??? needed ???
+void          animated_physic_sprite_set_position(aSpritePhysic *asp, short x, short y);
+void          animated_physic_sprite_move(aSpritePhysic *asp, short x, short y);
+void          animated_physic_sprite_shrunk(aSprite *as, spriteInfo *si, WORD shrunk_value);
+
+void          animated_sprite_display(aSprite *as, spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD anim);
+WORD          animated_sprite_index_auto(spriteInfo *si);
+void          animated_sprite_flash(aSprite *as, BYTE freq);
+BOOL          animated_sprite_is_visible(aSprite *as);
+
+
+// Todo deprecated
 BYTE      boxesCollide(box *b, box *boxes[], BYTE box_max);
 BOOL      boxCollide(box *b1, box *b2);
+
+// new signatures
+BYTE      boxes_collide(box *b, box *boxes[], BYTE box_max);
+BOOL      box_collide(box *b1, box *b2);
+
 
 // TODO to deprecated boxMake
 box       boxMake(short p0x, short p0y, short p1x, short p1y, short p2x, short p2y, short p3x, short p3y);
