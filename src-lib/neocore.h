@@ -159,6 +159,7 @@ void animated_sprite_display(aSprite *as, spriteInfo *si, paletteInfo *pali, sho
 WORD animated_sprite_index_auto(spriteInfo *si);
 void animated_sprite_flash(aSprite *as, BYTE freq);
 BOOL animated_sprite_is_visible(aSprite *as);
+void animated_sprite_shrunk(aSprite *as, spriteInfo *si, WORD shrunk_value);
 
 // b
 BYTE boxes_collide(box *b, box *boxes[], BYTE box_max);
@@ -169,7 +170,7 @@ void box_debug_update(picture5 *pics, box *box);
 void box_display(picture5 *pics, box *box, pictureInfo *pi, paletteInfo *pali);
 void box_shrunk(box *b, box *bOrigin, WORD shrunkValue);
 // todo - deprecated ?
-void boxResize(box *box, short edge);
+void box_resize(box *box, short edge);
 
 // c
 void inline clear_vram();

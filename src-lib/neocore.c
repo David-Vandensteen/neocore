@@ -152,6 +152,10 @@ BOOL animated_sprite_is_visible(aSprite *as) {
   return (as->flags | (0x0080 == 0)) ? false : true;
 }
 
+void animated_sprite_shrunk(aSprite *as, spriteInfo *si, WORD shrunk_value) {
+	shrunk_range(0x8000 + as->baseSprite, 0x8000 + as->baseSprite + si->maxWidth, shrunk_value);
+}
+
 BYTE boxes_collide(box *b, box *boxes[], BYTE box_max) {
   BYTE rt = false;
   BYTE i = 0;
@@ -265,7 +269,7 @@ void box_shrunk(box *b, box *bOrigin, WORD shrunkValue) {
 }
 
 // TODO deprecated ?
-void boxResize(box *box, short edge) {
+void box_resize(box *box, short edge) {
   box->p0.x -= edge;
   box->p0.y -= edge;
 
