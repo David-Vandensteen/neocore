@@ -10,7 +10,7 @@ int main(void) {
   box_init(&player.box, 48, 16, 0, 0);
   box_init(&asteroid.box, (asteroid_sprite.tileWidth MULT8), 32, 0, 0);
   animated_sprite_physic_display(&player, &player_sprite, &player_sprite_Palettes, 10, 10, PLAYER_SPRITE_ANIM_IDLE);
-  picturePhysicDisplay(&asteroid, &asteroid_sprite, &asteroid_sprite_Palettes, 100, 100);
+  image_physic_display(&asteroid, &asteroid_sprite, &asteroid_sprite_Palettes, 100, 100);
   while(1) {
     waitVBlank();
     joypad_update();

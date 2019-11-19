@@ -25,7 +25,7 @@ static void init() {
 }
 
 static void display() {
-  pictureDisplay(&peak,&peak_sprite, &peak_sprite_Palettes, peak_position[X], peak_position[Y]);
+  image_display(&peak,&peak_sprite, &peak_sprite_Palettes, peak_position[X], peak_position[Y]);
   animated_sprite_physic_display(&player, &player_sprite, &player_sprite_Palettes, 10, 10, PLAYER_SPRITE_ANIM_IDLE);
   display_mask_debug();
 }
@@ -34,7 +34,7 @@ static void display_mask_debug() {
   BYTE i = 0;
   picture p;
   for (i = 0; i < PEAK_MASK_VECTOR_MAX; i++) {
-    pictureDisplay(&p, &dot_sprite, &dot_sprite_Palettes, peak_mask[i].x, peak_mask[i].y);
+    image_display(&p, &dot_sprite, &dot_sprite_Palettes, peak_mask[i].x, peak_mask[i].y);
   }
 }
 

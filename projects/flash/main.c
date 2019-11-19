@@ -25,7 +25,7 @@ static void init() {
 }
 
 static void display() {
-  pictureDisplay(&pic, &laser_sprite, &laser_sprite_Palettes, 100, 200);
+  image_display(&pic, &laser_sprite, &laser_sprite_Palettes, 100, 200);
   player_display();
 }
 
@@ -36,7 +36,7 @@ static void update() {
   // aSpriteFlash(&player_get()->as, 30);
   // pictureFlash(&pic, 4);
   logger_init();
-  pictureShrunk(&pic, &laser_sprite, shrunkForge(0, 0));
+  image_shrunk(&pic, &laser_sprite, shrunkForge(0, 0));
   logger_short("POS Y : ", pic.posY);
 
 // pictureHide(&pic);

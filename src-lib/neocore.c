@@ -115,7 +115,7 @@ void animated_sprite_display(aSprite *as, spriteInfo *si, paletteInfo *pali, sho
     as,
     si,
 		animated_sprite_index_auto(si),
-    paletteGetIndex(),
+    palette_get_index(),
     posX,
     posY,
     anim,
@@ -123,7 +123,7 @@ void animated_sprite_display(aSprite *as, spriteInfo *si, paletteInfo *pali, sho
   );
 
   palJobPut(
-    paletteGetIndexAutoinc(pali),
+    palette_get_index_autoinc(pali),
     pali->palCount,
     pali->data
   );
@@ -216,13 +216,13 @@ void box_debug_update(picture5 *pics, box *box) {
 }
 
 void box_display(picture5 *pics, box *box, pictureInfo *pi, paletteInfo *pali) {
-  paletteDisableAutoinc();
-  pictureDisplay(&pics->pic0, pi, pali, box->p0.x, box->p0.y);
-  pictureDisplay(&pics->pic1, pi, pali, box->p1.x, box->p1.y);
-  pictureDisplay(&pics->pic2, pi, pali, box->p2.x, box->p2.y);
-  pictureDisplay(&pics->pic3, pi, pali, box->p3.x, box->p3.y);
-  paletteEnableAutoinc();
-  pictureDisplay(&pics->pic4, pi, pali, box->p4.x, box->p4.y);
+  palette_disable_autoinc();
+  image_display(&pics->pic0, pi, pali, box->p0.x, box->p0.y);
+  image_display(&pics->pic1, pi, pali, box->p1.x, box->p1.y);
+  image_display(&pics->pic2, pi, pali, box->p2.x, box->p2.y);
+  image_display(&pics->pic3, pi, pali, box->p3.x, box->p3.y);
+  palette_enable_autoinc();
+  image_display(&pics->pic4, pi, pali, box->p4.x, box->p4.y);
 }
 
 void box_shrunk(box *b, box *bOrigin, WORD shrunkValue) {
@@ -487,45 +487,45 @@ void inline logger_pictureInfo(char *label, pictureInfo *pi) {
   #endif
 }
 
-void picturePhysicShrunkCentroidUpdate(picturePhysicShrunkCentroid *pps, WORD shrunk) {
-  pictureShrunkCentroid(&pps->pp.p, pps->pi, pps->positionCenter.x, pps->positionCenter.y, shrunk);
+void image_physic_shrunk_centroid_update(picturePhysicShrunkCentroid *pps, WORD shrunk) {
+  image_shrunk_centroid(&pps->pp.p, pps->pi, pps->positionCenter.x, pps->positionCenter.y, shrunk);
   box_shrunk(&pps->pp.box, &pps->boxOrigin, shrunk);
 }
 
 void picturePhysicShrunkCentroidDisplay(picturePhysicShrunkCentroid *pps, WORD shrunk) {
-  picturePhysicDisplay(&pps->pp, pps->pi, pps->pali, pps->positionCenter.x, pps->positionCenter.y);
-  pictureShrunkCentroid(&pps->pp.p, pps->pi, pps->positionCenter.x, pps->positionCenter.y, shrunk);
+  image_physic_display(&pps->pp, pps->pi, pps->pali, pps->positionCenter.x, pps->positionCenter.y);
+  image_shrunk_centroid(&pps->pp.p, pps->pi, pps->positionCenter.x, pps->positionCenter.y, shrunk);
   BOXCOPY(&pps->pp.box, &pps->boxOrigin);
 }
 
-void picturePhysicShrunkCentroidInit(picturePhysicShrunkCentroid *pps, pictureInfo *pi, paletteInfo *pali, short xCenter, short yCenter) {
+void image_physic_shrunk_centroid_init(picturePhysicShrunkCentroid *pps, pictureInfo *pi, paletteInfo *pali, short xCenter, short yCenter) {
   pps->pi = pi;
   pps->pali = pali;
   pps->positionCenter.x = xCenter;
   pps->positionCenter.y = yCenter;
 }
 
-void picturePhysicShrunkCentroidSetPos(picturePhysicShrunkCentroid *pps, short x, short y) {
+void image_physic_shrunk_centroid_set_position(picturePhysicShrunkCentroid *pps, short x, short y) {
   pps->positionCenter.x = x;
   pps->positionCenter.y = y;
   box_update(&pps->boxOrigin, x, y);
 }
 
-void picturePhysicShrunkCentroidMove(picturePhysicShrunkCentroid *pps, short xShift, short yShift) {
-  picturePhysicShrunkCentroidSetPos(pps, pps->positionCenter.x + xShift, pps->positionCenter.y + yShift);
+void image_physic_shrunk_centroid_move(picturePhysicShrunkCentroid *pps, short xShift, short yShift) {
+  image_physic_shrunk_centroid_set_position(pps, pps->positionCenter.x + xShift, pps->positionCenter.y + yShift);
 }
 
-void picturePhysicDisplay(picturePhysic *pp, pictureInfo *pi, paletteInfo *pali, short posX, short posY) {
-  pictureDisplay(&pp->p, pi, pali, posX, posY); // TODO refactoring this func
+void image_physic_display(picturePhysic *pp, pictureInfo *pi, paletteInfo *pali, short posX, short posY) {
+  image_display(&pp->p, pi, pali, posX, posY); // TODO refactoring this func
   box_update(&pp->box, posX, posY);
 }
 
-void picturePhysicSetPos(picturePhysic *pp, short x, short y) {
+void image_physic_set_position(picturePhysic *pp, short x, short y) {
   pictureSetPos(&pp->p, x, y);
   box_update(&pp->box, x, y);
 }
 
-void picturesShow(picture *p, WORD max, BOOL visible) {
+void images_show(picture *p, WORD max, BOOL visible) {
   WORD i = 0;
   for (i = 0; i < max; i++) {
     if (visible) {  // TODO ternaire
@@ -536,25 +536,25 @@ void picturesShow(picture *p, WORD max, BOOL visible) {
   }
 }
 
-void pictureDisplay(picture *p, pictureInfo *pi, paletteInfo *pali, short posX, short posY) {
+void image_display(picture *p, pictureInfo *pi, paletteInfo *pali, short posX, short posY) {
   pictureInit(
     p,
     pi,
-    pictureGetSpriteIndexAutoinc(pi),
-    paletteGetIndex(),
+    image_get_sprite_index_autoinc(pi),
+    palette_get_index(),
     posX,
     posY,
     FLIP_NONE
   );
 
   palJobPut(
-    paletteGetIndexAutoinc(pali),
+    palette_get_index_autoinc(pali),
     pali->palCount,
     pali->data
   );
 }
 
-void pictureFlash(picture *p, BYTE freq) {
+void image_flash(picture *p, BYTE freq) {
   if (freq != 0) {
     if (DAT_frameCounter % freq == 0) {
       pictureShow(p);
@@ -568,36 +568,36 @@ void pictureFlash(picture *p, BYTE freq) {
 }
 
 
-void paletteDisableAutoinc() {
+void palette_disable_autoinc() {
   palette_autoinc = false;
 }
 
-void paletteEnableAutoinc() {
+void palette_enable_autoinc() {
   palette_autoinc = true;
 }
 
-BYTE paletteGetIndex() {
+BYTE palette_get_index() {
   return palette_index;
 }
 
-BYTE paletteSetIndex(BYTE index) {
+BYTE palette_set_index(BYTE index) {
 	palette_index = index;
 	return palette_index;
 }
 
-WORD pictureGetSpriteIndexAutoinc(pictureInfo *pi) {
+WORD image_get_sprite_index_autoinc(pictureInfo *pi) {
   WORD rt = sprite_index;
   if (sprite_autoinc) sprite_index += pi->tileWidth;
   return rt;
 }
 
-BYTE paletteGetIndexAutoinc(paletteInfo *pali) {
+BYTE palette_get_index_autoinc(paletteInfo *pali) {
 	BYTE rt = palette_index;
   if (palette_autoinc) palette_index += pali->palCount;
 	return rt;
 }
 
-void picture5Show(picture5 *pics, BOOL visible) {
+void image5_show(picture5 *pics, BOOL visible) {
   if (visible) {
     pictureShow(&pics->pic0);
     pictureShow(&pics->pic1);
@@ -613,21 +613,27 @@ void picture5Show(picture5 *pics, BOOL visible) {
   }
 }
 
-void picturePhysicMove(picturePhysic *pp, short x, short y) {
+void image_physic_move(picturePhysic *pp, short x, short y) {
   pictureMove(&pp->p, x, y);
   box_update(&pp->box, pp->p.posX, pp->p.posY);
 }
 
-void pictureShrunk(picture *p, pictureInfo *pi, WORD shrunk_value) {
+void image_shrunk(picture *p, pictureInfo *pi, WORD shrunk_value) {
   shrunkRange(0x8000 + p->baseSprite, 0x8000 + p->baseSprite + pi->tileWidth, shrunk_value);
 }
 
-void pictureShrunkCentroid(picture *p, pictureInfo *pi, short centerPosX, short centerPosY, WORD shrunk_value) {
-  pictureShrunk(p, pi, shrunk_value);
+void image_shrunk_centroid(picture *p, pictureInfo *pi, short centerPosX, short centerPosY, WORD shrunk_value) {
+  image_shrunk(p, pi, shrunk_value);
   pictureSetPos(p,
     shrunkCentroidGetTranslatedX(centerPosX, pi->tileWidth, SHRUNK_EXTRACT_X(shrunk_value)),
     shrunkCentroidGetTranslatedY(centerPosY, pi->tileHeight, SHRUNK_EXTRACT_Y(shrunk_value))
   );
+  /*
+  picture_set_position(p,
+    shrunkCentroidGetTranslatedX(centerPosX, pi->tileWidth, SHRUNK_EXTRACT_X(shrunk_value)),
+    shrunkCentroidGetTranslatedY(centerPosY, pi->tileHeight, SHRUNK_EXTRACT_Y(shrunk_value))
+  );
+  */
 }
 
 
@@ -693,12 +699,12 @@ void scrollerDisplay(scroller *s, scrollerInfo *si, paletteInfo *pali, short pos
     s,
     si,
     scrollerGetSpriteIndexAutoinc(si),
-    paletteGetIndex(),
+    palette_get_index(),
     posX,
     posY
   );
   palJobPut(
-    paletteGetIndexAutoinc(pali),
+    palette_get_index_autoinc(pali),
     pali->palCount,
     pali->data
   );
@@ -768,4 +774,3 @@ DWORD inline waitVbl(WORD nb) {
 }
 
 //
-

@@ -149,27 +149,27 @@ struct picturePhysicShrunkCentroid {
   box boxOrigin;
 };
 //  a
-void          animated_sprite_physic_display(aSpritePhysic *asp, spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD anim);
-void          animated_sprite_physic_collide(aSpritePhysic *asp, box *box); // TODO not implementd ??? needed ???
-void          animated_sprite_physic_set_position(aSpritePhysic *asp, short x, short y);
-void          animated_sprite_physic_move(aSpritePhysic *asp, short x, short y);
-void          animated_sprite_physic_shrunk(aSprite *as, spriteInfo *si, WORD shrunk_value);
+void animated_sprite_physic_display(aSpritePhysic *asp, spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD anim);
+void animated_sprite_physic_collide(aSpritePhysic *asp, box *box); // TODO not implementd ??? needed ???
+void animated_sprite_physic_set_position(aSpritePhysic *asp, short x, short y);
+void animated_sprite_physic_move(aSpritePhysic *asp, short x, short y);
+void animated_sprite_physic_shrunk(aSprite *as, spriteInfo *si, WORD shrunk_value);
 
-void          animated_sprite_display(aSprite *as, spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD anim);
-WORD          animated_sprite_index_auto(spriteInfo *si);
-void          animated_sprite_flash(aSprite *as, BYTE freq);
-BOOL          animated_sprite_is_visible(aSprite *as);
+void animated_sprite_display(aSprite *as, spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD anim);
+WORD animated_sprite_index_auto(spriteInfo *si);
+void animated_sprite_flash(aSprite *as, BYTE freq);
+BOOL animated_sprite_is_visible(aSprite *as);
 
 // b
-BYTE      boxes_collide(box *b, box *boxes[], BYTE box_max);
-BOOL      box_collide(box *b1, box *b2);
-void      box_init(box *b, short width, short height, short widthOffset, short heightOffset);
-void      box_update(box *b, short x, short y);
-void      box_debug_update(picture5 *pics, box *box);
-void      box_display(picture5 *pics, box *box, pictureInfo *pi, paletteInfo *pali);
-void      box_shrunk(box *b, box *bOrigin, WORD shrunkValue);
+BYTE boxes_collide(box *b, box *boxes[], BYTE box_max);
+BOOL box_collide(box *b1, box *b2);
+void box_init(box *b, short width, short height, short widthOffset, short heightOffset);
+void box_update(box *b, short x, short y);
+void box_debug_update(picture5 *pics, box *box);
+void box_display(picture5 *pics, box *box, pictureInfo *pi, paletteInfo *pali);
+void box_shrunk(box *b, box *bOrigin, WORD shrunkValue);
 // todo - deprecated ?
-void      boxResize(box *box, short edge);
+void boxResize(box *box, short edge);
 
 // c
 void inline clear_vram();
@@ -185,18 +185,18 @@ BOOL isVectorLeft(short x, short y, short v1x, short v1y, short v2x, short v2y);
 BOOL vector_is_left(short x, short y, short v1x, short v1y, short v2x, short v2y);
 
 // j
-void                  joypad_update();
-void                  joypad_update_edge();
-BOOL                  joypad_is_up();
-BOOL                  joypad_is_down();
-BOOL                  joypad_is_left();
-BOOL                  joypad_is_right();
-BOOL                  joypad_is_start();
-BOOL                  joypad_is_a();
-BOOL                  joypad_is_b();
-BOOL                  joypad_is_c();
-BOOL                  joypad_is_d();
-void inline           joypad_debug();
+void        joypad_update();
+void        joypad_update_edge();
+BOOL        joypad_is_up();
+BOOL        joypad_is_down();
+BOOL        joypad_is_left();
+BOOL        joypad_is_right();
+BOOL        joypad_is_start();
+BOOL        joypad_is_a();
+BOOL        joypad_is_b();
+BOOL        joypad_is_c();
+BOOL        joypad_is_d();
+void inline joypad_debug();
 
 // l
 void        logger_init();
@@ -213,6 +213,8 @@ void inline logger_spriteInfo(char *label, spriteInfo *si);
 void inline logger_box(char *label, box *b);
 void inline logger_pictureInfo(char *label, pictureInfo *pi);
 
+// p
+// old proto
 void          picturePhysicShrunkCentroidInit(picturePhysicShrunkCentroid *pps, pictureInfo *pi, paletteInfo *pali, short xCenter, short yCenter);
 void          picturePhysicShrunkCentroidSetPos(picturePhysicShrunkCentroid *pps, short x, short y);
 void          picturePhysicShrunkCentroidMove(picturePhysicShrunkCentroid *pps, short xShift, short yShift);
@@ -233,6 +235,28 @@ BYTE          paletteGetIndex();
 BYTE          paletteSetIndex(BYTE index);
 WORD          pictureGetSpriteIndexAutoinc(pictureInfo *pi);
 BYTE          paletteGetIndexAutoinc(paletteInfo *pali);
+
+// new proto
+void image_physic_shrunk_centroid_init(picturePhysicShrunkCentroid *pps, pictureInfo *pi, paletteInfo *pali, short xCenter, short yCenter);
+void image_physic_shrunk_centroid_set_position(picturePhysicShrunkCentroid *pps, short x, short y);
+void image_physic_shrunk_centroid_move(picturePhysicShrunkCentroid *pps, short xShift, short yShift);
+void image_physic_shrunk_centroid_update(picturePhysicShrunkCentroid *pps, WORD shrunk);
+void image_physic_shrunk_centroid_display(picturePhysicShrunkCentroid *pps, WORD shrunk);
+void image_physic_display(picturePhysic *pp, pictureInfo *pi, paletteInfo *pali, short posX, short posY);
+void image_physic_set_position(picturePhysic *pp, short x, short y);
+void image_physic_move(picturePhysic *pp, short x, short y);
+void image_shrunk(picture *p, pictureInfo *pi, WORD shrunk_value);
+void images_show(picture *p, WORD max, BOOL visible); // TODO deprecated, implement picturesHide, picturesShow, pictureHide, pictureShow
+void image5_show(picture5 *pics, BOOL visible); // TODO deprecated
+void image_display(picture *p, pictureInfo *pi, paletteInfo *pali, short posX, short posY);
+void image_shrunk_centroid(picture *p, pictureInfo *pi, short centerPosX, short centerPosY, WORD shrunk_value);
+void image_flash(picture *p, BYTE freq);
+void palette_disable_autoinc();
+void palette_enable_autoinc();
+BYTE palette_get_index();
+BYTE palette_set_index(BYTE index);
+WORD image_get_sprite_index_autoinc(pictureInfo *pi);
+BYTE palette_get_index_autoinc(paletteInfo *pali);
 
 
 void maskDisplay(picture pic[], vec2short vec[], BYTE vector_max); // TODO rename ? (vectorsDisplay)

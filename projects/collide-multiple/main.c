@@ -15,7 +15,7 @@ int main(void) {
   animated_sprite_physic_display(&player, &player_sprite, &player_sprite_Palettes, 10, 10, PLAYER_SPRITE_ANIM_IDLE);
   for (i = 0; i < ASTEROID_MAX; i++) {
     box_init(&asteroids[i].box, 8, 8, 0, 0);
-    picturePhysicDisplay(&asteroids[i], &asteroid_sprite, &asteroid_sprite_Palettes, RAND(300), RAND(200));
+    image_physic_display(&asteroids[i], &asteroid_sprite, &asteroid_sprite_Palettes, RAND(300), RAND(200));
     asteroids_box[i] = &asteroids[i].box;
   }
   while(1) {
