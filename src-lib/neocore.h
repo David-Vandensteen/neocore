@@ -76,9 +76,9 @@
 #define SHRUNK_EXTRACT_Y(value) (BYTE)value
 
 // overwrite aSpriteHide DAT macro
-#undef aSpriteHide(as)
-#define aSpriteHide(as)            { (as)->flags|=0x0080; clearSprites(as->baseSprite, as->tileWidth); }
-#define aSpriteHideDAT(as)         { (as)->flags|=0x0080; }
+//#undef aSpriteHide(as)
+//#define aSpriteHide(as)            { (as)->flags|=0x0080; clearSprites(as->baseSprite, as->tileWidth); }
+//#define aSpriteHideDAT(as)         { (as)->flags|=0x0080; }
 
 // overwrite pictureHide, pictureShow DAT func
 // #define pictureHide(p) { short x = (p)->posX; short y = (p)->posY; pictureSetPos(p, HIDE_X, HIDE_Y); (p)->posX = x; (p)->posY = y; loggerInfo("OVER PHIDE"); }
