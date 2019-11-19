@@ -492,7 +492,7 @@ void image_physic_shrunk_centroid_update(picturePhysicShrunkCentroid *pps, WORD 
   box_shrunk(&pps->pp.box, &pps->boxOrigin, shrunk);
 }
 
-void picturePhysicShrunkCentroidDisplay(picturePhysicShrunkCentroid *pps, WORD shrunk) {
+void image_physic_shrunk_centroid_display(picturePhysicShrunkCentroid *pps, WORD shrunk) {
   image_physic_display(&pps->pp, pps->pi, pps->pali, pps->positionCenter.x, pps->positionCenter.y);
   image_shrunk_centroid(&pps->pp.p, pps->pi, pps->positionCenter.x, pps->positionCenter.y, shrunk);
   BOXCOPY(&pps->pp.box, &pps->boxOrigin);

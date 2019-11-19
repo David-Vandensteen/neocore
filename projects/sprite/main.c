@@ -9,7 +9,7 @@ int main(void) {
   picture planet;
   gpu_init();
   scrollerDisplay(&background, &background_sprite, &background_sprite_Palettes, 0, 0);
-  pictureDisplay(&planet, &planet04_sprite, &planet04_sprite_Palettes, 20, 100);
+  image_display(&planet, &planet04_sprite, &planet04_sprite_Palettes, 20, 100);
   animated_sprite_display(&player, &player_sprite, &player_sprite_Palettes, 10, 10, PLAYER_SPRITE_ANIM_IDLE);
   while(1) {
     waitVBlank();

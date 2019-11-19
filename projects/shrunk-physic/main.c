@@ -22,8 +22,8 @@ static void display();
 static void update();
 
 static void init() {
-  picturePhysicShrunkCentroidInit(&laser, &laser_sprite, &laser_sprite_Palettes, 160, 180);
-  picturePhysicShrunkCentroidInit(&boss, &boss_city_sprite, &boss_city_sprite_Palettes, 160, 60);
+  image_physic_shrunk_centroid_init(&laser, &laser_sprite, &laser_sprite_Palettes, 160, 180);
+  image_physic_shrunk_centroid_init(&boss, &boss_city_sprite, &boss_city_sprite_Palettes, 160, 60);
 
   shrunk_x = 0;
   player_init();
@@ -34,8 +34,8 @@ static void init() {
 }
 
 static void display() {
-  picturePhysicShrunkCentroidDisplay(&laser, shrunkForge(shrunk_x, shrunk_y));
-  picturePhysicShrunkCentroidDisplay(&boss, shrunkForge(shrunk_x, shrunk_y));
+  image_physic_shrunk_centroid_display(&laser, shrunkForge(shrunk_x, shrunk_y));
+  image_physic_shrunk_centroid_display(&boss, shrunkForge(shrunk_x, shrunk_y));
   player_display();
 
   box_display(&laser_box_pics, &laser.pp.box, &dot_sprite, &dot_sprite_Palettes);
@@ -47,8 +47,8 @@ static void update() {
   joypad_update_edge();
   if (DAT_frameCounter % 5 == 0) {
     logger_init();
-    picturePhysicShrunkCentroidUpdate(&laser, shrunkForge(shrunk_x, shrunk_y));
-    picturePhysicShrunkCentroidUpdate(&boss, shrunkForge(shrunk_x, shrunk_y));
+    image_physic_shrunk_centroid_update(&laser, shrunkForge(shrunk_x, shrunk_y));
+    image_physic_shrunk_centroid_update(&boss, shrunkForge(shrunk_x, shrunk_y));
     box_debug_update(&laser_box_pics, &laser.pp.box);
     box_debug_update(&boss_box_pics, &boss.pp.box);
 
