@@ -36,7 +36,7 @@ static void update() {
   // aSpriteFlash(&player_get()->as, 30);
   // pictureFlash(&pic, 4);
   logger_init();
-  image_shrunk(&pic, &laser_sprite, shrunkForge(0, 0));
+  image_shrunk(&pic, &laser_sprite, shrunk_forge(0, 0));
   logger_short("POS Y : ", pic.posY);
 
 // pictureHide(&pic);

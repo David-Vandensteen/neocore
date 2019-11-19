@@ -8,7 +8,7 @@ int main(void) {
   scroller background;
   picture planet;
   gpu_init();
-  scrollerDisplay(&background, &background_sprite, &background_sprite_Palettes, 0, 0);
+  scroller_display(&background, &background_sprite, &background_sprite_Palettes, 0, 0);
   image_display(&planet, &planet04_sprite, &planet04_sprite_Palettes, 20, 100);
   animated_sprite_display(&player, &player_sprite, &player_sprite_Palettes, 10, 10, PLAYER_SPRITE_ANIM_IDLE);
   while(1) {
@@ -27,7 +27,7 @@ int main(void) {
     }
     if (!joypad_is_down() && !joypad_is_up()) { aSpriteSetAnim(&player, PLAYER_SPRITE_ANIM_IDLE); }
 
-    scrollerMove(&background, 1, 0);
+    scroller_move(&background, 1, 0);
     if (background.scrlPosX > 512)  scrollerSetPos(&background, 0, background.scrlPosY);
     aSpriteAnimate(&player);
     SCClose();

@@ -24,9 +24,9 @@ int main(void) {
     waitVBlank();
     if (DAT_frameCounter % 5 == 0) logo1_shrunk_x++;
     logo2_shrunk_y +=3 ;
-    image_shrunk(&logo1, &logo_sprite, shrunkForge(logo1_shrunk_x, 0xFF));
-    image_shrunk(&logo2, &logo_sprite, shrunkForge(0XF, logo2_shrunk_y));
-    image_shrunk(&logo3, &logo_sprite, shrunkPropTableGet(DAT_frameCounter & SHRUNK_TABLE_PROP_SIZE)); /* neocore provide a precalculated table for keep "aspect ratio" */
+    image_shrunk(&logo1, &logo_sprite, shrunk_forge(logo1_shrunk_x, 0xFF));
+    image_shrunk(&logo2, &logo_sprite, shrunk_forge(0XF, logo2_shrunk_y));
+    image_shrunk(&logo3, &logo_sprite, shrunk_prop_table_get(DAT_frameCounter & SHRUNK_TABLE_PROP_SIZE)); /* neocore provide a precalculated table for keep "aspect ratio" */
     SCClose();
   };
   SCClose();

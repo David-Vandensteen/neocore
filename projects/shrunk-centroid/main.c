@@ -53,7 +53,7 @@ static void update() {
 
 static void update_logo1() { // Horizontal
   logo1_shrunk_x += logo1_shrunk_inc;
-  image_shrunk_centroid(&logo1, &logo_sprite, logo1_position_center.x, logo1_position_center.y, shrunkForge(logo1_shrunk_x, 0xFF));
+  image_shrunk_centroid(&logo1, &logo_sprite, logo1_position_center.x, logo1_position_center.y, shrunk_forge(logo1_shrunk_x, 0xFF));
   if (logo1_shrunk_x == 0) {
     logo1_shrunk_inc = 1;
     logo1_position_center.x = LOGO1_POSITION_CENTER_X_INIT;
@@ -65,14 +65,14 @@ static void update_logo1() { // Horizontal
 }
 
 static void update_logo2() { // Proportional
-  image_shrunk_centroid(&logo2, &logo_sprite, logo2_position_center.x, logo2_position_center.y, shrunkPropTableGet(shrunkTableIndex));
+  image_shrunk_centroid(&logo2, &logo_sprite, logo2_position_center.x, logo2_position_center.y, shrunk_prop_table_get(shrunkTableIndex));
   shrunkTableIndex++;
   if (shrunkTableIndex >= SHRUNK_TABLE_PROP_SIZE) shrunkTableIndex = 0;
 }
 
 static void update_logo3() { // Verical
   logo3_shrunk_y += logo3_shrunk_inc;
-  image_shrunk_centroid(&logo3, &logo_sprite, logo3_position_center.x, logo3_position_center.y, shrunkForge(0XF ,logo3_shrunk_y));
+  image_shrunk_centroid(&logo3, &logo_sprite, logo3_position_center.x, logo3_position_center.y, shrunk_forge(0XF ,logo3_shrunk_y));
   if (logo3_shrunk_y == 0) {
     logo3_shrunk_inc = 1;
     logo3_position_center.y = LOGO3_POSITION_CENTER_Y_INIT;

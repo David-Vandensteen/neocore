@@ -34,8 +34,8 @@ static void init() {
 }
 
 static void display() {
-  image_physic_shrunk_centroid_display(&laser, shrunkForge(shrunk_x, shrunk_y));
-  image_physic_shrunk_centroid_display(&boss, shrunkForge(shrunk_x, shrunk_y));
+  image_physic_shrunk_centroid_display(&laser, shrunk_forge(shrunk_x, shrunk_y));
+  image_physic_shrunk_centroid_display(&boss, shrunk_forge(shrunk_x, shrunk_y));
   player_display();
 
   box_display(&laser_box_pics, &laser.pp.box, &dot_sprite, &dot_sprite_Palettes);
@@ -47,8 +47,8 @@ static void update() {
   joypad_update_edge();
   if (DAT_frameCounter % 5 == 0) {
     logger_init();
-    image_physic_shrunk_centroid_update(&laser, shrunkForge(shrunk_x, shrunk_y));
-    image_physic_shrunk_centroid_update(&boss, shrunkForge(shrunk_x, shrunk_y));
+    image_physic_shrunk_centroid_update(&laser, shrunk_forge(shrunk_x, shrunk_y));
+    image_physic_shrunk_centroid_update(&boss, shrunk_forge(shrunk_x, shrunk_y));
     box_debug_update(&laser_box_pics, &laser.pp.box);
     box_debug_update(&boss_box_pics, &boss.pp.box);
 

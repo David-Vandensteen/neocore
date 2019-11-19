@@ -107,7 +107,7 @@ void animated_sprite_physic_move(aSpritePhysic *asp, short x, short y) {
 }
 
 void animated_sprite_physic_shrunk(aSprite *as, spriteInfo *si, WORD shrunk_value) {
-	shrunkRange(0x8000 + as->baseSprite, 0x8000 + as->baseSprite + si->maxWidth, shrunk_value);
+	shrunk_range(0x8000 + as->baseSprite, 0x8000 + as->baseSprite + si->maxWidth, shrunk_value);
 }
 
 void animated_sprite_display(aSprite *as, spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD anim) {
@@ -286,9 +286,9 @@ void inline clear_vram() { // TODO diable interrupt
     SC234Put(addr, 0);
   }
   SCClose();
-  waitVbl(10);
+  wait_vbl(10);
   SCClose();
-  waitVbl(10);
+  wait_vbl(10);
 }
 
 void inline fix_print_neocore(int x, int y, char *label){
@@ -619,14 +619,14 @@ void image_physic_move(picturePhysic *pp, short x, short y) {
 }
 
 void image_shrunk(picture *p, pictureInfo *pi, WORD shrunk_value) {
-  shrunkRange(0x8000 + p->baseSprite, 0x8000 + p->baseSprite + pi->tileWidth, shrunk_value);
+  shrunk_range(0x8000 + p->baseSprite, 0x8000 + p->baseSprite + pi->tileWidth, shrunk_value);
 }
 
 void image_shrunk_centroid(picture *p, pictureInfo *pi, short centerPosX, short centerPosY, WORD shrunk_value) {
   image_shrunk(p, pi, shrunk_value);
   pictureSetPos(p,
-    shrunkCentroidGetTranslatedX(centerPosX, pi->tileWidth, SHRUNK_EXTRACT_X(shrunk_value)),
-    shrunkCentroidGetTranslatedY(centerPosY, pi->tileHeight, SHRUNK_EXTRACT_Y(shrunk_value))
+    shrunk_centroid_get_translated_x(centerPosX, pi->tileWidth, SHRUNK_EXTRACT_X(shrunk_value)),
+    shrunk_centroid_get_translated_y(centerPosY, pi->tileHeight, SHRUNK_EXTRACT_Y(shrunk_value))
   );
   /*
   picture_set_position(p,
@@ -646,7 +646,7 @@ void maskDisplay(picture pic[], vec2short vec[], BYTE vector_max) {
 }
 */
 
-void maskUpdate(short x, short y, vec2short vec[], vec2short offset[], BYTE vector_max) {
+void mask_update(short x, short y, vec2short vec[], vec2short offset[], BYTE vector_max) {
   BYTE i = 0;
   for (i = 0; i < vector_max; i++) {
     vec[i].x = x + offset[i].x;
@@ -682,23 +682,24 @@ BOOL vectorsCollide(box *box, vec2short vec[], BYTE vector_max) {
   return (p0 || p1 || p2 || p3 || p4);
 }
 
-void spriteDisableAutoinc() {
+// s
+void sprite_disable_autoinc() {
   sprite_autoinc = false;
 }
 
-void spriteEnableAutoinc() {
+void sprite_enable_autoinc() {
   sprite_autoinc = true;
 }
 
-void spriteSetIndex(WORD index) {
+void sprite_set_index(WORD index) {
 	sprite_index = index;
 }
 
-void scrollerDisplay(scroller *s, scrollerInfo *si, paletteInfo *pali, short posX, short posY) {
+void scroller_display(scroller *s, scrollerInfo *si, paletteInfo *pali, short posX, short posY) {
   scrollerInit(
     s,
     si,
-    scrollerGetSpriteIndexAutoinc(si),
+    scroller_get_sprite_index_autoinc(si),
     palette_get_index(),
     posX,
     posY
@@ -710,25 +711,25 @@ void scrollerDisplay(scroller *s, scrollerInfo *si, paletteInfo *pali, short pos
   );
 }
 
-void scrollerMove(scroller *sc, short x, short y) {
+void scroller_move(scroller *sc, short x, short y) {
   scrollerSetPos(sc, sc->scrlPosX + x, sc->scrlPosY + y);
 }
 
-WORD spriteGetIndex() {
+WORD sprite_get_index() {
   return sprite_index;
 }
 
-WORD scrollerGetSpriteIndexAutoinc(scrollerInfo *si) {
+WORD scroller_get_sprite_index_autoinc(scrollerInfo *si) {
   WORD rt = sprite_index;
   sprite_index += 21;
   return rt;
 }
 
-void inline shrunkAddr(WORD addr, WORD shrunk_value) {
+void inline shrunk_addr(WORD addr, WORD shrunk_value) {
   SC234Put(addr, shrunk_value);
 }
 
-WORD shrunkForge(BYTE xc, BYTE yc) { // TODO xcF, ycFF
+WORD shrunk_forge(BYTE xc, BYTE yc) { // TODO xcF, ycFF
   //F FF - x (hor) , y (vert)
   // vertical shrinking   8 bit
   // horizontal shrinking 4 bit
@@ -738,7 +739,7 @@ WORD shrunkForge(BYTE xc, BYTE yc) { // TODO xcF, ycFF
   return value;
 }
 
-WORD shrunkRange(WORD addr_start, WORD addr_end, WORD shrunk_value) {
+WORD shrunk_range(WORD addr_start, WORD addr_end, WORD shrunk_value) {
   WORD cur_addr = addr_start;
   while (cur_addr < addr_end) {
     SC234Put(cur_addr, shrunk_value);
@@ -747,27 +748,27 @@ WORD shrunkRange(WORD addr_start, WORD addr_end, WORD shrunk_value) {
   return addr_end;
 }
 
-WORD shrunkPropTableGet(WORD index) {
+WORD shrunk_prop_table_get(WORD index) {
   return shrunk_table_prop[index];
 }
 
-int shrunkCentroidGetTranslatedX(short centerPosX, WORD tileWidth, BYTE shrunkX) {
+int shrunk_centroid_get_translated_x(short centerPosX, WORD tileWidth, BYTE shrunkX) {
   FIXED newX = FIX(centerPosX);
   newX -= (shrunkX + 1) * FIX((tileWidth MULT8) / 0x10);
   return fixtoi(newX);
 }
 
-int shrunkCentroidGetTranslatedY(short centerPosY, WORD tileHeight, BYTE shrunkY) {
+int shrunk_centroid_get_translated_y(short centerPosY, WORD tileHeight, BYTE shrunkY) {
   FIXED newY = FIX(centerPosY);
   newY -= shrunkY * FIX((tileHeight MULT8) / 0xFF);
   return fixtoi(newY);
 }
 
-char sinTableGet(WORD index) {
+char sin_table_get(WORD index) {
 return sinTable[index];
 }
 
-DWORD inline waitVbl(WORD nb) {
+DWORD inline wait_vbl(WORD nb) {
   WORD i = 0;
   for (i = 0; i <= nb; i++) waitVBlank();
   return DAT_frameCounter;
