@@ -8,15 +8,15 @@ int main(void) {
   BYTE logo1_shrunk_x = 0;
   BYTE logo2_shrunk_y = 0;
   gpu_init();
-  loggerInit();
+  logger_init();
   paletteDisableAutoinc(); /* logo1, logo2 & logo3 use the same palette ... disable auto counter */
-  loggerInfo("HORIZONTAL SHRUNK");
+  logger_info("HORIZONTAL SHRUNK");
   pictureDisplay(&logo1, &logo_sprite, &logo_sprite_Palettes, 10, 20);
-  loggerPositionSet(1, 10);
-  loggerInfo("VERTICAL SHRUNK");
+  logger_set_position(1, 10);
+  logger_info("VERTICAL SHRUNK");
   pictureDisplay(&logo2, &logo_sprite, &logo_sprite_Palettes, 10, 80);
-  loggerPositionSet(1, 19);
-  loggerInfo("PROPORTIONAL SHRUNK");
+  logger_set_position(1, 19);
+  logger_info("PROPORTIONAL SHRUNK");
   pictureDisplay(&logo3, &logo_sprite, &logo_sprite_Palettes, 10, 150);
   paletteEnableAutoinc();
 

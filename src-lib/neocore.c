@@ -345,7 +345,7 @@ BOOL joypad_is_b()      { return (JOYPAD_IS_B)      ? (true) : (false); }
 BOOL joypad_is_c()      { return (JOYPAD_IS_C)      ? (true) : (false); }
 BOOL joypad_is_d()      { return (JOYPAD_IS_D)      ? (true) : (false); }
 
-void loggerInit() {
+void logger_init() {
   #ifdef LOGGER_ON
   x = LOGGER_X_INIT;
   y = LOGGER_Y_INIT;
@@ -355,14 +355,14 @@ void loggerInit() {
   #endif
 }
 
-void loggerPositionSet(WORD _x, WORD _y){
+void logger_set_position(WORD _x, WORD _y){
   x = _x;
   y = _y;
   x_default = x;
   y_default = y;
 }
 
-WORD inline loggerInfo(char *label){
+WORD inline logger_info(char *label){
   #ifdef LOGGER_ON
   fixPrintf(x, y , 0, 0 , label);
   autoInc();
@@ -370,120 +370,120 @@ WORD inline loggerInfo(char *label){
   #endif
 }
 
-void inline loggerWord(char *label, WORD value){
+void inline logger_word(char *label, WORD value){
   #ifdef LOGGER_ON
   WORD yc = y;
-  x = x_default + loggerInfo(label) + 2;
+  x = x_default + logger_info(label) + 2;
   fixPrintf(x , yc, 0, 0, "%04d", value);
   x = x_default;
   #endif
 }
 
-void inline loggerInt(char *label, int value){
+void inline logger_int(char *label, int value){
   #ifdef LOGGER_ON
   WORD yc = y;
-  x = x_default + loggerInfo(label) + 2;
+  x = x_default + logger_info(label) + 2;
   fixPrintf(x , yc, 0, 0, "%08d", value);
   x = x_default;
   #endif
 }
 
-void inline loggerDword(char *label, DWORD value){
+void inline logger_dword(char *label, DWORD value){
   #ifdef LOGGER_ON
   WORD yc = y;
-  x = x_default + loggerInfo(label) + 2;
+  x = x_default + logger_info(label) + 2;
   fixPrintf(x , yc, 0, 0, "%08d", value);
   x = x_default;
   #endif
 }
 
-void inline loggerShort(char *label, short value) {
+void inline logger_short(char *label, short value) {
   #ifdef LOGGER_ON
   WORD yc = y;
-  x = x_default + loggerInfo(label) + 2;
+  x = x_default + logger_info(label) + 2;
   fixPrintf(x , yc, 0, 0, "%02d", value);
   x = x_default;
   #endif
 }
 
-void inline loggerByte(char *label, BYTE value) {
+void inline logger_byte(char *label, BYTE value) {
   #ifdef LOGGER_ON
   WORD yc = y;
-  x = x_default + loggerInfo(label) + 2;
+  x = x_default + logger_info(label) + 2;
   fixPrintf(x , yc, 0, 0, "%02d", value);
   x = x_default;
   #endif
 }
 
-void inline loggerBool(char *label, BOOL value) {
+void inline logger_bool(char *label, BOOL value) {
   #ifdef LOGGER_ON
   WORD yc = y;
-  x = x_default + loggerInfo(label) + 2;
+  x = x_default + logger_info(label) + 2;
   fixPrintf(x , yc, 0, 0, "%01d", value);
   x = x_default;
   #endif
 }
 
-void inline loggerAsprite(char *label, aSprite *as) {
+void inline logger_animated_sprite(char *label, aSprite *as) {
   #ifdef LOGGER_ON
-  loggerInfo(label);
-  loggerWord("BASESPRITE : " , as->baseSprite);
-  loggerWord("BASEPALETTE : ", as->basePalette);
-  loggerShort("POSX : ", as->posX);
-  loggerShort("POSY : ", as->posY);
-  loggerShort("CURRENTSTEPNUM : ", as->currentStepNum);
-  loggerShort("MAXSTEP : ", as->maxStep);
-  loggerDword("COUNTER : ", as->counter);
-  loggerWord("REPEATS : ", as->repeats);
-  loggerWord("CURRENTFLIP : ", as->currentFlip);
-  loggerWord("TILEWIDTH : ", as->tileWidth);
-  loggerWord("ANIMID : ", as->animID);
-  loggerWord("FLAGS", as->flags);
+  logger_info(label);
+  logger_word("BASESPRITE : " , as->baseSprite);
+  logger_word("BASEPALETTE : ", as->basePalette);
+  logger_short("POSX : ", as->posX);
+  logger_short("POSY : ", as->posY);
+  logger_short("CURRENTSTEPNUM : ", as->currentStepNum);
+  logger_short("MAXSTEP : ", as->maxStep);
+  logger_dword("COUNTER : ", as->counter);
+  logger_word("REPEATS : ", as->repeats);
+  logger_word("CURRENTFLIP : ", as->currentFlip);
+  logger_word("TILEWIDTH : ", as->tileWidth);
+  logger_word("ANIMID : ", as->animID);
+  logger_word("FLAGS", as->flags);
   #endif
 }
 
-void inline loggerSpriteInfo(char *label, spriteInfo *si) {
+void inline logger_spriteInfo(char *label, spriteInfo *si) {
   #ifdef LOGGER_ON
-  loggerInfo(label);
-  loggerWord("PALCOUNT : ", si->palCount);
-  loggerWord("FRAMECOUNT : ", si->frameCount);
-  loggerWord("MAXWIDTH : ", si->maxWidth);
+  logger_info(label);
+  logger_word("PALCOUNT : ", si->palCount);
+  logger_word("FRAMECOUNT : ", si->frameCount);
+  logger_word("MAXWIDTH : ", si->maxWidth);
   #endif
 }
 
-void inline loggerBox(char *label, box *b) {
+void inline logger_box(char *label, box *b) {
   #ifdef LOGGER_ON
-  loggerInfo(label);
-  loggerShort("P0X", (short)b->p0.x);
-  loggerShort("P0Y", (short)b->p0.y);
-  loggerInfo("");
-  loggerShort("P1X", (short)b->p1.x);
-  loggerShort("P1Y", (short)b->p1.y);
-  loggerInfo("");
-  loggerShort("P2X", (short)b->p2.x);
-  loggerShort("P2Y", (short)b->p2.y);
-  loggerInfo("");
-  loggerShort("P3X", (short)b->p3.x);
-  loggerShort("P3Y", (short)b->p3.y);
-  loggerInfo("");
-  loggerShort("P4X", (short)b->p4.x);
-  loggerShort("P4Y", (short)b->p4.y);
-  loggerInfo("");
-  loggerShort("WIDTH ", b->width);
-  loggerShort("HEIGHT ", b->height);
-  loggerInfo("");
-  loggerShort("WIDTH OFFSET ", b->widthOffset);
-  loggerShort("HEIGHT OFFSET ", b->heightOffset);
+  logger_info(label);
+  logger_short("P0X", (short)b->p0.x);
+  logger_short("P0Y", (short)b->p0.y);
+  logger_info("");
+  logger_short("P1X", (short)b->p1.x);
+  logger_short("P1Y", (short)b->p1.y);
+  logger_info("");
+  logger_short("P2X", (short)b->p2.x);
+  logger_short("P2Y", (short)b->p2.y);
+  logger_info("");
+  logger_short("P3X", (short)b->p3.x);
+  logger_short("P3Y", (short)b->p3.y);
+  logger_info("");
+  logger_short("P4X", (short)b->p4.x);
+  logger_short("P4Y", (short)b->p4.y);
+  logger_info("");
+  logger_short("WIDTH ", b->width);
+  logger_short("HEIGHT ", b->height);
+  logger_info("");
+  logger_short("WIDTH OFFSET ", b->widthOffset);
+  logger_short("HEIGHT OFFSET ", b->heightOffset);
   #endif
 }
 
-void inline loggerPictureInfo(char *label, pictureInfo *pi) {
+void inline logger_pictureInfo(char *label, pictureInfo *pi) {
   #ifdef LOGGER_ON
-  loggerInfo(label);
-  loggerWord("COLSIZE : ", (WORD)pi->colSize);
-  loggerWord("UNUSED HEIGHT : ", (WORD)pi->unused__height);
-  loggerWord("TILEWIDTH : ", (WORD)pi->tileWidth);
-  loggerWord("TILEHEIGHT : ", (WORD)pi->tileHeight);
+  logger_info(label);
+  logger_word("COLSIZE : ", (WORD)pi->colSize);
+  logger_word("UNUSED HEIGHT : ", (WORD)pi->unused__height);
+  logger_word("TILEWIDTH : ", (WORD)pi->tileWidth);
+  logger_word("TILEHEIGHT : ", (WORD)pi->tileHeight);
   #endif
 }
 

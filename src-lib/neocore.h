@@ -199,19 +199,19 @@ BOOL                  joypad_is_d();
 void inline           joypad_debug();
 
 // l
-void        loggerInit();
-void        loggerPositionSet(WORD _x, WORD _y);
-WORD inline loggerInfo(char *txt);
-void inline loggerWord(char *label, WORD value);
-void inline loggerInt(char *label, int value);
-void inline loggerDword(char *label, DWORD value);
-void inline loggerShort(char *label, short value);
-void inline loggerByte(char *label, BYTE value);
-void inline loggerBool(char *label, BOOL value);
-void inline loggerAsprite(char *label, aSprite *as);
-void inline loggerSpriteInfo(char *label, spriteInfo *si);
-void inline loggerBox(char *label, box *b);
-void inline loggerPictureInfo(char *label, pictureInfo *pi);
+void        logger_init();
+void        logger_set_position(WORD _x, WORD _y);
+WORD inline logger_info(char *txt);
+void inline logger_word(char *label, WORD value);
+void inline logger_int(char *label, int value);
+void inline logger_dword(char *label, DWORD value);
+void inline logger_short(char *label, short value);
+void inline logger_byte(char *label, BYTE value);
+void inline logger_bool(char *label, BOOL value);
+void inline logger_animated_sprite(char *label, aSprite *as);
+void inline logger_spriteInfo(char *label, spriteInfo *si);
+void inline logger_box(char *label, box *b);
+void inline logger_pictureInfo(char *label, pictureInfo *pi);
 
 void          picturePhysicShrunkCentroidInit(picturePhysicShrunkCentroid *pps, pictureInfo *pi, paletteInfo *pali, short xCenter, short yCenter);
 void          picturePhysicShrunkCentroidSetPos(picturePhysicShrunkCentroid *pps, short x, short y);

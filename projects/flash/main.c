@@ -35,9 +35,9 @@ static void update() {
   player_update();
   // aSpriteFlash(&player_get()->as, 30);
   // pictureFlash(&pic, 4);
-  loggerInit();
+  logger_init();
   pictureShrunk(&pic, &laser_sprite, shrunkForge(0, 0));
-  loggerShort("POS Y : ", pic.posY);
+  logger_short("POS Y : ", pic.posY);
 
 // pictureHide(&pic);
   // loggerWord("VISIBLE : ", pictureIsVisible(&pic));

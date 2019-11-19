@@ -26,7 +26,7 @@ static void update_logo2();
 static void update_logo3();
 
 static void init() {
-  loggerInit();
+  logger_init();
   logo1_position_center = vec2shortMake(LOGO1_POSITION_CENTER_X_INIT, 30);
   logo2_position_center = vec2shortMake(160, 180);
   logo3_position_center = vec2shortMake(160, LOGO3_POSITION_CENTER_Y_INIT);
@@ -38,11 +38,11 @@ static void display() {
   pictureDisplay(&logo3, &logo_sprite, &logo_sprite_Palettes, logo3_position_center.x, logo3_position_center.y);
   paletteEnableAutoinc();
   pictureDisplay(&logo2, &logo_sprite, &logo_sprite_Palettes, logo2_position_center.x, logo2_position_center.y);
-  loggerInfo("HORIZONTAL SHRUNK");
-  loggerPositionSet(1, 11);
-  loggerInfo("VERTICAL SHRUNK");
-  loggerPositionSet(1, 20);
-  loggerInfo("PROPORTIONAL SHRUNK");
+  logger_info("HORIZONTAL SHRUNK");
+  logger_set_position(1, 11);
+  logger_info("VERTICAL SHRUNK");
+  logger_set_position(1, 20);
+  logger_info("PROPORTIONAL SHRUNK");
 }
 
 static void update() {
