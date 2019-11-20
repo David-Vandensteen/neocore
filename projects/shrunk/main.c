@@ -21,7 +21,7 @@ int main(void) {
   palette_enable_autoinc();
 
   while(1) {
-    waitVBlank();
+    WAIT_VBL
     if (DAT_frameCounter % 5 == 0) logo1_shrunk_x++;
     logo2_shrunk_y +=3 ;
     image_shrunk(&logo1, &logo_sprite, shrunk_forge(logo1_shrunk_x, 0xFF));

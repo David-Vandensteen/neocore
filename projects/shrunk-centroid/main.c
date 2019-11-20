@@ -27,9 +27,9 @@ static void update_logo3();
 
 static void init() {
   logger_init();
-  logo1_position_center = vec2shortMake(LOGO1_POSITION_CENTER_X_INIT, 30);
-  logo2_position_center = vec2shortMake(160, 180);
-  logo3_position_center = vec2shortMake(160, LOGO3_POSITION_CENTER_Y_INIT);
+  vec2short_init(&logo1_position_center, LOGO1_POSITION_CENTER_X_INIT, 30);
+  vec2short_init(&logo2_position_center, 160, 180);
+  vec2short_init(&logo3_position_center, 160, LOGO3_POSITION_CENTER_Y_INIT);
 }
 
 static void display() {
@@ -88,7 +88,7 @@ int main(void) {
   init();
   display();
   while(1) {
-    waitVBlank();
+    WAIT_VBL
     update();
     SCClose();
   };

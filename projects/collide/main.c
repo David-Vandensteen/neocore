@@ -12,23 +12,23 @@ int main(void) {
   animated_sprite_physic_display(&player, &player_sprite, &player_sprite_Palettes, 10, 10, PLAYER_SPRITE_ANIM_IDLE);
   image_physic_display(&asteroid, &asteroid_sprite, &asteroid_sprite_Palettes, 100, 100);
   while(1) {
-    waitVBlank();
+    WAIT_VBL
     joypad_update();
 
     if (joypad_is_left() && player.as.posX > 0) { animated_sprite_physic_move(&player, -1, 0); }
     if (joypad_is_right() && player.as.posX < 280) { animated_sprite_physic_move(&player, 1, 0); }
     if (joypad_is_up() && player.as.posY > 0) {
       animated_sprite_physic_move(&player, 0, -1);
-      aSpriteSetAnim(&player.as, PLAYER_SPRITE_ANIM_UP);
+      animated_sprite_set_animation(&player.as, PLAYER_SPRITE_ANIM_UP);
     }
     if (joypad_is_down() && player.as.posY < 200) {
       animated_sprite_physic_move(&player, 0, 1);
-      aSpriteSetAnim(&player.as, PLAYER_SPRITE_ANIM_DOWN);
+      animated_sprite_set_animation(&player.as, PLAYER_SPRITE_ANIM_DOWN);
     }
-    if (!joypad_is_down() && !joypad_is_up()) { aSpriteSetAnim(&player.as, PLAYER_SPRITE_ANIM_IDLE); }
+    if (!joypad_is_down() && !joypad_is_up()) { animated_sprite_set_animation(&player.as, PLAYER_SPRITE_ANIM_IDLE); }
     (box_collide(&player.box, &asteroid.box)) ? animated_sprite_flash(&player.as, 4) : animated_sprite_flash(&player.as, false);
 
-    aSpriteAnimate(&player.as);
+    animated_sprite_animate(&player.as);
     SCClose();
   };
   SCClose();

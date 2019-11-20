@@ -76,7 +76,7 @@ int main(void) {
   init();
   display();
   while(1) {
-    waitVBlank();
+    WAIT_VBL
     update();
     SCClose();
   };

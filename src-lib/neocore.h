@@ -2,7 +2,6 @@
 	David Vandensteen
 	2018
 */
-  // NeoDev type memo:
   // short  ->  2 bytes
   // word   ->  2 bytes
   // dword  ->  4 bytes
@@ -63,9 +62,6 @@
 #define LOGGER_ON
 #define LOGGER_X_INIT   1
 #define LOGGER_Y_INIT   2
-
-// #define HIDE_X  50
-// #define HIDE_Y  50
 
 #define BOXCOPY(bFrom, bTo)   memcpy(bTo, bFrom, sizeof(box))
 
@@ -161,6 +157,10 @@ void animated_sprite_flash(aSprite *as, BYTE freq);
 BOOL animated_sprite_is_visible(aSprite *as);
 void animated_sprite_shrunk(aSprite *as, spriteInfo *si, WORD shrunk_value);
 
+#define animated_sprite_set_animation(as, anim) aSpriteSetAnim(as, anim)
+#define animated_sprite_animate(as) aSpriteAnimate(as)
+#define animated_sprite_move(as, xOffset, yOffset) aSpriteMove(as, xOffset, yOffset)
+
 // b
 BYTE boxes_collide(box *b, box *boxes[], BYTE box_max);
 BOOL box_collide(box *b1, box *b2);
@@ -199,7 +199,6 @@ void image_flash(picture *p, BYTE freq);
 WORD image_get_sprite_index_autoinc(pictureInfo *pi);
 
 // todo - change signature
-BOOL isVectorLeft(short x, short y, short v1x, short v1y, short v2x, short v2y);
 BOOL vector_is_left(short x, short y, short v1x, short v1y, short v2x, short v2y);
 
 // j
@@ -243,11 +242,12 @@ void mask_display(picture pic[], vec2short vec[], BYTE vector_max); // TODO rena
 void mask_update(short x, short y, vec2short vec[], vec2short offset[], BYTE vector_max); // TODO rename ? (vectorsDebug)
 // TODO hardcode point\dot asset
 
-// todo - init
-vec2int   vec2intMake(int x, int y);
-vec2short vec2shortMake(short x, short y);
-vec2byte  vec2byteMake(BYTE x, BYTE y);
-BOOL      vectorsCollide(box *box, vec2short vec[], BYTE vector_max);
+void vec2int_init(vec2int *vec, int x, int y);
+void vec2short_init(vec2short *vec, short x, short y);
+void vec2byte_init(vec2byte *vec, BYTE x, BYTE y);
+
+BOOL vectors_collide(box *box, vec2short vec[], BYTE vector_max);
+
 
 // s
 WORD        shrunk_forge(BYTE xc, BYTE yc);
@@ -266,5 +266,7 @@ int         shrunk_centroid_get_translated_x(short centerPosX, WORD tileWidth, B
 int         shrunk_centroid_get_translated_y(short centerPosY, WORD tileHeight, BYTE shrunkY);
 
 // w
-DWORD inline wait_vbl(WORD nb);
+DWORD inline wait_vbl_max(WORD nb);
+#define WAIT_VBL waitVBlank();
+
 #endif

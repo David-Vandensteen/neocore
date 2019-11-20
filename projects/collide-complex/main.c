@@ -64,15 +64,15 @@ static void update_player() {
   if (joypad_is_right() && player.as.posX < 280) { animated_sprite_physic_move(&player, 1, 0); }
   if (joypad_is_up() && player.as.posY > 0) {
     animated_sprite_physic_move(&player, 0, -1);
-    aSpriteSetAnim(&player.as, PLAYER_SPRITE_ANIM_UP);
+    animated_sprite_set_animation(&player.as, PLAYER_SPRITE_ANIM_UP);
   }
   if (joypad_is_down() && player.as.posY < 200) {
     animated_sprite_physic_move(&player, 0, 1);
-    aSpriteSetAnim(&player.as, PLAYER_SPRITE_ANIM_DOWN);
+    animated_sprite_set_animation(&player.as, PLAYER_SPRITE_ANIM_DOWN);
   }
-  if (!joypad_is_down() && !joypad_is_up()) { aSpriteSetAnim(&player.as, PLAYER_SPRITE_ANIM_IDLE); }
-  (vectorsCollide(&player.box, peak_mask, PEAK_MASK_VECTOR_MAX)) ? animated_sprite_flash(&player.as, 4) : animated_sprite_flash(&player.as, false);
-  aSpriteAnimate(&player.as);
+  if (!joypad_is_down() && !joypad_is_up()) { animated_sprite_set_animation(&player.as, PLAYER_SPRITE_ANIM_IDLE); }
+  (vectors_collide(&player.box, peak_mask, PEAK_MASK_VECTOR_MAX)) ? animated_sprite_flash(&player.as, 4) : animated_sprite_flash(&player.as, false);
+  animated_sprite_animate(&player.as);
 }
 
 static void update() {
@@ -84,7 +84,7 @@ int main(void) {
   init();
   display();
   while(1) {
-    waitVBlank();
+    WAIT_VBL
     update();
     SCClose();
   };

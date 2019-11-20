@@ -37,7 +37,7 @@ static BOOL collide_point(short x, short y, vec2short vec[], BYTE vector_max) {
   for (i = 0; i < vector_max; i++) {
     j = i + 1;
     if (j == vector_max) { j = 0; }
-    if (isVectorLeft( // foreach edge vector check if dot is  left
+    if (vector_is_left( // foreach edge vector check if dot is  left
         x,
         y,
         vec[i].x, vec[i].y,
@@ -290,9 +290,9 @@ void inline clear_vram() { // TODO diable interrupt
     SC234Put(addr, 0);
   }
   SCClose();
-  wait_vbl(10);
+  wait_vbl_max(10);
   SCClose();
-  wait_vbl(10);
+  wait_vbl_max(10);
 }
 
 void inline fix_print_neocore(int x, int y, char *label){
@@ -309,7 +309,7 @@ void inline gpu_init() {
   palette_index = 16;
 }
 
-BOOL isVectorLeft(short x, short y, short v1x, short v1y, short v2x, short v2y) {
+BOOL vector_is_left(short x, short y, short v1x, short v1y, short v2x, short v2y) {
   BOOL rt = false;
   short vectorD[2] = {v2x - v1x, v2y - v1y};
   short vectorT[2] = {x - v1x, y -v1y};
@@ -658,25 +658,11 @@ void mask_update(short x, short y, vec2short vec[], vec2short offset[], BYTE vec
   }
 }
 
-vec2int vec2intMake(int x, int y) {
-  vec2int rt;
-  rt.x = x; rt.y = y;
-  return rt;
-}
+void vec2int_init(vec2int *vec, int x, int y)         { vec->x = x; vec->y = y; }
+void vec2short_init(vec2short *vec, short x, short y) { vec->x = x; vec->y = y; }
+void vec2byte_init(vec2byte *vec, BYTE x, BYTE y)     { vec->x = x; vec->y = y; }
 
-vec2short vec2shortMake(short x, short y) {
-  vec2short rt;
-  rt.x = x; rt.y = y;
-  return rt;
-}
-
-vec2byte vec2byteMake(BYTE x, BYTE y) {
-  vec2byte rt;
-  rt.x = x; rt.y = y;
-  return rt;
-}
-
-BOOL vectorsCollide(box *box, vec2short vec[], BYTE vector_max) {
+BOOL vectors_collide(box *box, vec2short vec[], BYTE vector_max) {
   BOOL p0 = false, p1 = false, p2 = false, p3 = false, p4 = false;
   p0 = collide_point(box->p0.x, box->p0.y, vec, vector_max);
   p1 = collide_point(box->p1.x, box->p1.y, vec, vector_max);
@@ -772,7 +758,7 @@ char sin_table_get(WORD index) {
 return sinTable[index];
 }
 
-DWORD inline wait_vbl(WORD nb) {
+DWORD inline wait_vbl_max(WORD nb) {
   WORD i = 0;
   for (i = 0; i <= nb; i++) waitVBlank();
   return DAT_frameCounter;
