@@ -156,6 +156,17 @@ void animated_sprite_shrunk(aSprite *as, spriteInfo *si, WORD shrunk_value) {
 	shrunk_range(0x8000 + as->baseSprite, 0x8000 + as->baseSprite + si->maxWidth, shrunk_value);
 }
 
+// todo
+void animated_sprite_flash_update(aSprite *as) {
+  if (DAT_frameCounter % 10 == 0) {
+    aSpriteShow(as);
+  }
+  if (DAT_frameCounter % 15 == 0) {
+    aSpriteHide(as);
+    clearSprites(as->baseSprite, as->tileWidth);
+  }
+}
+
 BYTE boxes_collide(box *b, box *boxes[], BYTE box_max) {
   BYTE rt = false;
   BYTE i = 0;

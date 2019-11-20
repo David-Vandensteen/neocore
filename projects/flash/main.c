@@ -3,22 +3,13 @@
 #include "player.h"
 #include "externs.h"
 
-// #define pictureHide(p) { short x = (p)->posX; short y = (p)->posY; pictureSetPos(p, -128, -128); (p)->posX = x; (p)->posY = y; } // overwrite DATlib func
-
 NEOCORE_INIT
-
 
 static void init();
 static void display();
 static void update();
 
 static picture pic;
-static BOOL toogle_visibility = false;
-
-//TODO patch neocore
-static BOOL pictureIsVisible(picture *p) {
-  return (p->posY < 0) ? false : true;
-}
 
 static void init() {
   player_init();
@@ -27,20 +18,14 @@ static void init() {
 static void display() {
   image_display(&pic, &laser_sprite, &laser_sprite_Palettes, 100, 200);
   player_display();
+  animated_sprite_flash(&player_get()->as, 10);
 }
 
 static void update() {
   BYTE i = 0;
   WORD val = 0;
   player_update();
-  // aSpriteFlash(&player_get()->as, 30);
-  // pictureFlash(&pic, 4);
-  logger_init();
-  image_shrunk(&pic, &laser_sprite, shrunk_forge(0, 0));
-  logger_short("POS Y : ", pic.posY);
-
-// pictureHide(&pic);
-  // loggerWord("VISIBLE : ", pictureIsVisible(&pic));
+  animated_sprite_flash_update(&player_get()->as);
 }
 
 int main(void) {
@@ -48,7 +33,7 @@ int main(void) {
   init();
   display();
   while(1) {
-    waitVBlank();
+    WAIT_VBL
     update();
     SCClose();
   };

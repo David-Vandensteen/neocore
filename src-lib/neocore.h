@@ -154,6 +154,7 @@ void animated_sprite_physic_shrunk(aSprite *as, spriteInfo *si, WORD shrunk_valu
 void animated_sprite_display(aSprite *as, spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD anim);
 WORD animated_sprite_index_auto(spriteInfo *si);
 void animated_sprite_flash(aSprite *as, BYTE freq);
+void animated_sprite_flash_update(aSprite *as);
 BOOL animated_sprite_is_visible(aSprite *as);
 void animated_sprite_shrunk(aSprite *as, spriteInfo *si, WORD shrunk_value);
 
