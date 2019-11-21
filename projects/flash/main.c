@@ -11,14 +11,6 @@ static void update();
 
 static picture pic;
 
-// todo - patch neocore
-typedef struct Flash Flash;
-struct Flash {
-  short frequency;
-  short lengh;
-  BOOL visible;
-  BOOL enabled;
-};
 
 static void flash_init(Flash *flash, short frequency, short lengh, BOOL enabled) {
   flash->enabled = enabled;
@@ -40,8 +32,8 @@ static BOOL flash_update(Flash *flash) {
       }
     };
     flash->lengh -= 1;
-    return (flash->visible) ? true : false;
   };
+  return (flash->visible);
 };
 
 static void flash_enable(Flash *flash) {
@@ -58,6 +50,7 @@ static void animated_sprite_flash_update(aSprite *as, Flash *flash) {
     aSpriteShow(as);
   } else {
     aSpriteHide(as);
+    clearSprites(as->baseSprite, as->tileWidth);
   }
 }
 
@@ -67,7 +60,7 @@ Flash laser_flash;
 static void init() {
   player_init();
   flash_init(&player_flash, 10, 200, true);
-  flash_init(&pic, 3, 600, true);
+  flash_init(&laser_flash, 3, 600, true);
 }
 
 static void display() {
@@ -81,7 +74,7 @@ static void update() {
   BYTE i = 0;
   WORD val = 0;
   player_update();
-  flash_update(&player_flash, &player_get()->as);
+  animated_sprite_flash_update(&player_get()->as, &player_flash);
   //animated_sprite_flash_update(&player_get()->as);
 }
 
