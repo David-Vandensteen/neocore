@@ -63,7 +63,7 @@
 #define LOGGER_X_INIT   1
 #define LOGGER_Y_INIT   2
 
-#define BOXCOPY(bFrom, bTo)   memcpy(bTo, bFrom, sizeof(box))
+#define BOXCOPY(bFrom, bTo)   memcpy(bTo, bFrom, sizeof(Box))
 
 #define FIX(value) value * 65536
 #define RAND(value) rand() % value
@@ -82,31 +82,31 @@
 
 enum direction { NONE, UP, DOWN, LEFT, RIGHT };
 
-typedef struct vec2int vec2int;
-struct vec2int {
+typedef struct Vec2int Vec2int;
+struct Vec2int {
   int x;
   int y;
 };
 
-typedef struct vec2short vec2short;
-struct vec2short {
+typedef struct Vec2short Vec2short;
+struct Vec2short {
   short x;
   short y;
 };
 
-typedef struct vec2byte vec2byte;
-struct vec2byte {
+typedef struct Vec2byte Vec2byte;
+struct Vec2byte {
   BYTE x;
   BYTE y;
 };
 
-typedef struct box box;
-struct box {
-  vec2short p0;
-  vec2short p1;
-  vec2short p2;
-  vec2short p3;
-  vec2short p4;
+typedef struct Box Box;
+struct Box {
+  Vec2short p0;
+  Vec2short p1;
+  Vec2short p2;
+  Vec2short p3;
+  Vec2short p4;
   short width;
   short height;
   short widthOffset;
@@ -125,14 +125,14 @@ struct picture5 {
 typedef struct aSpritePhysic aSpritePhysic;
 struct aSpritePhysic {
   aSprite as; //50 bytes
-  box box;
+  Box box;
   WORD height;
 };
 
 typedef struct picturePhysic picturePhysic;
 struct picturePhysic {
   picture p;
-  box box;
+  Box box;
   BOOL visible;
 };
 
@@ -141,12 +141,12 @@ struct picturePhysicShrunkCentroid {
   picturePhysic pp;
   pictureInfo *pi;
   paletteInfo *pali;
-  vec2short positionCenter;
-  box boxOrigin;
+  Vec2short positionCenter;
+  Box boxOrigin;
 };
 //  a
 void animated_sprite_physic_display(aSpritePhysic *asp, spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD anim);
-void animated_sprite_physic_collide(aSpritePhysic *asp, box *box); // TODO not implementd ??? needed ???
+void animated_sprite_physic_collide(aSpritePhysic *asp, Box *box); // TODO not implementd ??? needed ???
 void animated_sprite_physic_set_position(aSpritePhysic *asp, short x, short y);
 void animated_sprite_physic_move(aSpritePhysic *asp, short x, short y);
 void animated_sprite_physic_shrunk(aSprite *as, spriteInfo *si, WORD shrunk_value);
@@ -164,15 +164,16 @@ void animated_sprite_shrunk(aSprite *as, spriteInfo *si, WORD shrunk_value);
 #define animated_sprite_move(as, xOffset, yOffset) aSpriteMove(as, xOffset, yOffset)
 
 // b
-BYTE boxes_collide(box *b, box *boxes[], BYTE box_max);
-BOOL box_collide(box *b1, box *b2);
-void box_init(box *b, short width, short height, short widthOffset, short heightOffset);
-void box_update(box *b, short x, short y);
-void box_debug_update(picture5 *pics, box *box);
-void box_display(picture5 *pics, box *box, pictureInfo *pi, paletteInfo *pali);
-void box_shrunk(box *b, box *bOrigin, WORD shrunkValue);
+BYTE boxes_collide(Box *b, Box *boxes[], BYTE box_max);
+BOOL box_collide(Box *b1, Box *b2);
+void box_init(Box *b, short width, short height, short widthOffset, short heightOffset);
+void box_update(Box *b, short x, short y);
+void box_debug_update(picture5 *pics, Box *box);
+void box_display(picture5 *pics, Box *box, pictureInfo *pi, paletteInfo *pali);
+void box_shrunk(Box *b, Box *bOrigin, WORD shrunkValue);
+
 // todo - deprecated ?
-void box_resize(box *box, short edge);
+void box_resize(Box *Box, short edge);
 
 // c
 void inline clear_vram();
@@ -229,7 +230,7 @@ void inline logger_byte(char *label, BYTE value);
 void inline logger_bool(char *label, BOOL value);
 void inline logger_animated_sprite(char *label, aSprite *as);
 void inline logger_spriteInfo(char *label, spriteInfo *si);
-void inline logger_box(char *label, box *b);
+void inline logger_box(char *label, Box *b);
 void inline logger_pictureInfo(char *label, pictureInfo *pi);
 
 // p
@@ -240,16 +241,15 @@ BYTE palette_set_index(BYTE index);
 BYTE palette_get_index_autoinc(paletteInfo *pali);
 
 // m
-void mask_display(picture pic[], vec2short vec[], BYTE vector_max); // TODO rename ? (vectorsDisplay)
-void mask_update(short x, short y, vec2short vec[], vec2short offset[], BYTE vector_max); // TODO rename ? (vectorsDebug)
+void mask_display(picture pic[], Vec2short vec[], BYTE vector_max); // TODO rename ? (vectorsDisplay)
+void mask_update(short x, short y, Vec2short vec[], Vec2short offset[], BYTE vector_max); // TODO rename ? (vectorsDebug)
 // TODO hardcode point\dot asset
 
-void vec2int_init(vec2int *vec, int x, int y);
-void vec2short_init(vec2short *vec, short x, short y);
-void vec2byte_init(vec2byte *vec, BYTE x, BYTE y);
+void vec2int_init(Vec2int *vec, int x, int y);
+void vec2short_init(Vec2short *vec, short x, short y);
+void vec2byte_init(Vec2byte *vec, BYTE x, BYTE y);
 
-BOOL vectors_collide(box *box, vec2short vec[], BYTE vector_max);
-
+BOOL vectors_collide(Box *box, Vec2short vec[], BYTE vector_max);
 
 // s
 WORD        shrunk_forge(BYTE xc, BYTE yc);

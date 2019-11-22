@@ -8,12 +8,43 @@
 
 static aSpritePhysic player;
 
+static void animated_sprite_init(Animated_Sprite *animated_sprite ,spriteInfo *si, paletteInfo *pali) {
+  animated_sprite->si = si;
+  animated_sprite->pali = pali;
+};
+
+static void NEW_animated_sprite_display(Animated_Sprite *animated_sprite, short x, short y, WORD anim) {
+  aSpriteInit(
+    &animated_sprite->as,
+    animated_sprite->si,
+		animated_sprite_index_auto(animated_sprite->si),
+    palette_get_index(),
+    x,
+    y,
+    anim,
+    FLIP_NONE
+  );
+
+  palJobPut(
+    palette_get_index_autoinc(animated_sprite->pali),
+    animated_sprite->pali->palCount,
+    animated_sprite->pali->data
+  );
+  aSpriteSetAnim(&animated_sprite->as, anim);
+}
+
+static void animated_sprite_physic_init(Animated_Sprite_Physic *animated_sprite_physic, spriteInfo *si, paletteInfo *pali, short box_witdh, short box_height, short box_width_offset, short box_height_offset) {
+  box_init(&animated_sprite_physic->box, box_witdh, box_height, box_width_offset, box_height_offset);
+  animated_sprite_physic->physic_enabled = true;
+  NEW_animated_sprite_display(&animated_sprite_physic->animated_sprite, 100, 100, PLAYER_SPRITE_ANIM_IDLE);
+}
+
 void player_init() {
-  box_init(&player.box, 48, 16, 0, 0);
+  // box_init(&player.box, 48, 16, 0, 0);
 }
 
 void player_display() {
-  animated_sprite_physic_display(&player, &player_sprite, &player_sprite_Palettes, 100, 100, PLAYER_SPRITE_ANIM_IDLE);
+  // animated_sprite_physic_display(&player, &player_sprite, &player_sprite_Palettes, 100, 100, PLAYER_SPRITE_ANIM_IDLE);
 }
 
 void player_update() {
@@ -34,11 +65,11 @@ void player_update() {
   if (DAT_frameCounter % 60 == 0) animated_sprite_flash(&player.as, false);
 }
 
-void player_collide(box *b) {
+void player_collide(Box *b) {
   if (box_collide(b, &player.box)) animated_sprite_flash(&player.as, 4);
 }
 
-void player_collides(box *boxes[], BYTE box_max) {
+void player_collides(Box *boxes[], BYTE box_max) {
   BYTE i = 0;
   for (i = 0; i < box_max; i++) {
     player_collide(boxes[i]);
