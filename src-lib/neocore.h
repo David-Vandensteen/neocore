@@ -2,7 +2,6 @@
 	David Vandensteen
 	2018
 */
-  // NeoDev type memo:
   // short  ->  2 bytes
   // word   ->  2 bytes
   // dword  ->  4 bytes
@@ -13,6 +12,7 @@
 #ifndef NEOCORE_H
 #define NEOCORE_H
 #include <DATlib.h>
+#include <math.h>
 
 #define NEOCORE_INIT \
   typedef struct bkp_ram_info { \
@@ -63,7 +63,7 @@
 #define LOGGER_X_INIT   1
 #define LOGGER_Y_INIT   2
 
-#define BOXCOPY(bFrom, bTo)   memcpy(bTo, bFrom, sizeof(box))
+#define BOXCOPY(bFrom, bTo)   memcpy(bTo, bFrom, sizeof(Box))
 
 #define FIX(value) value * 65536
 #define RAND(value) rand() % value
@@ -71,33 +71,42 @@
 #define SHRUNK_EXTRACT_X(value) value >> 8
 #define SHRUNK_EXTRACT_Y(value) (BYTE)value
 
+// overwrite aSpriteHide DAT macro
+//#undef aSpriteHide(as)
+//#define aSpriteHide(as)            { (as)->flags|=0x0080; clearSprites(as->baseSprite, as->tileWidth); }
+//#define aSpriteHideDAT(as)         { (as)->flags|=0x0080; }
+
+// overwrite pictureHide, pictureShow DAT func
+// #define pictureHide(p) { short x = (p)->posX; short y = (p)->posY; pictureSetPos(p, HIDE_X, HIDE_Y); (p)->posX = x; (p)->posY = y; loggerInfo("OVER PHIDE"); }
+// #define pictureShow(p) { pictureSetPos(p, (p)->posX, (p)->posY); loggerInfo("OVER PSHOW"); }
+
 enum direction { NONE, UP, DOWN, LEFT, RIGHT };
 
-typedef struct vec2int vec2int;
-struct vec2int {
+typedef struct Vec2int Vec2int;
+struct Vec2int {
   int x;
   int y;
 };
 
-typedef struct vec2short vec2short;
-struct vec2short {
+typedef struct Vec2short Vec2short;
+struct Vec2short {
   short x;
   short y;
 };
 
-typedef struct vec2byte vec2byte;
-struct vec2byte {
+typedef struct Vec2byte Vec2byte;
+struct Vec2byte {
   BYTE x;
   BYTE y;
 };
 
-typedef struct box box;
-struct box {
-  vec2short p0;
-  vec2short p1;
-  vec2short p2;
-  vec2short p3;
-  vec2short p4;
+typedef struct Box Box;
+struct Box {
+  Vec2short p0;
+  Vec2short p1;
+  Vec2short p2;
+  Vec2short p3;
+  Vec2short p4;
   short width;
   short height;
   short widthOffset;
@@ -116,119 +125,150 @@ struct picture5 {
 typedef struct aSpritePhysic aSpritePhysic;
 struct aSpritePhysic {
   aSprite as; //50 bytes
-  box box;
-  BOOL flashing;
-  BOOL visible;
-  WORD flashingFreq;
+  Box box;
   WORD height;
 };
 
 typedef struct picturePhysic picturePhysic;
 struct picturePhysic {
   picture p;
-  box box;
+  Box box;
   BOOL visible;
 };
 
-void          aSpritePhysicDisplay(aSpritePhysic *asp, spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD anim);
-void          aSpritePhysicShow(aSpritePhysic *asp, BOOL pvisible);
-void          aSpritePhysicFlash(aSpritePhysic *asp, BOOL pflash, WORD freq);
-void          aSpritePhysicFlashUpdate(aSpritePhysic *asp);
-void          aSpritePhysicCollide(aSpritePhysic *asp, box *box); // TODO not implementd ??? needed ???
-void          aSpritePhysicSetPos(aSpritePhysic *asp, short x, short y);
-void          aSpritePhysicMove(aSpritePhysic *asp, short x, short y);
-void          aSpriteShrunk(aSprite *as, spriteInfo *si, WORD shrunk_value);
-void          aSpriteShowNeocore(aSprite *as, BOOL visible);
-void          aSpriteDisplay(aSprite *as, spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD anim);
-WORD          aSpriteGetSpriteIndexAutoinc(spriteInfo *si);
+typedef struct picturePhysicShrunkCentroid picturePhysicShrunkCentroid;
+struct picturePhysicShrunkCentroid {
+  picturePhysic pp;
+  pictureInfo *pi;
+  paletteInfo *pali;
+  Vec2short positionCenter;
+  Box boxOrigin;
+};
+//  a
+void animated_sprite_physic_display(aSpritePhysic *asp, spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD anim);
+void animated_sprite_physic_collide(aSpritePhysic *asp, Box *box); // TODO not implementd ??? needed ???
+void animated_sprite_physic_set_position(aSpritePhysic *asp, short x, short y);
+void animated_sprite_physic_move(aSpritePhysic *asp, short x, short y);
+void animated_sprite_physic_shrunk(aSprite *as, spriteInfo *si, WORD shrunk_value);
 
-BYTE      boxesCollide(box *b, box *boxes[], BYTE box_max);
-BOOL      boxCollide(box *b1, box *b2);
+void animated_sprite_display(aSprite *as, spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD anim);
+WORD animated_sprite_index_auto(spriteInfo *si);
+void animated_sprite_flash(aSprite *as, BYTE freq);
+// todo
+//void animated_sprite_flash_update(aSprite *as);
+BOOL animated_sprite_is_visible(aSprite *as);
+void animated_sprite_shrunk(aSprite *as, spriteInfo *si, WORD shrunk_value);
 
-// TODO to deprecated boxMake
-box       boxMake(short p0x, short p0y, short p1x, short p1y, short p2x, short p2y, short p3x, short p3y);
+#define animated_sprite_set_animation(as, anim) aSpriteSetAnim(as, anim)
+#define animated_sprite_animate(as) aSpriteAnimate(as)
+#define animated_sprite_move(as, xOffset, yOffset) aSpriteMove(as, xOffset, yOffset)
 
-void      boxInit(box *b, short width, short height, short widthOffset, short heightOffset);
-void      boxUpdate(box *b, short x, short y);
-void      boxDebugUpdate(picture5 *pics, box *box);
-void      boxDisplay(picture5 *pics, box *box, pictureInfo *pi, paletteInfo *pali);
+// b
+BYTE boxes_collide(Box *b, Box *boxes[], BYTE box_max);
+BOOL box_collide(Box *b1, Box *b2);
+void box_init(Box *b, short width, short height, short widthOffset, short heightOffset);
+void box_update(Box *b, short x, short y);
+void box_debug_update(picture5 *pics, Box *box);
+void box_display(picture5 *pics, Box *box, pictureInfo *pi, paletteInfo *pali);
+void box_shrunk(Box *b, Box *bOrigin, WORD shrunkValue);
 
-// deprecated ?
-void      boxResize(box *box, short edge);
+// todo - deprecated ?
+void box_resize(Box *Box, short edge);
 
-void inline clearVram();
+// c
+void inline clear_vram();
 
-void inline fixPrintNeocore(int x, int y, char *label);
+// f
+void inline fix_print_neocore(int x, int y, char *label);
 
-void inline gpuInit();
+// g
+void inline gpu_init();
 
-BOOL isVectorLeft(short x, short y, short v1x, short v1y, short v2x, short v2y);
+// i
+void image_physic_shrunk_centroid_init(picturePhysicShrunkCentroid *pps, pictureInfo *pi, paletteInfo *pali, short xCenter, short yCenter);
+void image_physic_shrunk_centroid_set_position(picturePhysicShrunkCentroid *pps, short x, short y);
+void image_physic_shrunk_centroid_move(picturePhysicShrunkCentroid *pps, short xShift, short yShift);
+void image_physic_shrunk_centroid_update(picturePhysicShrunkCentroid *pps, WORD shrunk);
+void image_physic_shrunk_centroid_display(picturePhysicShrunkCentroid *pps, WORD shrunk);
+void image_physic_display(picturePhysic *pp, pictureInfo *pi, paletteInfo *pali, short posX, short posY);
+void image_physic_set_position(picturePhysic *pp, short x, short y);
+void image_physic_move(picturePhysic *pp, short x, short y);
+void image_shrunk(picture *p, pictureInfo *pi, WORD shrunk_value);
+void images_show(picture *p, WORD max, BOOL visible); // TODO deprecated, implement picturesHide, picturesShow, pictureHide, pictureShow
+void image5_show(picture5 *pics, BOOL visible); // TODO deprecated
+void image_display(picture *p, pictureInfo *pi, paletteInfo *pali, short posX, short posY);
+void image_shrunk_centroid(picture *p, pictureInfo *pi, short centerPosX, short centerPosY, WORD shrunk_value);
+void image_flash(picture *p, BYTE freq);
+WORD image_get_sprite_index_autoinc(pictureInfo *pi);
 
-void                  joypadUpdate();
-void                  joypadUpdateEdge();
-BOOL                  joypadIsUp();
-BOOL                  joypadIsDown();
-BOOL                  joypadIsLeft();
-BOOL                  joypadIsRight();
-BOOL                  joypadIsStart();
-BOOL                  joypadIsA();
-BOOL                  joypadIsB();
-BOOL                  joypadIsC();
-BOOL                  joypadIsD();
-void inline           joypadDebug();
+// todo - change signature
+BOOL vector_is_left(short x, short y, short v1x, short v1y, short v2x, short v2y);
 
-void        loggerInit();
-void        loggerPositionSet(WORD _x, WORD _y);
-WORD inline loggerInfo(char *txt);
-void inline loggerWord(char *label, WORD value);
-void inline loggerInt(char *label, int value);
-void inline loggerDword(char *label, DWORD value);
-void inline loggerShort(char *label, short value);
-void inline loggerByte(char *label, BYTE value);
-void inline loggerBool(char *label, BOOL value);
-void inline loggerAsprite(char *label, aSprite *as);
-void inline loggerSpriteInfo(char *label, spriteInfo *si);
-void inline loggerBox(char *label, box *b);
-void inline loggerPictureInfo(char *label, pictureInfo *pi);
+// j
+void        joypad_update();
+void        joypad_update_edge();
+BOOL        joypad_is_up();
+BOOL        joypad_is_down();
+BOOL        joypad_is_left();
+BOOL        joypad_is_right();
+BOOL        joypad_is_start();
+BOOL        joypad_is_a();
+BOOL        joypad_is_b();
+BOOL        joypad_is_c();
+BOOL        joypad_is_d();
+void inline joypad_debug();
 
-void          picturePhysicDisplay(picturePhysic *pp, pictureInfo *pi, paletteInfo *pali, short posX, short posY);
-void          picturePhysicSetPos(picturePhysic *pp, short x, short y);
-void          picturePhysicMove(picturePhysic *pp, short x, short y);
-void          pictureShrunk(picture *p, pictureInfo *pi, WORD shrunk_value);
-void          picturesShow(picture *p, WORD max, BOOL visible);
-void          picture5Show(picture5 *pics, BOOL visible);
-void          pictureDisplay(picture *p, pictureInfo *pi, paletteInfo *pali, short posX, short posY);
-void          pictureShrunkCentroid(picture *p, pictureInfo *pi, short centerPosX, short centerPosY, WORD shrunk_value);
-void          paletteDisableAutoinc();
-void          paletteEnableAutoinc();
-BYTE          paletteGetIndex();
-BYTE          paletteSetIndex(BYTE index);
-WORD          pictureGetSpriteIndexAutoinc(pictureInfo *pi);
-BYTE          paletteGetIndexAutoinc(paletteInfo *pali);
+// l
+void        logger_init();
+void        logger_set_position(WORD _x, WORD _y);
+WORD inline logger_info(char *txt);
+void inline logger_word(char *label, WORD value);
+void inline logger_int(char *label, int value);
+void inline logger_dword(char *label, DWORD value);
+void inline logger_short(char *label, short value);
+void inline logger_byte(char *label, BYTE value);
+void inline logger_bool(char *label, BOOL value);
+void inline logger_animated_sprite(char *label, aSprite *as);
+void inline logger_spriteInfo(char *label, spriteInfo *si);
+void inline logger_box(char *label, Box *b);
+void inline logger_pictureInfo(char *label, pictureInfo *pi);
 
-void maskDisplay(picture pic[], vec2short vec[], BYTE vector_max); // TODO rename ? (vectorsDisplay)
-void maskUpdate(short x, short y, vec2short vec[], vec2short offset[], BYTE vector_max); // TODO rename ? (vectorsDebug)
+// p
+void palette_disable_autoinc();
+void palette_enable_autoinc();
+BYTE palette_get_index();
+BYTE palette_set_index(BYTE index);
+BYTE palette_get_index_autoinc(paletteInfo *pali);
+
+// m
+void mask_display(picture pic[], Vec2short vec[], BYTE vector_max); // TODO rename ? (vectorsDisplay)
+void mask_update(short x, short y, Vec2short vec[], Vec2short offset[], BYTE vector_max); // TODO rename ? (vectorsDebug)
 // TODO hardcode point\dot asset
 
-vec2int   vec2intMake(int x, int y);
-vec2short vec2shortMake(short x, short y);
-vec2byte  vec2byteMake(BYTE x, BYTE y);
-BOOL      vectorsCollide(box *box, vec2short vec[], BYTE vector_max);
+void vec2int_init(Vec2int *vec, int x, int y);
+void vec2short_init(Vec2short *vec, short x, short y);
+void vec2byte_init(Vec2byte *vec, BYTE x, BYTE y);
 
-WORD        shrunkForge(BYTE xc, BYTE yc);
-void inline shrunk(WORD addr, WORD shrunk_value);
-WORD        shrunkRange(WORD addr_start, WORD addr_end, WORD shrunk_value);
-WORD        shrunkPropTableGet(WORD index); // TODO rename shrunkGetPropTable ?
-char        sinTableGet(WORD index);
-void        scrollerDisplay(scroller *s, scrollerInfo *si, paletteInfo *pali, short posX, short posY);
-void        spriteDisableAutoinc();
-void        spriteEnableAutoinc();
-WORD        spriteGetIndex();
-void        spriteSetIndex(WORD index);
-WORD        scrollerGetSpriteIndexAutoinc(scrollerInfo *si);
-void        scrollerMove(scroller *sc, short x, short y);
-short       shrunkCentroidGetTranslatedX(short centerPosX, WORD tileWidth, BYTE shrunkX);
-short       shrunkCentroidGetTranslatedY(short centerPosY, WORD tileHeight, BYTE shrunkY);
+BOOL vectors_collide(Box *box, Vec2short vec[], BYTE vector_max);
 
-DWORD inline waitVbl(WORD nb);
+// s
+WORD        shrunk_forge(BYTE xc, BYTE yc);
+void inline shrunk_addr(WORD addr, WORD shrunk_value);
+WORD        shrunk_range(WORD addr_start, WORD addr_end, WORD shrunk_value);
+WORD        shrunk_prop_table_get(WORD index); // TODO rename shrunkGetPropTable ?
+char        sin_table_get(WORD index);
+void        scroller_display(scroller *s, scrollerInfo *si, paletteInfo *pali, short posX, short posY);
+void        sprite_disable_autoinc();
+void        sprite_enable_autoinc();
+WORD        sprite_get_Index();
+void        sprite_set_index(WORD index);
+WORD        scroller_get_sprite_index_autoinc(scrollerInfo *si);
+void        scroller_move(scroller *sc, short x, short y);
+int         shrunk_centroid_get_translated_x(short centerPosX, WORD tileWidth, BYTE shrunkX);
+int         shrunk_centroid_get_translated_y(short centerPosY, WORD tileHeight, BYTE shrunkY);
+
+// w
+DWORD inline wait_vbl_max(WORD nb);
+#define WAIT_VBL waitVBlank();
+
 #endif

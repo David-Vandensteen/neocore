@@ -26,23 +26,23 @@ static void update_logo2();
 static void update_logo3();
 
 static void init() {
-  loggerInit();
-  logo1_position_center = vec2shortMake(LOGO1_POSITION_CENTER_X_INIT, 30);
-  logo2_position_center = vec2shortMake(160, 180);
-  logo3_position_center = vec2shortMake(160, LOGO3_POSITION_CENTER_Y_INIT);
+  logger_init();
+  vec2short_init(&logo1_position_center, LOGO1_POSITION_CENTER_X_INIT, 30);
+  vec2short_init(&logo2_position_center, 160, 180);
+  vec2short_init(&logo3_position_center, 160, LOGO3_POSITION_CENTER_Y_INIT);
 }
 
 static void display() {
-  paletteDisableAutoinc();
-  pictureDisplay(&logo1, &logo_sprite, &logo_sprite_Palettes, logo1_position_center.x, logo1_position_center.y);
-  pictureDisplay(&logo3, &logo_sprite, &logo_sprite_Palettes, logo3_position_center.x, logo3_position_center.y);
-  paletteEnableAutoinc();
-  pictureDisplay(&logo2, &logo_sprite, &logo_sprite_Palettes, logo2_position_center.x, logo2_position_center.y);
-  loggerInfo("HORIZONTAL SHRUNK");
-  loggerPositionSet(1, 11);
-  loggerInfo("VERTICAL SHRUNK");
-  loggerPositionSet(1, 20);
-  loggerInfo("PROPORTIONAL SHRUNK");
+  palette_disable_autoinc();
+  image_display(&logo1, &logo_sprite, &logo_sprite_Palettes, logo1_position_center.x, logo1_position_center.y);
+  image_display(&logo3, &logo_sprite, &logo_sprite_Palettes, logo3_position_center.x, logo3_position_center.y);
+  palette_enable_autoinc();
+  image_display(&logo2, &logo_sprite, &logo_sprite_Palettes, logo2_position_center.x, logo2_position_center.y);
+  logger_info("HORIZONTAL SHRUNK");
+  logger_set_position(1, 11);
+  logger_info("VERTICAL SHRUNK");
+  logger_set_position(1, 20);
+  logger_info("PROPORTIONAL SHRUNK");
 }
 
 static void update() {
@@ -53,7 +53,7 @@ static void update() {
 
 static void update_logo1() { // Horizontal
   logo1_shrunk_x += logo1_shrunk_inc;
-  pictureShrunkCentroid(&logo1, &logo_sprite, logo1_position_center.x, logo1_position_center.y, shrunkForge(logo1_shrunk_x, 0xFF));
+  image_shrunk_centroid(&logo1, &logo_sprite, logo1_position_center.x, logo1_position_center.y, shrunk_forge(logo1_shrunk_x, 0xFF));
   if (logo1_shrunk_x == 0) {
     logo1_shrunk_inc = 1;
     logo1_position_center.x = LOGO1_POSITION_CENTER_X_INIT;
@@ -65,14 +65,14 @@ static void update_logo1() { // Horizontal
 }
 
 static void update_logo2() { // Proportional
-  pictureShrunkCentroid(&logo2, &logo_sprite, logo2_position_center.x, logo2_position_center.y, shrunkPropTableGet(shrunkTableIndex));
+  image_shrunk_centroid(&logo2, &logo_sprite, logo2_position_center.x, logo2_position_center.y, shrunk_prop_table_get(shrunkTableIndex));
   shrunkTableIndex++;
   if (shrunkTableIndex >= SHRUNK_TABLE_PROP_SIZE) shrunkTableIndex = 0;
 }
 
 static void update_logo3() { // Verical
   logo3_shrunk_y += logo3_shrunk_inc;
-  pictureShrunkCentroid(&logo3, &logo_sprite, logo3_position_center.x, logo3_position_center.y, shrunkForge(0XF ,logo3_shrunk_y));
+  image_shrunk_centroid(&logo3, &logo_sprite, logo3_position_center.x, logo3_position_center.y, shrunk_forge(0XF ,logo3_shrunk_y));
   if (logo3_shrunk_y == 0) {
     logo3_shrunk_inc = 1;
     logo3_position_center.y = LOGO3_POSITION_CENTER_Y_INIT;
@@ -84,11 +84,11 @@ static void update_logo3() { // Verical
 }
 
 int main(void) {
-  gpuInit();
+  gpu_init();
   init();
   display();
   while(1) {
-    waitVBlank();
+    WAIT_VBL
     update();
     SCClose();
   };

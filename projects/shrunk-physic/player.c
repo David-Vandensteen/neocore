@@ -9,38 +9,33 @@
 static aSpritePhysic player;
 
 void player_init() {
-  boxInit(&player.box, 48, 16, 0, 0);
+  box_init(&player.box, 48, 16, 0, 0);
 }
 
 void player_display() {
-  aSpritePhysicDisplay(&player, &player_sprite, &player_sprite_Palettes, 100, 100, PLAYER_SPRITE_ANIM_IDLE);
+  animated_sprite_physic_display(&player, &player_sprite, &player_sprite_Palettes, 100, 100, PLAYER_SPRITE_ANIM_IDLE);
 }
 
 void player_update() {
+  joypad_update();
 
-  // loggerInit();
-  // loggerBox("PLAYER BOX ", &player.box);
-
-  joypadUpdate();
-
-  if (joypadIsLeft() && player.as.posX > PLAYER_MIN_X) { aSpritePhysicMove(&player, -1, 0); }
-  if (joypadIsRight() && player.as.posX < PLAYER_MAX_X) { aSpritePhysicMove(&player, 1, 0); }
-  if (joypadIsUp() && player.as.posY > PLAYER_MIN_Y) {
-    aSpritePhysicMove(&player, 0, -1);
+  if (joypad_is_left() && player.as.posX > PLAYER_MIN_X) { animated_sprite_physic_move(&player, -1, 0); }
+  if (joypad_is_right() && player.as.posX < PLAYER_MAX_X) { animated_sprite_physic_move(&player, 1, 0); }
+  if (joypad_is_up() && player.as.posY > PLAYER_MIN_Y) {
+    animated_sprite_physic_move(&player, 0, -1);
     aSpriteSetAnim(&player.as, PLAYER_SPRITE_ANIM_UP);
   }
-  if (joypadIsDown() && player.as.posY < PLAYER_MAX_Y) {
-    aSpritePhysicMove(&player, 0, 1);
+  if (joypad_is_down() && player.as.posY < PLAYER_MAX_Y) {
+    animated_sprite_physic_move(&player, 0, 1);
     aSpriteSetAnim(&player.as, PLAYER_SPRITE_ANIM_DOWN);
   }
-  if (!joypadIsDown() && !joypadIsUp()) { aSpriteSetAnim(&player.as, PLAYER_SPRITE_ANIM_IDLE); }
+  if (!joypad_is_down() && !joypad_is_up()) { aSpriteSetAnim(&player.as, PLAYER_SPRITE_ANIM_IDLE); }
   aSpriteAnimate(&player.as);
-  if (DAT_frameCounter % 60 == 0) aSpritePhysicFlash(&player, false, 0);
-  aSpritePhysicFlashUpdate(&player);
+  if (DAT_frameCounter % 60 == 0) animated_sprite_flash(&player.as, false);
 }
 
 void player_collide(box *b) {
-  if (boxCollide(b, &player.box)) aSpritePhysicFlash(&player, true, 5);
+  if (box_collide(b, &player.box)) animated_sprite_flash(&player.as, 4);
 }
 
 void player_collides(box *boxes[], BYTE box_max) {

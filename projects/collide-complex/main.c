@@ -21,12 +21,12 @@ static void update_player();
 
 static void init() {
   init_mask();
-  boxInit(&player.box, 48, 16, 0, 0);
+  box_init(&player.box, 48, 16, 0, 0);
 }
 
 static void display() {
-  pictureDisplay(&peak,&peak_sprite, &peak_sprite_Palettes, peak_position[X], peak_position[Y]);
-  aSpritePhysicDisplay(&player, &player_sprite, &player_sprite_Palettes, 10, 10, PLAYER_SPRITE_ANIM_IDLE);
+  image_display(&peak,&peak_sprite, &peak_sprite_Palettes, peak_position[X], peak_position[Y]);
+  animated_sprite_physic_display(&player, &player_sprite, &player_sprite_Palettes, 10, 10, PLAYER_SPRITE_ANIM_IDLE);
   display_mask_debug();
 }
 
@@ -34,7 +34,7 @@ static void display_mask_debug() {
   BYTE i = 0;
   picture p;
   for (i = 0; i < PEAK_MASK_VECTOR_MAX; i++) {
-    pictureDisplay(&p, &dot_sprite, &dot_sprite_Palettes, peak_mask[i].x, peak_mask[i].y);
+    image_display(&p, &dot_sprite, &dot_sprite_Palettes, peak_mask[i].x, peak_mask[i].y);
   }
 }
 
@@ -59,21 +59,20 @@ static void init_mask() {
 }
 
 static void update_player() {
-  joypadUpdate();
-  if (joypadIsLeft() && player.as.posX > 0) { aSpritePhysicMove(&player, -1, 0); }
-  if (joypadIsRight() && player.as.posX < 280) { aSpritePhysicMove(&player, 1, 0); }
-  if (joypadIsUp() && player.as.posY > 0) {
-    aSpritePhysicMove(&player, 0, -1);
-    aSpriteSetAnim(&player.as, PLAYER_SPRITE_ANIM_UP);
+  joypad_update();
+  if (joypad_is_left() && player.as.posX > 0) { animated_sprite_physic_move(&player, -1, 0); }
+  if (joypad_is_right() && player.as.posX < 280) { animated_sprite_physic_move(&player, 1, 0); }
+  if (joypad_is_up() && player.as.posY > 0) {
+    animated_sprite_physic_move(&player, 0, -1);
+    animated_sprite_set_animation(&player.as, PLAYER_SPRITE_ANIM_UP);
   }
-  if (joypadIsDown() && player.as.posY < 200) {
-    aSpritePhysicMove(&player, 0, 1);
-    aSpriteSetAnim(&player.as, PLAYER_SPRITE_ANIM_DOWN);
+  if (joypad_is_down() && player.as.posY < 200) {
+    animated_sprite_physic_move(&player, 0, 1);
+    animated_sprite_set_animation(&player.as, PLAYER_SPRITE_ANIM_DOWN);
   }
-  if (!joypadIsDown() && !joypadIsUp()) { aSpriteSetAnim(&player.as, PLAYER_SPRITE_ANIM_IDLE); }
-  (vectorsCollide(&player.box, peak_mask, PEAK_MASK_VECTOR_MAX)) ? aSpritePhysicFlash(&player, true, 5) : aSpritePhysicFlash(&player, false, 0);
-  aSpritePhysicFlashUpdate(&player);
-  aSpriteAnimate(&player.as);
+  if (!joypad_is_down() && !joypad_is_up()) { animated_sprite_set_animation(&player.as, PLAYER_SPRITE_ANIM_IDLE); }
+  (vectors_collide(&player.box, peak_mask, PEAK_MASK_VECTOR_MAX)) ? animated_sprite_flash(&player.as, 4) : animated_sprite_flash(&player.as, false);
+  animated_sprite_animate(&player.as);
 }
 
 static void update() {
@@ -81,11 +80,11 @@ static void update() {
 }
 
 int main(void) {
-  gpuInit();
+  gpu_init();
   init();
   display();
   while(1) {
-    waitVBlank();
+    WAIT_VBL
     update();
     SCClose();
   };
