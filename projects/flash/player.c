@@ -8,6 +8,8 @@
 
 static aSpritePhysic player;
 
+static Animated_Sprite_Physic player_new;
+
 static void animated_sprite_init(Animated_Sprite *animated_sprite ,spriteInfo *si, paletteInfo *pali) {
   animated_sprite->si = si;
   animated_sprite->pali = pali;
@@ -40,7 +42,11 @@ static void animated_sprite_physic_init(Animated_Sprite_Physic *animated_sprite_
 }
 
 void player_init() {
+  // useless
   // box_init(&player.box, 48, 16, 0, 0);
+
+  // wip
+  animated_sprite_physic_init(&player_new, &player_sprite, &player_sprite_Palettes, 48, 16, 0, 0);
 }
 
 void player_display() {
