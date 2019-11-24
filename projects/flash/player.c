@@ -7,7 +7,6 @@
 #include "externs.h"
 
 static aSpritePhysic player;
-
 static Animated_Sprite_Physic player_new;
 
 static void animated_sprite_init(Animated_Sprite *animated_sprite ,spriteInfo *si, paletteInfo *pali) {
@@ -50,6 +49,7 @@ void player_init() {
 }
 
 void player_display() {
+ // NEW_animated_sprite_display(&player_new, 100, 100, PLAYER_SPRITE_ANIM_IDLE);
   // animated_sprite_physic_display(&player, &player_sprite, &player_sprite_Palettes, 100, 100, PLAYER_SPRITE_ANIM_IDLE);
 }
 
