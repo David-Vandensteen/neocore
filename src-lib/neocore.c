@@ -92,7 +92,7 @@ JOYPAD
 
 //
 void animated_sprite_physic_display(aSpritePhysic *asp, spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD anim) {
-  animated_sprite_display(&asp->as, si, pali, posX, posY, anim);
+  // animated_sprite_display(&asp->as, si, pali, posX, posY, anim);
   box_update(&asp->box, posX, posY);
 }
 
@@ -110,24 +110,29 @@ void animated_sprite_physic_shrunk(aSprite *as, spriteInfo *si, WORD shrunk_valu
 	shrunk_range(0x8000 + as->baseSprite, 0x8000 + as->baseSprite + si->maxWidth, shrunk_value);
 }
 
-void animated_sprite_display(aSprite *as, spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD anim) {
+void animated_sprite_init(Animated_Sprite *animated_sprite ,spriteInfo *si, paletteInfo *pali) {
+  animated_sprite->si = si;
+  animated_sprite->pali = pali;
+};
+
+void animated_sprite_display(Animated_Sprite *animated_sprite, short x, short y, WORD anim) {
   aSpriteInit(
-    as,
-    si,
-		animated_sprite_index_auto(si),
+    &animated_sprite->as,
+    animated_sprite->si,
+		animated_sprite_index_auto(animated_sprite->si),
     palette_get_index(),
-    posX,
-    posY,
+    x,
+    y,
     anim,
     FLIP_NONE
   );
 
   palJobPut(
-    palette_get_index_autoinc(pali),
-    pali->palCount,
-    pali->data
+    palette_get_index_autoinc(animated_sprite->pali),
+    animated_sprite->pali->palCount,
+    animated_sprite->pali->data
   );
-  aSpriteSetAnim(as, anim);
+  aSpriteSetAnim(&animated_sprite->as, anim);
 }
 
 WORD animated_sprite_index_auto(spriteInfo *si) {

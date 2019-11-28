@@ -129,6 +129,22 @@ struct aSpritePhysic {
   WORD height;
 };
 
+typedef struct Flash Flash;
+struct Flash {
+  short frequency;
+  short lengh;
+  BOOL visible;
+  BOOL enabled;
+};
+
+typedef struct Animated_Sprite Animated_Sprite;
+struct Animated_Sprite {
+  aSprite as;
+  spriteInfo *si;
+  paletteInfo *pali;
+  Flash flash;
+};
+
 typedef struct picturePhysic picturePhysic;
 struct picturePhysic {
   picture p;
@@ -151,7 +167,8 @@ void animated_sprite_physic_set_position(aSpritePhysic *asp, short x, short y);
 void animated_sprite_physic_move(aSpritePhysic *asp, short x, short y);
 void animated_sprite_physic_shrunk(aSprite *as, spriteInfo *si, WORD shrunk_value);
 
-void animated_sprite_display(aSprite *as, spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD anim);
+void animated_sprite_init(Animated_Sprite *animated_sprite ,spriteInfo *si, paletteInfo *pali);
+void animated_sprite_display(Animated_Sprite *animated_sprite, short x, short y, WORD anim);
 WORD animated_sprite_index_auto(spriteInfo *si);
 void animated_sprite_flash(aSprite *as, BYTE freq);
 // todo
@@ -160,7 +177,7 @@ BOOL animated_sprite_is_visible(aSprite *as);
 void animated_sprite_shrunk(aSprite *as, spriteInfo *si, WORD shrunk_value);
 
 #define animated_sprite_set_animation(as, anim) aSpriteSetAnim(as, anim)
-#define animated_sprite_animate(as) aSpriteAnimate(as)
+#define animated_sprite_animate(animated_sprite) aSpriteAnimate(animated_sprite.as)
 #define animated_sprite_move(as, xOffset, yOffset) aSpriteMove(as, xOffset, yOffset)
 
 // b

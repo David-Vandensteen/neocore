@@ -9,31 +9,6 @@
 static aSpritePhysic player;
 static Animated_Sprite_Physic player_new;
 
-static void animated_sprite_init(Animated_Sprite *animated_sprite ,spriteInfo *si, paletteInfo *pali) {
-  animated_sprite->si = si;
-  animated_sprite->pali = pali;
-};
-
-static void NEW_animated_sprite_display(Animated_Sprite *animated_sprite, short x, short y, WORD anim) {
-  aSpriteInit(
-    &animated_sprite->as,
-    animated_sprite->si,
-		animated_sprite_index_auto(animated_sprite->si),
-    palette_get_index(),
-    x,
-    y,
-    anim,
-    FLIP_NONE
-  );
-
-  palJobPut(
-    palette_get_index_autoinc(animated_sprite->pali),
-    animated_sprite->pali->palCount,
-    animated_sprite->pali->data
-  );
-  aSpriteSetAnim(&animated_sprite->as, anim);
-}
-
 static void animated_sprite_physic_init(Animated_Sprite_Physic *animated_sprite_physic, spriteInfo *si, paletteInfo *pali, short box_witdh, short box_height, short box_width_offset, short box_height_offset) {
   box_init(&animated_sprite_physic->box, box_witdh, box_height, box_width_offset, box_height_offset);
   animated_sprite_physic->physic_enabled = true;
