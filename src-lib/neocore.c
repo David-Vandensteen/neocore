@@ -91,9 +91,39 @@ void inline static autoInc(){
 JOYPAD
 
 //
-void animated_sprite_physic_display(aSpritePhysic *asp, spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD anim) {
-  // animated_sprite_display(&asp->as, si, pali, posX, posY, anim);
-  box_update(&asp->box, posX, posY);
+
+void animated_sprite_physic_init(
+    Animated_Sprite_Physic *animated_sprite_physic,
+    spriteInfo *si,
+    paletteInfo *pali,
+    short box_witdh,
+    short box_height,
+    short box_width_offset,
+    short box_height_offset
+  ) {
+  box_init(
+    &animated_sprite_physic->box,
+    box_witdh,
+    box_height,
+    box_width_offset,
+    box_height_offset
+  );
+  animated_sprite_physic->physic_enabled = true;
+  animated_sprite_init(
+    &animated_sprite_physic->animated_sprite,
+    si,
+    pali
+  );
+}
+
+void animated_sprite_physic_display(Animated_Sprite_Physic *animated_sprite_physic, short x, short y, WORD anim) {
+  animated_sprite_display(
+    &animated_sprite_physic->animated_sprite,
+    x,
+    y,
+    anim
+  );
+  box_update(&animated_sprite_physic->box, x, y);
 }
 
 void animated_sprite_physic_set_position(aSpritePhysic *asp, short x, short y) {
@@ -101,10 +131,12 @@ void animated_sprite_physic_set_position(aSpritePhysic *asp, short x, short y) {
   box_update(&asp->box, x, y);
 }
 
+/*
 void animated_sprite_physic_move(aSpritePhysic *asp, short x, short y) {
   aSpriteMove(&asp->as, x, y);
   box_update(&asp->box, asp->as.posX, asp->as.posY);
 }
+*/
 
 void animated_sprite_physic_shrunk(aSprite *as, spriteInfo *si, WORD shrunk_value) {
 	shrunk_range(0x8000 + as->baseSprite, 0x8000 + as->baseSprite + si->maxWidth, shrunk_value);
@@ -588,7 +620,6 @@ void image_flash(picture *p, BYTE freq) {
     pictureShow(p);
   }
 }
-
 
 void palette_disable_autoinc() {
   palette_autoinc = false;

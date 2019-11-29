@@ -145,6 +145,13 @@ struct Animated_Sprite {
   Flash flash;
 };
 
+typedef struct Animated_Sprite_Physic Animated_Sprite_Physic;
+struct Animated_Sprite_Physic {
+  Animated_Sprite animated_sprite;
+  Box box;
+  BOOL physic_enabled;
+};
+
 typedef struct picturePhysic picturePhysic;
 struct picturePhysic {
   picture p;
@@ -161,11 +168,22 @@ struct picturePhysicShrunkCentroid {
   Box boxOrigin;
 };
 //  a
-void animated_sprite_physic_display(aSpritePhysic *asp, spriteInfo *si, paletteInfo *pali, short posX, short posY, WORD anim);
+void animated_sprite_physic_init(
+  Animated_Sprite_Physic *animated_sprite_physic,
+  spriteInfo *si,
+  paletteInfo *pali,
+  short box_witdh,
+  short box_height,
+  short box_width_offset,
+  short box_height_offset
+);
+
+void animated_sprite_physic_display(Animated_Sprite_Physic *animated_sprite_physic, short x, short y, WORD anim);
 void animated_sprite_physic_collide(aSpritePhysic *asp, Box *box); // TODO not implementd ??? needed ???
 void animated_sprite_physic_set_position(aSpritePhysic *asp, short x, short y);
-void animated_sprite_physic_move(aSpritePhysic *asp, short x, short y);
+// void animated_sprite_physic_move(aSpritePhysic *asp, short x, short y);
 void animated_sprite_physic_shrunk(aSprite *as, spriteInfo *si, WORD shrunk_value);
+#define animated_sprite_physic_animate(animated_sprite_physic) aSpriteAnimate(animated_sprite_physic.animated_sprite.as)
 
 void animated_sprite_init(Animated_Sprite *animated_sprite ,spriteInfo *si, paletteInfo *pali);
 void animated_sprite_display(Animated_Sprite *animated_sprite, short x, short y, WORD anim);
@@ -178,7 +196,7 @@ void animated_sprite_shrunk(aSprite *as, spriteInfo *si, WORD shrunk_value);
 
 #define animated_sprite_set_animation(as, anim) aSpriteSetAnim(as, anim)
 #define animated_sprite_animate(animated_sprite) aSpriteAnimate(animated_sprite.as)
-#define animated_sprite_move(as, xOffset, yOffset) aSpriteMove(as, xOffset, yOffset)
+// #define animated_sprite_move(as, xOffset, yOffset) aSpriteMove(as, xOffset, yOffset)
 
 // b
 BYTE boxes_collide(Box *b, Box *boxes[], BYTE box_max);

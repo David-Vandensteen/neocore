@@ -4,6 +4,8 @@
 
 NEOCORE_INIT
 
+#define animated_sprite_move(animated_sprite, x_offset, y_offset) aSpriteMove(animated_sprite.as, x_offset, y_offset)
+
 Animated_Sprite player;
 
 int main(void) {
@@ -13,6 +15,7 @@ int main(void) {
   while(1) {
     WAIT_VBL
     logger_init();
+    animated_sprite_move(&player, 1, 0);
     animated_sprite_animate(&player);
     SCClose();
   };
