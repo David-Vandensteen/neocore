@@ -126,20 +126,33 @@ void animated_sprite_physic_display(Animated_Sprite_Physic *animated_sprite_phys
   box_update(&animated_sprite_physic->box, x, y);
 }
 
-void animated_sprite_physic_set_position(aSpritePhysic *asp, short x, short y) {
-  aSpriteSetPos(&asp->as, x, y);
-  box_update(&asp->box, x, y);
+void animated_sprite_physic_set_position(Animated_Sprite_Physic *animated_sprite_physic, short x, short y) {
+  animated_sprite_set_position(&animated_sprite_physic->animated_sprite, x, y);
+  box_update(&animated_sprite_physic->box, x, y);
 }
 
-/*
-void animated_sprite_physic_move(aSpritePhysic *asp, short x, short y) {
-  aSpriteMove(&asp->as, x, y);
-  box_update(&asp->box, asp->as.posX, asp->as.posY);
+void animated_sprite_physic_move(Animated_Sprite_Physic *animated_sprite_physic, short x_offset, short y_offset) {
+  animated_sprite_move(&animated_sprite_physic->animated_sprite, x_offset, y_offset);
+  box_update(&animated_sprite_physic->box, animated_sprite_physic->animated_sprite.as.posX, animated_sprite_physic->animated_sprite.as.posY);
 }
-*/
 
-void animated_sprite_physic_shrunk(aSprite *as, spriteInfo *si, WORD shrunk_value) {
-	shrunk_range(0x8000 + as->baseSprite, 0x8000 + as->baseSprite + si->maxWidth, shrunk_value);
+void animated_sprite_physic_shrunk(Animated_Sprite_Physic *animated_sprite_physic, WORD shrunk_value) {
+  animated_sprite_shrunk(&animated_sprite_physic->animated_sprite, shrunk_value);
+  // todo box resize
+}
+
+void animated_sprite_physic_hide(Animated_Sprite_Physic *animated_sprite_physic) {
+  animated_sprite_hide(&animated_sprite_physic->animated_sprite);
+  animated_sprite_physic->physic_enabled = false;
+}
+
+void animated_sprite_physic_show(Animated_Sprite_Physic *animated_sprite_physic) {
+  animated_sprite_show(&animated_sprite_physic->animated_sprite);
+  animated_sprite_physic->physic_enabled = true;
+}
+
+BOOL animated_sprite_physic_is_visible(Animated_Sprite_Physic *animated_sprite_physic) {
+  return animated_sprite_is_visible(&animated_sprite_physic->animated_sprite);
 }
 
 void animated_sprite_init(Animated_Sprite *animated_sprite ,spriteInfo *si, paletteInfo *pali) {
@@ -173,25 +186,39 @@ WORD animated_sprite_index_auto(spriteInfo *si) {
   return rt;
 }
 
-void animated_sprite_flash(aSprite *as, BYTE freq) {
-  if (freq != 0) {
-    if (DAT_frameCounter % freq == 0) {
-      if (animated_sprite_is_visible(as)) {
-        aSpriteHide(as);
+void animated_sprite_flash(Animated_Sprite *animated_sprite) {
+  if (animated_sprite->flash.frequency != 0 && animated_sprite->flash.lengh != 0) {
+    if (DAT_frameCounter % animated_sprite->flash.frequency == 0) {
+      if (animated_sprite_is_visible(animated_sprite)) {
+        animated_sprite_hide(animated_sprite);
       } else {
-        aSpriteShow(as);
+        animated_sprite_show(animated_sprite);
       }
+      animated_sprite->flash.lengh--;
+      if (animated_sprite->flash.lengh == 0) animated_sprite_show(animated_sprite);
     }
   }
 }
 
-BOOL animated_sprite_is_visible(aSprite *as) {
-  return (as->flags | (0x0080 == 0)) ? false : true;
+BOOL animated_sprite_is_visible(Animated_Sprite *animated_sprite) {
+  return animated_sprite->flash.visible;
 }
 
-void animated_sprite_shrunk(aSprite *as, spriteInfo *si, WORD shrunk_value) {
-	shrunk_range(0x8000 + as->baseSprite, 0x8000 + as->baseSprite + si->maxWidth, shrunk_value);
+void animated_sprite_shrunk(Animated_Sprite *animated_sprite, WORD shrunk_value) {
+	shrunk_range(0x8000 + animated_sprite->as.baseSprite, 0x8000 + animated_sprite->as.baseSprite + animated_sprite->si->maxWidth, shrunk_value);
 }
+
+void animated_sprite_hide(Animated_Sprite *animated_sprite) {
+  animated_sprite->flash.visible = false;
+  aSpriteHide(&animated_sprite->as);
+  clearSprites(animated_sprite->as.baseSprite, animated_sprite->as.tileWidth);
+}
+
+void animated_sprite_show(Animated_Sprite *animated_sprite) {
+  animated_sprite->flash.visible = true;
+  aSpriteShow(&animated_sprite->as);
+}
+
 
 // todo
 /*
@@ -347,6 +374,11 @@ void inline clear_vram() { // TODO diable interrupt
 
 void inline fix_print_neocore(int x, int y, char *label){
   fixPrint(x, y, 0, 0, label);
+}
+
+void flash_init(Flash *flash, short frequency, short lengh) {
+  flash->frequency = frequency;
+  flash->lengh = lengh;
 }
 
 void inline gpu_init() {

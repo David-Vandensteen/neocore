@@ -27,6 +27,8 @@ function _main{
   compileProject "shrunk-physic" 1
   compileProject "shrunk" 1
   compileProject "sprite" 1
+  compileProject "test_animated_sprite" 1
+  compileProject "test_animated_sprite_physic" 1
 }
 
 _main

@@ -122,17 +122,19 @@ struct picture5 {
   picture pic4;
 };
 
+/*
 typedef struct aSpritePhysic aSpritePhysic;
 struct aSpritePhysic {
   aSprite as; //50 bytes
   Box box;
   WORD height;
 };
+*/
 
 typedef struct Flash Flash;
 struct Flash {
-  short frequency;
-  short lengh;
+  WORD frequency;
+  WORD lengh;
   BOOL visible;
   BOOL enabled;
 };
@@ -145,9 +147,24 @@ struct Animated_Sprite {
   Flash flash;
 };
 
+typedef struct Image Image;
+struct Image {
+  picture pic;
+  pictureInfo *pi;
+  paletteInfo *pali;
+  Flash flash;
+};
+
 typedef struct Animated_Sprite_Physic Animated_Sprite_Physic;
 struct Animated_Sprite_Physic {
   Animated_Sprite animated_sprite;
+  Box box;
+  BOOL physic_enabled;
+};
+
+typedef struct Image_Physic Image_Physic;
+struct Image_Physic {
+  Image image;
   Box box;
   BOOL physic_enabled;
 };
@@ -179,23 +196,33 @@ void animated_sprite_physic_init(
 );
 
 void animated_sprite_physic_display(Animated_Sprite_Physic *animated_sprite_physic, short x, short y, WORD anim);
-void animated_sprite_physic_collide(aSpritePhysic *asp, Box *box); // TODO not implementd ??? needed ???
-void animated_sprite_physic_set_position(aSpritePhysic *asp, short x, short y);
-// void animated_sprite_physic_move(aSpritePhysic *asp, short x, short y);
-void animated_sprite_physic_shrunk(aSprite *as, spriteInfo *si, WORD shrunk_value);
+// void animated_sprite_physic_collide(aSpritePhysic *asp, Box *box); // TODO not implementd ??? needed ???
+void animated_sprite_physic_set_position(Animated_Sprite_Physic *animated_sprite_physic, short x, short y);
+void animated_sprite_physic_move(Animated_Sprite_Physic *animated_sprite_physic, short x_offset, short y_offset);
+void animated_sprite_physic_shrunk(Animated_Sprite_Physic *animated_sprite_physic, WORD shrunk_value);
 #define animated_sprite_physic_animate(animated_sprite_physic) aSpriteAnimate(animated_sprite_physic.animated_sprite.as)
+void animated_sprite_physic_hide(Animated_Sprite_Physic *animated_sprite_physic);
+void animated_sprite_physic_show(Animated_Sprite_Physic *animated_sprite_physic);
+BOOL animated_sprite_physic_is_visible(Animated_Sprite_Physic *animated_sprite_physic);
 
 void animated_sprite_init(Animated_Sprite *animated_sprite ,spriteInfo *si, paletteInfo *pali);
 void animated_sprite_display(Animated_Sprite *animated_sprite, short x, short y, WORD anim);
-WORD animated_sprite_index_auto(spriteInfo *si);
-void animated_sprite_flash(aSprite *as, BYTE freq);
-// todo
-//void animated_sprite_flash_update(aSprite *as);
-BOOL animated_sprite_is_visible(aSprite *as);
-void animated_sprite_shrunk(aSprite *as, spriteInfo *si, WORD shrunk_value);
-
+#define animated_sprite_move(animated_sprite, x_offset, y_offset) aSpriteMove(animated_sprite.as, x_offset, y_offset)
+#define animated_sprite_set_position(animated_sprite, x, y) aSpriteSetPos(animated_sprite.as, x, y)
+void animated_sprite_hide(Animated_Sprite *animated_sprite);
+void animated_sprite_show(Animated_Sprite *animated_sprite);
+void animated_sprite_shrunk(Animated_Sprite *animated_sprite, WORD shrunk_value);
+BOOL animated_sprite_is_visible(Animated_Sprite *animated_sprite);
 #define animated_sprite_set_animation(as, anim) aSpriteSetAnim(as, anim)
 #define animated_sprite_animate(animated_sprite) aSpriteAnimate(animated_sprite.as)
+
+
+// todo - rename func animated_sprite_index_auto
+WORD animated_sprite_index_auto(spriteInfo *si);
+void animated_sprite_flash(Animated_Sprite *animated_sprite);
+// todo
+//void animated_sprite_flash_update(aSprite *as);
+
 // #define animated_sprite_move(as, xOffset, yOffset) aSpriteMove(as, xOffset, yOffset)
 
 // b
@@ -215,6 +242,7 @@ void inline clear_vram();
 
 // f
 void inline fix_print_neocore(int x, int y, char *label);
+void flash_init(Flash *flash, short frequency, short lengh);
 
 // g
 void inline gpu_init();

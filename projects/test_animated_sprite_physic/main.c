@@ -30,6 +30,8 @@ int main(void) {
     logger_init();
     animated_sprite_physic_animate(&player);
     logger_box("BOX : ", &player.box);
+    // animated_sprite_physic_move(&player, 1, 0);
+    animated_sprite_physic_set_position(&player, 10, 10);
     SCClose();
   };
   SCClose();
