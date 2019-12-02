@@ -203,7 +203,10 @@ void animated_sprite_physic_shrunk(Animated_Sprite_Physic *animated_sprite_physi
 #define animated_sprite_physic_animate(animated_sprite_physic) aSpriteAnimate(animated_sprite_physic.animated_sprite.as)
 void animated_sprite_physic_hide(Animated_Sprite_Physic *animated_sprite_physic);
 void animated_sprite_physic_show(Animated_Sprite_Physic *animated_sprite_physic);
-BOOL animated_sprite_physic_is_visible(Animated_Sprite_Physic *animated_sprite_physic);
+
+// todo
+// BOOL animated_sprite_physic_is_visible(Animated_Sprite_Physic *animated_sprite_physic);
+BOOL is_visible(Flash flash);
 
 void animated_sprite_init(Animated_Sprite *animated_sprite ,spriteInfo *si, paletteInfo *pali);
 void animated_sprite_display(Animated_Sprite *animated_sprite, short x, short y, WORD anim);
@@ -215,6 +218,7 @@ void animated_sprite_shrunk(Animated_Sprite *animated_sprite, WORD shrunk_value)
 BOOL animated_sprite_is_visible(Animated_Sprite *animated_sprite);
 #define animated_sprite_set_animation(as, anim) aSpriteSetAnim(as, anim)
 #define animated_sprite_animate(animated_sprite) aSpriteAnimate(animated_sprite.as)
+WORD animated_sprite_index_auto(spriteInfo *si);
 
 
 // todo - rename func animated_sprite_index_auto
@@ -248,6 +252,19 @@ void flash_init(Flash *flash, short frequency, short lengh);
 void inline gpu_init();
 
 // i
+void image_init(Image *image, pictureInfo *pi, paletteInfo *pali);
+void image_display(Image *image, short x, short y);
+// void image_move(); //todo macro
+// void image_set_position(); // todo macro
+void image_hide(Image *image);
+void image_show(Image *image);
+void image_shrunk(Image *image, WORD shrunk_value);
+void image_is_visible(Image *image);
+void image_flash(Image *image);
+WORD image_sprite_index_auto(pictureInfo *pi);
+
+
+/*
 void image_physic_shrunk_centroid_init(picturePhysicShrunkCentroid *pps, pictureInfo *pi, paletteInfo *pali, short xCenter, short yCenter);
 void image_physic_shrunk_centroid_set_position(picturePhysicShrunkCentroid *pps, short x, short y);
 void image_physic_shrunk_centroid_move(picturePhysicShrunkCentroid *pps, short xShift, short yShift);
@@ -263,6 +280,7 @@ void image_display(picture *p, pictureInfo *pi, paletteInfo *pali, short posX, s
 void image_shrunk_centroid(picture *p, pictureInfo *pi, short centerPosX, short centerPosY, WORD shrunk_value);
 void image_flash(picture *p, BYTE freq);
 WORD image_get_sprite_index_autoinc(pictureInfo *pi);
+*/
 
 // todo - change signature
 BOOL vector_is_left(short x, short y, short v1x, short v1y, short v2x, short v2y);

@@ -156,6 +156,7 @@ BOOL animated_sprite_physic_is_visible(Animated_Sprite_Physic *animated_sprite_p
 }
 
 void animated_sprite_init(Animated_Sprite *animated_sprite ,spriteInfo *si, paletteInfo *pali) {
+  flash_init(&animated_sprite->flash, 0, 0);
   animated_sprite->si = si;
   animated_sprite->pali = pali;
 };
@@ -218,20 +219,6 @@ void animated_sprite_show(Animated_Sprite *animated_sprite) {
   animated_sprite->flash.visible = true;
   aSpriteShow(&animated_sprite->as);
 }
-
-
-// todo
-/*
-void animated_sprite_flash_update(aSprite *as) {
-  if (DAT_frameCounter % 10 == 0) {
-    aSpriteShow(as);
-  }
-  if (DAT_frameCounter % 15 == 0) {
-    aSpriteHide(as);
-    clearSprites(as->baseSprite, as->tileWidth);
-  }
-}
-*/
 
 BYTE boxes_collide(Box *b, Box *boxes[], BYTE box_max) {
   BYTE rt = false;
@@ -296,6 +283,7 @@ void box_debug_update(picture5 *pics, Box *box) {
   pictureSetPos(&pics->pic4, box->p4.x, box->p4.y);
 }
 
+/*
 void box_display(picture5 *pics, Box *box, pictureInfo *pi, paletteInfo *pali) {
   palette_disable_autoinc();
   image_display(&pics->pic0, pi, pali, box->p0.x, box->p0.y);
@@ -305,6 +293,7 @@ void box_display(picture5 *pics, Box *box, pictureInfo *pi, paletteInfo *pali) {
   palette_enable_autoinc();
   image_display(&pics->pic4, pi, pali, box->p4.x, box->p4.y);
 }
+*/
 
 void box_shrunk(Box *b, Box *bOrigin, WORD shrunkValue) {
   // TODO optim.
@@ -573,6 +562,7 @@ void inline logger_pictureInfo(char *label, pictureInfo *pi) {
   #endif
 }
 
+/*
 void image_physic_shrunk_centroid_update(picturePhysicShrunkCentroid *pps, WORD shrunk) {
   image_shrunk_centroid(&pps->pp.p, pps->pi, pps->positionCenter.x, pps->positionCenter.y, shrunk);
   box_shrunk(&pps->pp.box, &pps->boxOrigin, shrunk);
@@ -652,6 +642,66 @@ void image_flash(picture *p, BYTE freq) {
     pictureShow(p);
   }
 }
+*/
+
+void image_init(Image *image, pictureInfo *pi, paletteInfo *pali) {
+  flash_init(&image->flash, 0, 0);
+  image->pali = pali;
+  image->pi = pi;
+};
+
+void image_display(Image *image, short x, short y) {
+  pictureInit(
+    &image->pic,
+    image->pi,
+    image_sprite_index_auto(image->pi),
+    palette_get_index_autoinc(image->pali),
+    x,
+    y,
+    FLIP_NONE
+  );
+
+  palJobPut(
+    palette_get_index_autoinc(image->pali),
+    image->pali->palCount,
+    image->pali->data
+  );};
+
+WORD image_sprite_index_auto(pictureInfo *pi) {
+  WORD rt = sprite_index;
+  if (sprite_autoinc) sprite_index += pi->tileWidth;
+  return rt;
+};
+
+
+void image_hide(Image *image) {
+  pictureHide(&image->pic);
+  image->flash.visible = false;
+};
+
+void image_show(Image *image) {
+  pictureShow(&image->pic);
+  image->flash.visible = true;
+};
+
+// todo refactor
+/*
+void image_shrunk(Image *image, WORD shrunk_value) {
+
+};
+*/
+
+// todo refactor
+/*
+void image_is_visible(Image *image) {
+  return image->flash.visible;
+};
+*/
+
+void image_flash(Image *image) {
+
+};
+
 
 void palette_disable_autoinc() {
   palette_autoinc = false;
@@ -703,10 +753,13 @@ void image_physic_move(picturePhysic *pp, short x, short y) {
   box_update(&pp->box, pp->p.posX, pp->p.posY);
 }
 
+/*
 void image_shrunk(picture *p, pictureInfo *pi, WORD shrunk_value) {
   shrunk_range(0x8000 + p->baseSprite, 0x8000 + p->baseSprite + pi->tileWidth, shrunk_value);
 }
+*/
 
+/*
 void image_shrunk_centroid(picture *p, pictureInfo *pi, short centerPosX, short centerPosY, WORD shrunk_value) {
   image_shrunk(p, pi, shrunk_value);
   pictureSetPos(p,
@@ -719,8 +772,7 @@ void image_shrunk_centroid(picture *p, pictureInfo *pi, short centerPosX, short 
     shrunkCentroidGetTranslatedY(centerPosY, pi->tileHeight, SHRUNK_EXTRACT_Y(shrunk_value))
   );
   */
-}
-
+//}
 
 /* TODO
 void maskDisplay(picture pic[], vec2short vec[], BYTE vector_max) {
