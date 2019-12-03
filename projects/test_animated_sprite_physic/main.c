@@ -25,13 +25,18 @@ int main(void) {
     PLAYER_SPRITE_ANIM_IDLE
   );
 
+  flash_init(&player.animated_sprite.flash, 10, 10);
+
   while(1) {
     WAIT_VBL
     logger_init();
     animated_sprite_physic_animate(&player);
     logger_box("BOX : ", &player.box);
+    animated_sprite_physic_flash(&player);
     // animated_sprite_physic_move(&player, 1, 0);
-    animated_sprite_physic_set_position(&player, 10, 10);
+    // animated_sprite_physic_shrunk(&player, shrunk_forge(0x5, 0xFB));
+    // animated_sprite_physic_set_position(&player, 10, 10);
+
     SCClose();
   };
   SCClose();

@@ -203,10 +203,10 @@ void animated_sprite_physic_shrunk(Animated_Sprite_Physic *animated_sprite_physi
 #define animated_sprite_physic_animate(animated_sprite_physic) aSpriteAnimate(animated_sprite_physic.animated_sprite.as)
 void animated_sprite_physic_hide(Animated_Sprite_Physic *animated_sprite_physic);
 void animated_sprite_physic_show(Animated_Sprite_Physic *animated_sprite_physic);
+void animated_sprite_physic_flash(Animated_Sprite_Physic *animated_sprite_physic);
 
-// todo
-// BOOL animated_sprite_physic_is_visible(Animated_Sprite_Physic *animated_sprite_physic);
-BOOL is_visible(Flash flash);
+BOOL is_visible(Flash *flash);
+void shrunk(WORD base_sprite, WORD max_width, WORD value);
 
 void animated_sprite_init(Animated_Sprite *animated_sprite ,spriteInfo *si, paletteInfo *pali);
 void animated_sprite_display(Animated_Sprite *animated_sprite, short x, short y, WORD anim);
@@ -214,16 +214,14 @@ void animated_sprite_display(Animated_Sprite *animated_sprite, short x, short y,
 #define animated_sprite_set_position(animated_sprite, x, y) aSpriteSetPos(animated_sprite.as, x, y)
 void animated_sprite_hide(Animated_Sprite *animated_sprite);
 void animated_sprite_show(Animated_Sprite *animated_sprite);
-void animated_sprite_shrunk(Animated_Sprite *animated_sprite, WORD shrunk_value);
-BOOL animated_sprite_is_visible(Animated_Sprite *animated_sprite);
 #define animated_sprite_set_animation(as, anim) aSpriteSetAnim(as, anim)
 #define animated_sprite_animate(animated_sprite) aSpriteAnimate(animated_sprite.as)
-WORD animated_sprite_index_auto(spriteInfo *si);
 
+WORD sprite_index_auto(spriteInfo *si);
 
 // todo - rename func animated_sprite_index_auto
 WORD animated_sprite_index_auto(spriteInfo *si);
-void animated_sprite_flash(Animated_Sprite *animated_sprite);
+BOOL animated_sprite_flash(Animated_Sprite *animated_sprite);
 // todo
 //void animated_sprite_flash_update(aSprite *as);
 

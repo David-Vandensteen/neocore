@@ -137,7 +137,8 @@ void animated_sprite_physic_move(Animated_Sprite_Physic *animated_sprite_physic,
 }
 
 void animated_sprite_physic_shrunk(Animated_Sprite_Physic *animated_sprite_physic, WORD shrunk_value) {
-  animated_sprite_shrunk(&animated_sprite_physic->animated_sprite, shrunk_value);
+  // animated_sprite_shrunk(&animated_sprite_physic->animated_sprite, shrunk_value);
+  shrunk(animated_sprite_physic->animated_sprite.as.baseSprite, animated_sprite_physic->animated_sprite.si->maxWidth, shrunk_value);
   // todo box resize
 }
 
@@ -151,8 +152,12 @@ void animated_sprite_physic_show(Animated_Sprite_Physic *animated_sprite_physic)
   animated_sprite_physic->physic_enabled = true;
 }
 
-BOOL animated_sprite_physic_is_visible(Animated_Sprite_Physic *animated_sprite_physic) {
-  return animated_sprite_is_visible(&animated_sprite_physic->animated_sprite);
+void animated_sprite_physic_flash(Animated_Sprite_Physic *animated_sprite_physic) {
+  animated_sprite_physic->physic_enabled = animated_sprite_flash(&animated_sprite_physic->animated_sprite);
+}
+
+BOOL is_visible(Flash *flash) {
+  return flash->visible;
 }
 
 void animated_sprite_init(Animated_Sprite *animated_sprite ,spriteInfo *si, paletteInfo *pali) {
@@ -165,7 +170,7 @@ void animated_sprite_display(Animated_Sprite *animated_sprite, short x, short y,
   aSpriteInit(
     &animated_sprite->as,
     animated_sprite->si,
-		animated_sprite_index_auto(animated_sprite->si),
+		sprite_index_auto(animated_sprite->si),
     palette_get_index(),
     x,
     y,
@@ -181,33 +186,34 @@ void animated_sprite_display(Animated_Sprite *animated_sprite, short x, short y,
   aSpriteSetAnim(&animated_sprite->as, anim);
 }
 
-WORD animated_sprite_index_auto(spriteInfo *si) {
+WORD sprite_index_auto(spriteInfo *si) {
   WORD rt = sprite_index;
   if (sprite_autoinc) sprite_index += si->maxWidth;
   return rt;
 }
 
-void animated_sprite_flash(Animated_Sprite *animated_sprite) {
+BOOL animated_sprite_flash(Animated_Sprite *animated_sprite) {
+  BOOL rt = true;
   if (animated_sprite->flash.frequency != 0 && animated_sprite->flash.lengh != 0) {
     if (DAT_frameCounter % animated_sprite->flash.frequency == 0) {
-      if (animated_sprite_is_visible(animated_sprite)) {
+      if (is_visible(&animated_sprite->flash)) {
         animated_sprite_hide(animated_sprite);
+        rt = false;
       } else {
         animated_sprite_show(animated_sprite);
+        rt = true;
       }
       animated_sprite->flash.lengh--;
       if (animated_sprite->flash.lengh == 0) animated_sprite_show(animated_sprite);
     }
   }
+  return rt;
 }
 
-BOOL animated_sprite_is_visible(Animated_Sprite *animated_sprite) {
-  return animated_sprite->flash.visible;
+void shrunk(WORD base_sprite, WORD max_width, WORD value) {
+	shrunk_range(0x8000 + base_sprite, 0x8000 + base_sprite + max_width, value);
 }
 
-void animated_sprite_shrunk(Animated_Sprite *animated_sprite, WORD shrunk_value) {
-	shrunk_range(0x8000 + animated_sprite->as.baseSprite, 0x8000 + animated_sprite->as.baseSprite + animated_sprite->si->maxWidth, shrunk_value);
-}
 
 void animated_sprite_hide(Animated_Sprite *animated_sprite) {
   animated_sprite->flash.visible = false;
