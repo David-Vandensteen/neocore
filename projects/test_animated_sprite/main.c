@@ -11,6 +11,7 @@ int main(void) {
   animated_sprite_init(&player, &player_sprite, &player_sprite_Palettes);
   flash_init(&player.flash, 10, 10);
   animated_sprite_display(&player, 100, 100, PLAYER_SPRITE_ANIM_IDLE);
+  shrunk(player.as.baseSprite, player.si->maxWidth, shrunk_forge(0x5, 0xFF));
   while(1) {
     WAIT_VBL
     logger_init();
@@ -18,7 +19,6 @@ int main(void) {
     // animated_sprite_set_position(&player, 10, 10);
     animated_sprite_animate(&player);
     animated_sprite_flash(&player);
-    shrunk(player.as.baseSprite, player.si->maxWidth, shrunk_forge(0x5, 0xFF));
     logger_bool("VIS : ", is_visible(&player.flash));
     logger_word("LEN: ", player.flash.lengh);
     SCClose();

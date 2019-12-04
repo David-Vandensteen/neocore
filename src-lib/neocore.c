@@ -654,14 +654,14 @@ void image_init(Image *image, pictureInfo *pi, paletteInfo *pali) {
   flash_init(&image->flash, 0, 0);
   image->pali = pali;
   image->pi = pi;
-};
+}
 
 void image_display(Image *image, short x, short y) {
   pictureInit(
     &image->pic,
     image->pi,
     image_sprite_index_auto(image->pi),
-    palette_get_index_autoinc(image->pali),
+    palette_get_index(image->pali),
     x,
     y,
     FLIP_NONE
@@ -677,25 +677,18 @@ WORD image_sprite_index_auto(pictureInfo *pi) {
   WORD rt = sprite_index;
   if (sprite_autoinc) sprite_index += pi->tileWidth;
   return rt;
-};
+}
 
 
 void image_hide(Image *image) {
   pictureHide(&image->pic);
   image->flash.visible = false;
-};
+}
 
 void image_show(Image *image) {
   pictureShow(&image->pic);
   image->flash.visible = true;
-};
-
-// todo refactor
-/*
-void image_shrunk(Image *image, WORD shrunk_value) {
-
-};
-*/
+}
 
 // todo refactor
 /*
@@ -704,9 +697,36 @@ void image_is_visible(Image *image) {
 };
 */
 
-void image_flash(Image *image) {
+BOOL image_flash(Image *image) {
+  BOOL rt = true;
+  if (image->flash.frequency != 0 && image->flash.lengh != 0) {
+    if (DAT_frameCounter % image->flash.frequency == 0) {
+      if (is_visible(&image->flash)) {
+        image_hide(image);
+        rt = false;
+      } else {
+        image_show(image);
+        rt = true;
+      }
+      image->flash.lengh--;
+      if (image->flash.lengh == 0) image_show(image);
+    }
+  }
+  return rt;
+}
 
-};
+void image_physic_init(
+  Image_Physic *image_physic,
+  pictureInfo *pi,
+  paletteInfo *pali,
+  short box_witdh,
+  short box_height,
+  short box_width_offset,
+  short box_height_offset
+) {
+  image_init(&image_physic->image, pi, pali);
+  box_init(&image_physic->box, box_witdh, box_height, box_width_offset, box_height_offset);
+}
 
 
 void palette_disable_autoinc() {

@@ -122,15 +122,6 @@ struct picture5 {
   picture pic4;
 };
 
-/*
-typedef struct aSpritePhysic aSpritePhysic;
-struct aSpritePhysic {
-  aSprite as; //50 bytes
-  Box box;
-  WORD height;
-};
-*/
-
 typedef struct Flash Flash;
 struct Flash {
   WORD frequency;
@@ -205,7 +196,6 @@ void animated_sprite_physic_hide(Animated_Sprite_Physic *animated_sprite_physic)
 void animated_sprite_physic_show(Animated_Sprite_Physic *animated_sprite_physic);
 void animated_sprite_physic_flash(Animated_Sprite_Physic *animated_sprite_physic);
 
-BOOL is_visible(Flash *flash);
 void shrunk(WORD base_sprite, WORD max_width, WORD value);
 
 void animated_sprite_init(Animated_Sprite *animated_sprite ,spriteInfo *si, paletteInfo *pali);
@@ -216,16 +206,9 @@ void animated_sprite_hide(Animated_Sprite *animated_sprite);
 void animated_sprite_show(Animated_Sprite *animated_sprite);
 #define animated_sprite_set_animation(as, anim) aSpriteSetAnim(as, anim)
 #define animated_sprite_animate(animated_sprite) aSpriteAnimate(animated_sprite.as)
-
-WORD sprite_index_auto(spriteInfo *si);
-
 // todo - rename func animated_sprite_index_auto
 WORD animated_sprite_index_auto(spriteInfo *si);
 BOOL animated_sprite_flash(Animated_Sprite *animated_sprite);
-// todo
-//void animated_sprite_flash_update(aSprite *as);
-
-// #define animated_sprite_move(as, xOffset, yOffset) aSpriteMove(as, xOffset, yOffset)
 
 // b
 BYTE boxes_collide(Box *b, Box *boxes[], BYTE box_max);
@@ -250,17 +233,33 @@ void flash_init(Flash *flash, short frequency, short lengh);
 void inline gpu_init();
 
 // i
+BOOL is_visible(Flash *flash);
 void image_init(Image *image, pictureInfo *pi, paletteInfo *pali);
 void image_display(Image *image, short x, short y);
-// void image_move(); //todo macro
-// void image_set_position(); // todo macro
+#define image_move(image, x_offset, y_offset) pictureMove(image.pic, x_offset, y_offset)
+#define image_set_position(image, x, y) pictureSetPos(image.pic, x, y)
 void image_hide(Image *image);
 void image_show(Image *image);
-void image_shrunk(Image *image, WORD shrunk_value);
 void image_is_visible(Image *image);
-void image_flash(Image *image);
+BOOL image_flash(Image *image);
 WORD image_sprite_index_auto(pictureInfo *pi);
 
+void image_physic_init(
+  Image_Physic *image_physic,
+  pictureInfo *pi,
+  paletteInfo *pali,
+  short box_witdh,
+  short box_height,
+  short box_width_offset,
+  short box_height_offset
+);
+
+void image_physic_display(Image_Physic *image_physic, pictureInfo *pi, paletteInfo *pali);
+void image_physic_move(Image_Physic *image_physic, short x_offset, short y_offset);
+void image_physic_set_position(Image_Physic *image_physic, short x, short y);
+void image_physic_hide(Image_Physic *image_physic);
+void image_physic_show(Image_Physic *image_physic);
+void image_physic_flash(Image_Physic *image_physic);
 
 /*
 void image_physic_shrunk_centroid_init(picturePhysicShrunkCentroid *pps, pictureInfo *pi, paletteInfo *pali, short xCenter, short yCenter);
@@ -313,10 +312,12 @@ void inline logger_box(char *label, Box *b);
 void inline logger_pictureInfo(char *label, pictureInfo *pi);
 
 // p
+// todo rename autoinc to auto
 void palette_disable_autoinc();
 void palette_enable_autoinc();
 BYTE palette_get_index();
 BYTE palette_set_index(BYTE index);
+// todo rename palette_get_index_auto
 BYTE palette_get_index_autoinc(paletteInfo *pali);
 
 // m
@@ -331,6 +332,7 @@ void vec2byte_init(Vec2byte *vec, BYTE x, BYTE y);
 BOOL vectors_collide(Box *box, Vec2short vec[], BYTE vector_max);
 
 // s
+WORD        sprite_index_auto(spriteInfo *si);
 WORD        shrunk_forge(BYTE xc, BYTE yc);
 void inline shrunk_addr(WORD addr, WORD shrunk_value);
 WORD        shrunk_range(WORD addr_start, WORD addr_end, WORD shrunk_value);
