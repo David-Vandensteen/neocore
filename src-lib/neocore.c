@@ -728,6 +728,38 @@ void image_physic_init(
   box_init(&image_physic->box, box_witdh, box_height, box_width_offset, box_height_offset);
 }
 
+void image_physic_display(Image_Physic *image_physic, short x, short y) {
+  image_display(&image_physic->image, x, y);
+  box_update(&image_physic->box, x, y);
+}
+
+void image_physic_move(Image_Physic *image_physic, short x_offset, short y_offset) {
+  image_move(&image_physic->image, x_offset, y_offset);
+  box_update(&image_physic->box, image_physic->image.pic.posX, image_physic->image.pic.posY);
+}
+
+void image_physic_set_position(Image_Physic *image_physic, short x, short y) {
+  image_set_position(&image_physic->image, x, y);
+  box_update(&image_physic->box, x, y);
+}
+
+void image_physic_hide(Image_Physic *image_physic) {
+  image_hide(&image_physic->image);
+  image_physic->physic_enabled = false;
+}
+
+void image_physic_show(Image_Physic *image_physic) {
+  image_show(&image_physic->image);
+  image_physic->physic_enabled = true;
+}
+
+void image_physic_flash(Image_Physic *image_physic) {
+  image_physic->physic_enabled = image_flash(&image_physic->image);
+}
+
+void image_physic_shrunk(Image_Physic *image_physic, WORD shrunk_value) {
+  shrunk(&image_physic->image.pic.baseSprite, image_physic->)
+}
 
 void palette_disable_autoinc() {
   palette_autoinc = false;

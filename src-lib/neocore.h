@@ -196,8 +196,6 @@ void animated_sprite_physic_hide(Animated_Sprite_Physic *animated_sprite_physic)
 void animated_sprite_physic_show(Animated_Sprite_Physic *animated_sprite_physic);
 void animated_sprite_physic_flash(Animated_Sprite_Physic *animated_sprite_physic);
 
-void shrunk(WORD base_sprite, WORD max_width, WORD value);
-
 void animated_sprite_init(Animated_Sprite *animated_sprite ,spriteInfo *si, paletteInfo *pali);
 void animated_sprite_display(Animated_Sprite *animated_sprite, short x, short y, WORD anim);
 #define animated_sprite_move(animated_sprite, x_offset, y_offset) aSpriteMove(animated_sprite.as, x_offset, y_offset)
@@ -254,12 +252,13 @@ void image_physic_init(
   short box_height_offset
 );
 
-void image_physic_display(Image_Physic *image_physic, pictureInfo *pi, paletteInfo *pali);
+void image_physic_display(Image_Physic *image_physic, short x, short y);
 void image_physic_move(Image_Physic *image_physic, short x_offset, short y_offset);
 void image_physic_set_position(Image_Physic *image_physic, short x, short y);
 void image_physic_hide(Image_Physic *image_physic);
 void image_physic_show(Image_Physic *image_physic);
 void image_physic_flash(Image_Physic *image_physic);
+void image_physic_shrunk(Image_Physic *image_physic, WORD shrunk_value);
 
 /*
 void image_physic_shrunk_centroid_init(picturePhysicShrunkCentroid *pps, pictureInfo *pi, paletteInfo *pali, short xCenter, short yCenter);
@@ -347,6 +346,7 @@ WORD        scroller_get_sprite_index_autoinc(scrollerInfo *si);
 void        scroller_move(scroller *sc, short x, short y);
 int         shrunk_centroid_get_translated_x(short centerPosX, WORD tileWidth, BYTE shrunkX);
 int         shrunk_centroid_get_translated_y(short centerPosY, WORD tileHeight, BYTE shrunkY);
+void        shrunk(WORD base_sprite, WORD max_width, WORD value);
 
 // w
 DWORD inline wait_vbl_max(WORD nb);
