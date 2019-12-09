@@ -20,7 +20,6 @@ function _main{
   compileProject "collide-complex" 1
   compileProject "collide-multiple" 1
   compileProject "fixed-value"
-  compileProject "flash" 1
   compileProject "hello"
   compileProject 'joypad'
   compileProject "shrunk-centroid" 1
