@@ -758,7 +758,7 @@ void image_physic_flash(Image_Physic *image_physic) {
 }
 
 void image_physic_shrunk(Image_Physic *image_physic, WORD shrunk_value) {
-  shrunk(&image_physic->image.pic.baseSprite, image_physic->)
+  shrunk(image_physic->image.pic.baseSprite, image_physic->image.pic.info->tileWidth, shrunk_value);
 }
 
 void palette_disable_autoinc() {
@@ -804,11 +804,6 @@ void image5_show(picture5 *pics, BOOL visible) {
     pictureHide(&pics->pic3);
     pictureHide(&pics->pic4);
   }
-}
-
-void image_physic_move(picturePhysic *pp, short x, short y) {
-  pictureMove(&pp->p, x, y);
-  box_update(&pp->box, pp->p.posX, pp->p.posY);
 }
 
 /*

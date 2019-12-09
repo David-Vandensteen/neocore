@@ -29,6 +29,8 @@ function _main{
   compileProject "sprite" 1
   compileProject "test_animated_sprite" 1
   compileProject "test_animated_sprite_physic" 1
+  compileProject "test_image" 1
+  compileProject "test_image_physic" 1
 }
 
 _main
