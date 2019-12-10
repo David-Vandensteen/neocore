@@ -671,14 +671,19 @@ void image_display(Image *image, short x, short y) {
     palette_get_index_autoinc(image->pali),
     image->pali->palCount,
     image->pali->data
-  );};
+  );
+}
+
+void image_set_position(Image *image, short x, short y) {
+  pictureSetPos(&image->pic, x, y);
+}
+
 
 WORD image_sprite_index_auto(pictureInfo *pi) {
   WORD rt = sprite_index;
   if (sprite_autoinc) sprite_index += pi->tileWidth;
   return rt;
 }
-
 
 void image_hide(Image *image) {
   pictureHide(&image->pic);
@@ -759,6 +764,18 @@ void image_physic_flash(Image_Physic *image_physic) {
 
 void image_physic_shrunk(Image_Physic *image_physic, WORD shrunk_value) {
   shrunk(image_physic->image.pic.baseSprite, image_physic->image.pic.info->tileWidth, shrunk_value);
+}
+
+void image_shrunk_centroid(Image *image, short center_x, short center_y, WORD shrunk_value) {
+  shrunk(image->pic.baseSprite, image->pic.info->tileWidth, shrunk_value);
+  image_set_position(&image, 10, 10);
+  /*
+  image_set_position(
+    image,
+    shrunk_centroid_get_translated_x(center_x, image->pic.info->tileWidth, SHRUNK_EXTRACT_X(shrunk_value),
+    shrunk_centroid_get_translated_y(center_y, image->pic.info->tileHeight, SHRUNK_EXTRACT_Y(shrunk_value)
+  );
+  */
 }
 
 void palette_disable_autoinc() {

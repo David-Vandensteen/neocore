@@ -235,7 +235,8 @@ BOOL is_visible(Flash *flash);
 void image_init(Image *image, pictureInfo *pi, paletteInfo *pali);
 void image_display(Image *image, short x, short y);
 #define image_move(image, x_offset, y_offset) pictureMove(image.pic, x_offset, y_offset)
-#define image_set_position(image, x, y) pictureSetPos(image.pic, x, y)
+// #define image_set_position(image, x, y) pictureSetPos(image.pic, x, y)
+void image_set_position(Image *image, short x, short y);
 void image_hide(Image *image);
 void image_show(Image *image);
 void image_is_visible(Image *image);
@@ -259,6 +260,7 @@ void image_physic_hide(Image_Physic *image_physic);
 void image_physic_show(Image_Physic *image_physic);
 void image_physic_flash(Image_Physic *image_physic);
 void image_physic_shrunk(Image_Physic *image_physic, WORD shrunk_value);
+void image_shrunk_centroid(Image *image, short center_x, short center_y, WORD shrunk_value);
 
 /*
 void image_physic_shrunk_centroid_init(picturePhysicShrunkCentroid *pps, pictureInfo *pi, paletteInfo *pali, short xCenter, short yCenter);
