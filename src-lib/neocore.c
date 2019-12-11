@@ -768,7 +768,7 @@ void image_physic_shrunk(Image_Physic *image_physic, WORD shrunk_value) {
 
 void image_shrunk_centroid(Image *image, short center_x, short center_y, WORD shrunk_value) {
   shrunk(image->pic.baseSprite, image->pic.info->tileWidth, shrunk_value);
-  image_set_position(&image, 10, 10);
+  image_set_position(image, 10, 10);
   /*
   image_set_position(
     image,
