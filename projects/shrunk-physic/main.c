@@ -12,7 +12,7 @@ NEOCORE_INIT
 static picturePhysicShrunkCentroid laser, boss;
 static BYTE shrunk_x;
 static WORD shrunk_y = 0;
-static box *boxes_collide_to_test[2];
+static Box *boxes_collide_to_test[2];
 
 static picture5 laser_box_pics, boss_box_pics;
 

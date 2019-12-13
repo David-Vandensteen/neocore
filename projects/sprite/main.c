@@ -4,26 +4,29 @@
 NEOCORE_INIT
 
 int main(void) {
-  aSprite player;
+  Animated_Sprite player;
   scroller background;
-  picture planet;
+  Image planet;
+
   gpu_init();
+  image_init(&planet, &planet04_sprite, &planet04_sprite_Palettes);
+  animated_sprite_init(&player, &player_sprite, &player_sprite_Palettes);
   scroller_display(&background, &background_sprite, &background_sprite_Palettes, 0, 0);
-  image_display(&planet, &planet04_sprite, &planet04_sprite_Palettes, 20, 100);
-  animated_sprite_display(&player, &player_sprite, &player_sprite_Palettes, 10, 10, PLAYER_SPRITE_ANIM_IDLE);
+  animated_sprite_display(&player, 10, 10, PLAYER_SPRITE_ANIM_IDLE);
+
   while(1) {
     WAIT_VBL
     joypad_update();
 
-    if (joypad_is_left() && player.posX > 0) { aSpriteMove(&player, -1, 0); }
-    if (joypad_is_right() && player.posX < 280) { aSpriteMove(&player, 1, 0); }
-    if (joypad_is_up() && player.posY > 0) {
+    if (joypad_is_left() && player.as.posX > 0) { animated_sprite_move(&player, -1, 0); }
+    if (joypad_is_right() && player.as.posX < 280) { animated_sprite_move(&player, 1, 0); }
+    if (joypad_is_up() && player.as.posY > 0) {
       animated_sprite_move(&player, 0, -1);
-      animated_sprite_set_animation(&player, PLAYER_SPRITE_ANIM_UP);
+      animated_sprite_set_animation(&player.as, PLAYER_SPRITE_ANIM_UP);
     }
-    if (joypad_is_down() && player.posY < 200) {
+    if (joypad_is_down() && player.as.posY < 200) {
       animated_sprite_move(&player, 0, 1);
-      animated_sprite_set_animation(&player, PLAYER_SPRITE_ANIM_DOWN);
+      animated_sprite_set_animation(&player.as, PLAYER_SPRITE_ANIM_DOWN);
     }
     if (!joypad_is_down() && !joypad_is_up()) { animated_sprite_set_animation(&player, PLAYER_SPRITE_ANIM_IDLE); }
 
