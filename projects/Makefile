@@ -121,7 +121,7 @@ sprite:
 	$(RM) -f char.bin
 
 run: zip
-# TODO raine parametric position
+# todo (minor) - raine parametric position
 	powershell -ExecutionPolicy Bypass -File ..\..\scripts\raine-start.ps1 $(shell cygpath -w $(RAINE)) $(shell cygpath -w $(FILEZIP))
 
 zip: $(FILEPRG) iso

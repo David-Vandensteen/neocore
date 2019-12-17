@@ -1,4 +1,4 @@
-# todo - test errorlevel break
+# todo (minor) - test errorlevel break
 param (
   [string] $op
 )

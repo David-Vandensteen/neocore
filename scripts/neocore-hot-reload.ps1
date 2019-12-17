@@ -14,7 +14,7 @@ $action = { $path = $Event.SourceEventArgs.FullPath
             Add-content "c:\temp\log.txt" -value $logline
 
             // get-job
-            // TODO get-job | receive-job
+            // todo (minor) get-job | receive-job
             // receive
           }
 ### DECIDE WHICH EVENTS SHOULD BE WATCHED

@@ -129,7 +129,7 @@ void animated_sprite_physic_move(Animated_Sprite_Physic *animated_sprite_physic,
 
 void animated_sprite_physic_shrunk(Animated_Sprite_Physic *animated_sprite_physic, WORD shrunk_value) {
   shrunk(animated_sprite_physic->animated_sprite.as.baseSprite, animated_sprite_physic->animated_sprite.si->maxWidth, shrunk_value);
-  // todo box resize
+  // todo (minor) - box resize
 }
 
 void animated_sprite_physic_hide(Animated_Sprite_Physic *animated_sprite_physic) {
@@ -295,17 +295,17 @@ void box_display(picture5 *pics, Box *box, pictureInfo *pi, paletteInfo *pali) {
 */
 
 void box_shrunk(Box *b, Box *bOrigin, WORD shrunkValue) {
-  // todo - optim.
+  // todo (minor) - optim.
   // if i can read the shrunk VRAM value, i can compute the origin box...
-  // todo - improve precision
-  // todo - consider box offsets
+  // todo (minor) - improve precision
+  // todo (minor) - consider box offsets
   BYTE shrunk_x = SHRUNK_EXTRACT_X(shrunkValue);
   BYTE pix_step_x = (bOrigin->width DIV16);
   BYTE trim_x = (((15 - shrunk_x) * pix_step_x) DIV2);
 
   int trim_y;
   FIXED shrunk_y = FIX(SHRUNK_EXTRACT_Y(shrunkValue));
-  FIXED pix_step_y = FIX((float)bOrigin->height / (float)256); // todo - hmmm !!! float
+  FIXED pix_step_y = FIX((float)bOrigin->height / (float)256); // todo (minor) - hmmm !!! float
   FIXED shrunk_y_multiplicator = fsub(FIX(255), shrunk_y);
   shrunk_y_multiplicator = fmul(shrunk_y_multiplicator, pix_step_y);
   trim_y = fixtoi(shrunk_y_multiplicator);
@@ -328,7 +328,7 @@ void box_shrunk(Box *b, Box *bOrigin, WORD shrunkValue) {
   b->p4.y = b->p0.y + ((b->p3.y - b->p0.y) DIV2);
 }
 
-// todo - deprecated ?
+// todo (minor) - deprecated ?
 void box_resize(Box *box, short edge) {
   box->p0.x -= edge;
   box->p0.y -= edge;
@@ -343,7 +343,7 @@ void box_resize(Box *box, short edge) {
   box->p3.y += edge;
 }
 
-void inline clear_vram() { // todo - disable interrupt
+void inline clear_vram() { // todo (minor) - disable interrupt
   WORD addr = 0x0000;
   WORD addr_end = 0x8FFF;
   for (addr = addr; addr <= addr_end; addr++) {
@@ -365,7 +365,7 @@ void flash_init(Flash *flash, short frequency, short lengh) {
 }
 
 void inline gpu_init() {
-  backgroundColor(0x7000); // todo - macro with some colors ...
+  backgroundColor(0x7000); // todo (minor) - macro with some colors ...
   clearFixLayer();
   initGfx();
   volMEMWORD(0x400002) = 0xffff;  // debug text white
@@ -586,7 +586,7 @@ void image_physic_shrunk_centroid_move(picturePhysicShrunkCentroid *pps, short x
 }
 
 void image_physic_display(picturePhysic *pp, pictureInfo *pi, paletteInfo *pali, short posX, short posY) {
-  image_display(&pp->p, pi, pali, posX, posY); // TODO refactoring this func
+  image_display(&pp->p, pi, pali, posX, posY);
   box_update(&pp->box, posX, posY);
 }
 
@@ -760,7 +760,7 @@ void image5_show(picture5 *pics, BOOL visible) {
 }
 
 
-/* todo 
+/* todo (minor)
 void maskDisplay(picture pic[], vec2short vec[], BYTE vector_max) {
   BYTE i = 0;
   for (i = 0; i < vector_max; i++) {
@@ -838,7 +838,7 @@ void inline shrunk_addr(WORD addr, WORD shrunk_value) {
   SC234Put(addr, shrunk_value);
 }
 
-WORD shrunk_forge(BYTE xc, BYTE yc) { // TODO xcF, ycFF
+WORD shrunk_forge(BYTE xc, BYTE yc) { // todo (minor) - xcF, ycFF
   //F FF - x (hor) , y (vert)
   // vertical shrinking   8 bit
   // horizontal shrinking 4 bit

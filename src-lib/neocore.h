@@ -192,7 +192,7 @@ void animated_sprite_hide(Animated_Sprite *animated_sprite);
 void animated_sprite_show(Animated_Sprite *animated_sprite);
 void animated_sprite_set_animation(Animated_Sprite *animated_sprite, WORD anim);
 #define animated_sprite_animate(animated_sprite) aSpriteAnimate(animated_sprite.as)
-// todo - rename func animated_sprite_index_auto
+// todo (major) - rename func animated_sprite_index_auto
 WORD animated_sprite_index_auto(spriteInfo *si);
 BOOL animated_sprite_flash(Animated_Sprite *animated_sprite);
 
@@ -216,7 +216,7 @@ void box_debug_update(picture5 *pics, Box *box);
 void box_display(picture5 *pics, Box *box, pictureInfo *pi, paletteInfo *pali);
 void box_shrunk(Box *b, Box *bOrigin, WORD shrunkValue);
 
-// todo - deprecated ?
+// todo (minor) - deprecated ?
 void box_resize(Box *Box, short edge);
 
 // c
@@ -281,15 +281,15 @@ void image_physic_display(picturePhysic *pp, pictureInfo *pi, paletteInfo *pali,
 void image_physic_set_position(picturePhysic *pp, short x, short y);
 void image_physic_move(picturePhysic *pp, short x, short y);
 void image_shrunk(picture *p, pictureInfo *pi, WORD shrunk_value);
-void images_show(picture *p, WORD max, BOOL visible); // TODO deprecated, implement picturesHide, picturesShow, pictureHide, pictureShow
-void image5_show(picture5 *pics, BOOL visible); // TODO deprecated
+void images_show(picture *p, WORD max, BOOL visible);
+void image5_show(picture5 *pics, BOOL visible);
 void image_display(picture *p, pictureInfo *pi, paletteInfo *pali, short posX, short posY);
 void image_shrunk_centroid(picture *p, pictureInfo *pi, short centerPosX, short centerPosY, WORD shrunk_value);
 void image_flash(picture *p, BYTE freq);
 WORD image_get_sprite_index_autoinc(pictureInfo *pi);
 */
 
-// todo - change signature
+// todo (major) - change signature
 BOOL vector_is_left(short x, short y, short v1x, short v1y, short v2x, short v2y);
 
 // j
@@ -322,18 +322,18 @@ void inline logger_box(char *label, Box *b);
 void inline logger_pictureInfo(char *label, pictureInfo *pi);
 
 // p
-// todo - rename autoinc to auto
+// todo (major) - rename autoinc to auto
 void palette_disable_autoinc();
 void palette_enable_autoinc();
 BYTE palette_get_index();
 BYTE palette_set_index(BYTE index);
-// todo - rename palette_get_index_auto
+// todo (major) - rename palette_get_index_auto
 BYTE palette_get_index_autoinc(paletteInfo *pali);
 
 // m
-void mask_display(picture pic[], Vec2short vec[], BYTE vector_max); // todo - rename ? (vectorsDisplay)
-void mask_update(short x, short y, Vec2short vec[], Vec2short offset[], BYTE vector_max); // todo - rename ? (vectorsDebug)
-// todo - hardcode point\dot asset
+void mask_display(picture pic[], Vec2short vec[], BYTE vector_max); // todo (major) - rename ? (vectorsDisplay)
+void mask_update(short x, short y, Vec2short vec[], Vec2short offset[], BYTE vector_max); // todo (major) - rename ? (vectorsDebug)
+// todo (minor) - hardcode point\dot asset
 
 void vec2int_init(Vec2int *vec, int x, int y);
 void vec2short_init(Vec2short *vec, short x, short y);
@@ -346,7 +346,7 @@ WORD        sprite_index_auto(spriteInfo *si);
 WORD        shrunk_forge(BYTE xc, BYTE yc);
 void inline shrunk_addr(WORD addr, WORD shrunk_value);
 WORD        shrunk_range(WORD addr_start, WORD addr_end, WORD shrunk_value);
-WORD        shrunk_prop_table_get(WORD index); // todo - rename shrunkGetPropTable ?
+WORD        shrunk_prop_table_get(WORD index); // todo (major) - rename shrunkGetPropTable ?
 char        sin_table_get(WORD index);
 void        scroller_display(scroller *s, scrollerInfo *si, paletteInfo *pali, short posX, short posY);
 void        sprite_disable_autoinc();

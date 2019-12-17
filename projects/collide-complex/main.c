@@ -3,7 +3,7 @@
 
 #define PEAK_MASK_VECTOR_MAX 6
 
-// TODO improve neocore collision detection (bug on top of peak)
+// todo (minor) - improve neocore collision detection (bug on top of peak)
 
 NEOCORE_INIT
 
