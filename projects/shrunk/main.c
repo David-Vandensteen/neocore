@@ -9,6 +9,9 @@ int main(void) {
   BYTE logo1_shrunk_x = 0;
   BYTE logo2_shrunk_y = 0;
   gpu_init();
+  image_init(&logo1, &logo_sprite, &logo_sprite_Palettes);
+  image_init(&logo2, &logo_sprite, &logo_sprite_Palettes);
+  image_init(&logo3, &logo_sprite, &logo_sprite_Palettes);
   logger_init();
   palette_disable_autoinc(); /* logo1, logo2 & logo3 use the same palette ... disable auto counter */
   logger_info("HORIZONTAL SHRUNK");
@@ -33,6 +36,8 @@ int main(void) {
     */
 
     shrunk(logo1.pic.baseSprite, logo1.pic.info->tileWidth, shrunk_forge(logo1_shrunk_x, 0xFF));
+    shrunk(logo2.pic.baseSprite, logo2.pic.info->tileWidth, shrunk_forge(0xF, logo2_shrunk_y));
+    shrunk(logo3.pic.baseSprite, logo3.pic.info->tileWidth, shrunk_prop_table_get(DAT_frameCounter & SHRUNK_TABLE_PROP_SIZE));
 
 
     /* neocore provide a precalculated table for keep "aspect ratio" */

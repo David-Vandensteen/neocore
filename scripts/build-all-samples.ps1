@@ -23,7 +23,7 @@ function _main{
   compileProject "hello"
   compileProject 'joypad'
   compileProject "shrunk-centroid" 1
-  compileProject "shrunk-physic" 1
+  #compileProject "shrunk-physic" 1
   compileProject "shrunk" 1
   compileProject "sprite" 1
   compileProject "test_animated_sprite" 1

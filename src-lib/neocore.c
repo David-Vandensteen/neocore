@@ -210,10 +210,13 @@ BOOL animated_sprite_flash(Animated_Sprite *animated_sprite) {
   return rt;
 }
 
+void animated_sprite_set_animation(Animated_Sprite *animated_sprite, WORD anim) {
+  aSpriteSetAnim(&animated_sprite->as, anim);
+}
+
 void shrunk(WORD base_sprite, WORD max_width, WORD value) {
 	shrunk_range(0x8000 + base_sprite, 0x8000 + base_sprite + max_width, value);
 }
-
 
 void animated_sprite_hide(Animated_Sprite *animated_sprite) {
   animated_sprite->flash.visible = false;

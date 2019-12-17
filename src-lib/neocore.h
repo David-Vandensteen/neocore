@@ -202,7 +202,8 @@ void animated_sprite_display(Animated_Sprite *animated_sprite, short x, short y,
 #define animated_sprite_set_position(animated_sprite, x, y) aSpriteSetPos(animated_sprite.as, x, y)
 void animated_sprite_hide(Animated_Sprite *animated_sprite);
 void animated_sprite_show(Animated_Sprite *animated_sprite);
-#define animated_sprite_set_animation(as, anim) aSpriteSetAnim(as, anim)
+// #define animated_sprite_set_animation(as, anim) aSpriteSetAnim(as, anim)
+void animated_sprite_set_animation(Animated_Sprite *animated_sprite, WORD anim);
 #define animated_sprite_animate(animated_sprite) aSpriteAnimate(animated_sprite.as)
 // todo - rename func animated_sprite_index_auto
 WORD animated_sprite_index_auto(spriteInfo *si);
