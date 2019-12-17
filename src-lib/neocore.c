@@ -3,15 +3,11 @@
 	2018
 */
 
-// TODO reorganiser les fonctions par odre alpha
-
 #include <DATlib.h>
 #include <input.h>
 #include <stdio.h>
 #include <neocore.h>
 #include <math.h>
-
-// STATIC
 
 static WORD sprite_index = 1;
 static BYTE palette_index = 16;
@@ -56,7 +52,6 @@ static int y_default = LOGGER_Y_INIT;
 
 void inline static setX(WORD _x);
 void inline static setY(WORD _y);
-//void inline static setPos(WORD _x, WORD _y);
 void inline static setPosDefault();
 WORD inline static countChar(char *txt);
 void inline static autoInc();
@@ -86,11 +81,7 @@ void inline static autoInc(){
   y++;
 }
 
-// STATIC END
-
 JOYPAD
-
-//
 
 void animated_sprite_physic_init(
     Animated_Sprite_Physic *animated_sprite_physic,
@@ -137,7 +128,6 @@ void animated_sprite_physic_move(Animated_Sprite_Physic *animated_sprite_physic,
 }
 
 void animated_sprite_physic_shrunk(Animated_Sprite_Physic *animated_sprite_physic, WORD shrunk_value) {
-  // animated_sprite_shrunk(&animated_sprite_physic->animated_sprite, shrunk_value);
   shrunk(animated_sprite_physic->animated_sprite.as.baseSprite, animated_sprite_physic->animated_sprite.si->maxWidth, shrunk_value);
   // todo box resize
 }
@@ -246,7 +236,7 @@ BYTE boxes_collide(Box *b, Box *boxes[], BYTE box_max) {
   return rt;
 }
 
-BOOL box_collide(Box *b1, Box *b2) { // TODO return a frixion vector
+BOOL box_collide(Box *b1, Box *b2) { // todo - return a frixion vector
   if(
       b1->p1.x >= b2->p0.x
           &&
@@ -305,22 +295,17 @@ void box_display(picture5 *pics, Box *box, pictureInfo *pi, paletteInfo *pali) {
 */
 
 void box_shrunk(Box *b, Box *bOrigin, WORD shrunkValue) {
-  // TODO optim.
+  // todo - optim.
   // if i can read the shrunk VRAM value, i can compute the origin box...
-
-  // TODO improve precision
-
-  // TODO consider box offsets
-
-  // TODO move the code to neocore
-
+  // todo - improve precision
+  // todo - consider box offsets
   BYTE shrunk_x = SHRUNK_EXTRACT_X(shrunkValue);
   BYTE pix_step_x = (bOrigin->width DIV16);
   BYTE trim_x = (((15 - shrunk_x) * pix_step_x) DIV2);
 
   int trim_y;
   FIXED shrunk_y = FIX(SHRUNK_EXTRACT_Y(shrunkValue));
-  FIXED pix_step_y = FIX((float)bOrigin->height / (float)256); // TODO hmmm float
+  FIXED pix_step_y = FIX((float)bOrigin->height / (float)256); // todo - hmmm !!! float
   FIXED shrunk_y_multiplicator = fsub(FIX(255), shrunk_y);
   shrunk_y_multiplicator = fmul(shrunk_y_multiplicator, pix_step_y);
   trim_y = fixtoi(shrunk_y_multiplicator);
@@ -343,7 +328,7 @@ void box_shrunk(Box *b, Box *bOrigin, WORD shrunkValue) {
   b->p4.y = b->p0.y + ((b->p3.y - b->p0.y) DIV2);
 }
 
-// TODO deprecated ?
+// todo - deprecated ?
 void box_resize(Box *box, short edge) {
   box->p0.x -= edge;
   box->p0.y -= edge;
@@ -358,7 +343,7 @@ void box_resize(Box *box, short edge) {
   box->p3.y += edge;
 }
 
-void inline clear_vram() { // TODO diable interrupt
+void inline clear_vram() { // todo - disable interrupt
   WORD addr = 0x0000;
   WORD addr_end = 0x8FFF;
   for (addr = addr; addr <= addr_end; addr++) {
@@ -380,11 +365,11 @@ void flash_init(Flash *flash, short frequency, short lengh) {
 }
 
 void inline gpu_init() {
-  backgroundColor(0x7000); //BG color
+  backgroundColor(0x7000); // todo - macro with some colors ...
   clearFixLayer();
   initGfx();
-  volMEMWORD(0x400002) = 0xffff; //debug text white
-  LSPCmode = 0x1c00;//autoanim speed
+  volMEMWORD(0x400002) = 0xffff;  // debug text white
+  LSPCmode = 0x1c00;              // autoanim speed
   sprite_index = 1;
   palette_index = 16;
 }
@@ -609,48 +594,6 @@ void image_physic_set_position(picturePhysic *pp, short x, short y) {
   pictureSetPos(&pp->p, x, y);
   box_update(&pp->box, x, y);
 }
-
-void images_show(picture *p, WORD max, BOOL visible) {
-  WORD i = 0;
-  for (i = 0; i < max; i++) {
-    if (visible) {  // TODO ternaire
-      pictureShow(&p[i]);
-    } else {
-      pictureHide(&p[i]);
-    }
-  }
-}
-
-void image_display(picture *p, pictureInfo *pi, paletteInfo *pali, short posX, short posY) {
-  pictureInit(
-    p,
-    pi,
-    image_get_sprite_index_autoinc(pi),
-    palette_get_index(),
-    posX,
-    posY,
-    FLIP_NONE
-  );
-
-  palJobPut(
-    palette_get_index_autoinc(pali),
-    pali->palCount,
-    pali->data
-  );
-}
-
-void image_flash(picture *p, BYTE freq) {
-  if (freq != 0) {
-    if (DAT_frameCounter % freq == 0) {
-      pictureShow(p);
-    }
-    if (DAT_frameCounter % ((freq MULT2) + (freq DIV2)) == 0) {
-      pictureHide(p);
-    }
-  } else {
-    pictureShow(p);
-  }
-}
 */
 
 void image_init(Image *image, pictureInfo *pi, paletteInfo *pali) {
@@ -697,13 +640,6 @@ void image_show(Image *image) {
   pictureShow(&image->pic);
   image->flash.visible = true;
 }
-
-// todo refactor
-/*
-void image_is_visible(Image *image) {
-  return image->flash.visible;
-};
-*/
 
 BOOL image_flash(Image *image) {
   BOOL rt = true;
@@ -771,21 +707,11 @@ void image_physic_shrunk(Image_Physic *image_physic, WORD shrunk_value) {
 
 void image_shrunk_centroid(Image *image, short center_x, short center_y, WORD shrunk_value) {
   shrunk(image->pic.baseSprite, image->pic.info->tileWidth, shrunk_value);
-  // image_set_position(image, 10, 10);
   image_set_position(
     image,
     shrunk_centroid_get_translated_x(center_x, image->pi->tileWidth, SHRUNK_EXTRACT_X(shrunk_value)),
     shrunk_centroid_get_translated_y(center_y, image->pi->tileHeight, SHRUNK_EXTRACT_Y(shrunk_value))
   );
-
-
-  /*
-  image_set_position(
-    image,
-    shrunk_centroid_get_translated_x(center_x, image->pic.info->tileWidth, SHRUNK_EXTRACT_X(shrunk_value),
-    shrunk_centroid_get_translated_y(center_y, image->pic.info->tileHeight, SHRUNK_EXTRACT_Y(shrunk_value)
-  );
-  */
 }
 
 void palette_disable_autoinc() {
@@ -833,28 +759,8 @@ void image5_show(picture5 *pics, BOOL visible) {
   }
 }
 
-/*
-void image_shrunk(picture *p, pictureInfo *pi, WORD shrunk_value) {
-  shrunk_range(0x8000 + p->baseSprite, 0x8000 + p->baseSprite + pi->tileWidth, shrunk_value);
-}
-*/
 
-/*
-void image_shrunk_centroid(picture *p, pictureInfo *pi, short centerPosX, short centerPosY, WORD shrunk_value) {
-  image_shrunk(p, pi, shrunk_value);
-  pictureSetPos(p,
-    shrunk_centroid_get_translated_x(centerPosX, pi->tileWidth, SHRUNK_EXTRACT_X(shrunk_value)),
-    shrunk_centroid_get_translated_y(centerPosY, pi->tileHeight, SHRUNK_EXTRACT_Y(shrunk_value))
-  );
-  /*
-  picture_set_position(p,
-    shrunkCentroidGetTranslatedX(centerPosX, pi->tileWidth, SHRUNK_EXTRACT_X(shrunk_value)),
-    shrunkCentroidGetTranslatedY(centerPosY, pi->tileHeight, SHRUNK_EXTRACT_Y(shrunk_value))
-  );
-  */
-//}
-
-/* TODO
+/* todo 
 void maskDisplay(picture pic[], vec2short vec[], BYTE vector_max) {
   BYTE i = 0;
   for (i = 0; i < vector_max; i++) {

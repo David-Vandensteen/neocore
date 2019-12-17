@@ -71,15 +71,6 @@
 #define SHRUNK_EXTRACT_X(value) value >> 8
 #define SHRUNK_EXTRACT_Y(value) (BYTE)value
 
-// overwrite aSpriteHide DAT macro
-//#undef aSpriteHide(as)
-//#define aSpriteHide(as)            { (as)->flags|=0x0080; clearSprites(as->baseSprite, as->tileWidth); }
-//#define aSpriteHideDAT(as)         { (as)->flags|=0x0080; }
-
-// overwrite pictureHide, pictureShow DAT func
-// #define pictureHide(p) { short x = (p)->posX; short y = (p)->posY; pictureSetPos(p, HIDE_X, HIDE_Y); (p)->posX = x; (p)->posY = y; loggerInfo("OVER PHIDE"); }
-// #define pictureShow(p) { pictureSetPos(p, (p)->posX, (p)->posY); loggerInfo("OVER PSHOW"); }
-
 enum direction { NONE, UP, DOWN, LEFT, RIGHT };
 
 typedef struct Vec2int Vec2int;
@@ -251,7 +242,6 @@ BOOL is_visible(Flash *flash);
 void image_init(Image *image, pictureInfo *pi, paletteInfo *pali);
 void image_display(Image *image, short x, short y);
 #define image_move(image, x_offset, y_offset) pictureMove(image.pic, x_offset, y_offset)
-// #define image_set_position(image, x, y) pictureSetPos(image.pic, x, y)
 void image_set_position(Image *image, short x, short y);
 void image_hide(Image *image);
 void image_show(Image *image);
@@ -332,18 +322,18 @@ void inline logger_box(char *label, Box *b);
 void inline logger_pictureInfo(char *label, pictureInfo *pi);
 
 // p
-// todo rename autoinc to auto
+// todo - rename autoinc to auto
 void palette_disable_autoinc();
 void palette_enable_autoinc();
 BYTE palette_get_index();
 BYTE palette_set_index(BYTE index);
-// todo rename palette_get_index_auto
+// todo - rename palette_get_index_auto
 BYTE palette_get_index_autoinc(paletteInfo *pali);
 
 // m
-void mask_display(picture pic[], Vec2short vec[], BYTE vector_max); // TODO rename ? (vectorsDisplay)
-void mask_update(short x, short y, Vec2short vec[], Vec2short offset[], BYTE vector_max); // TODO rename ? (vectorsDebug)
-// TODO hardcode point\dot asset
+void mask_display(picture pic[], Vec2short vec[], BYTE vector_max); // todo - rename ? (vectorsDisplay)
+void mask_update(short x, short y, Vec2short vec[], Vec2short offset[], BYTE vector_max); // todo - rename ? (vectorsDebug)
+// todo - hardcode point\dot asset
 
 void vec2int_init(Vec2int *vec, int x, int y);
 void vec2short_init(Vec2short *vec, short x, short y);
@@ -356,7 +346,7 @@ WORD        sprite_index_auto(spriteInfo *si);
 WORD        shrunk_forge(BYTE xc, BYTE yc);
 void inline shrunk_addr(WORD addr, WORD shrunk_value);
 WORD        shrunk_range(WORD addr_start, WORD addr_end, WORD shrunk_value);
-WORD        shrunk_prop_table_get(WORD index); // TODO rename shrunkGetPropTable ?
+WORD        shrunk_prop_table_get(WORD index); // todo - rename shrunkGetPropTable ?
 char        sin_table_get(WORD index);
 void        scroller_display(scroller *s, scrollerInfo *si, paletteInfo *pali, short posX, short posY);
 void        sprite_disable_autoinc();

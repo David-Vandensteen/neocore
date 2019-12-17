@@ -6,7 +6,6 @@ NEOCORE_INIT
 #define LOGO1_POSITION_CENTER_X_INIT 160
 #define LOGO3_POSITION_CENTER_Y_INIT 100
 
-// static picture logo1, logo2, logo3;
 static Image logo1, logo2, logo3;
 
 static BYTE logo1_shrunk_x = 0xF;
