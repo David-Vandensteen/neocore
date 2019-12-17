@@ -127,9 +127,9 @@ The iso file is generated at:
 ```
 
 ## CDDA play ... (todo)   
-
+how to add your music and play it ...
 ## DATlib GFX asset build doc... (todo)   
-
+how to build your own gfx...   
 ## SoundFX ... (todo)   
 
 ___***Warn : mak script override path environment variable during the compiling, if u have some problems after using it, just close and restart a new command terminal***___
