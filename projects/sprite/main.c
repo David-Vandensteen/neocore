@@ -20,11 +20,11 @@ int main(void) {
     if (joypad_is_right() && player.as.posX < 280) { animated_sprite_move(&player, 1, 0); }
     if (joypad_is_up() && player.as.posY > 0) {
       animated_sprite_move(&player, 0, -1);
-      animated_sprite_set_animation(&player, PLAYER_SPRITE_ANIM_UP);
+      animated_sprite_set_animation(&player.as, PLAYER_SPRITE_ANIM_UP);
     }
     if (joypad_is_down() && player.as.posY < 200) {
       animated_sprite_move(&player, 0, 1);
-      animated_sprite_set_animation(&player, PLAYER_SPRITE_ANIM_DOWN);
+      animated_sprite_set_animation(&player.as, PLAYER_SPRITE_ANIM_DOWN);
     }
     if (!joypad_is_down() && !joypad_is_up()) { animated_sprite_set_animation(&player, PLAYER_SPRITE_ANIM_IDLE); }
 
@@ -35,6 +35,4 @@ int main(void) {
   };
   SCClose();
   return 0;
-  //
-
 }
