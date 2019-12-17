@@ -274,6 +274,7 @@ void box_update(Box *b, short x, short y) {
   b->p4.y = b->p0.y + ((b->p3.y - b->p0.y) DIV2);
 }
 
+/* todo (minor)
 void box_debug_update(picture5 *pics, Box *box) {
   pictureSetPos(&pics->pic0, box->p0.x, box->p0.y);
   pictureSetPos(&pics->pic1, box->p1.x, box->p1.y);
@@ -281,6 +282,7 @@ void box_debug_update(picture5 *pics, Box *box) {
   pictureSetPos(&pics->pic3, box->p3.x, box->p3.y);
   pictureSetPos(&pics->pic4, box->p4.x, box->p4.y);
 }
+*/
 
 /*
 void box_display(picture5 *pics, Box *box, pictureInfo *pi, paletteInfo *pali) {
@@ -743,6 +745,7 @@ BYTE palette_get_index_autoinc(paletteInfo *pali) {
 	return rt;
 }
 
+/* todo (minor)
 void image5_show(picture5 *pics, BOOL visible) {
   if (visible) {
     pictureShow(&pics->pic0);
@@ -758,7 +761,7 @@ void image5_show(picture5 *pics, BOOL visible) {
     pictureHide(&pics->pic4);
   }
 }
-
+*/
 
 /* todo (minor)
 void maskDisplay(picture pic[], vec2short vec[], BYTE vector_max) {

@@ -104,6 +104,7 @@ struct Box {
   short heightOffset;
 };
 
+/* todo (minor) - to remove
 typedef struct picture5 picture5;
 struct picture5 {
   picture pic0;
@@ -112,6 +113,7 @@ struct picture5 {
   picture pic3;
   picture pic4;
 };
+*/
 
 typedef struct Flash Flash;
 struct Flash {
@@ -151,13 +153,16 @@ struct Image_Physic {
   BOOL physic_enabled;
 };
 
+/* todo (minor) - to remove
 typedef struct picturePhysic picturePhysic;
 struct picturePhysic {
   picture p;
   Box box;
   BOOL visible;
 };
+*/
 
+/* todo (minor) - to remake
 typedef struct picturePhysicShrunkCentroid picturePhysicShrunkCentroid;
 struct picturePhysicShrunkCentroid {
   picturePhysic pp;
@@ -166,6 +171,7 @@ struct picturePhysicShrunkCentroid {
   Vec2short positionCenter;
   Box boxOrigin;
 };
+*/
 
   //--------------------------------------------------------------------------//
  //                                  a                                       //
@@ -212,8 +218,8 @@ BYTE boxes_collide(Box *b, Box *boxes[], BYTE box_max);
 BOOL box_collide(Box *b1, Box *b2);
 void box_init(Box *b, short width, short height, short widthOffset, short heightOffset);
 void box_update(Box *b, short x, short y);
-void box_debug_update(picture5 *pics, Box *box);
-void box_display(picture5 *pics, Box *box, pictureInfo *pi, paletteInfo *pali);
+// void box_debug_update(picture5 *pics, Box *box); // todo (minor)
+// void box_display(picture5 *pics, Box *box, pictureInfo *pi, paletteInfo *pali); // todo (minor)
 void box_shrunk(Box *b, Box *bOrigin, WORD shrunkValue);
 
 // todo (minor) - deprecated ?
@@ -271,7 +277,7 @@ void image_physic_show(Image_Physic *image_physic);
 void image_physic_flash(Image_Physic *image_physic);
 void image_physic_shrunk(Image_Physic *image_physic, WORD shrunk_value);
 
-/*
+/* todo (minor)
 void image_physic_shrunk_centroid_init(picturePhysicShrunkCentroid *pps, pictureInfo *pi, paletteInfo *pali, short xCenter, short yCenter);
 void image_physic_shrunk_centroid_set_position(picturePhysicShrunkCentroid *pps, short x, short y);
 void image_physic_shrunk_centroid_move(picturePhysicShrunkCentroid *pps, short xShift, short yShift);

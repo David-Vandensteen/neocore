@@ -2,6 +2,10 @@
   David Vandensteen
   2019
 */
+
+// todo (minor) - remake this sample (all is deprecated) - sample panic
+
+/*
 #include <neocore.h>
 #include <math.h>
 #include "player.h"
@@ -51,7 +55,7 @@ static void update() {
     image_physic_shrunk_centroid_update(&boss, shrunk_forge(shrunk_x, shrunk_y));
     box_debug_update(&laser_box_pics, &laser.pp.box);
     box_debug_update(&boss_box_pics, &boss.pp.box);
-
+*/
     /* Set Pos
     laser.positionCenter.x++;
     picturePhysicShrunkCentroidSetPos(&laser.boxOrigin, laser.positionCenter.x, laser.positionCenter.y);
@@ -60,7 +64,7 @@ static void update() {
     /* Move
     picturePhysicShrunkCentroidMove(&laser, 1, 1);
     */
-
+/*
     shrunk_x++;
     shrunk_y++;
 
@@ -83,3 +87,4 @@ int main(void) {
   SCClose();
   return 0;
 }
+*/

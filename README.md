@@ -15,7 +15,7 @@ I'm **David Vandensteen** and i write Neocore for my shoot em up game on Neo Geo
 (**Flamble**) http://azertyvortex.free.fr/flamble
 
 Neocore provide high level functions over Neo Dev Kit (**Fabrice Martinez, Jeff Kurtz, al**) & DATLib 0.2 (**HPMAN**)    
-The Makefile provides many rules (make sprite, make zip, make iso, make cue, make run, make hot-reload...)   
+The Makefile contain many rules (make sprite, make zip, make iso, make cue, make run, make hot-reload...)   
 
 I share my tools and my code, these could possibly help your projects on this platform !!!   
 
@@ -113,7 +113,7 @@ Save the file
 The hot-reload process will rebuild & run your project automaticaly.
 
 Some problems currently:
-* The process is not a real watcher (the rebuild is trigger only if the folder size change)
+* The process is not a real watcher (the rebuild is triggered only if the folder size change)
 * When you break this process, path is not restored in the current terminal (close & reopen a new terminal)
 
 ## Make ISO
@@ -121,8 +121,15 @@ Some problems currently:
 cd projects\hello 
 mak iso
 ```
-The iso file is generate at:
+The iso file is generated at:
 ```cmd
 %temp%\neocore\hello\hello.iso   
 ```
 
+## CDDA play ... (todo)   
+
+## DATlib GFX asset build doc... (todo)   
+
+## SoundFX ... (todo)   
+
+___***Warn : mak script override path environment variable during the compiling, if u have some problems after using it, just close and restart a new command terminal***___
