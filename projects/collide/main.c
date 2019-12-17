@@ -37,13 +37,13 @@ int main(void) {
     if (joypad_is_right() && player.animated_sprite.as.posX < 280) { animated_sprite_physic_move(&player, 1, 0); }
     if (joypad_is_up() && player.animated_sprite.as.posY > 0) {
       animated_sprite_physic_move(&player, 0, -1);
-      animated_sprite_set_animation(&player.animated_sprite.as, PLAYER_SPRITE_ANIM_UP);
+      animated_sprite_set_animation(&player.animated_sprite, PLAYER_SPRITE_ANIM_UP);
     }
     if (joypad_is_down() && player.animated_sprite.as.posY < 200) {
       animated_sprite_physic_move(&player, 0, 1);
-      animated_sprite_set_animation(&player.animated_sprite.as, PLAYER_SPRITE_ANIM_DOWN);
+      animated_sprite_set_animation(&player.animated_sprite, PLAYER_SPRITE_ANIM_DOWN);
     }
-    if (!joypad_is_down() && !joypad_is_up()) { animated_sprite_set_animation(&player.animated_sprite.as, PLAYER_SPRITE_ANIM_IDLE); }
+    if (!joypad_is_down() && !joypad_is_up()) { animated_sprite_set_animation(&player.animated_sprite, PLAYER_SPRITE_ANIM_IDLE); }
 
     if (box_collide(&player.box, &asteroid.box)) flash_init(&player.animated_sprite.flash, 10, 10);
 

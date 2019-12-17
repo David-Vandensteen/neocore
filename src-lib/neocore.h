@@ -175,7 +175,15 @@ struct picturePhysicShrunkCentroid {
   Vec2short positionCenter;
   Box boxOrigin;
 };
-//  a
+
+  //--------------------------------------------------------------------------//
+ //                                  a                                       //
+//--------------------------------------------------------------------------//
+
+  /*------------------*/
+ /* animated sprite  */
+/*------------------*/
+
 void animated_sprite_physic_init(
   Animated_Sprite_Physic *animated_sprite_physic,
   spriteInfo *si,
@@ -185,29 +193,28 @@ void animated_sprite_physic_init(
   short box_width_offset,
   short box_height_offset
 );
-
-void animated_sprite_physic_display(Animated_Sprite_Physic *animated_sprite_physic, short x, short y, WORD anim);
-// void animated_sprite_physic_collide(aSpritePhysic *asp, Box *box); // TODO not implementd ??? needed ???
-void animated_sprite_physic_set_position(Animated_Sprite_Physic *animated_sprite_physic, short x, short y);
-void animated_sprite_physic_move(Animated_Sprite_Physic *animated_sprite_physic, short x_offset, short y_offset);
-void animated_sprite_physic_shrunk(Animated_Sprite_Physic *animated_sprite_physic, WORD shrunk_value);
-#define animated_sprite_physic_animate(animated_sprite_physic) aSpriteAnimate(animated_sprite_physic.animated_sprite.as)
-void animated_sprite_physic_hide(Animated_Sprite_Physic *animated_sprite_physic);
-void animated_sprite_physic_show(Animated_Sprite_Physic *animated_sprite_physic);
-void animated_sprite_physic_flash(Animated_Sprite_Physic *animated_sprite_physic);
-
 void animated_sprite_init(Animated_Sprite *animated_sprite ,spriteInfo *si, paletteInfo *pali);
 void animated_sprite_display(Animated_Sprite *animated_sprite, short x, short y, WORD anim);
 #define animated_sprite_move(animated_sprite, x_offset, y_offset) aSpriteMove(animated_sprite.as, x_offset, y_offset)
 #define animated_sprite_set_position(animated_sprite, x, y) aSpriteSetPos(animated_sprite.as, x, y)
 void animated_sprite_hide(Animated_Sprite *animated_sprite);
 void animated_sprite_show(Animated_Sprite *animated_sprite);
-// #define animated_sprite_set_animation(as, anim) aSpriteSetAnim(as, anim)
 void animated_sprite_set_animation(Animated_Sprite *animated_sprite, WORD anim);
 #define animated_sprite_animate(animated_sprite) aSpriteAnimate(animated_sprite.as)
 // todo - rename func animated_sprite_index_auto
 WORD animated_sprite_index_auto(spriteInfo *si);
 BOOL animated_sprite_flash(Animated_Sprite *animated_sprite);
+
+/* animated sprite physic */
+void animated_sprite_physic_display(Animated_Sprite_Physic *animated_sprite_physic, short x, short y, WORD anim);
+// void animated_sprite_physic_collide(aSpritePhysic *asp, Box *box); // todo - not implementd ??? needed ???
+void animated_sprite_physic_set_position(Animated_Sprite_Physic *animated_sprite_physic, short x, short y);
+void animated_sprite_physic_move(Animated_Sprite_Physic *animated_sprite_physic, short x_offset, short y_offset);
+void animated_sprite_physic_shrunk(Animated_Sprite_Physic *animated_sprite_physic, WORD shrunk_value);
+void animated_sprite_physic_hide(Animated_Sprite_Physic *animated_sprite_physic);
+void animated_sprite_physic_show(Animated_Sprite_Physic *animated_sprite_physic);
+void animated_sprite_physic_flash(Animated_Sprite_Physic *animated_sprite_physic);
+
 
 // b
 BYTE boxes_collide(Box *b, Box *boxes[], BYTE box_max);
@@ -231,8 +238,16 @@ void flash_init(Flash *flash, short frequency, short lengh);
 // g
 void inline gpu_init();
 
-// i
+  //--------------------------------------------------------------------------//
+ //                                  i                                       //
+//--------------------------------------------------------------------------//
+
 BOOL is_visible(Flash *flash);
+
+  /*------------------*/
+ /*       image      */
+/*------------------*/
+
 void image_init(Image *image, pictureInfo *pi, paletteInfo *pali);
 void image_display(Image *image, short x, short y);
 #define image_move(image, x_offset, y_offset) pictureMove(image.pic, x_offset, y_offset)
@@ -243,6 +258,11 @@ void image_show(Image *image);
 void image_is_visible(Image *image);
 BOOL image_flash(Image *image);
 WORD image_sprite_index_auto(pictureInfo *pi);
+void image_shrunk_centroid(Image *image, short center_x, short center_y, WORD shrunk_value);
+
+  /*------------------*/
+ /*  image physic    */
+/*------------------*/
 
 void image_physic_init(
   Image_Physic *image_physic,
@@ -253,7 +273,6 @@ void image_physic_init(
   short box_width_offset,
   short box_height_offset
 );
-
 void image_physic_display(Image_Physic *image_physic, short x, short y);
 void image_physic_move(Image_Physic *image_physic, short x_offset, short y_offset);
 void image_physic_set_position(Image_Physic *image_physic, short x, short y);
@@ -261,7 +280,6 @@ void image_physic_hide(Image_Physic *image_physic);
 void image_physic_show(Image_Physic *image_physic);
 void image_physic_flash(Image_Physic *image_physic);
 void image_physic_shrunk(Image_Physic *image_physic, WORD shrunk_value);
-void image_shrunk_centroid(Image *image, short center_x, short center_y, WORD shrunk_value);
 
 /*
 void image_physic_shrunk_centroid_init(picturePhysicShrunkCentroid *pps, pictureInfo *pi, paletteInfo *pali, short xCenter, short yCenter);

@@ -1,6 +1,7 @@
-# TODO factorize, trap errorlevel
-# TODO test errorlevel break
-
+# todo - test errorlevel break
+param (
+  [string] $op
+)
 
 function compileProject($name, $withSprite) {
   pushd ..\projects\$name
@@ -15,7 +16,15 @@ function compileProject($name, $withSprite) {
   popd
 }
 
-function _main{
+function runProject($name) {
+  pushd ..\projects\$name
+  .\mak.bat run
+  if ($LASTEXITCODE -ne 0) { break }
+  sleep 10
+  popd
+}
+
+function compileProjects {
   compileProject "collide" 1
   compileProject "collide-complex" 1
   compileProject "collide-multiple" 1
@@ -32,4 +41,27 @@ function _main{
   compileProject "test_image_physic" 1
 }
 
-_main
+function runProjects {
+  runProject "collide"
+  runProject "collide-complex"
+  runProject "collide-multiple"
+  runProject "fixed-value"
+  runProject "hello"
+  runProject 'joypad'
+  runProject "shrunk-centroid"
+  # runProject "shrunk-physic" --todo
+  runProject "shrunk"
+  runProject "sprite"
+  runProject "test_animated_sprite"
+  runProject "test_animated_sprite_physic"
+  runProject "test_image"
+  runProject "test_image_physic"
+}
+
+function _main {
+  write-host $op
+  if ($op -eq "compile") { compileProjects }
+  if ($op -eq "run") { runProjects }
+}
+
+_main $op

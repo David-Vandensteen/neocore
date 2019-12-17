@@ -30,7 +30,7 @@ int main(void) {
   while(1) {
     WAIT_VBL
     logger_init();
-    animated_sprite_physic_animate(&player);
+    animated_sprite_animate(&player.animated_sprite);
     logger_box("BOX : ", &player.box);
     animated_sprite_physic_flash(&player);
     // animated_sprite_physic_move(&player, 1, 0);
