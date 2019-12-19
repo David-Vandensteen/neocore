@@ -9,6 +9,8 @@
   // int    ->  4 bytes
   // byte   ->  1 byte
 
+// todo (major) - project test same palette
+
 #ifndef NEOCORE_H
 #define NEOCORE_H
 #include <DATlib.h>
@@ -153,6 +155,15 @@ struct Image_Physic {
   BOOL physic_enabled;
 };
 
+// todo (major) - scroller
+typedef struct Scroller Scroller;
+struct Scroller {
+  scroller *s;
+  scrollerInfo *si;
+  paletteInfo *pi;
+  Flash flash;
+};
+
 /* todo (minor) - to remove
 typedef struct picturePhysic picturePhysic;
 struct picturePhysic {
@@ -198,8 +209,6 @@ void animated_sprite_hide(Animated_Sprite *animated_sprite);
 void animated_sprite_show(Animated_Sprite *animated_sprite);
 void animated_sprite_set_animation(Animated_Sprite *animated_sprite, WORD anim);
 #define animated_sprite_animate(animated_sprite) aSpriteAnimate(animated_sprite.as)
-// todo (major) - rename func animated_sprite_index_auto
-WORD animated_sprite_index_auto(spriteInfo *si);
 BOOL animated_sprite_flash(Animated_Sprite *animated_sprite);
 
 /* animated sprite physic */
@@ -234,6 +243,8 @@ void flash_init(Flash *flash, short frequency, short lengh);
 
 // g
 void inline gpu_init();
+WORD        get_sprite_index_from_sprite(spriteInfo *si);
+BYTE        get_palette_index();
 
   //--------------------------------------------------------------------------//
  //                                  i                                       //
@@ -328,13 +339,9 @@ void inline logger_box(char *label, Box *b);
 void inline logger_pictureInfo(char *label, pictureInfo *pi);
 
 // p
-// todo (major) - rename autoinc to auto
-void palette_disable_autoinc();
-void palette_enable_autoinc();
-BYTE palette_get_index();
-BYTE palette_set_index(BYTE index);
-// todo (major) - rename palette_get_index_auto
-BYTE palette_get_index_autoinc(paletteInfo *pali);
+void palette_disable_auto_index();
+void palette_enable_auto_index();
+BYTE palette_set_index(BYTE index); // todo (major) - rename set_palette_indx
 
 // m
 void mask_display(picture pic[], Vec2short vec[], BYTE vector_max); // todo (major) - rename ? (vectorsDisplay)
@@ -348,17 +355,14 @@ void vec2byte_init(Vec2byte *vec, BYTE x, BYTE y);
 BOOL vectors_collide(Box *box, Vec2short vec[], BYTE vector_max);
 
 // s
-WORD        sprite_index_auto(spriteInfo *si);
 WORD        shrunk_forge(BYTE xc, BYTE yc);
 void inline shrunk_addr(WORD addr, WORD shrunk_value);
 WORD        shrunk_range(WORD addr_start, WORD addr_end, WORD shrunk_value);
 WORD        shrunk_prop_table_get(WORD index); // todo (major) - rename shrunkGetPropTable ?
 char        sin_table_get(WORD index);
-void        scroller_display(scroller *s, scrollerInfo *si, paletteInfo *pali, short posX, short posY);
-void        sprite_disable_autoinc();
-void        sprite_enable_autoinc();
-WORD        sprite_get_Index();
-void        sprite_set_index(WORD index);
+void        scroller_init(Scroller *s, scrollerInfo *si, paletteInfo *pi);
+void        scroller_display(Scroller *s, short x, short y);
+void        set_sprite_index(WORD index);
 WORD        scroller_get_sprite_index_autoinc(scrollerInfo *si);
 void        scroller_move(scroller *sc, short x, short y);
 int         shrunk_centroid_get_translated_x(short centerPosX, WORD tileWidth, BYTE shrunkX);

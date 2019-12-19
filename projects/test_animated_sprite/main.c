@@ -19,8 +19,7 @@ int main(void) {
     // animated_sprite_set_position(&player, 10, 10);
     animated_sprite_animate(&player);
     animated_sprite_flash(&player);
-    logger_bool("VIS : ", is_visible(&player.flash));
-    logger_word("LEN: ", player.flash.lengh);
+    logger_animated_sprite("PLAYER", &player);
     SCClose();
   };
   SCClose();

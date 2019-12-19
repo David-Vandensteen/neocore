@@ -12,7 +12,7 @@ int main(void) {
   image_init(&logo2, &logo_sprite, &logo_sprite_Palettes);
   image_init(&logo3, &logo_sprite, &logo_sprite_Palettes);
   logger_init();
-  palette_disable_autoinc(); /* logo1, logo2 & logo3 use the same palette ... disable auto counter */
+  palette_disable_auto_index(); /* logo1, logo2 & logo3 use the same palette ... disable auto counter */
   logger_info("HORIZONTAL SHRUNK");
   image_init(&logo1, &logo_sprite, &logo_sprite_Palettes);
   image_init(&logo2, &logo_sprite, &logo_sprite_Palettes);
@@ -24,7 +24,7 @@ int main(void) {
   logger_set_position(1, 19);
   logger_info("PROPORTIONAL SHRUNK");
   image_display(&logo3, 10, 150);
-  palette_enable_autoinc();
+  palette_enable_auto_index();
 
   while(1) {
     WAIT_VBL
