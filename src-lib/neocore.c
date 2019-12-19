@@ -178,6 +178,7 @@ void animated_sprite_display(Animated_Sprite *animated_sprite, short x, short y,
   aSpriteSetAnim(&animated_sprite->as, anim);
 }
 
+WORD get_sprite_index() { return sprite_index; }
 WORD get_sprite_index_from_sprite(spriteInfo *si) {
   WORD rt = sprite_index;
   if (sprite_auto_index) sprite_index += si->maxWidth;
@@ -808,12 +809,12 @@ void sprite_set_index(WORD index) {
 }
 
 // todo (major) - scroller_init
-void scroller_init(Scroller *s, scrollerInfo *si, paletteInfo *pi) {
+void scroller_init(Scroller *s, scrollerInfo *si, paletteInfo *pali) {
   s->si = si;
-  s->pi = pi;
+  s->pali = pali;
 }
 
-/*
+/* todo (major) - deprecated
 void scroller_display(scroller *s, scrollerInfo *si, paletteInfo *pali, short posX, short posY) { // todo (major)
   BOOL palette_auto_index_state = palette_auto_index;
   scrollerInit(
@@ -834,12 +835,12 @@ void scroller_display(scroller *s, scrollerInfo *si, paletteInfo *pali, short po
 }
 */
 
-void scroller_display(Scroller *s, short x, short y) { // todo (major)
+void scroller_display(Scroller *s, short x, short y) { // todo (major) - problem with palette
   BOOL palette_auto_index_state = palette_auto_index;
   scrollerInit(
     &s->s,
     s->si,
-    get_sprite_index_from_sprite(s->s->),
+    get_sprite_index(), // todo (major) - hummmm !
     get_palette_index(s->pali),
     x,
     y
@@ -852,16 +853,8 @@ void scroller_display(Scroller *s, short x, short y) { // todo (major)
   );
 }
 
-
-
-void scroller_move(scroller *sc, short x, short y) { // todo (major) - to update
-  scrollerSetPos(sc, sc->scrlPosX + x, sc->scrlPosY + y);
-}
-
-WORD scroller_get_sprite_index_autoinc(scrollerInfo *si) { // todo (major) - deprecatd
-  WORD rt = sprite_index;
-  sprite_index += 21;
-  return rt;
+void scroller_move(Scroller *s, short x, short y) {
+  scrollerSetPos(&s->s, s->s.scrlPosX + x, s->s.scrlPosY + y);
 }
 
 void inline shrunk_addr(WORD addr, WORD shrunk_value) {

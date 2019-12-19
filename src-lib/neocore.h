@@ -158,10 +158,9 @@ struct Image_Physic {
 // todo (major) - scroller
 typedef struct Scroller Scroller;
 struct Scroller {
-  scroller *s;
+  scroller s;
   scrollerInfo *si;
-  paletteInfo *pi;
-  Flash flash;
+  paletteInfo *pali;
 };
 
 /* todo (minor) - to remove
@@ -243,6 +242,7 @@ void flash_init(Flash *flash, short frequency, short lengh);
 
 // g
 void inline gpu_init();
+WORD        get_sprite_index();
 WORD        get_sprite_index_from_sprite(spriteInfo *si);
 BYTE        get_palette_index();
 
@@ -360,11 +360,10 @@ void inline shrunk_addr(WORD addr, WORD shrunk_value);
 WORD        shrunk_range(WORD addr_start, WORD addr_end, WORD shrunk_value);
 WORD        shrunk_prop_table_get(WORD index); // todo (major) - rename shrunkGetPropTable ?
 char        sin_table_get(WORD index);
-void        scroller_init(Scroller *s, scrollerInfo *si, paletteInfo *pi);
+void        scroller_init(Scroller *s, scrollerInfo *si, paletteInfo *pali);
 void        scroller_display(Scroller *s, short x, short y);
 void        set_sprite_index(WORD index);
-WORD        scroller_get_sprite_index_autoinc(scrollerInfo *si);
-void        scroller_move(scroller *sc, short x, short y);
+void        scroller_move(Scroller *s, short x, short y);
 int         shrunk_centroid_get_translated_x(short centerPosX, WORD tileWidth, BYTE shrunkX);
 int         shrunk_centroid_get_translated_y(short centerPosY, WORD tileHeight, BYTE shrunkY);
 void        shrunk(WORD base_sprite, WORD max_width, WORD value);

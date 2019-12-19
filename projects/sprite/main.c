@@ -5,12 +5,15 @@ NEOCORE_INIT
 
 int main(void) {
   Animated_Sprite player;
-  scroller background;
+  Scroller background;
   Image planet;
   gpu_init();
   image_init(&planet, &planet04_sprite, &planet04_sprite_Palettes);
   animated_sprite_init(&player, &player_sprite, &player_sprite_Palettes);
-  scroller_display(&background, &background_sprite, &background_sprite_Palettes, 0, 0);
+  scroller_init(&background, &background_sprite, &background_sprite_Palettes);
+
+  // scroller_display(&background, &background_sprite, &background_sprite_Palettes, 0, 0);
+  scroller_display(&background, 0, 0);
   image_display(&planet, 20, 100);
   animated_sprite_display(&player, 10, 10, PLAYER_SPRITE_ANIM_IDLE);
   while(1) {
@@ -29,7 +32,7 @@ int main(void) {
     if (!joypad_is_down() && !joypad_is_up()) { animated_sprite_set_animation(&player, PLAYER_SPRITE_ANIM_IDLE); }
 
     scroller_move(&background, 1, 0);
-    if (background.scrlPosX > 512)  scrollerSetPos(&background, 0, background.scrlPosY);
+    if (background.s.scrlPosX > 512)  scrollerSetPos(&background, 0, background.s.scrlPosY);
     animated_sprite_animate(&player);
     SCClose();
   };
