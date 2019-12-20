@@ -7,7 +7,6 @@ NEOCORE_INIT
 static Image planet;
 static Animated_Sprite player;
 static Scroller backgroung;
-// todo (major) - scroller
 
 int main(void) {
   gpu_init();
@@ -29,10 +28,9 @@ int main(void) {
     logger_byte("PALI PLANET ", planet.pic.basePalette);
     logger_byte("PALI BACK   ", backgroung.s.basePalette);
     logger_info(" ");
-    logger_word("PAL PLAYER ", (WORD)player.pali);
-    logger_word("PAL PLANET ", (WORD)planet.pali);
-    logger_word("PAL BACK   ", (WORD)backgroung.pali);
-    scroller_move(&backgroung, 1, 0);
+    logger_word("PAL PLAYER ", (int)player.pali);
+    logger_word("PAL PLANET ", (int)planet.pali);
+    logger_word("PAL BACK   ", (int)backgroung.pali);
     animated_sprite_animate(&player);
     SCClose();
   };

@@ -43,7 +43,6 @@ static void display() {
   player_display();
 
   box_display(&laser_box_pics, &laser.pp.box, &dot_sprite, &dot_sprite_Palettes);
-  // todo (major) - pallete inc
   box_display(&boss_box_pics, &boss.pp.box, &dot_sprite, &dot_sprite_Palettes);
 }
 

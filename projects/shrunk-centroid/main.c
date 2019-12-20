@@ -68,7 +68,7 @@ static void update_logo1() { // Horizontal
 }
 
 static void update_logo2() { // Proportional
-  image_shrunk_centroid(&logo2, (short)logo2_position_center.x, (short)logo2_position_center.y, shrunk_prop_table_get(shrunkTableIndex));
+  image_shrunk_centroid(&logo2, (short)logo2_position_center.x, (short)logo2_position_center.y, get_shrunk_proportional_table(shrunkTableIndex));
   shrunkTableIndex++;
   if (shrunkTableIndex >= SHRUNK_TABLE_PROP_SIZE) shrunkTableIndex = 0;
 }

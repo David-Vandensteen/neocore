@@ -156,7 +156,7 @@ void animated_sprite_init(Animated_Sprite *animated_sprite ,spriteInfo *si, pale
   animated_sprite->pali = pali;
 };
 
-void animated_sprite_display(Animated_Sprite *animated_sprite, short x, short y, WORD anim) { // todo (major) - better auto_index managment
+void animated_sprite_display(Animated_Sprite *animated_sprite, short x, short y, WORD anim) {
   BOOL palette_auto_index_state = palette_auto_index;
   palette_disable_auto_index();
   aSpriteInit(
@@ -179,6 +179,13 @@ void animated_sprite_display(Animated_Sprite *animated_sprite, short x, short y,
 }
 
 WORD get_sprite_index() { return sprite_index; }
+
+WORD get_sprite_index_from_picture(pictureInfo *pi) {
+  WORD rt = sprite_index;
+  if (sprite_auto_index) sprite_index += pi->tileWidth;
+  return rt;
+}
+
 WORD get_sprite_index_from_sprite(spriteInfo *si) {
   WORD rt = sprite_index;
   if (sprite_auto_index) sprite_index += si->maxWidth;
@@ -613,7 +620,7 @@ void image_display(Image *image, short x, short y) {
   pictureInit(
     &image->pic,
     image->pi,
-    image_sprite_index_auto(image->pi),
+    get_sprite_index_from_picture(image->pi),
     get_palette_index(image->pali),
     x,
     y,
@@ -631,12 +638,6 @@ void image_set_position(Image *image, short x, short y) {
   pictureSetPos(&image->pic, x, y);
 }
 
-
-WORD image_sprite_index_auto(pictureInfo *pi) { // todo (major) -- get_sprite_index_from_picture
-  WORD rt = sprite_index;
-  if (sprite_auto_index) sprite_index += pi->tileWidth;
-  return rt;
-}
 
 void image_hide(Image *image) {
   pictureHide(&image->pic);
@@ -729,7 +730,7 @@ void palette_enable_auto_index() {
   palette_auto_index = true;
 }
 
-BYTE palette_set_index(BYTE index) { // todo (major) - rename set_palette_index
+BYTE set_palette_index(BYTE index) {
 	palette_index = index;
 	return palette_index;
 }
@@ -773,6 +774,7 @@ void maskDisplay(picture pic[], vec2short vec[], BYTE vector_max) {
 }
 */
 
+/*
 void mask_update(short x, short y, Vec2short vec[], Vec2short offset[], BYTE vector_max) {
   BYTE i = 0;
   for (i = 0; i < vector_max; i++) {
@@ -780,6 +782,7 @@ void mask_update(short x, short y, Vec2short vec[], Vec2short offset[], BYTE vec
     vec[i].y = y + offset[i].y;
   }
 }
+*/
 
 void vec2int_init(Vec2int *vec, int x, int y)         { vec->x = x; vec->y = y; }
 void vec2short_init(Vec2short *vec, short x, short y) { vec->x = x; vec->y = y; }
@@ -808,7 +811,6 @@ void sprite_set_index(WORD index) {
 	sprite_index = index;
 }
 
-// todo (major) - scroller_init
 void scroller_init(Scroller *s, scrollerInfo *si, paletteInfo *pali) {
   s->si = si;
   s->pali = pali;
@@ -825,7 +827,7 @@ void scroller_display(Scroller *s, short x, short y) {
     x,
     y
   );
-  sprite_index += 21; // todo (major) - test
+  sprite_index += 21;
   if (palette_auto_index_state) palette_enable_auto_index();
   palJobPut(
     get_palette_index(s->pali),
@@ -865,8 +867,8 @@ WORD shrunk_range(WORD addr_start, WORD addr_end, WORD shrunk_value) {
   return addr_end;
 }
 
-WORD shrunk_prop_table_get(WORD index) {
-  return shrunk_table_prop[index];
+WORD get_shrunk_proportional_table(WORD index) {
+  return shrunk_table_prop[index]; // todo (minor) - rename shrunk_proportional_table
 }
 
 int shrunk_centroid_get_translated_x(short centerPosX, WORD tileWidth, BYTE shrunkX) {

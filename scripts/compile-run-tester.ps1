@@ -31,14 +31,16 @@ function compileProjects {
   compileProject "fixed-value"
   compileProject "hello"
   compileProject 'joypad'
+  compileProject "shrunk" 1
   compileProject "shrunk-centroid" 1
   # compileProject "shrunk-physic" 1 --todo
-  compileProject "shrunk" 1
   compileProject "sprite" 1
   compileProject "test_animated_sprite" 1
   compileProject "test_animated_sprite_physic" 1
   compileProject "test_image" 1
   compileProject "test_image_physic" 1
+  compileProject "test_same_palette" 1
+  compileProject "test_scroller" 1
 }
 
 function runProjects {
@@ -48,14 +50,16 @@ function runProjects {
   runProject "fixed-value"
   runProject "hello"
   runProject 'joypad'
+  runProject "shrunk"
   runProject "shrunk-centroid"
   # runProject "shrunk-physic" --todo
-  runProject "shrunk"
   runProject "sprite"
   runProject "test_animated_sprite"
   runProject "test_animated_sprite_physic"
   runProject "test_image"
   runProject "test_image_physic"
+  runProject "test_same_palette"
+  runProject "test_scroller"
 }
 
 function _main {
