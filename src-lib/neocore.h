@@ -362,6 +362,7 @@ WORD        shrunk_prop_table_get(WORD index); // todo (major) - rename shrunkGe
 char        sin_table_get(WORD index);
 void        scroller_init(Scroller *s, scrollerInfo *si, paletteInfo *pali);
 void        scroller_display(Scroller *s, short x, short y);
+void        croller_set_position(Scroller *s, short x, short y);
 void        set_sprite_index(WORD index);
 void        scroller_move(Scroller *s, short x, short y);
 int         shrunk_centroid_get_translated_x(short centerPosX, WORD tileWidth, BYTE shrunkX);
