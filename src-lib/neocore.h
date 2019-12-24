@@ -360,7 +360,7 @@ void palette_enable_auto_index();
 
 // m
 //void mask_display(picture pic[], Vec2short vec[], BYTE vector_max); // todo (minor) - rename ? (vectorsDisplay)
-//void mask_update(short x, short y, Vec2short vec[], Vec2short offset[], BYTE vector_max); // todo (minor) - rename ? (vectorsDebug)
+void mask_update(short x, short y, Vec2short vec[], Vec2short offset[], BYTE vector_max); // todo (minor) - rename ? (vectorsDebug)
 // todo (minor) - hardcode point\dot asset
 
   //--------------------------------------------------------------------------//

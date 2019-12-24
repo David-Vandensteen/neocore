@@ -943,7 +943,6 @@ void maskDisplay(picture pic[], vec2short vec[], BYTE vector_max) {
 }
 */
 
-/*
 void mask_update(short x, short y, Vec2short vec[], Vec2short offset[], BYTE vector_max) {
   BYTE i = 0;
   for (i = 0; i < vector_max; i++) {
@@ -951,12 +950,10 @@ void mask_update(short x, short y, Vec2short vec[], Vec2short offset[], BYTE vec
     vec[i].y = y + offset[i].y;
   }
 }
-*/
 
-/* todo (minor) - deprecated
+// todo (major) - remane get_table_sin()
 char sin_table_get(WORD index) {
   return sinTable[index];
 }
-*/
 
 //
