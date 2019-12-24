@@ -9,6 +9,10 @@
 #include <neocore.h>
 #include <math.h>
 
+  /*------------------*/
+ /* -static          */
+/*------------------*/
+
 static WORD sprite_index = 1;
 static BYTE palette_index = 16;
 
@@ -83,6 +87,78 @@ void inline static autoInc(){
 
 JOYPAD
 
+
+
+  //--------------------------------------------------------------------------//
+ //                                  -A                                      //
+//--------------------------------------------------------------------------//
+  /*------------------*/
+ /* -animated_sprite */
+/*------------------*/
+void animated_sprite_init(Animated_Sprite *animated_sprite ,spriteInfo *si, paletteInfo *pali) {
+  flash_init(&animated_sprite->flash, 0, 0);
+  animated_sprite->si = si;
+  animated_sprite->pali = pali;
+};
+
+void animated_sprite_display(Animated_Sprite *animated_sprite, short x, short y, WORD anim) {
+  BOOL palette_auto_index_state = palette_auto_index;
+  palette_disable_auto_index();
+  aSpriteInit(
+    &animated_sprite->as,
+    animated_sprite->si,
+		get_sprite_index_from_sprite(animated_sprite->si),
+    get_palette_index(animated_sprite->pali),
+    x,
+    y,
+    anim,
+    FLIP_NONE
+  );
+  if (palette_auto_index_state) palette_enable_auto_index();
+  palJobPut(
+    get_palette_index(animated_sprite->pali),
+    animated_sprite->pali->palCount,
+    animated_sprite->pali->data
+  );
+  aSpriteSetAnim(&animated_sprite->as, anim);
+}
+
+BOOL animated_sprite_flash(Animated_Sprite *animated_sprite) {
+  BOOL rt = true;
+  if (animated_sprite->flash.frequency != 0 && animated_sprite->flash.lengh != 0) {
+    if (DAT_frameCounter % animated_sprite->flash.frequency == 0) {
+      if (is_visible(&animated_sprite->flash)) {
+        animated_sprite_hide(animated_sprite);
+        rt = false;
+      } else {
+        animated_sprite_show(animated_sprite);
+        rt = true;
+      }
+      animated_sprite->flash.lengh--;
+      if (animated_sprite->flash.lengh == 0) animated_sprite_show(animated_sprite);
+    }
+  }
+  return rt;
+}
+
+void animated_sprite_set_animation(Animated_Sprite *animated_sprite, WORD anim) {
+  aSpriteSetAnim(&animated_sprite->as, anim);
+}
+
+void animated_sprite_hide(Animated_Sprite *animated_sprite) {
+  animated_sprite->flash.visible = false;
+  aSpriteHide(&animated_sprite->as);
+  clearSprites(animated_sprite->as.baseSprite, animated_sprite->as.tileWidth);
+}
+
+void animated_sprite_show(Animated_Sprite *animated_sprite) {
+  animated_sprite->flash.visible = true;
+  aSpriteShow(&animated_sprite->as);
+}
+
+  /*--------------------------*/
+ /* -animated_sprite_physic  */
+/*--------------------------*/
 void animated_sprite_physic_init(
     Animated_Sprite_Physic *animated_sprite_physic,
     spriteInfo *si,
@@ -146,89 +222,9 @@ void animated_sprite_physic_flash(Animated_Sprite_Physic *animated_sprite_physic
   animated_sprite_physic->physic_enabled = animated_sprite_flash(&animated_sprite_physic->animated_sprite);
 }
 
-BOOL is_visible(Flash *flash) {
-  return flash->visible;
-}
-
-void animated_sprite_init(Animated_Sprite *animated_sprite ,spriteInfo *si, paletteInfo *pali) {
-  flash_init(&animated_sprite->flash, 0, 0);
-  animated_sprite->si = si;
-  animated_sprite->pali = pali;
-};
-
-void animated_sprite_display(Animated_Sprite *animated_sprite, short x, short y, WORD anim) {
-  BOOL palette_auto_index_state = palette_auto_index;
-  palette_disable_auto_index();
-  aSpriteInit(
-    &animated_sprite->as,
-    animated_sprite->si,
-		get_sprite_index_from_sprite(animated_sprite->si),
-    get_palette_index(animated_sprite->pali),
-    x,
-    y,
-    anim,
-    FLIP_NONE
-  );
-  if (palette_auto_index_state) palette_enable_auto_index();
-  palJobPut(
-    get_palette_index(animated_sprite->pali),
-    animated_sprite->pali->palCount,
-    animated_sprite->pali->data
-  );
-  aSpriteSetAnim(&animated_sprite->as, anim);
-}
-
-WORD get_sprite_index() { return sprite_index; }
-
-WORD get_sprite_index_from_picture(pictureInfo *pi) {
-  WORD rt = sprite_index;
-  if (sprite_auto_index) sprite_index += pi->tileWidth;
-  return rt;
-}
-
-WORD get_sprite_index_from_sprite(spriteInfo *si) {
-  WORD rt = sprite_index;
-  if (sprite_auto_index) sprite_index += si->maxWidth;
-  return rt;
-}
-
-BOOL animated_sprite_flash(Animated_Sprite *animated_sprite) {
-  BOOL rt = true;
-  if (animated_sprite->flash.frequency != 0 && animated_sprite->flash.lengh != 0) {
-    if (DAT_frameCounter % animated_sprite->flash.frequency == 0) {
-      if (is_visible(&animated_sprite->flash)) {
-        animated_sprite_hide(animated_sprite);
-        rt = false;
-      } else {
-        animated_sprite_show(animated_sprite);
-        rt = true;
-      }
-      animated_sprite->flash.lengh--;
-      if (animated_sprite->flash.lengh == 0) animated_sprite_show(animated_sprite);
-    }
-  }
-  return rt;
-}
-
-void animated_sprite_set_animation(Animated_Sprite *animated_sprite, WORD anim) {
-  aSpriteSetAnim(&animated_sprite->as, anim);
-}
-
-void shrunk(WORD base_sprite, WORD max_width, WORD value) {
-	shrunk_range(0x8000 + base_sprite, 0x8000 + base_sprite + max_width, value);
-}
-
-void animated_sprite_hide(Animated_Sprite *animated_sprite) {
-  animated_sprite->flash.visible = false;
-  aSpriteHide(&animated_sprite->as);
-  clearSprites(animated_sprite->as.baseSprite, animated_sprite->as.tileWidth);
-}
-
-void animated_sprite_show(Animated_Sprite *animated_sprite) {
-  animated_sprite->flash.visible = true;
-  aSpriteShow(&animated_sprite->as);
-}
-
+  //--------------------------------------------------------------------------//
+ //                                  -B                                      //
+//--------------------------------------------------------------------------//
 BYTE boxes_collide(Box *b, Box *boxes[], BYTE box_max) {
   BYTE rt = false;
   BYTE i = 0;
@@ -284,28 +280,6 @@ void box_update(Box *b, short x, short y) {
   b->p4.y = b->p0.y + ((b->p3.y - b->p0.y) DIV2);
 }
 
-/* todo (minor)
-void box_debug_update(picture5 *pics, Box *box) {
-  pictureSetPos(&pics->pic0, box->p0.x, box->p0.y);
-  pictureSetPos(&pics->pic1, box->p1.x, box->p1.y);
-  pictureSetPos(&pics->pic2, box->p2.x, box->p2.y);
-  pictureSetPos(&pics->pic3, box->p3.x, box->p3.y);
-  pictureSetPos(&pics->pic4, box->p4.x, box->p4.y);
-}
-*/
-
-/*
-void box_display(picture5 *pics, Box *box, pictureInfo *pi, paletteInfo *pali) {
-  palette_disable_autoinc();
-  image_display(&pics->pic0, pi, pali, box->p0.x, box->p0.y);
-  image_display(&pics->pic1, pi, pali, box->p1.x, box->p1.y);
-  image_display(&pics->pic2, pi, pali, box->p2.x, box->p2.y);
-  image_display(&pics->pic3, pi, pali, box->p3.x, box->p3.y);
-  palette_enable_autoinc();
-  image_display(&pics->pic4, pi, pali, box->p4.x, box->p4.y);
-}
-*/
-
 void box_shrunk(Box *b, Box *bOrigin, WORD shrunkValue) {
   // todo (minor) - optim.
   // if i can read the shrunk VRAM value, i can compute the origin box...
@@ -355,6 +329,9 @@ void box_resize(Box *box, short edge) {
   box->p3.y += edge;
 }
 
+  //--------------------------------------------------------------------------//
+ //                                  -C                                      //
+//--------------------------------------------------------------------------//
 void inline clear_vram() { // todo (minor) - disable interrupt
   WORD addr = 0x0000;
   WORD addr_end = 0x8FFF;
@@ -367,6 +344,9 @@ void inline clear_vram() { // todo (minor) - disable interrupt
   wait_vbl_max(10);
 }
 
+  //--------------------------------------------------------------------------//
+ //                                  -F                                      //
+//--------------------------------------------------------------------------//
 void inline fix_print_neocore(int x, int y, char *label){
   fixPrint(x, y, 0, 0, label);
 }
@@ -376,6 +356,9 @@ void flash_init(Flash *flash, short frequency, short lengh) {
   flash->lengh = lengh;
 }
 
+  //--------------------------------------------------------------------------//
+ //                                  -G                                      //
+//--------------------------------------------------------------------------//
 void inline gpu_init() {
   backgroundColor(0x7000); // todo (minor) - macro with some colors ...
   clearFixLayer();
@@ -386,15 +369,163 @@ void inline gpu_init() {
   palette_index = 16;
 }
 
-BOOL vector_is_left(short x, short y, short v1x, short v1y, short v2x, short v2y) {
-  BOOL rt = false;
-  short vectorD[2] = {v2x - v1x, v2y - v1y};
-  short vectorT[2] = {x - v1x, y -v1y};
-  short d = vectorD[X] * vectorT[Y] - vectorD[Y] * vectorT[X];
-  (d > 0) ? (rt = false) : (rt = true);
+WORD get_sprite_index() { return sprite_index; }
+
+WORD get_sprite_index_from_picture(pictureInfo *pi) {
+  WORD rt = sprite_index;
+  if (sprite_auto_index) sprite_index += pi->tileWidth;
   return rt;
 }
 
+WORD get_sprite_index_from_sprite(spriteInfo *si) {
+  WORD rt = sprite_index;
+  if (sprite_auto_index) sprite_index += si->maxWidth;
+  return rt;
+}
+
+BYTE get_palette_index(paletteInfo *pali) {
+	BYTE rt = palette_index;
+  if (palette_auto_index) palette_index += pali->palCount;
+	return rt;
+}
+
+WORD get_shrunk_proportional_table(WORD index) {
+  return shrunk_table_prop[index]; // todo (minor) - rename shrunk_proportional_table
+}
+
+  //--------------------------------------------------------------------------//
+ //                                  -I                                      //
+//--------------------------------------------------------------------------//
+BOOL is_visible(Flash *flash) {
+  return flash->visible;
+}
+
+  /*------------------*/
+ /*      -image      */
+/*------------------*/
+void image_init(Image *image, pictureInfo *pi, paletteInfo *pali) {
+  flash_init(&image->flash, 0, 0);
+  image->pali = pali;
+  image->pi = pi;
+}
+
+void image_display(Image *image, short x, short y) {
+  BOOL palette_auto_index_state = palette_auto_index;
+  palette_disable_auto_index();
+  pictureInit(
+    &image->pic,
+    image->pi,
+    get_sprite_index_from_picture(image->pi),
+    get_palette_index(image->pali),
+    x,
+    y,
+    FLIP_NONE
+  );
+  if (palette_auto_index_state) palette_enable_auto_index();
+  palJobPut(
+    get_palette_index(image->pali),
+    image->pali->palCount,
+    image->pali->data
+  );
+}
+
+void image_set_position(Image *image, short x, short y) {
+  pictureSetPos(&image->pic, x, y);
+}
+
+
+void image_hide(Image *image) {
+  pictureHide(&image->pic);
+  image->flash.visible = false;
+}
+
+void image_show(Image *image) {
+  pictureShow(&image->pic);
+  image->flash.visible = true;
+}
+
+BOOL image_flash(Image *image) {
+  BOOL rt = true;
+  if (image->flash.frequency != 0 && image->flash.lengh != 0) {
+    if (DAT_frameCounter % image->flash.frequency == 0) {
+      if (is_visible(&image->flash)) {
+        image_hide(image);
+        rt = false;
+      } else {
+        image_show(image);
+        rt = true;
+      }
+      image->flash.lengh--;
+      if (image->flash.lengh == 0) image_show(image);
+    }
+  }
+  return rt;
+}
+
+  /*------------------*/
+ /*  -image_physic   */
+/*------------------*/
+void image_physic_init(
+  Image_Physic *image_physic,
+  pictureInfo *pi,
+  paletteInfo *pali,
+  short box_witdh,
+  short box_height,
+  short box_width_offset,
+  short box_height_offset
+) {
+  image_init(&image_physic->image, pi, pali);
+  box_init(&image_physic->box, box_witdh, box_height, box_width_offset, box_height_offset);
+}
+
+void image_physic_display(Image_Physic *image_physic, short x, short y) {
+  image_display(&image_physic->image, x, y);
+  box_update(&image_physic->box, x, y);
+}
+
+void image_physic_move(Image_Physic *image_physic, short x_offset, short y_offset) {
+  image_move(&image_physic->image, x_offset, y_offset);
+  box_update(&image_physic->box, image_physic->image.pic.posX, image_physic->image.pic.posY);
+}
+
+void image_physic_set_position(Image_Physic *image_physic, short x, short y) {
+  image_set_position(&image_physic->image, x, y);
+  box_update(&image_physic->box, x, y);
+}
+
+void image_physic_hide(Image_Physic *image_physic) {
+  image_hide(&image_physic->image);
+  image_physic->physic_enabled = false;
+}
+
+void image_physic_show(Image_Physic *image_physic) {
+  image_show(&image_physic->image);
+  image_physic->physic_enabled = true;
+}
+
+void image_physic_flash(Image_Physic *image_physic) {
+  image_physic->physic_enabled = image_flash(&image_physic->image);
+}
+
+void image_physic_shrunk(Image_Physic *image_physic, WORD shrunk_value) {
+  shrunk(image_physic->image.pic.baseSprite, image_physic->image.pic.info->tileWidth, shrunk_value);
+}
+
+void image_shrunk_centroid(Image *image, short center_x, short center_y, WORD shrunk_value) {
+  shrunk(image->pic.baseSprite, image->pic.info->tileWidth, shrunk_value);
+  image_set_position(
+    image,
+    shrunk_centroid_get_translated_x(center_x, image->pi->tileWidth, SHRUNK_EXTRACT_X(shrunk_value)),
+    shrunk_centroid_get_translated_y(center_y, image->pi->tileHeight, SHRUNK_EXTRACT_Y(shrunk_value))
+  );
+}
+
+  //--------------------------------------------------------------------------//
+ //                                  -J                                      //
+//--------------------------------------------------------------------------//
+  /*----------*/
+ /* -joypad  */
+/*----------*/
 void inline joypad_debug() {
   JOYPAD_READ
   if (joypad_is_start()) {  fix_print_neocore(10, 11,  "JOYPAD START"); }
@@ -426,6 +557,12 @@ BOOL joypad_is_b()      { return (JOYPAD_IS_B)      ? (true) : (false); }
 BOOL joypad_is_c()      { return (JOYPAD_IS_C)      ? (true) : (false); }
 BOOL joypad_is_d()      { return (JOYPAD_IS_D)      ? (true) : (false); }
 
+  //--------------------------------------------------------------------------//
+ //                                  -L                                       //
+//--------------------------------------------------------------------------//
+  /*----------*/
+ /* -logger  */
+/*----------*/
 void logger_init() {
   #ifdef LOGGER_ON
   x = LOGGER_X_INIT;
@@ -568,6 +705,169 @@ void inline logger_pictureInfo(char *label, pictureInfo *pi) {
   #endif
 }
 
+  //--------------------------------------------------------------------------//
+ //                                  -P                                      //
+//--------------------------------------------------------------------------//
+  /*-----------*/
+ /* -palette  */
+/*-----------*/
+
+void palette_disable_auto_index() { palette_auto_index = false; }
+void palette_enable_auto_index() { palette_auto_index = true; }
+
+  //--------------------------------------------------------------------------//
+ //                                  -V                                      //
+//--------------------------------------------------------------------------//
+BOOL vector_is_left(short x, short y, short v1x, short v1y, short v2x, short v2y) {
+  BOOL rt = false;
+  short vectorD[2] = {v2x - v1x, v2y - v1y};
+  short vectorT[2] = {x - v1x, y -v1y};
+  short d = vectorD[X] * vectorT[Y] - vectorD[Y] * vectorT[X];
+  (d > 0) ? (rt = false) : (rt = true);
+  return rt;
+}
+
+void vec2int_init(Vec2int *vec, int x, int y)         { vec->x = x; vec->y = y; }
+void vec2short_init(Vec2short *vec, short x, short y) { vec->x = x; vec->y = y; }
+void vec2byte_init(Vec2byte *vec, BYTE x, BYTE y)     { vec->x = x; vec->y = y; }
+
+BOOL vectors_collide(Box *box, Vec2short vec[], BYTE vector_max) {
+  BOOL p0 = false, p1 = false, p2 = false, p3 = false, p4 = false;
+  p0 = collide_point(box->p0.x, box->p0.y, vec, vector_max);
+  p1 = collide_point(box->p1.x, box->p1.y, vec, vector_max);
+  p2 = collide_point(box->p2.x, box->p2.y, vec, vector_max);
+  p3 = collide_point(box->p3.x, box->p3.y, vec, vector_max);
+  p4 = collide_point(box->p4.x, box->p4.y, vec, vector_max);
+  return (p0 || p1 || p2 || p3 || p4);
+}
+
+  //--------------------------------------------------------------------------//
+ //                                  -S                                      //
+//--------------------------------------------------------------------------//
+BYTE set_palette_index(BYTE index) {
+	palette_index = index;
+	return palette_index;
+}
+
+void sprite_disable_autoinc() { sprite_auto_index = false; }
+void sprite_enable_autoinc() { sprite_auto_index = true; }
+
+void sprite_set_index(WORD index) {
+	sprite_index = index;
+}
+
+  /*-----------*/
+ /* -scroller */
+/*-----------*/
+void scroller_set_position(Scroller *s, short x, short y) {
+  scrollerSetPos(&s->s, x, y);
+}
+
+void scroller_display(Scroller *s, short x, short y) {
+  BOOL palette_auto_index_state = palette_auto_index;
+  palette_disable_auto_index();
+  scrollerInit(
+    &s->s,
+    s->si,
+    get_sprite_index(),
+    get_palette_index(s->pali),
+    x,
+    y
+  );
+  sprite_index += 21;
+  if (palette_auto_index_state) palette_enable_auto_index();
+  palJobPut(
+    get_palette_index(s->pali),
+    s->pali->palCount,
+    s->pali->data
+  );
+}
+
+void scroller_move(Scroller *s, short x, short y) {
+  scrollerSetPos(&s->s, s->s.scrlPosX + x, s->s.scrlPosY + y);
+}
+
+void scroller_init(Scroller *s, scrollerInfo *si, paletteInfo *pali) {
+  s->si = si;
+  s->pali = pali;
+}
+
+  /*-----------*/
+ /* -shrunk   */
+/*-----------*/
+void inline shrunk_addr(WORD addr, WORD shrunk_value) {
+  SC234Put(addr, shrunk_value);
+}
+
+WORD shrunk_forge(BYTE xc, BYTE yc) { // todo (minor) - xcF, ycFF
+  //F FF - x (hor) , y (vert)
+  // vertical shrinking   8 bit
+  // horizontal shrinking 4 bit
+  WORD value = 0;
+  value = xc << 8;
+  value += yc;
+  return value;
+}
+
+WORD shrunk_range(WORD addr_start, WORD addr_end, WORD shrunk_value) {
+  WORD cur_addr = addr_start;
+  while (cur_addr < addr_end) {
+    SC234Put(cur_addr, shrunk_value);
+    cur_addr++;
+  }
+  return addr_end;
+}
+
+void shrunk(WORD base_sprite, WORD max_width, WORD value) {
+	shrunk_range(0x8000 + base_sprite, 0x8000 + base_sprite + max_width, value);
+}
+
+int shrunk_centroid_get_translated_x(short centerPosX, WORD tileWidth, BYTE shrunkX) {
+  FIXED newX = FIX(centerPosX);
+  newX -= (shrunkX + 1) * FIX((tileWidth MULT8) / 0x10);
+  return fixtoi(newX);
+}
+
+int shrunk_centroid_get_translated_y(short centerPosY, WORD tileHeight, BYTE shrunkY) {
+  FIXED newY = FIX(centerPosY);
+  newY -= shrunkY * FIX((tileHeight MULT8) / 0xFF);
+  return fixtoi(newY);
+}
+
+  //--------------------------------------------------------------------------//
+ //                                  -W                                      //
+//--------------------------------------------------------------------------//
+DWORD inline wait_vbl_max(WORD nb) {
+  WORD i = 0;
+  for (i = 0; i <= nb; i++) waitVBlank();
+  return DAT_frameCounter;
+}
+
+
+///////////////////////////////////////////////////////////////////////
+
+/* todo (minor)
+void box_debug_update(picture5 *pics, Box *box) {
+  pictureSetPos(&pics->pic0, box->p0.x, box->p0.y);
+  pictureSetPos(&pics->pic1, box->p1.x, box->p1.y);
+  pictureSetPos(&pics->pic2, box->p2.x, box->p2.y);
+  pictureSetPos(&pics->pic3, box->p3.x, box->p3.y);
+  pictureSetPos(&pics->pic4, box->p4.x, box->p4.y);
+}
+*/
+
+/*
+void box_display(picture5 *pics, Box *box, pictureInfo *pi, paletteInfo *pali) {
+  palette_disable_autoinc();
+  image_display(&pics->pic0, pi, pali, box->p0.x, box->p0.y);
+  image_display(&pics->pic1, pi, pali, box->p1.x, box->p1.y);
+  image_display(&pics->pic2, pi, pali, box->p2.x, box->p2.y);
+  image_display(&pics->pic3, pi, pali, box->p3.x, box->p3.y);
+  palette_enable_autoinc();
+  image_display(&pics->pic4, pi, pali, box->p4.x, box->p4.y);
+}
+*/
+
 /*
 void image_physic_shrunk_centroid_update(picturePhysicShrunkCentroid *pps, WORD shrunk) {
   image_shrunk_centroid(&pps->pp.p, pps->pi, pps->positionCenter.x, pps->positionCenter.y, shrunk);
@@ -608,144 +908,13 @@ void image_physic_set_position(picturePhysic *pp, short x, short y) {
 }
 */
 
-void image_init(Image *image, pictureInfo *pi, paletteInfo *pali) {
-  flash_init(&image->flash, 0, 0);
-  image->pali = pali;
-  image->pi = pi;
-}
-
-void image_display(Image *image, short x, short y) {
-  BOOL palette_auto_index_state = palette_auto_index;
-  palette_disable_auto_index();
-  pictureInit(
-    &image->pic,
-    image->pi,
-    get_sprite_index_from_picture(image->pi),
-    get_palette_index(image->pali),
-    x,
-    y,
-    FLIP_NONE
-  );
-  if (palette_auto_index_state) palette_enable_auto_index();
-  palJobPut(
-    get_palette_index(image->pali),
-    image->pali->palCount,
-    image->pali->data
-  );
-}
-
-void image_set_position(Image *image, short x, short y) {
-  pictureSetPos(&image->pic, x, y);
-}
-
-
-void image_hide(Image *image) {
-  pictureHide(&image->pic);
-  image->flash.visible = false;
-}
-
-void image_show(Image *image) {
-  pictureShow(&image->pic);
-  image->flash.visible = true;
-}
-
-BOOL image_flash(Image *image) {
-  BOOL rt = true;
-  if (image->flash.frequency != 0 && image->flash.lengh != 0) {
-    if (DAT_frameCounter % image->flash.frequency == 0) {
-      if (is_visible(&image->flash)) {
-        image_hide(image);
-        rt = false;
-      } else {
-        image_show(image);
-        rt = true;
-      }
-      image->flash.lengh--;
-      if (image->flash.lengh == 0) image_show(image);
-    }
-  }
-  return rt;
-}
-
-void image_physic_init(
-  Image_Physic *image_physic,
-  pictureInfo *pi,
-  paletteInfo *pali,
-  short box_witdh,
-  short box_height,
-  short box_width_offset,
-  short box_height_offset
-) {
-  image_init(&image_physic->image, pi, pali);
-  box_init(&image_physic->box, box_witdh, box_height, box_width_offset, box_height_offset);
-}
-
-void image_physic_display(Image_Physic *image_physic, short x, short y) {
-  image_display(&image_physic->image, x, y);
-  box_update(&image_physic->box, x, y);
-}
-
-void image_physic_move(Image_Physic *image_physic, short x_offset, short y_offset) {
-  image_move(&image_physic->image, x_offset, y_offset);
-  box_update(&image_physic->box, image_physic->image.pic.posX, image_physic->image.pic.posY);
-}
-
-void image_physic_set_position(Image_Physic *image_physic, short x, short y) {
-  image_set_position(&image_physic->image, x, y);
-  box_update(&image_physic->box, x, y);
-}
-
-void image_physic_hide(Image_Physic *image_physic) {
-  image_hide(&image_physic->image);
-  image_physic->physic_enabled = false;
-}
-
-void image_physic_show(Image_Physic *image_physic) {
-  image_show(&image_physic->image);
-  image_physic->physic_enabled = true;
-}
-
-void image_physic_flash(Image_Physic *image_physic) {
-  image_physic->physic_enabled = image_flash(&image_physic->image);
-}
-
-void image_physic_shrunk(Image_Physic *image_physic, WORD shrunk_value) {
-  shrunk(image_physic->image.pic.baseSprite, image_physic->image.pic.info->tileWidth, shrunk_value);
-}
-
-void image_shrunk_centroid(Image *image, short center_x, short center_y, WORD shrunk_value) {
-  shrunk(image->pic.baseSprite, image->pic.info->tileWidth, shrunk_value);
-  image_set_position(
-    image,
-    shrunk_centroid_get_translated_x(center_x, image->pi->tileWidth, SHRUNK_EXTRACT_X(shrunk_value)),
-    shrunk_centroid_get_translated_y(center_y, image->pi->tileHeight, SHRUNK_EXTRACT_Y(shrunk_value))
-  );
-}
-
-void palette_disable_auto_index() {
-  palette_auto_index = false;
-}
-
-void palette_enable_auto_index() {
-  palette_auto_index = true;
-}
-
-BYTE set_palette_index(BYTE index) {
-	palette_index = index;
-	return palette_index;
-}
-
+/* todo (minor) - deprecated
 WORD image_get_sprite_index_autoinc(pictureInfo *pi) {
   WORD rt = sprite_index;
   if (sprite_auto_index) sprite_index += pi->tileWidth;
   return rt;
 }
-
-BYTE get_palette_index(paletteInfo *pali) {
-	BYTE rt = palette_index;
-  if (palette_auto_index) palette_index += pali->palCount;
-	return rt;
-}
+*/
 
 /* todo (minor)
 void image5_show(picture5 *pics, BOOL visible) {
@@ -784,113 +953,10 @@ void mask_update(short x, short y, Vec2short vec[], Vec2short offset[], BYTE vec
 }
 */
 
-void vec2int_init(Vec2int *vec, int x, int y)         { vec->x = x; vec->y = y; }
-void vec2short_init(Vec2short *vec, short x, short y) { vec->x = x; vec->y = y; }
-void vec2byte_init(Vec2byte *vec, BYTE x, BYTE y)     { vec->x = x; vec->y = y; }
-
-BOOL vectors_collide(Box *box, Vec2short vec[], BYTE vector_max) {
-  BOOL p0 = false, p1 = false, p2 = false, p3 = false, p4 = false;
-  p0 = collide_point(box->p0.x, box->p0.y, vec, vector_max);
-  p1 = collide_point(box->p1.x, box->p1.y, vec, vector_max);
-  p2 = collide_point(box->p2.x, box->p2.y, vec, vector_max);
-  p3 = collide_point(box->p3.x, box->p3.y, vec, vector_max);
-  p4 = collide_point(box->p4.x, box->p4.y, vec, vector_max);
-  return (p0 || p1 || p2 || p3 || p4);
-}
-
-// s
-void sprite_disable_autoinc() {
-  sprite_auto_index = false;
-}
-
-void sprite_enable_autoinc() {
-  sprite_auto_index = true;
-}
-
-void sprite_set_index(WORD index) {
-	sprite_index = index;
-}
-
-void scroller_init(Scroller *s, scrollerInfo *si, paletteInfo *pali) {
-  s->si = si;
-  s->pali = pali;
-}
-
-void scroller_display(Scroller *s, short x, short y) {
-  BOOL palette_auto_index_state = palette_auto_index;
-  palette_disable_auto_index();
-  scrollerInit(
-    &s->s,
-    s->si,
-    get_sprite_index(),
-    get_palette_index(s->pali),
-    x,
-    y
-  );
-  sprite_index += 21;
-  if (palette_auto_index_state) palette_enable_auto_index();
-  palJobPut(
-    get_palette_index(s->pali),
-    s->pali->palCount,
-    s->pali->data
-  );
-}
-
-void scroller_move(Scroller *s, short x, short y) {
-  scrollerSetPos(&s->s, s->s.scrlPosX + x, s->s.scrlPosY + y);
-}
-
-void scroller_set_position(Scroller *s, short x, short y) {
-  scrollerSetPos(&s->s, x, y);
-}
-
-void inline shrunk_addr(WORD addr, WORD shrunk_value) {
-  SC234Put(addr, shrunk_value);
-}
-
-WORD shrunk_forge(BYTE xc, BYTE yc) { // todo (minor) - xcF, ycFF
-  //F FF - x (hor) , y (vert)
-  // vertical shrinking   8 bit
-  // horizontal shrinking 4 bit
-  WORD value = 0;
-  value = xc << 8;
-  value += yc;
-  return value;
-}
-
-WORD shrunk_range(WORD addr_start, WORD addr_end, WORD shrunk_value) {
-  WORD cur_addr = addr_start;
-  while (cur_addr < addr_end) {
-    SC234Put(cur_addr, shrunk_value);
-    cur_addr++;
-  }
-  return addr_end;
-}
-
-WORD get_shrunk_proportional_table(WORD index) {
-  return shrunk_table_prop[index]; // todo (minor) - rename shrunk_proportional_table
-}
-
-int shrunk_centroid_get_translated_x(short centerPosX, WORD tileWidth, BYTE shrunkX) {
-  FIXED newX = FIX(centerPosX);
-  newX -= (shrunkX + 1) * FIX((tileWidth MULT8) / 0x10);
-  return fixtoi(newX);
-}
-
-int shrunk_centroid_get_translated_y(short centerPosY, WORD tileHeight, BYTE shrunkY) {
-  FIXED newY = FIX(centerPosY);
-  newY -= shrunkY * FIX((tileHeight MULT8) / 0xFF);
-  return fixtoi(newY);
-}
-
+/* todo (minor) - deprecated
 char sin_table_get(WORD index) {
-return sinTable[index];
+  return sinTable[index];
 }
-
-DWORD inline wait_vbl_max(WORD nb) {
-  WORD i = 0;
-  for (i = 0; i <= nb; i++) waitVBlank();
-  return DAT_frameCounter;
-}
+*/
 
 //

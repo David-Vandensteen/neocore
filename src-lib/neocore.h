@@ -182,13 +182,11 @@ struct picturePhysicShrunkCentroid {
 */
 
   //--------------------------------------------------------------------------//
- //                                  a                                       //
+ //                                  -A                                      //
 //--------------------------------------------------------------------------//
-
   /*------------------*/
- /* animated sprite  */
+ /* -animated_sprite */
 /*------------------*/
-
 void animated_sprite_physic_init(
   Animated_Sprite_Physic *animated_sprite_physic,
   spriteInfo *si,
@@ -208,7 +206,9 @@ void animated_sprite_set_animation(Animated_Sprite *animated_sprite, WORD anim);
 #define animated_sprite_animate(animated_sprite) aSpriteAnimate(animated_sprite.as)
 BOOL animated_sprite_flash(Animated_Sprite *animated_sprite);
 
-/* animated sprite physic */
+  /*--------------------------*/
+ /* -animated_sprite_physic  */
+/*--------------------------*/
 void animated_sprite_physic_display(Animated_Sprite_Physic *animated_sprite_physic, short x, short y, WORD anim);
 // void animated_sprite_physic_collide(aSpritePhysic *asp, Box *box); // todo - not implementd ??? needed ???
 void animated_sprite_physic_set_position(Animated_Sprite_Physic *animated_sprite_physic, short x, short y);
@@ -219,7 +219,9 @@ void animated_sprite_physic_show(Animated_Sprite_Physic *animated_sprite_physic)
 void animated_sprite_physic_flash(Animated_Sprite_Physic *animated_sprite_physic);
 
 
-// b
+  //--------------------------------------------------------------------------//
+ //                                  -B                                      //
+//--------------------------------------------------------------------------//
 BYTE boxes_collide(Box *b, Box *boxes[], BYTE box_max);
 BOOL box_collide(Box *b1, Box *b2);
 void box_init(Box *b, short width, short height, short widthOffset, short heightOffset);
@@ -227,18 +229,23 @@ void box_update(Box *b, short x, short y);
 // void box_debug_update(picture5 *pics, Box *box); // todo (minor)
 // void box_display(picture5 *pics, Box *box, pictureInfo *pi, paletteInfo *pali); // todo (minor)
 void box_shrunk(Box *b, Box *bOrigin, WORD shrunkValue);
-
 // todo (minor) - deprecated ?
 void box_resize(Box *Box, short edge);
 
-// c
+  //--------------------------------------------------------------------------//
+ //                                  -C                                      //
+//--------------------------------------------------------------------------//
 void inline clear_vram();
 
-// f
+  //--------------------------------------------------------------------------//
+ //                                  -F                                      //
+//--------------------------------------------------------------------------//
 void inline fix_print_neocore(int x, int y, char *label);
 void flash_init(Flash *flash, short frequency, short lengh);
 
-// g
+  //--------------------------------------------------------------------------//
+ //                                  -G                                      //
+//--------------------------------------------------------------------------//
 void inline gpu_init();
 WORD        get_sprite_index();
 WORD        get_sprite_index_from_picture(pictureInfo *pi);
@@ -247,15 +254,13 @@ BYTE        get_palette_index();
 WORD        get_shrunk_proportional_table(WORD index);
 
   //--------------------------------------------------------------------------//
- //                                  i                                       //
+ //                                  -I                                      //
 //--------------------------------------------------------------------------//
-
 BOOL is_visible(Flash *flash);
 
   /*------------------*/
- /*       image      */
+ /*      -image      */
 /*------------------*/
-
 void image_init(Image *image, pictureInfo *pi, paletteInfo *pali);
 void image_display(Image *image, short x, short y);
 #define image_move(image, x_offset, y_offset) pictureMove(image.pic, x_offset, y_offset)
@@ -267,9 +272,8 @@ BOOL image_flash(Image *image);
 void image_shrunk_centroid(Image *image, short center_x, short center_y, WORD shrunk_value);
 
   /*------------------*/
- /*  image physic    */
+ /*  -image_physic   */
 /*------------------*/
-
 void image_physic_init(
   Image_Physic *image_physic,
   pictureInfo *pi,
@@ -305,9 +309,13 @@ void image_flash(picture *p, BYTE freq);
 WORD image_get_sprite_index_autoinc(pictureInfo *pi);
 */
 
-BOOL vector_is_left(short x, short y, short v1x, short v1y, short v2x, short v2y);
 
-// j
+  //--------------------------------------------------------------------------//
+ //                                  -J                                      //
+//--------------------------------------------------------------------------//
+  /*----------*/
+ /* -joypad  */
+/*----------*/
 void        joypad_update();
 void        joypad_update_edge();
 BOOL        joypad_is_up();
@@ -321,7 +329,12 @@ BOOL        joypad_is_c();
 BOOL        joypad_is_d();
 void inline joypad_debug();
 
-// l
+  //--------------------------------------------------------------------------//
+ //                                  -L                                       //
+//--------------------------------------------------------------------------//
+  /*----------*/
+ /* -logger  */
+/*----------*/
 void        logger_init();
 void        logger_set_position(WORD _x, WORD _y);
 WORD inline logger_info(char *txt);
@@ -336,7 +349,12 @@ void inline logger_spriteInfo(char *label, spriteInfo *si);
 void inline logger_box(char *label, Box *b);
 void inline logger_pictureInfo(char *label, pictureInfo *pi);
 
-// p
+  //--------------------------------------------------------------------------//
+ //                                  -P                                      //
+//--------------------------------------------------------------------------//
+  /*-----------*/
+ /* -palette  */
+/*-----------*/
 void palette_disable_auto_index();
 void palette_enable_auto_index();
 
@@ -345,28 +363,42 @@ void palette_enable_auto_index();
 //void mask_update(short x, short y, Vec2short vec[], Vec2short offset[], BYTE vector_max); // todo (minor) - rename ? (vectorsDebug)
 // todo (minor) - hardcode point\dot asset
 
+  //--------------------------------------------------------------------------//
+ //                                  -V                                      //
+//--------------------------------------------------------------------------//
 void vec2int_init(Vec2int *vec, int x, int y);
 void vec2short_init(Vec2short *vec, short x, short y);
 void vec2byte_init(Vec2byte *vec, BYTE x, BYTE y);
-
 BOOL vectors_collide(Box *box, Vec2short vec[], BYTE vector_max);
+BOOL vector_is_left(short x, short y, short v1x, short v1y, short v2x, short v2y);
 
-// s
-WORD        shrunk_forge(BYTE xc, BYTE yc);
-void inline shrunk_addr(WORD addr, WORD shrunk_value);
-WORD        shrunk_range(WORD addr_start, WORD addr_end, WORD shrunk_value);
+  //--------------------------------------------------------------------------//
+ //                                  -S                                      //
+//--------------------------------------------------------------------------//
 char        sin_table_get(WORD index);
-void        scroller_init(Scroller *s, scrollerInfo *si, paletteInfo *pali);
-void        scroller_display(Scroller *s, short x, short y);
-void        croller_set_position(Scroller *s, short x, short y);
 void        set_sprite_index(WORD index);
 BYTE        set_palette_index(BYTE index);
+  /*-----------*/
+ /* -scroller */
+/*-----------*/
+void        scroller_init(Scroller *s, scrollerInfo *si, paletteInfo *pali);
+void        scroller_display(Scroller *s, short x, short y);
 void        scroller_move(Scroller *s, short x, short y);
+void        scroller_set_position(Scroller *s, short x, short y);
+
+  /*-----------*/
+ /* -shrunk   */
+/*-----------*/
 int         shrunk_centroid_get_translated_x(short centerPosX, WORD tileWidth, BYTE shrunkX);
 int         shrunk_centroid_get_translated_y(short centerPosY, WORD tileHeight, BYTE shrunkY);
 void        shrunk(WORD base_sprite, WORD max_width, WORD value);
+WORD        shrunk_forge(BYTE xc, BYTE yc);
+void inline shrunk_addr(WORD addr, WORD shrunk_value);
+WORD        shrunk_range(WORD addr_start, WORD addr_end, WORD shrunk_value);
 
-// w
+  //--------------------------------------------------------------------------//
+ //                                  -W                                      //
+//--------------------------------------------------------------------------//
 DWORD inline wait_vbl_max(WORD nb);
 #define WAIT_VBL waitVBlank();
 
