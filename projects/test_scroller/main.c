@@ -7,7 +7,7 @@ NEOCORE_INIT
 static Scroller background;
 
 int main(void) {
-  gpu_init();
+  GPU_INIT
   scroller_init(&background, &background_sprite, &background_sprite_Palettes);
   scroller_display(&background, 0, 0);
   while(1) {

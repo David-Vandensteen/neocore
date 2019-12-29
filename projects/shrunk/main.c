@@ -7,7 +7,7 @@ int main(void) {
   Image logo1, logo2, logo3;
   BYTE logo1_shrunk_x = 0;
   BYTE logo2_shrunk_y = 0;
-  gpu_init();
+  GPU_INIT
   image_init(&logo1, &logo_sprite, &logo_sprite_Palettes);
   image_init(&logo2, &logo_sprite, &logo_sprite_Palettes);
   image_init(&logo3, &logo_sprite, &logo_sprite_Palettes);

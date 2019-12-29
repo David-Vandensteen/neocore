@@ -7,7 +7,7 @@ static Animated_Sprite_Physic player;
 static Image_Physic asteroid;
 
 int main(void) {
-  gpu_init();
+  GPU_INIT
   animated_sprite_physic_init(
     &player,
     &player_sprite,

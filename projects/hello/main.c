@@ -9,7 +9,7 @@
 NEOCORE_INIT
 
 int main(void) {
-  gpu_init();
+  GPU_INIT
   while(1) {
     WAIT_VBL;
     logger_init();
