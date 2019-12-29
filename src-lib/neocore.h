@@ -76,35 +76,55 @@
 
 enum direction { NONE, UP, DOWN, LEFT, RIGHT };
 
+/**
+ * \struct Vec2int
+ * \brief content x & y int coordinate
+ */
 typedef struct Vec2int Vec2int;
 struct Vec2int {
   int x;
   int y;
 };
 
+/**
+ * \struct Vec2short
+ * \brief content x & y short coordinate
+ */
 typedef struct Vec2short Vec2short;
 struct Vec2short {
   short x;
   short y;
 };
 
+/**
+ * \struct Vec2byte
+ * \brief content x & y byte coordinate
+ */
 typedef struct Vec2byte Vec2byte;
 struct Vec2byte {
   BYTE x;
   BYTE y;
 };
 
+/**
+ * \struct Box
+ * \brief collider definition</br>
+ * \brief can be init by box_make constructor</br>
+ * \brief - 4 points</br>
+ * \brief - Width & height of the box</br>
+ * \brief - Offset for reducing the box
+ */
 typedef struct Box Box;
 struct Box {
-  Vec2short p0;
-  Vec2short p1;
-  Vec2short p2;
-  Vec2short p3;
-  Vec2short p4;
-  short width;
-  short height;
-  short widthOffset;
-  short heightOffset;
+  Vec2short p0;       /*!< coordinate 0 for the box (x, y) */
+  Vec2short p1;       /*!< coordinate 1 for the box (x, y) */
+  Vec2short p2;       /*!< coordinate 2 for the box (x, y) */
+  Vec2short p3;       /*!< coordinate 3 for the box (x, y) */
+  Vec2short p4;       /*!< coordinate 4 for the box (x, y) */
+  short width;        /*!< width of the box (auto computing by box_make function) */
+  short height;       /*!< height of the box (auto computing by box_make function) */
+  short widthOffset;  /*!< width reducing */
+  short heightOffset; /*!< height reducing */
 };
 
 /* todo (minor) - to remove
@@ -118,6 +138,14 @@ struct picture5 {
 };
 */
 
+/**
+ * \struct Flash
+ * \brief flash definition</br>
+ * \brief - frequency</br>
+ * \brief - lengh</br>
+ * \brief - visible</br>
+ * \brief - enabled</br>
+ */
 typedef struct Flash Flash;
 struct Flash {
   WORD frequency;
@@ -126,6 +154,14 @@ struct Flash {
   BOOL enabled;
 };
 
+/**
+ * \struct Animated_Sprite
+ * \brief Animated Sprite definition (DATLib aSprite encapsulation)</br>
+ * \brief - as is aSprite DATLib definition</br>
+ * \brief - si is spriteIndo DATLib definition</br>
+ * \brief - pali is paletteInfo DATLib definition</br>
+ * \brief - flash
+ */
 typedef struct Animated_Sprite Animated_Sprite;
 struct Animated_Sprite {
   aSprite as;
@@ -189,6 +225,15 @@ struct picturePhysicShrunkCentroid {
   /*------------------*/
  /* -animated_sprite */
 /*------------------*/
+/**
+ * @param sprite information (DAT)
+ * @param palette information (DAT)
+ * @param witdh of the physic box
+ * @param height of the physic box
+ * @param width offset to reduce physic box
+ * @param height offset to resuce physic box
+ */
+
 void animated_sprite_physic_init(
   Animated_Sprite_Physic *animated_sprite_physic,
   spriteInfo *si,
