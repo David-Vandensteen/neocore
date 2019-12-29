@@ -22,6 +22,8 @@
   } bkp_ram_info; \
   bkp_ram_info bkp_data;
 
+#define GPU_INIT  gpu_init();
+
 #define __ALIGN1__      __attribute__ ((aligned (1)))
 #define __ALIGN2__      __attribute__ ((aligned (2)))
 #define __ALIGN4__      __attribute__ ((aligned (4)))
