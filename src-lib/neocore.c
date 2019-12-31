@@ -509,6 +509,7 @@ void image_physic_flash(Image_Physic *image_physic) {
 
 void image_physic_shrunk(Image_Physic *image_physic, WORD shrunk_value) {
   shrunk(image_physic->image.pic.baseSprite, image_physic->image.pic.info->tileWidth, shrunk_value);
+  // todo (minor) - shrunk box
 }
 
 void image_shrunk_centroid(Image *image, short center_x, short center_y, WORD shrunk_value) {
