@@ -299,6 +299,7 @@ WORD        get_sprite_index_from_picture(pictureInfo *pi);
 WORD        get_sprite_index_from_sprite(spriteInfo *si);
 BYTE        get_palette_index();
 WORD        get_shrunk_proportional_table(WORD index);
+char        get_sin_table(WORD index);
 
   //--------------------------------------------------------------------------//
  //                                  -I                                      //
@@ -422,7 +423,6 @@ BOOL vector_is_left(short x, short y, short v1x, short v1y, short v2x, short v2y
   //--------------------------------------------------------------------------//
  //                                  -S                                      //
 //--------------------------------------------------------------------------//
-char        sin_table_get(WORD index);
 void        set_sprite_index(WORD index);
 BYTE        set_palette_index(BYTE index);
   /*-----------*/

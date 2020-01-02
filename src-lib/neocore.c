@@ -393,6 +393,11 @@ WORD get_shrunk_proportional_table(WORD index) {
   return shrunk_table_prop[index]; // todo (minor) - rename shrunk_proportional_table
 }
 
+char get_sin_table(WORD index) {
+  return sinTable[index];
+}
+
+
   //--------------------------------------------------------------------------//
  //                                  -I                                      //
 //--------------------------------------------------------------------------//
@@ -950,10 +955,3 @@ void mask_update(short x, short y, Vec2short vec[], Vec2short offset[], BYTE vec
     vec[i].y = y + offset[i].y;
   }
 }
-
-// todo (major) - remane get_table_sin()
-char sin_table_get(WORD index) {
-  return sinTable[index];
-}
-
-//
