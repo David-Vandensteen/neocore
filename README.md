@@ -18,6 +18,8 @@ Neocore provide high level functions over Neo Dev Kit (**Fabrice Martinez, Jeff 
 The Makefile contain many rules (make sprite, make zip, make iso, make cue, make run, make hot-reload...)   
 
 I share my tools and my code, these could possibly help your projects on this platform !!!   
+ 
+(**Doxygen doc**) http://azertyvortex.free.fr/neocore-doxy/develop/
 
 ***Lot of thing is under development and unoptimized ...***   
 ***I'm not responsible for any software damage on your computer***   
