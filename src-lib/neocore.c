@@ -393,10 +393,9 @@ WORD get_shrunk_proportional_table(WORD index) {
   return shrunk_table_prop[index]; // todo (minor) - rename shrunk_proportional_table
 }
 
-char get_sin_table(WORD index) {
+char get_sin(WORD index) {
   return sinTable[index];
 }
-
 
   //--------------------------------------------------------------------------//
  //                                  -I                                      //
@@ -514,6 +513,7 @@ void image_physic_flash(Image_Physic *image_physic) {
 
 void image_physic_shrunk(Image_Physic *image_physic, WORD shrunk_value) {
   shrunk(image_physic->image.pic.baseSprite, image_physic->image.pic.info->tileWidth, shrunk_value);
+  // todo (minor) - shrunk box
 }
 
 void image_shrunk_centroid(Image *image, short center_x, short center_y, WORD shrunk_value) {
@@ -647,21 +647,21 @@ void inline logger_bool(char *label, BOOL value) {
   #endif
 }
 
-void inline logger_animated_sprite(char *label, aSprite *as) {
+void inline logger_animated_sprite(char *label, Animated_Sprite *animated_sprite) {
   #ifdef LOGGER_ON
   logger_info(label);
-  logger_word("BASESPRITE : " , as->baseSprite);
-  logger_word("BASEPALETTE : ", as->basePalette);
-  logger_short("POSX : ", as->posX);
-  logger_short("POSY : ", as->posY);
-  logger_short("CURRENTSTEPNUM : ", as->currentStepNum);
-  logger_short("MAXSTEP : ", as->maxStep);
-  logger_dword("COUNTER : ", as->counter);
-  logger_word("REPEATS : ", as->repeats);
-  logger_word("CURRENTFLIP : ", as->currentFlip);
-  logger_word("TILEWIDTH : ", as->tileWidth);
-  logger_word("ANIMID : ", as->animID);
-  logger_word("FLAGS", as->flags);
+  logger_word("BASESPRITE : " , animated_sprite->as.baseSprite);
+  logger_word("BASEPALETTE : ", animated_sprite->as.basePalette);
+  logger_short("POSX : ", animated_sprite->as.posX);
+  logger_short("POSY : ", animated_sprite->as.posY);
+  logger_short("CURRENTSTEPNUM : ", animated_sprite->as.currentStepNum);
+  logger_short("MAXSTEP : ", animated_sprite->as.maxStep);
+  logger_dword("COUNTER : ", animated_sprite->as.counter);
+  logger_word("REPEATS : ", animated_sprite->as.repeats);
+  logger_word("CURRENTFLIP : ", animated_sprite->as.currentFlip);
+  logger_word("TILEWIDTH : ", animated_sprite->as.tileWidth);
+  logger_word("ANIMID : ", animated_sprite->as.animID);
+  logger_word("FLAGS", animated_sprite->as.flags);
   #endif
 }
 
