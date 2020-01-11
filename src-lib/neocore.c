@@ -124,6 +124,7 @@ void animated_sprite_display(Animated_Sprite *animated_sprite, short x, short y,
 }
 
 BOOL animated_sprite_flash(Animated_Sprite *animated_sprite) {
+  /*
   BOOL rt = true;
   if (animated_sprite->flash.frequency != 0 && animated_sprite->flash.lengh != 0) {
     if (DAT_frameCounter % animated_sprite->flash.frequency == 0) {
@@ -139,6 +140,17 @@ BOOL animated_sprite_flash(Animated_Sprite *animated_sprite) {
     }
   }
   return rt;
+  */
+
+  if (animated_sprite->flash.enabled) {
+    if (DAT_frameCounter % animated_sprite->flash.frequency == 0) {
+      (is_visible(&animated_sprite->flash)) ? animated_sprite_hide(animated_sprite) : animated_sprite_show(animated_sprite);
+      animated_sprite->flash.lengh--;
+      if (animated_sprite->flash.lengh <= 0) animated_sprite_show(animated_sprite);
+    }
+  }
+  if (animated_sprite->flash.lengh <= 0)  animated_sprite->flash.enabled = false;
+  return (animated_sprite->flash.enabled) ? true : false;
 }
 
 void animated_sprite_set_animation(Animated_Sprite *animated_sprite, WORD anim) {
