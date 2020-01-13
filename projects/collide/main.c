@@ -45,7 +45,7 @@ int main(void) {
     }
     if (!joypad_is_down() && !joypad_is_up()) { animated_sprite_set_animation(&player.animated_sprite, PLAYER_SPRITE_ANIM_IDLE); }
 
-    if (box_collide(&player.box, &asteroid.box)) flash_init(&player.animated_sprite.flash, 10, 10);
+    if (box_collide(&player.box, &asteroid.box)) flash_init(&player.animated_sprite.flash, true, 10, 10);
 
     animated_sprite_flash(&player.animated_sprite);
     animated_sprite_animate(&player.animated_sprite);

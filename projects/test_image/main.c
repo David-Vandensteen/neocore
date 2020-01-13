@@ -9,7 +9,7 @@ Image planet04;
 int main(void) {
   GPU_INIT
   image_init(&planet04, &planet04_sprite, &planet04_sprite_Palettes);
-  flash_init(&planet04.flash, 10, 10);
+  flash_init(&planet04.flash, true, 10, 10);
   image_display(&planet04, 100, 100);
   // shrunk(planet04.pic.baseSprite, planet04.pi->tileWidth, shrunk_forge(0x5, 0xF));
   while(1) {

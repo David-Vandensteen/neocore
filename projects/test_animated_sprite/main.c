@@ -9,7 +9,7 @@ Animated_Sprite player;
 int main(void) {
   GPU_INIT
   animated_sprite_init(&player, &player_sprite, &player_sprite_Palettes);
-  flash_init(&player.flash, 10, 10);
+  flash_init(&player.flash, true, 10, 10);
   animated_sprite_display(&player, 100, 100, PLAYER_SPRITE_ANIM_IDLE);
   shrunk(player.as.baseSprite, player.si->maxWidth, shrunk_forge(0x5, 0xFF));
   while(1) {

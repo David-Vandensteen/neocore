@@ -25,7 +25,7 @@ int main(void) {
     PLAYER_SPRITE_ANIM_IDLE
   );
 
-  flash_init(&player.animated_sprite.flash, 10, 10);
+  flash_init(&player.animated_sprite.flash, true, 10, 10);
 
   while(1) {
     WAIT_VBL
