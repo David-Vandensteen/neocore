@@ -149,7 +149,7 @@ struct picture5 {
 typedef struct Flash Flash;
 struct Flash {
   WORD frequency;
-  WORD lengh;
+  short lengh;
   BOOL visible;
   BOOL enabled;
 };
@@ -433,10 +433,11 @@ void inline fix_print_neocore(int x, int y, char *label);
 
 /**
  * @param Flash* Flash pointer
+ * @param enabled
  * @param frequency
  * @param lengh
  */
-void flash_init(Flash *flash, short frequency, short lengh);
+void flash_init(Flash *flash, BOOL enabled, short frequency, short lengh);
 
   //-----------------------------------------------------------------s---------//
  //                                  -G                                      //

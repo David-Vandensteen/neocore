@@ -96,7 +96,7 @@ JOYPAD
  /* -animated_sprite */
 /*------------------*/
 void animated_sprite_init(Animated_Sprite *animated_sprite ,spriteInfo *si, paletteInfo *pali) {
-  flash_init(&animated_sprite->flash, 0, 0);
+  flash_init(&animated_sprite->flash, false, 0, 0);
   animated_sprite->si = si;
   animated_sprite->pali = pali;
 };
@@ -124,33 +124,17 @@ void animated_sprite_display(Animated_Sprite *animated_sprite, short x, short y,
 }
 
 BOOL animated_sprite_flash(Animated_Sprite *animated_sprite) {
-  /*
-  BOOL rt = true;
-  if (animated_sprite->flash.frequency != 0 && animated_sprite->flash.lengh != 0) {
-    if (DAT_frameCounter % animated_sprite->flash.frequency == 0) {
-      if (is_visible(&animated_sprite->flash)) {
-        animated_sprite_hide(animated_sprite);
-        rt = false;
-      } else {
-        animated_sprite_show(animated_sprite);
-        rt = true;
-      }
-      animated_sprite->flash.lengh--;
-      if (animated_sprite->flash.lengh == 0) animated_sprite_show(animated_sprite);
-    }
-  }
-  return rt;
-  */
-
   if (animated_sprite->flash.enabled) {
     if (DAT_frameCounter % animated_sprite->flash.frequency == 0) {
       (is_visible(&animated_sprite->flash)) ? animated_sprite_hide(animated_sprite) : animated_sprite_show(animated_sprite);
       animated_sprite->flash.lengh--;
-      if (animated_sprite->flash.lengh <= 0) animated_sprite_show(animated_sprite);
+      if (animated_sprite->flash.lengh <= 0) {
+        animated_sprite_show(animated_sprite);
+        animated_sprite->flash.enabled = false;
+      }
     }
   }
-  if (animated_sprite->flash.lengh <= 0)  animated_sprite->flash.enabled = false;
-  return (animated_sprite->flash.enabled) ? true : false;
+  return animated_sprite->flash.enabled;
 }
 
 void animated_sprite_set_animation(Animated_Sprite *animated_sprite, WORD anim) {
@@ -363,7 +347,8 @@ void inline fix_print_neocore(int x, int y, char *label){
   fixPrint(x, y, 0, 0, label);
 }
 
-void flash_init(Flash *flash, short frequency, short lengh) {
+void flash_init(Flash *flash, BOOL enabled, short frequency, short lengh) {
+  flash->enabled = enabled;
   flash->frequency = frequency;
   flash->lengh = lengh;
 }
@@ -420,7 +405,7 @@ BOOL is_visible(Flash *flash) {
  /*      -image      */
 /*------------------*/
 void image_init(Image *image, pictureInfo *pi, paletteInfo *pali) {
-  flash_init(&image->flash, 0, 0);
+  flash_init(&image->flash, false, 0, 0);
   image->pali = pali;
   image->pi = pi;
 }
