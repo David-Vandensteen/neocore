@@ -127,17 +127,6 @@ struct Box {
   short heightOffset; /*!< height box reducing */
 };
 
-/* todo (minor) - to remove
-typedef struct picture5 picture5;
-struct picture5 {
-  picture pic0;
-  picture pic1;
-  picture pic2;
-  picture pic3;
-  picture pic4;
-};
-*/
-
 /**
  * \struct Flash
  * \brief
@@ -214,26 +203,6 @@ struct Scroller {
   scrollerInfo *si;    /*!< - si is a pointer to DATLib scrollerInfo structure */
   paletteInfo *pali;   /*!< - pali is a pointer to DATLib paletteInfo structure */
 };
-
-/* todo (minor) - to remove
-typedef struct picturePhysic picturePhysic;
-struct picturePhysic {
-  picture p;
-  Box box;
-  BOOL visible;
-};
-*/
-
-/* todo (minor) - to remake
-typedef struct picturePhysicShrunkCentroid picturePhysicShrunkCentroid;
-struct picturePhysicShrunkCentroid {
-  picturePhysic pp;
-  pictureInfo *pi;
-  paletteInfo *pali;
-  Vec2short positionCenter;
-  Box boxOrigin;
-};
-*/
 
   //--------------------------------------------------------------------------//
  //                                  -A                                      //
