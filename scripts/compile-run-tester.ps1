@@ -3,14 +3,10 @@ param (
   [string] $op
 )
 
-function compileProject($name, $withSprite) {
+function compileProject($name) {
   pushd ..\projects\$name
   .\mak.bat clean
   if ($LASTEXITCODE -ne 0) { Write-Host "break"; Write-Host $env:error; break }
-  .\mak.bat init
-  if ($LASTEXITCODE -ne 0) { break }
-  if ($withSprite) { .\mak.bat sprite }
-  if ($LASTEXITCODE -ne 0) { break }
   .\mak.bat
   if ($LASTEXITCODE -ne 0) { break }
   popd
@@ -25,22 +21,22 @@ function runProject($name) {
 }
 
 function compileProjects {
-  compileProject "collide" 1
-  compileProject "collide-complex" 1
-  compileProject "collide-multiple" 1
+  compileProject "collide"
+  compileProject "collide-complex"
+  compileProject "collide-multiple"
   compileProject "fixed-value"
   compileProject "hello"
   compileProject 'joypad'
-  compileProject "shrunk" 1
-  compileProject "shrunk-centroid" 1
+  compileProject "shrunk"
+  compileProject "shrunk-centroid"
   # compileProject "shrunk-physic" 1 --todo
-  compileProject "sprite" 1
-  compileProject "test_animated_sprite" 1
-  compileProject "test_animated_sprite_physic" 1
-  compileProject "test_image" 1
-  compileProject "test_image_physic" 1
-  compileProject "test_same_palette" 1
-  compileProject "test_scroller" 1
+  compileProject "sprite"
+  compileProject "test_animated_sprite"
+  compileProject "test_animated_sprite_physic"
+  compileProject "test_image"
+  compileProject "test_image_physic"
+  compileProject "test_same_palette"
+  compileProject "test_scroller"
 }
 
 function runProjects {
