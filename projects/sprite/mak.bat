@@ -2,7 +2,7 @@
 set PROJECT=sprite
 
 set routine=..\..\scripts\mak-routines.bat
+set backupPath=%path%
+
 call %routine% :main %*
-set error=%errorlevel%
 path=%backupPath%
-exit /b %error%

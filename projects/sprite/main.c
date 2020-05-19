@@ -4,7 +4,7 @@
 NEOCORE_INIT
 
 int main(void) {
-  Animated_Sprite players;
+  Animated_Sprite player;
   Scroller background;
   Image planet;
   GPU_INIT
