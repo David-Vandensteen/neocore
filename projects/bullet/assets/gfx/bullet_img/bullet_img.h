@@ -1,0 +1,2 @@
+#define BULLET_IMG_ANIM_IDLE 0
+
