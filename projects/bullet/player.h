@@ -21,7 +21,7 @@ void player_update();
 void player_position_set(short px, short py);
 void player_move(short px, short py);
 Box *player_box_get();
-Animated_Sprite_Physic *player_get();
+Animated_Sprite_Physic *player_get_sprite();
 short player_position_get_x();
 short player_position_get_y();
 void player_show(BOOL visible);

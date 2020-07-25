@@ -3,6 +3,9 @@
   <setup>
     <starting_tile>256</starting_tile>
   </setup>
+  <pict id="asteroid_sprite">
+    <file>assets\gfx\asteroid.png</file>
+  </pict>
   <sprt id="player_img">
     <file>assets\gfx\player_img.png</file>
     <!-- IDLE -->

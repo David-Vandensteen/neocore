@@ -4,8 +4,9 @@
 */
 
 #include <neocore.h>
-#include "bullet_player.h"
 #include "externs.h"
+#include "bullet_player.h"
+#include "asteroid.h"
 
 static Animated_Sprite_Physic sprites[BULLET_MAX];
 
@@ -31,6 +32,15 @@ static Animated_Sprite_Physic *get_free_sprite() {
   return null;
 }
 
+static void collide() {
+  BYTE j = 0;
+  for (j = 0; j < BULLET_MAX; j++) {
+    if (sprites_state[j]) {
+      if (asteroid_collide(&sprites[j].box)) free_sprite(j);
+    }
+  }
+}
+
 static void free_sprite(BYTE index) {
   sprites_state[index] = false;
   animated_sprite_physic_hide(&sprites[index]);
@@ -43,13 +53,18 @@ static void debug() {
     logger_bool("STATE ", sprites_state[i]);
   }
   logger_byte("PAL I :", sprites[0].animated_sprite.as.basePalette);
+  if (joypad_is_a()) {
+    logger_info("JOYPAD A 1");
+  } else {
+    logger_info("JOYPAD A 0");
+  }
 }
 
 static void update_states(short x, short y) {
   Animated_Sprite_Physic *free_aSprite;
   free_aSprite = get_free_sprite();
   if (free_aSprite) {
-    animated_sprite_physic_set_position(free_aSprite, x + WEAPON_XOFFSET, y);
+    animated_sprite_physic_set_position(free_aSprite, x + BULLET_XOFFSET, y);
     animated_sprite_physic_show(free_aSprite);
   }
 }
@@ -58,7 +73,7 @@ static void update_move() {
   BYTE i = 0;
   for (i = 0; i < BULLET_MAX; i++) {
     if (sprites_state[i]) {
-      animated_sprite_physic_move(&sprites[i], 5, 0);
+      animated_sprite_physic_move(&sprites[i], BULLET_SPEED, 0);
       animated_sprite_animate(&sprites[i].animated_sprite);
       if (sprites[i].animated_sprite.as.posX > 320) {
         free_sprite(i);
@@ -79,7 +94,7 @@ void bullet_player_init() {
 void bullet_player_display(short x, short y) {
   BYTE i = 0;
   for (i = 0; i < BULLET_MAX; i++) {
-    animated_sprite_physic_display(&sprites[i], x + (i * WEAPON_XOFFSET), y, BULLET_IMG_ANIM_IDLE);
+    animated_sprite_physic_display(&sprites[i], x + (i * BULLET_XOFFSET), y, BULLET_IMG_ANIM_IDLE);
     // same Palette
     set_palette_index(sprites[0].animated_sprite.as.basePalette);
     animated_sprite_physic_hide(&sprites[i]);
@@ -94,10 +109,6 @@ void bullet_player_update(BOOL pstate, short x, short y) {
   update_move();
   collide();
   if (DAT_frameCounter % BULLET_RATE == 0 && state) update_states(x, y);
-}
-
-WORD weapons_palette_get_index_bullet() {
-  return sprites[0].animated_sprite.as.basePalette;
 }
 
 void bullet_player_destroy() {

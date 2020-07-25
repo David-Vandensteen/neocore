@@ -21,6 +21,7 @@ function runProject($name) {
 }
 
 function compileProjects {
+  compileProject "bullet"
   compileProject "collide"
   compileProject "collide-complex"
   compileProject "collide-multiple"
