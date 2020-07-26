@@ -4,7 +4,6 @@ collide, shrunking, sprite ...
 ![](https://media.giphy.com/media/TLfbmyW3523z24WONz/giphy.gif)
 ![](https://media.giphy.com/media/iFUh5AEPD4XfvpsvJh/giphy.gif)
 ![](https://media.giphy.com/media/iJObJsdx6ud4zI7cS1/giphy.gif)
-![](https://media.giphy.com/media/UuAmsbabZrvngafCmN/giphy.gif)
 
 ***See more samples in projects folder***
 
