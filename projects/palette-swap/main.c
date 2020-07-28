@@ -20,7 +20,7 @@ int main(void) {
   while(1) {
     WAIT_VBL
     if (DAT_frameCounter % 8 == 0) {
-      for (i = 0; i < logo.pali->palCount * 16; i++) { logo_swap_palette.data[i] = RAND(0xFFFF); }
+      for (i = 0; i < (logo.pali->palCount MULT16); i++) { logo_swap_palette.data[i] = RAND(0xFFFF); }
       logo_swap_palette.data[1] = 0x0000;
       palette_swap(logo.pic.basePalette, &logo_swap_palette);
     }
