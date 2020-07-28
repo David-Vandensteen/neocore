@@ -656,6 +656,13 @@ void palette_disable_auto_index();
  */
 void palette_enable_auto_index();
 
+/**
+ * \brief Swap palette
+ * @param WORD Palette Index
+ * @param paletteInfo* Pointer
+ */
+void palette_swap(WORD palette_index, paletteInfo *pali);
+
 // m
 //void mask_display(picture pic[], Vec2short vec[], BYTE vector_max); // todo (minor) - rename ? (vectorsDisplay)
 void mask_update(short x, short y, Vec2short vec[], Vec2short offset[], BYTE vector_max); // todo (minor) - rename ? (vectorsDebug)
