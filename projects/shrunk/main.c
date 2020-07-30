@@ -1,40 +1,44 @@
 #include <neocore.h>
 #include "externs.h"
 
-typedef struct bkp_ram_info {
-	WORD debug_dips;
-	BYTE stuff[254];
-	//256 bytes
-} bkp_ram_info;
-
-bkp_ram_info bkp_data;
+NEOCORE_INIT
 
 int main(void) {
-  picture logo1, logo2, logo3;
+  Image logo1, logo2, logo3;
   BYTE logo1_shrunk_x = 0;
   BYTE logo2_shrunk_y = 0;
-  gpuInit();
-  loggerInit();
-  paletteDisableAutoinc(); /* logo1, logo2 & logo3 use the same palette ... disable auto counter */
-  loggerInfo("HORIZONTAL SHRUNK");
-  logo1 = pictureDisplay(&logo_sprite, &logo_sprite_Palettes, 10, 20);
-  loggerPositionSet(1, 10);
-  loggerInfo("VERTICAL SHRUNK");
-  logo2 = pictureDisplay(&logo_sprite, &logo_sprite_Palettes, 10, 80);
-  loggerPositionSet(1, 19);
-  loggerInfo("PROPORTIONAL SHRUNK");
-  logo3 = pictureDisplay(&logo_sprite, &logo_sprite_Palettes, 10, 150);
-  paletteEnableAutoinc();
+  GPU_INIT
+  image_init(&logo1, &logo_sprite, &logo_sprite_Palettes);
+  image_init(&logo2, &logo_sprite, &logo_sprite_Palettes);
+  image_init(&logo3, &logo_sprite, &logo_sprite_Palettes);
+  logger_init();
+  palette_disable_auto_index(); /* logo1, logo2 & logo3 use the same palette ... disable auto counter */
+  logger_info("HORIZONTAL SHRUNK");
+  image_init(&logo1, &logo_sprite, &logo_sprite_Palettes);
+  image_init(&logo2, &logo_sprite, &logo_sprite_Palettes);
+  image_init(&logo3, &logo_sprite, &logo_sprite_Palettes);
+  image_display(&logo1, 10, 20);
+  logger_set_position(1, 10);
+  logger_info("VERTICAL SHRUNK");
+  image_display(&logo2, 10, 80);
+  logger_set_position(1, 19);
+  logger_info("PROPORTIONAL SHRUNK");
+  image_display(&logo3, 10, 150);
+  palette_enable_auto_index();
 
   while(1) {
-    waitVBlank();
+    WAIT_VBL
     if (DAT_frameCounter % 5 == 0) logo1_shrunk_x++;
-    logo2_shrunk_y +=3 ;
-    pictureShrunk(&logo1, &logo_sprite, shrunkForge(logo1_shrunk_x, 0xFF));
-    pictureShrunk(&logo2, &logo_sprite, shrunkForge(0XF, logo2_shrunk_y));
-    pictureShrunk(&logo3, &logo_sprite, shrunkPropTableGet(DAT_frameCounter & SHRUNK_TABLE_PROP_SIZE)); /* neocore provide a precalculated table for keep "aspect ratio" */
+    logo2_shrunk_y +=3;
+
+    shrunk(logo1.pic.baseSprite, logo1.pic.info->tileWidth, shrunk_forge(logo1_shrunk_x, 0xFF));
+    shrunk(logo2.pic.baseSprite, logo2.pic.info->tileWidth, shrunk_forge(0xF, logo2_shrunk_y));
+    shrunk(logo3.pic.baseSprite, logo3.pic.info->tileWidth, get_shrunk_proportional_table(DAT_frameCounter & SHRUNK_TABLE_PROP_SIZE)); // todo (minor) - rename SHRUNK_PROPORTIONAL_TABLE_SIZE
+
+
+    /* neocore provide a precalculated table for keep "aspect ratio" */
     SCClose();
   };
-	SCClose();
+  SCClose();
   return 0;
 }

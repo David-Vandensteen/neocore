@@ -1,42 +1,41 @@
 #include <neocore.h>
 #include "externs.h"
 
-typedef struct bkp_ram_info {
-	WORD debug_dips;
-	BYTE stuff[254];
-	//256 bytes
-} bkp_ram_info;
-
-bkp_ram_info bkp_data;
+NEOCORE_INIT
 
 int main(void) {
-  aSprite player;
-  scroller background;
-  gpuInit();
-  background = scrollerDisplay(&background_sprite, &background_sprite_Palettes, 0, 0);
-  pictureDisplay(&planet04_sprite, &planet04_sprite_Palettes, 20, 100);
-  player = aSpriteDisplay(&player_sprite, &player_sprite_Palettes, 10, 10, PLAYER_SPRITE_ANIM_IDLE);
+  Animated_Sprite player;
+  Scroller background;
+  Image planet;
+  GPU_INIT
+  image_init(&planet, &planet04_sprite, &planet04_sprite_Palettes);
+  animated_sprite_init(&player, &player_sprite, &player_sprite_Palettes);
+  scroller_init(&background, &background_sprite, &background_sprite_Palettes);
+
+  // scroller_display(&background, &background_sprite, &background_sprite_Palettes, 0, 0);
+  scroller_display(&background, 0, 0);
+  image_display(&planet, 20, 100);
+  animated_sprite_display(&player, 10, 10, PLAYER_SPRITE_ANIM_IDLE);
   while(1) {
-    waitVBlank();
-    joypadUpdate();
-
-    if (joypadIsLeft() && player.posX > 0) { aSpriteMove(&player, -1, 0); }
-    if (joypadIsRight() && player.posX < 280) { aSpriteMove(&player, 1, 0); }
-    if (joypadIsUp() && player.posY > 0) {
-      aSpriteMove(&player, 0, -1);
-      aSpriteSetAnim(&player, PLAYER_SPRITE_ANIM_UP);
+    WAIT_VBL
+    joypad_update();
+    if (joypad_is_left() && player.as.posX > 0) { animated_sprite_move(&player, -1, 0); }
+    if (joypad_is_right() && player.as.posX < 280) { animated_sprite_move(&player, 1, 0); }
+    if (joypad_is_up() && player.as.posY > 0) {
+      animated_sprite_move(&player, 0, -1);
+      animated_sprite_set_animation(&player, PLAYER_SPRITE_ANIM_UP);
     }
-    if (joypadIsDown() && player.posY < 200) {
-      aSpriteMove(&player, 0, 1);
-      aSpriteSetAnim(&player, PLAYER_SPRITE_ANIM_DOWN);
+    if (joypad_is_down() && player.as.posY < 200) {
+      animated_sprite_move(&player, 0, 1);
+      animated_sprite_set_animation(&player, PLAYER_SPRITE_ANIM_DOWN);
     }
-    if (!joypadIsDown() && !joypadIsUp()) { aSpriteSetAnim(&player, PLAYER_SPRITE_ANIM_IDLE); }
+    if (!joypad_is_down() && !joypad_is_up()) { animated_sprite_set_animation(&player, PLAYER_SPRITE_ANIM_IDLE); }
 
-    scrollerMove(&background, 1, 0);
-    if (background.scrlPosX > 512)  scrollerSetPos(&background, 0, background.scrlPosY);
-    aSpriteAnimate(&player);
+    scroller_move(&background, 1, 0);
+    if (background.s.scrlPosX > 512)  scrollerSetPos(&background, 0, background.s.scrlPosY);
+    animated_sprite_animate(&player);
     SCClose();
   };
-	SCClose();
+  SCClose();
   return 0;
 }

@@ -70,15 +70,14 @@ SRC_C= $(wildcard *.c)
 
 OBJS = $(NEOBUILDTEMP)/crt0_$(OUTPUT).o
 
-ifneq ("$(wildcard $(FILESPRITE).cd)","")
+ifneq ("$(wildcard chardata.xml)","")
 	OBJS := $(OBJS) $(NEOBUILDTEMP)/palettes.o
 	OBJS := $(OBJS) $(NEOBUILDTEMP)/maps.o
 endif
 
-#OBJS += $(NEOBUILDTEMP)/$(SRC_C)$(SRC_C:.c=.o)
 OBJS += $(patsubst %.c,$(NEOBUILDTEMP)/%.o,$(wildcard *.c))
 
-LIBS = -lneocore -lDATlib -lprocess -lc -lgcc
+LIBS = -lneocore -lDATlib -lmath -lprocess -lc -lgcc
 
 #####################
 # Compilation Flags #
@@ -98,7 +97,7 @@ FIXFILES = $(BASEDIR)/src/shared/fix_font.bmp
 ##############
 # Make rules #
 ##############
-
+all: init $(FILESPRITE).cd $(FILEPRG)
 $(FILEPRG) : $(NEOBUILDTEMP)/$(PROJECTNAME).o
 	$(OBJC) -O binary $< $@
 
@@ -115,13 +114,19 @@ $(NEOBUILDTEMP)/%.o: %.s
 init:
 	$(MKDIR) -p $(NEOBUILDTEMP)
 
-sprite:
-	BuildChar.exe "chardata.xml"
-	CharSplit.exe char.bin -cd $(shell cygpath -w $(FILESPRITE))
+sprite: $(FILESPRITE).cd
+
+dbg:
+	echo $(OBJC)
+	echo $(OBJS)
+
+$(FILESPRITE).cd:
+	if exist chardata.xml BuildChar.exe "chardata.xml"
+	if exist char.bin CharSplit.exe char.bin -cd $(shell cygpath -w $(FILESPRITE))
 	$(RM) -f char.bin
 
 run: zip
-# TODO raine parametric position
+# todo (minor) - raine parametric position
 	powershell -ExecutionPolicy Bypass -File ..\..\scripts\raine-start.ps1 $(shell cygpath -w $(RAINE)) $(shell cygpath -w $(FILEZIP))
 
 zip: $(FILEPRG) iso
@@ -150,6 +155,9 @@ cue:
 	echo PREGAP 00:00:59 >> $(FILECUE)
 	echo INDEX 01 00:00:00 >> $(FILECUE)
 
+clean-sprite:
+	$(RM) -f $(FILESPRITE).cd
+
 clean:
 	echo Try to kill raine32.exe process...
 	powershell "try { taskkill /IM raine32.exe /f } catch { }; exit 0"
@@ -162,5 +170,7 @@ clean:
 
 clean-build: clean init sprite $(FILEPRG)
 
-hot-reload:
+serve:
 	powershell -ExecutionPolicy Bypass -File ..\..\scripts\neocore-hot-reload.ps1 .
+
+dist:
