@@ -715,7 +715,7 @@ void inline logger_pictureInfo(char *label, pictureInfo *pi) {
 void palette_disable_auto_index() { palette_auto_index = false; }
 void palette_enable_auto_index() { palette_auto_index = true; }
 void palette_swap(WORD palette_index, paletteInfo *pali, BOOL vblForce) {
-  volatile WORD *palettes = 0x402000 + (32 * palette_index);
+  volatile WORD *palettes = 0x402000 + (32 * palette_index); // todo MULT // todo force mirror ?
   BYTE i = 0;
   if (vblForce) {
     SCClose();
