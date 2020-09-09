@@ -106,7 +106,7 @@ mak clean-build run
 ## "Hot reload"
 ```cmd
 cd projects\hello
-mak hot-reload
+mak serve
 ```
 Wait the running of emulator and edit projects\hello\main.c
 Remove **loggerInfo("DAVID VANDENSTEEN");** (for example)
