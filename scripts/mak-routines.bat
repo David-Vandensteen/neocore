@@ -22,7 +22,15 @@ if %errorlevel% neq 0 (
 exit /b %errorlevel%
 
 :main
+if "%1"=="run" (
+  if "%2"=="raine" (
+    %appdata%\neocore\raine\raine32.exe
+    goto :end
+  )
+)
 call :init
 call :init-sprite
 call :make %*
+
+:end
 exit /b 0
