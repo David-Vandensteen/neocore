@@ -77,7 +77,7 @@ endif
 
 OBJS += $(patsubst %.c,$(NEOBUILDTEMP)/%.o,$(wildcard *.c))
 
-LIBS = -lneocore -lDATlib -lmath -lprocess -lc -lgcc
+LIBS = -lneocore -lDATlib -lmath -lprocess -lc -lgcc -lcddactrl
 
 #####################
 # Compilation Flags #
