@@ -388,7 +388,16 @@ void box_resize(Box *Box, short edge); // todo (minor) - deprecated ?
   //--------------------------------------------------------------------------//
  //                                  -C                                      //
 //--------------------------------------------------------------------------//
+/**
+ *  \brief VRAM Clear
+ */
 void inline clear_vram();
+
+/**
+ * \brief Play CD Audio Track
+ * @param track
+ */
+void cdda_play(BYTE track);
 
   //--------------------------------------------------------------------------//
  //                                  -F                                      //

@@ -10,6 +10,38 @@
 #include <math.h>
 
   /*------------------*/
+ /* -define          */
+/*------------------*/
+
+#define CDDA_PLAY_TRACK_02 \
+  asm("loop_track_02:"); \
+  asm(" move.w #0x0002,%d0"); \
+  asm(" tst.b	0x10F6D9"); \
+  asm(" beq.s	loop_track_02"); \
+  asm(" jsr	0xC0056A"); \
+
+#define CDDA_PLAY_TRACK_03 \
+  asm("loop_track_03:"); \
+  asm(" move.w #0x0003,%d0"); \
+  asm(" tst.b	0x10F6D9"); \
+  asm(" beq.s	loop_track_03"); \
+  asm(" jsr	0xC0056A"); \
+
+#define CDDA_PLAY_TRACK_04 \
+  asm("loop_track_04:"); \
+  asm(" move.w #0x0004,%d0"); \
+  asm(" tst.b	0x10F6D9"); \
+  asm(" beq.s	loop_track_04"); \
+  asm(" jsr	0xC0056A"); \
+
+#define CDDA_PLAY_TRACK_05 \
+  asm("loop_track_05:"); \
+  asm(" move.w #0x0005,%d0"); \
+  asm(" tst.b	0x10F6D9"); \
+  asm(" beq.s	loop_track_05"); \
+  asm(" jsr	0xC0056A"); \
+
+  /*------------------*/
  /* -static          */
 /*------------------*/
 
@@ -326,6 +358,35 @@ void box_resize(Box *box, short edge) {
   //--------------------------------------------------------------------------//
  //                                  -C                                      //
 //--------------------------------------------------------------------------//
+void cdda_play(BYTE track) {
+  disableIRQ();
+  switch (track) {
+  case 2:
+    CDDA_PLAY_TRACK_02
+    enableIRQ();
+    break;
+
+  case 3:
+    CDDA_PLAY_TRACK_03
+    enableIRQ();
+    break;
+
+  case 4:
+    CDDA_PLAY_TRACK_04
+    enableIRQ();
+    break;
+
+  case 5:
+    CDDA_PLAY_TRACK_05
+    enableIRQ();
+    break;
+
+  default:
+    enableIRQ();
+    break;
+  }
+}
+
 void inline clear_vram() { // todo (minor) - disable interrupt
   WORD addr = 0x0000;
   WORD addr_end = 0x8FFF;
