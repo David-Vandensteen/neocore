@@ -155,9 +155,6 @@ cue:
 	echo PREGAP 00:00:59 >> $(FILECUE)
 	echo INDEX 01 00:00:00 >> $(FILECUE)
 
-clean-sprite:
-	$(RM) -f $(FILESPRITE).cd
-
 clean:
 	echo Try to kill raine32.exe process...
 	powershell "try { taskkill /IM raine32.exe /f } catch { }; exit 0"
@@ -167,8 +164,6 @@ clean:
 	$(RM) -f palettes.s
 	$(RM) -f maps.s
 	$(RM) -f externs.h
-
-clean-build: clean init sprite $(FILEPRG)
 
 serve:
 	powershell -ExecutionPolicy Bypass -File ..\..\scripts\neocore-hot-reload.ps1 .

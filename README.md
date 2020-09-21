@@ -87,7 +87,7 @@ mak
 ### Rebuild all
 ```cmd
 cd projects\hello
-mak clean-build
+mak clean && mak init && mak
 ```
 Or
 ```cmd
@@ -95,12 +95,6 @@ cd projects\hello
 mak clean
 mak init
 mak
-```
-
-### Rebuild all & run
-```cmd
-cd projects\hello
-mak clean-build run
 ```
 
 ## "Hot reload"
