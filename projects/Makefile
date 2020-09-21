@@ -6,7 +6,7 @@ PROJECTNAME = $(PROJECT)
 
 NEOBUILDTEMP = $(shell cygpath -u $(TEMP))/neocore/$(PROJECTNAME)
 
-FILECUE = $(shell cygpath -u $(NEOBUILDTEMP)\$(PROJECTNAME).cue)
+FILECUE = $(PROJECTNAME).cue
 FILEISO = $(shell cygpath -u $(NEOBUILDTEMP)\$(PROJECTNAME).iso)
 FILEZIP = $(shell cygpath -u $(NEOBUILDTEMP)\$(PROJECTNAME).zip)
 ISONAME = $(PROJECTNAME).iso
@@ -145,7 +145,7 @@ ifneq ("$(wildcard $(FILESPRITE).cd)","")
 endif
 	$(MKISOFS) -o $(FILEISO) -pad $(NEOBUILDTEMP)/iso
 
-cue:
+add-cue:
 	echo CATALOG 0000000000000 > $(FILECUE)
 	echo FILE "$(ISONAME)" BINARY >> $(FILECUE)
 	echo TRACK 01 MODE1/2048 >> $(FILECUE)
