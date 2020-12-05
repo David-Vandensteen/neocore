@@ -41,6 +41,7 @@ function compileProjects {
 }
 
 function runProjects {
+  runProject "bullet"
   runProject "collide"
   runProject "collide-complex"
   runProject "collide-multiple"
