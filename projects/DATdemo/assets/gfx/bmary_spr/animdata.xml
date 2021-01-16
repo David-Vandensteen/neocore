@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<animations>
+  <animation name="IDLE" repeats="0" link="IDLE">
+    <step frame="bmary_spr_0000" x="-25" y="-108" t="6" />
+    <step frame="bmary_spr_0001" x="-25" y="-108" t="6" />
+    <step frame="bmary_spr_0002" x="-25" y="-108" t="6" />
+    <step frame="bmary_spr_0003" x="-25" y="-108" t="6" />
+    <step frame="bmary_spr_0004" x="-25" y="-108" t="6" />
+    <step frame="bmary_spr_0005" x="-25" y="-108" t="6" />
+    <step frame="bmary_spr_0006" x="-25" y="-108" t="6" />
+    <step frame="bmary_spr_0007" x="-25" y="-108" t="6" />
+    <step frame="bmary_spr_0008" x="-25" y="-108" t="6" />
+    <step frame="bmary_spr_0009" x="-25" y="-108" t="6" />
+    <step frame="bmary_spr_000a" x="-25" y="-108" t="6" />
+    <step frame="bmary_spr_000b" x="-25" y="-108" t="6" />
+  </animation>
+  <animation name="WALK" repeats="0" link="WALK">
+    <step frame="bmary_spr_000c" x="-32" y="-111" t="5" />
+    <step frame="bmary_spr_000d" x="-32" y="-111" t="5" />
+    <step frame="bmary_spr_000e" x="-32" y="-111" t="5" />
+    <step frame="bmary_spr_000f" x="-32" y="-111" t="5" />
+    <step frame="bmary_spr_0010" x="-32" y="-111" t="5" />
+    <step frame="bmary_spr_0011" x="-32" y="-111" t="5" />
+    <step frame="bmary_spr_0012" x="-32" y="-111" t="5" />
+    <step frame="bmary_spr_0013" x="-32" y="-111" t="5" />
+  </animation>
+</animations>
