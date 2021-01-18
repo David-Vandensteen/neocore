@@ -1,3 +1,5 @@
+set FILE=Makefile
+
 call %*
 
 :init
@@ -14,7 +16,9 @@ exit /b 0
 
 :make
 @echo on
-make -f ..\Makefile %*
+if not exist Makefile set FILE=..\Makefile
+
+make -f %FILE% %*
 if %errorlevel% neq 0 (
   pause
 )
