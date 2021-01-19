@@ -159,7 +159,7 @@ run: iso
 	echo ^</software^> >> $(MAMEHASH)
 	echo ^</softwarelist^> >> $(MAMEHASH)
 
-	$(MAMEFOLDER)\mame64.exe -rompath $(MAMEFOLDER)\roms -hashpath $(MAMEFOLDER)\hash -cfg_directory $(shell cygpath -w $(TEMP)) -nvram_directory $(shell cygpath -w $(TEMP)) neocdz $(PROJECTNAME)
+	$(MAMEFOLDER)\mame64.exe -rompath $(MAMEFOLDER)\roms -hashpath $(MAMEFOLDER)\hash neocdz $(PROJECTNAME)
 
 run-raine: zip
 # todo (minor) - raine parametric position
