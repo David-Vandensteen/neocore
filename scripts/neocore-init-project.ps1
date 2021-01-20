@@ -50,6 +50,10 @@ function makeInit{
 }
 
 function _main{
+  if ($projectName.Contains("-")) {
+    Write-Host "char - is not allowed ..."
+    break;
+  }
   createFolder projects\$projectName
   createFolder projects\$projectName\assets
   createFolder projects\$projectName\assets\gfx

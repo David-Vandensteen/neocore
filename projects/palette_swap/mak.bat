@@ -1,5 +1,5 @@
 @echo off
-set PROJECT=fixed-value
+set PROJECT=palette_swap
 
 set routine=..\..\scripts\mak-routines.bat
 set backupPath=%path%

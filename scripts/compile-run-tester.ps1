@@ -23,13 +23,13 @@ function runProject($name) {
 function compileProjects {
   compileProject "bullet"
   compileProject "collide"
-  compileProject "collide-complex"
-  compileProject "collide-multiple"
-  compileProject "fixed-value"
+  compileProject "collide_complex"
+  compileProject "collide_multiple"
+  compileProject "fixed_value"
   compileProject "hello"
   compileProject 'joypad'
   compileProject "shrunk"
-  compileProject "shrunk-centroid"
+  compileProject "shrunk_centroid"
   # compileProject "shrunk-physic" 1 --todo
   compileProject "sprite"
   compileProject "test_animated_sprite"
@@ -43,14 +43,14 @@ function compileProjects {
 function runProjects {
   runProject "bullet"
   runProject "collide"
-  runProject "collide-complex"
-  runProject "collide-multiple"
-  runProject "fixed-value"
+  runProject "collide_complex"
+  runProject "collide_multiple"
+  runProject "fixed_value"
   runProject "hello"
   runProject 'joypad'
   runProject "shrunk"
-  runProject "shrunk-centroid"
-  # runProject "shrunk-physic" --todo
+  runProject "shrunk_centroid"
+  # runProject "shrunk_physic" --todo
   runProject "sprite"
   runProject "test_animated_sprite"
   runProject "test_animated_sprite_physic"

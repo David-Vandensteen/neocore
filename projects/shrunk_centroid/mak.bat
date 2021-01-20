@@ -1,5 +1,5 @@
 @echo off
-set PROJECT=palette-swap
+set PROJECT=shrunk_centroid
 
 set routine=..\..\scripts\mak-routines.bat
 set backupPath=%path%

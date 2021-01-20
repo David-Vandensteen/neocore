@@ -1,5 +1,5 @@
 @echo off
-set PROJECT=shrunk-physic
+set PROJECT=fixed_value
 
 set routine=..\..\scripts\mak-routines.bat
 set backupPath=%path%
