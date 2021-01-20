@@ -19,11 +19,14 @@ FILEPRG = $(NEOBUILDTEMP)/$(PROJECTNAME).prg
 FILESPRITE = $(NEOBUILDTEMP)/SPR
 NEOBUILDDATA = $(shell cygpath -u $(APPDATA))/neocore
 RAINE = $(NEOBUILDDATA)/raine/raine32.exe
+
+MAMEFOLDER = $(NEOBUILDDATA)/mame
+MAMEHASH = $(MAMEFOLDER)\hash\neocd.xml
+
+CHDMAN = $(NEOBUILDDATA)/bin/chdman.exe
+FILECHD = $(MAMEFOLDER)/roms/neocdz/$(PROJECTNAME).chd
 CDTEMPLATE = $(NEOBUILDDATA)/cd_template
 
-#######
-#	CMD #
-#######
 MKDIR = $(shell cygpath -w $(NEOBUILDDATA))\bin\mkdir.exe
 CP = $(shell cygpath -w $(NEOBUILDDATA))\bin\cp.exe
 RM = $(shell cygpath -w $(NEOBUILDDATA))\bin\rm.exe
@@ -125,17 +128,27 @@ $(FILESPRITE).cd:
 	if exist char.bin CharSplit.exe char.bin -cd $(shell cygpath -w $(FILESPRITE))
 	$(RM) -f char.bin
 
-run: zip
-# todo (minor) - raine parametric position
+run-mame: iso
+	echo Try to kill mame process...
+	powershell "try { taskkill /IM mame64.exe /f } catch { }; exit 0"
+
+	# TODO : remove all CHD files
+	$(shell cygpath -w $(CHDMAN)) createcd -i "$(shell cygpath -w $(FILEISO))" -o "$(shell cygpath -w $(FILECHD))" --force
+
+	powershell -ExecutionPolicy Bypass -File ..\..\scripts\mame-hash-writer.ps1 $(PROJECTNAME) $(shell cygpath -w $(FILECHD)) $(shell cygpath -w $(MAMEHASH))
+	start cmd /c "$(shell cygpath -w $(MAMEFOLDER))\mame64.exe -rompath $(shell cygpath -w $(MAMEFOLDER))\roms -hashpath $(shell cygpath -w $(MAMEFOLDER))\hash -cfg_directory $(shell cygpath -w $(TEMP)) -nvram_directory $(shell cygpath -w $(TEMP)) -window -skip_gameinfo neocdz $(PROJECTNAME)"
+
+run-raine: zip
+	echo Try to kill raine32.exe process...
+	powershell "try { taskkill /IM raine32.exe /f } catch { }; exit 0"
 	powershell -ExecutionPolicy Bypass -File ..\..\scripts\raine-start.ps1 $(shell cygpath -w $(RAINE)) $(shell cygpath -w $(FILEZIP))
+
+run: run-raine
 
 zip: $(FILEPRG) iso
 	$(ZIP) -j $(shell cygpath -u $(FILEZIP)) $(NEOBUILDTEMP)/iso/*
 
 iso: $(FILEPRG)
-	echo Try to kill raine32.exe process...
-	powershell "try { taskkill /IM raine32.exe /f } catch { }; exit 0"
-
 	$(RM) -rf $(NEOBUILDTEMP)/iso
 	$(MKDIR) -p $(NEOBUILDTEMP)/iso
 	$(CP) -f $(CDTEMPLATE)/* $(NEOBUILDTEMP)/iso
