@@ -28,9 +28,6 @@ FILECHD = $(MAMEFOLDER)/roms/neocdz/$(PROJECTNAME).chd
 
 CDTEMPLATE = $(NEOBUILDDATA)/cd_template
 
-#######
-#	CMD #
-#######
 MKDIR = $(shell cygpath -w $(NEOBUILDDATA))\bin\mkdir.exe
 CP = $(shell cygpath -w $(NEOBUILDDATA))\bin\cp.exe
 RM = $(shell cygpath -w $(NEOBUILDDATA))\bin\rm.exe
@@ -132,7 +129,7 @@ $(FILESPRITE).cd:
 	if exist char.bin CharSplit.exe char.bin -cd $(shell cygpath -w $(FILESPRITE))
 	$(RM) -f char.bin
 
-run: iso
+run-mame: iso
 	echo Try to kill mame process...
 	powershell "try { taskkill /IM mame64.exe /f } catch { }; exit 0"
 	$(shell cygpath -w $(CHDMAN)) createcd -i "$(shell cygpath -w $(FILEISO))" -o "$(shell cygpath -w $(FILECHD))" --force
@@ -156,9 +153,9 @@ run: iso
 	echo ^</software^> >> $(shell cygpath -w $(MAMEHASH))
 	echo ^</softwarelist^> >> $(shell cygpath -w $(MAMEHASH))
 
-	start cmd /c "$(shell cygpath -w $(MAMEFOLDER))\mame64.exe -rompath $(shell cygpath -w $(MAMEFOLDER))\roms -hashpath $(shell cygpath -w $(MAMEFOLDER))\hash -cfg_directory $(shell cygpath -w $(TEMP)) -nvram_directory $(shell cygpath -w $(TEMP)) -window neocdz $(PROJECTNAME)"
+	start cmd /c "$(shell cygpath -w $(MAMEFOLDER))\mame64.exe -rompath $(shell cygpath -w $(MAMEFOLDER))\roms -hashpath $(shell cygpath -w $(MAMEFOLDER))\hash -cfg_directory $(shell cygpath -w $(TEMP)) -nvram_directory $(shell cygpath -w $(TEMP)) -window -skip_gameinfo neocdz $(PROJECTNAME)"
 
-run-raine: zip
+run: zip
 	echo Try to kill raine32.exe process...
 	powershell "try { taskkill /IM raine32.exe /f } catch { }; exit 0"
 
