@@ -2,8 +2,11 @@
 #include <math.h>
 #include "externs.h"
 
+// 96 sprites per line
+// 380 sprites max
+
+// #define PLANETS_MAX 47
 #define PLANETS_MAX 47
-// #define PLANETS_MAX 48
 
 NEOCORE_INIT
 
@@ -25,10 +28,10 @@ static void display() {
   for(i = 0; i < PLANETS_MAX; i++) {
     //x = 100;
     //y = 10 + (i * 3);
-    x = 100 + ( i * 3);
+    x = 100 + ( i * 10);
     y = 100;
     image_display(&planets[i], 0, 0 + i);
-    image_shrunk_centroid(&planets[i], x, y, get_shrunk_proportional_table(100));
+    image_shrunk_centroid(&planets[i], x, y, get_shrunk_proportional_table(50));
   }
 }
 
@@ -41,12 +44,14 @@ static void update() {
   logger_word("FD : ", DAT_droppedFrames);
   logger_word("S : ", get_sprite_index());
   // BURN
+  /*
   for (i = 1; i < 0xFFFF; i++ ) {
     x = rand();
     result = x / i;
   }
   logger_dword("R : ", result);
   for (i = 0; i < PLANETS_MAX; i++) image_move(&planets[i], 1, 0);
+  */
 }
 
 int main(void) {
@@ -54,7 +59,7 @@ int main(void) {
   display();
   while(1) {
     WAIT_VBL
-    // update();
+    update();
     SCClose();
   };
   SCClose();

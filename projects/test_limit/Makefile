@@ -20,14 +20,11 @@ FILESPRITE = $(NEOBUILDTEMP)/SPR
 NEOBUILDDATA = $(shell cygpath -u $(APPDATA))/neocore
 RAINE = $(NEOBUILDDATA)/raine/raine32.exe
 
-#MAME = $(NEOBUILDDATA)/mame/mame64.exe
-MAMEFOLDER = c:\temp\mame
-#MAMEHASH = $(NEOBUILDDATA)/mame/hash/neocd.xml
-MAMEHASH = c:\temp\mame\hash\neocd.xml
+MAMEFOLDER = $(NEOBUILDDATA)/mame
+MAMEHASH = $(MAMEFOLDER)\hash\neocd.xml
 
-#CHDMAN = $(NEOBUILDDATA)/bin/chdman.exe
-CHDMAN = c:\temp\chdman.exe
-FILECHD = c:\temp\mame\roms/neocdz\$(PROJECTNAME).chd
+CHDMAN = $(NEOBUILDDATA)/bin/chdman.exe
+FILECHD = $(MAMEFOLDER)/roms/neocdz/$(PROJECTNAME).chd
 
 CDTEMPLATE = $(NEOBUILDDATA)/cd_template
 
@@ -138,40 +135,40 @@ $(FILESPRITE).cd:
 run: iso
 	echo Try to kill mame process...
 	powershell "try { taskkill /IM mame64.exe /f } catch { }; exit 0"
-	$(CHDMAN) createcd -i "$(shell cygpath -w $(FILEISO))" -o "$(FILECHD)" --force
+	$(shell cygpath -w $(CHDMAN)) createcd -i "$(shell cygpath -w $(FILEISO))" -o "$(shell cygpath -w $(FILECHD))" --force
 
-	echo ^<?xml version="1.0"?^> > $(MAMEHASH)
-	echo ^<!DOCTYPE softwarelist SYSTEM "softwarelist.dtd"^> >> $(MAMEHASH)
-	echo ^<softwarelist name="neocd" description="SNK NeoGeo CD CD-ROMs"^> >> $(MAMEHASH)
+	echo ^<?xml version="1.0"?^> > $(shell cygpath -w $(MAMEHASH))
+	echo ^<!DOCTYPE softwarelist SYSTEM "softwarelist.dtd"^> >> $(shell cygpath -w $(MAMEHASH))
+	echo ^<softwarelist name="neocd" description="SNK NeoGeo CD CD-ROMs"^> >> $(shell cygpath -w $(MAMEHASH))
 
-	echo ^<software name="$(PROJECTNAME)"^> >> $(MAMEHASH)
-	echo ^<description^>$(PROJECTNAME)^</description^> >> $(MAMEHASH)
-	echo ^<year^>1995^</year^> >> $(MAMEHASH)
-	echo ^<publisher^>$(PROJECTNAME)^</publisher^> >> $(MAMEHASH)
-	echo ^<info name="alt_title" value="$(PROJECTNAME)" /^> >> $(MAMEHASH)
-	echo ^<info name="serial" value="NGCD-583 (JPN)" /^> >> $(MAMEHASH)
-	echo ^<info name="release" value="59950502 (JPN)" /^> >> $(MAMEHASH)
-	echo ^<part name="cdrom" interface="neocd_cdrom"^> >> $(MAMEHASH)
-	echo ^<diskarea name="cdrom"^> >> $(MAMEHASH)
-	echo ^<disk name="$(PROJECTNAME)" sha1="e9ae51499f1790b402307c0d1c8a62c2ff0cfea9"/^> >> $(MAMEHASH)
-	echo ^</diskarea^> >> $(MAMEHASH)
-	echo ^</part^> >> $(MAMEHASH)
-	echo ^</software^> >> $(MAMEHASH)
-	echo ^</softwarelist^> >> $(MAMEHASH)
+	echo ^<software name="$(PROJECTNAME)"^> >> $(shell cygpath -w $(MAMEHASH))
+	echo ^<description^>$(PROJECTNAME)^</description^> >> $(shell cygpath -w $(MAMEHASH))
+	echo ^<year^>1995^</year^> >> $(shell cygpath -w $(MAMEHASH))
+	echo ^<publisher^>$(PROJECTNAME)^</publisher^> >> $(shell cygpath -w $(MAMEHASH))
+	echo ^<info name="alt_title" value="$(PROJECTNAME)" /^> >> $(shell cygpath -w $(MAMEHASH))
+	echo ^<info name="serial" value="NGCD-583 (JPN)" /^> >> $(shell cygpath -w $(MAMEHASH))
+	echo ^<info name="release" value="59950502 (JPN)" /^> >> $(shell cygpath -w $(MAMEHASH))
+	echo ^<part name="cdrom" interface="neocd_cdrom"^> >> $(shell cygpath -w $(MAMEHASH))
+	echo ^<diskarea name="cdrom"^> >> $(shell cygpath -w $(MAMEHASH))
+	echo ^<disk name="$(PROJECTNAME)" sha1="e9ae51499f1790b402307c0d1c8a62c2ff0cfea9"/^> >> $(shell cygpath -w $(MAMEHASH))
+	echo ^</diskarea^> >> $(shell cygpath -w $(MAMEHASH))
+	echo ^</part^> >> $(shell cygpath -w $(MAMEHASH))
+	echo ^</software^> >> $(shell cygpath -w $(MAMEHASH))
+	echo ^</softwarelist^> >> $(shell cygpath -w $(MAMEHASH))
 
-	$(MAMEFOLDER)\mame64.exe -rompath $(MAMEFOLDER)\roms -hashpath $(MAMEFOLDER)\hash neocdz $(PROJECTNAME)
+	start cmd /c "$(shell cygpath -w $(MAMEFOLDER))\mame64.exe -rompath $(shell cygpath -w $(MAMEFOLDER))\roms -hashpath $(shell cygpath -w $(MAMEFOLDER))\hash -cfg_directory $(shell cygpath -w $(TEMP)) -nvram_directory $(shell cygpath -w $(TEMP)) -window neocdz $(PROJECTNAME)"
 
 run-raine: zip
-# todo (minor) - raine parametric position
+	echo Try to kill raine32.exe process...
+	powershell "try { taskkill /IM raine32.exe /f } catch { }; exit 0"
+
+# TODO (minor) - raine parametric position
 	powershell -ExecutionPolicy Bypass -File ..\..\scripts\raine-start.ps1 $(shell cygpath -w $(RAINE)) $(shell cygpath -w $(FILEZIP))
 
 zip: $(FILEPRG) iso
 	$(ZIP) -j $(shell cygpath -u $(FILEZIP)) $(NEOBUILDTEMP)/iso/*
 
 iso: $(FILEPRG)
-	echo Try to kill raine32.exe process...
-	powershell "try { taskkill /IM raine32.exe /f } catch { }; exit 0"
-
 	$(RM) -rf $(NEOBUILDTEMP)/iso
 	$(MKDIR) -p $(NEOBUILDTEMP)/iso
 	$(CP) -f $(CDTEMPLATE)/* $(NEOBUILDTEMP)/iso
