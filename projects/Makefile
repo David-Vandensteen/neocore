@@ -133,6 +133,8 @@ run-mame: iso
 	powershell "try { taskkill /IM mame64.exe /f } catch { }; exit 0"
 
 # TODO : remove all CHD files
+	del $(shell cygpath -w $(MAMEFOLDER))\roms\neocdz\*.chd /q
+
 	$(shell cygpath -w $(CHDMAN)) createcd -i "$(shell cygpath -w $(FILEISO))" -o "$(shell cygpath -w $(FILECHD))" --force
 
 	powershell -ExecutionPolicy Bypass -File ..\..\scripts\mame-hash-writer.ps1 $(PROJECTNAME) $(shell cygpath -w $(FILECHD)) $(shell cygpath -w $(MAMEHASH))
