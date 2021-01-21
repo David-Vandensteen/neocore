@@ -141,13 +141,14 @@ run-mame: iso
 	start cmd /c "$(shell cygpath -w $(MAMEFOLDER))\mame64.exe -rompath $(shell cygpath -w $(MAMEFOLDER))\roms -hashpath $(shell cygpath -w $(MAMEFOLDER))\hash -cfg_directory $(shell cygpath -w $(TEMP)) -nvram_directory $(shell cygpath -w $(TEMP)) -window -skip_gameinfo neocdz $(PROJECTNAME)"
 
 run-raine: zip
-	echo Try to kill raine32.exe process...
-	powershell "try { taskkill /IM raine32.exe /f } catch { }; exit 0"
 	powershell -ExecutionPolicy Bypass -File ..\..\scripts\raine-start.ps1 $(shell cygpath -w $(RAINE)) $(shell cygpath -w $(FILEZIP))
 
 run: run-raine
 
 zip: $(FILEPRG) iso
+	echo Try to kill raine32.exe process...
+	powershell "try { taskkill /IM raine32.exe /f } catch { }; exit 0"
+
 	$(ZIP) -j $(shell cygpath -u $(FILEZIP)) $(NEOBUILDTEMP)/iso/*
 
 iso: $(FILEPRG)
