@@ -1,6 +1,6 @@
 /*
-	David Vandensteen
-	2018
+  David Vandensteen
+  2018
 */
   // short  ->  2 bytes
   // word   ->  2 bytes
@@ -22,13 +22,14 @@
   } bkp_ram_info; \
   bkp_ram_info bkp_data;
 
+// TODO : remove GPU_INIT MACRO
 #define GPU_INIT  gpu_init();
 
 #define __ALIGN1__      __attribute__ ((aligned (1)))
 #define __ALIGN2__      __attribute__ ((aligned (2)))
 #define __ALIGN4__      __attribute__ ((aligned (4)))
-#define __ALIGN64__ 		__attribute__ ((aligned (64)))
-#define __ALIGN128__		__attribute__ ((aligned (128)))
+#define __ALIGN64__     __attribute__ ((aligned (64)))
+#define __ALIGN128__    __attribute__ ((aligned (128)))
 
 #define MULT2              << 1
 #define MULT4              << 2
@@ -49,13 +50,13 @@
 
 #define SHRUNK_TABLE_PROP_SIZE    0x2fe
 
-#define JOYPAD  		    	BYTE p1, ps;
-#define JOYPAD_READ		    p1 = volMEMBYTE(P1_CURRENT); ps = volMEMBYTE(PS_CURRENT);
+#define JOYPAD            BYTE p1, ps;
+#define JOYPAD_READ        p1 = volMEMBYTE(P1_CURRENT); ps = volMEMBYTE(PS_CURRENT);
 #define JOYPAD_READ_EDGE  p1 = volMEMBYTE(P1_EDGE); ps = volMEMBYTE(PS_EDGE);
-#define JOYPAD_IS_UP			p1&JOY_UP
-#define JOYPAD_IS_DOWN		p1&JOY_DOWN
-#define JOYPAD_IS_LEFT		p1&JOY_LEFT
-#define JOYPAD_IS_RIGHT		p1&JOY_RIGHT
+#define JOYPAD_IS_UP      p1&JOY_UP
+#define JOYPAD_IS_DOWN    p1&JOY_DOWN
+#define JOYPAD_IS_LEFT    p1&JOY_LEFT
+#define JOYPAD_IS_RIGHT    p1&JOY_RIGHT
 #define JOYPAD_IS_START   ps&P1_START
 #define JOYPAD_IS_A       p1&JOY_A
 #define JOYPAD_IS_B       p1&JOY_B
@@ -73,6 +74,9 @@
 
 #define SHRUNK_EXTRACT_X(value) value >> 8
 #define SHRUNK_EXTRACT_Y(value) (BYTE)value
+
+#define SPRITE_INDEX_MANAGER_MAX  384
+#define PALETTE_INDEX_MANAGER_MAX 256
 
 enum direction { NONE, UP, DOWN, LEFT, RIGHT };
 
@@ -417,7 +421,7 @@ void inline fix_print_neocore(int x, int y, char *label);
  */
 void flash_init(Flash *flash, BOOL enabled, short frequency, short lengh);
 
-  //-----------------------------------------------------------------s---------//
+  //---------------------------------------------------------------------------//
  //                                  -G                                      //
 //--------------------------------------------------------------------------//
 void inline gpu_init();
@@ -524,6 +528,12 @@ BOOL image_flash(Image *image);
  * @param shrunk use shrunk_forge function for make a WORD with width & heigh value
  */
 void image_shrunk_centroid(Image *image, short center_x, short center_y, WORD shrunk_value);
+
+/**
+ * \brief image destroy
+ * @param Image* Image pointer
+ */
+void image_destroy(Image *image);
 
   /*------------------*/
  /*  -image_physic   */
