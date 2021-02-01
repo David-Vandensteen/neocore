@@ -44,13 +44,6 @@
   /*------------------*/
  /* -static          */
 /*------------------*/
-
-static WORD sprite_index = 1;
-static BYTE palette_index = 16;
-
-static BOOL palette_auto_index = true;
-static BOOL sprite_auto_index = true;
-
 static BOOL sprite_index_manager_status[SPRITE_INDEX_MANAGER_MAX];
 static paletteInfo *palette_index_manager_status[PALETTE_INDEX_MANAGER_MAX];
 
@@ -500,31 +493,8 @@ void inline gpu_init() {
   initGfx();
   volMEMWORD(0x400002) = 0xffff;  // debug text white
   LSPCmode = 0x1c00;              // autoanim speed
-  sprite_index = 1;
-  palette_index = 16;
   sprite_index_manager_init();
   palette_index_manager_init();
-}
-
-WORD get_sprite_index() { return sprite_index; }
-
-// TODO : remove (useless)
-WORD get_sprite_index_from_picture(pictureInfo *pi) {
-  WORD rt = sprite_index;
-  if (sprite_auto_index) sprite_index += pi->tileWidth;
-  return rt;
-}
-
-WORD get_sprite_index_from_sprite(spriteInfo *si) {
-  WORD rt = sprite_index;
-  if (sprite_auto_index) sprite_index += si->maxWidth;
-  return rt;
-}
-
-BYTE get_palette_index(paletteInfo *pali) {
-  BYTE rt = palette_index;
-  if (palette_auto_index) palette_index += pali->palCount;
-  return rt;
 }
 
 WORD get_shrunk_proportional_table(WORD index) {
@@ -854,12 +824,6 @@ void inline logger_pictureInfo(char *label, pictureInfo *pi) {
   //--------------------------------------------------------------------------//
  //                                  -P                                      //
 //--------------------------------------------------------------------------//
-  /*-----------*/
- /* -palette  */
-/*-----------*/
-
-void palette_disable_auto_index() { palette_auto_index = false; }
-void palette_enable_auto_index() { palette_auto_index = true; }
 
   //--------------------------------------------------------------------------//
  //                                  -V                                      //
@@ -890,18 +854,6 @@ BOOL vectors_collide(Box *box, Vec2short vec[], BYTE vector_max) {
   //--------------------------------------------------------------------------//
  //                                  -S                                      //
 //--------------------------------------------------------------------------//
-BYTE set_palette_index(BYTE index) {
-  palette_index = index;
-  return palette_index;
-}
-
-void sprite_disable_autoinc() { sprite_auto_index = false; }
-void sprite_enable_autoinc() { sprite_auto_index = true; }
-
-void sprite_set_index(WORD index) {
-  sprite_index = index;
-}
-
   /*-----------*/
  /* -scroller */
 /*-----------*/

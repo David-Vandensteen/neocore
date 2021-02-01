@@ -51,12 +51,12 @@
 #define SHRUNK_TABLE_PROP_SIZE    0x2fe
 
 #define JOYPAD            BYTE p1, ps;
-#define JOYPAD_READ        p1 = volMEMBYTE(P1_CURRENT); ps = volMEMBYTE(PS_CURRENT);
+#define JOYPAD_READ       p1 = volMEMBYTE(P1_CURRENT); ps = volMEMBYTE(PS_CURRENT);
 #define JOYPAD_READ_EDGE  p1 = volMEMBYTE(P1_EDGE); ps = volMEMBYTE(PS_EDGE);
 #define JOYPAD_IS_UP      p1&JOY_UP
 #define JOYPAD_IS_DOWN    p1&JOY_DOWN
 #define JOYPAD_IS_LEFT    p1&JOY_LEFT
-#define JOYPAD_IS_RIGHT    p1&JOY_RIGHT
+#define JOYPAD_IS_RIGHT   p1&JOY_RIGHT
 #define JOYPAD_IS_START   ps&P1_START
 #define JOYPAD_IS_A       p1&JOY_A
 #define JOYPAD_IS_B       p1&JOY_B
@@ -425,27 +425,6 @@ void flash_init(Flash *flash, BOOL enabled, short frequency, short lengh);
  //                                  -G                                      //
 //--------------------------------------------------------------------------//
 void inline gpu_init();
-/**
- * \return WORD the current sprite_index
- */
-WORD        get_sprite_index();
-
-/**
- * @param pictureInfo* pointer to DATLib structure
- * \return WORD the sprite_index after add sprites from pictureInfo
- */
-WORD        get_sprite_index_from_picture(pictureInfo *pi);
-
-/**
- * @param spriteInfo* pointer to DATLib structure
- * \return WORD the sprite_index after add sprites from spriteInfo
- */
-WORD        get_sprite_index_from_sprite(spriteInfo *si);
-
-/**
- * \return BYTE current palette_index
- */
-BYTE        get_palette_index();
 
 /**
  * @param index
@@ -662,18 +641,6 @@ void inline logger_pictureInfo(char *label, pictureInfo *pi);
   //--------------------------------------------------------------------------//
  //                                  -P                                      //
 //--------------------------------------------------------------------------//
-  /*-----------*/
- /* -palette  */
-/*-----------*/
-/**
- * \brief Disable auto management of palette index
- */
-void palette_disable_auto_index();
-
-/**
- * \brief Enable auto management of palette index
- */
-void palette_enable_auto_index();
 
 // m
 //void mask_display(picture pic[], Vec2short vec[], BYTE vector_max); // todo (minor) - rename ? (vectorsDisplay)
@@ -727,16 +694,6 @@ BOOL vector_is_left(short x, short y, short v1x, short v1y, short v2x, short v2y
   //--------------------------------------------------------------------------//
  //                                  -S                                      //
 //--------------------------------------------------------------------------//
-/**
- * @param index
- */
-void        set_sprite_index(WORD index);
-
-/**
- * @param index
- */
-BYTE        set_palette_index(BYTE index);
-
   /*-----------*/
  /* -scroller */
 /*-----------*/
