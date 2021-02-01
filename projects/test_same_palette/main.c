@@ -14,8 +14,6 @@ int main(void) {
   image_init(&planet, &planet04_sprite, &background_sprite_Palettes);
   animated_sprite_init(&player, &player_sprite, &background_sprite_Palettes);
 
-  palette_disable_auto_index();
-
   scroller_display(&backgroung, 0, 0);
   image_display(&planet, 100, 150);
   animated_sprite_display(&player, 150, 10, PLAYER_SPRITE_ANIM_IDLE);
