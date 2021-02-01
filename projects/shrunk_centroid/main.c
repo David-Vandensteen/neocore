@@ -30,10 +30,8 @@ static void init() {
   vec2short_init(&logo1_position_center, LOGO1_POSITION_CENTER_X_INIT, 30);
   vec2short_init(&logo2_position_center, 160, 180);
   vec2short_init(&logo3_position_center, 160, LOGO3_POSITION_CENTER_Y_INIT);
-  palette_disable_auto_index();
   image_init(&logo1, &logo_sprite, &logo_sprite_Palettes);
   image_init(&logo2, &logo_sprite, &logo_sprite_Palettes);
-  palette_enable_auto_index();
   image_init(&logo3, &logo_sprite, &logo_sprite_Palettes);
 }
 
