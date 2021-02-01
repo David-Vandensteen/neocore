@@ -15,11 +15,13 @@ function compileProject($name) {
 }
 
 function runProject($name) {
-  pushd ..\projects\$name
-  .\mak.bat $makeArg
-  if ($LASTEXITCODE -ne 0) { break }
-  sleep $killTime
-  popd
+  if ($op -eq "run") {
+    pushd ..\projects\$name
+    .\mak.bat $makeArg
+    if ($LASTEXITCODE -ne 0) { break }
+    sleep $killTime
+    popd
+  }
 }
 
 function _main {
