@@ -39,6 +39,9 @@ function _main {
   compileProject "collide_multiple"
   runProject "collide_multiple"
 
+  compileProject "DATdemo"
+  runProject "DATdemo"
+
   compileProject "fixed_value"
   runProject "fixed_value"
 
@@ -71,11 +74,17 @@ function _main {
   compileProject "test_image_physic"
   runProject "test_image_physic"
 
+  compileProject "test_palettemanager"
+  runProject "test_palettemanager"
+
   compileProject "test_same_palette"
   runProject "test_same_palette"
 
   compileProject "test_scroller"
   runProject "test_scroller"
+
+  compileProject "test_spritemanager"
+  runProject "test_spritemanager"
 }
 
 _main $op $makeArg $killTime
