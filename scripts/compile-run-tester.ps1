@@ -1,7 +1,8 @@
 # todo (minor) - test errorlevel break
 param (
   [string] $op,
-  [string] $makeArg
+  [string] $makeArg,
+  [string] $killTime
 )
 
 function compileProject($name) {
@@ -17,7 +18,7 @@ function runProject($name) {
   pushd ..\projects\$name
   .\mak.bat $makeArg
   if ($LASTEXITCODE -ne 0) { break }
-  sleep 10
+  sleep $killTime
   popd
 }
 
@@ -62,9 +63,9 @@ function runProjects {
 }
 
 function _main {
-  write-host $op $makeArg
+  write-host $op $makeArg $killTime
   if ($op -eq "compile") { compileProjects }
   if ($op -eq "run") { runProjects }
 }
 
-_main $op $makeArg
+_main $op $makeArg $killTime
