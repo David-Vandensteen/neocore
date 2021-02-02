@@ -777,6 +777,6 @@ WORD        shrunk_range(WORD addr_start, WORD addr_end, WORD shrunk_value);
  * @param vbl Number of frames to wait
  */
 DWORD inline wait_vbl_max(WORD nb);
-#define WAIT_VBL waitVBlank();
+#define wait_vbl(); waitVBlank();
 
 #endif
