@@ -20,7 +20,7 @@ int main(void) {
     asteroids_box[i] = &asteroids[i].box;
   }
   while(1) {
-    WAIT_VBL
+    wait_vbl();
     joypad_update();
 
     if (joypad_is_left() && player.animated_sprite.as.posX > 0) { animated_sprite_physic_move(&player, -1, 0); }

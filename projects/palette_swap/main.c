@@ -21,7 +21,7 @@ int main(void) {
   logo_swap_palette.data[1] = 0x0000;
 
   while(1) {
-    WAIT_VBL
+    wait_vbl();
     logger_init();
     if (DAT_frameCounter % 8 == 0) {
       for (i = 0; i < (logo.pali->palCount MULT16); i++) { logo_swap_palette.data[i] = RAND(0xFFFF); }

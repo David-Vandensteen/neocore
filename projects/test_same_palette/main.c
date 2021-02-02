@@ -20,7 +20,7 @@ int main(void) {
 
 
   while(1) {
-    WAIT_VBL
+    wait_vbl();
     logger_init();
     logger_byte("PALI PLAYER ", player.as.basePalette);
     logger_byte("PALI PLANET ", planet.pic.basePalette);

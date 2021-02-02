@@ -25,7 +25,7 @@ int main(void) {
   image_display(&logo3, 10, 150);
 
   while(1) {
-    WAIT_VBL
+    wait_vbl();
     if (DAT_frameCounter % 5 == 0) logo1_shrunk_x++;
     logo2_shrunk_y +=3;
 

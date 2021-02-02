@@ -13,7 +13,7 @@ int main(void) {
   animated_sprite_display(&player, 100, 100, PLAYER_SPRITE_ANIM_IDLE);
   shrunk(player.as.baseSprite, player.si->maxWidth, shrunk_forge(0x5, 0xFF));
   while(1) {
-    WAIT_VBL
+    wait_vbl();
     logger_init();
     // animated_sprite_move(&player, 1, 0);
     // animated_sprite_set_position(&player, 10, 10);

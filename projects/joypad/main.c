@@ -11,7 +11,7 @@ NEOCORE_INIT
 int main(void) {
   gpu_init();
   while(1) {
-    WAIT_VBL
+    wait_vbl();
     logger_init();
     logger_info("INTERACT WITH JOYPAD ...");
     joypad_update_edge();

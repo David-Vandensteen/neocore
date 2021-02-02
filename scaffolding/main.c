@@ -23,7 +23,7 @@ static void update() {
 int main(void) {
   init();
   while(1) {
-    WAIT_VBL
+    wait_vbl();
     update();
     SCClose();
   };

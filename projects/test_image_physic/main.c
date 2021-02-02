@@ -13,7 +13,7 @@ int main(void) {
   image_physic_display(&planet04, 100, 100);
   // image_physic_shrunk(&planet04, shrunk_forge(0x9, 0xF));
   while(1) {
-    WAIT_VBL
+    wait_vbl();
     logger_init();
     image_physic_flash(&planet04);
     // image_physic_move(&planet04, 1, 0);

@@ -17,7 +17,7 @@ int main(void) {
   image_display(&planet, 20, 100);
   animated_sprite_display(&player, 10, 10, PLAYER_SPRITE_ANIM_IDLE);
   while(1) {
-    WAIT_VBL
+    wait_vbl();
     joypad_update();
     if (joypad_is_left() && player.as.posX > 0) { animated_sprite_move(&player, -1, 0); }
     if (joypad_is_right() && player.as.posX < 280) { animated_sprite_move(&player, 1, 0); }

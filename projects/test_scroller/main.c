@@ -11,7 +11,7 @@ int main(void) {
   scroller_init(&background, &background_sprite, &background_sprite_Palettes);
   scroller_display(&background, 0, 0);
   while(1) {
-    WAIT_VBL
+    wait_vbl();
     scroller_move(&background, 1, 0);
     if (background.s.scrlPosX > 512) scroller_set_position(&background, 0, 0);
     SCClose();

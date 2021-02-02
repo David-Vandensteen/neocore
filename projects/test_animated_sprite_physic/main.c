@@ -28,7 +28,7 @@ int main(void) {
   flash_init(&player.animated_sprite.flash, true, 10, 10);
 
   while(1) {
-    WAIT_VBL
+    wait_vbl();
     logger_init();
     animated_sprite_animate(&player.animated_sprite);
     logger_box("BOX : ", &player.box);

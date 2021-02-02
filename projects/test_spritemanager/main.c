@@ -46,7 +46,7 @@ int main(void) {
   init();
   display();
   while(1) {
-    WAIT_VBL
+    wait_vbl();
     update();
     SCClose();
   };

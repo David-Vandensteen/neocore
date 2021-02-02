@@ -10,7 +10,7 @@ int main(void) {
   logger_init();
   logger_int("10.5 ADD 10.5 : ", fixtoi(fadd(val1, val2)));
   while(1) {
-    WAIT_VBL
+    wait_vbl();
     SCClose();
   };
   SCClose();
