@@ -33,6 +33,9 @@ static void update() {
   logger_info("MUST BE : 18");
   logger_word("P3 INDEX : ", planet03.pic.basePalette);
   logger_info("MUST BE : 17");
+  if (DAT_frameCounter == 500) {
+    logger_info("P1 REALLOCATE");
+  }
 }
 
 int main(void) {

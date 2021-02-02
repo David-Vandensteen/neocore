@@ -254,6 +254,11 @@ void animated_sprite_show(Animated_Sprite *animated_sprite) {
   aSpriteShow(&animated_sprite->as);
 }
 
+void animated_sprite_destroy(Animated_Sprite *animated_sprite) {
+  animated_sprite_hide(animated_sprite);
+  sprite_index_manager_set_free(animated_sprite->as.baseSprite, animated_sprite->si->maxWidth);
+}
+
   /*--------------------------*/
  /* -animated_sprite_physic  */
 /*--------------------------*/
@@ -318,6 +323,11 @@ void animated_sprite_physic_show(Animated_Sprite_Physic *animated_sprite_physic)
 
 void animated_sprite_physic_flash(Animated_Sprite_Physic *animated_sprite_physic) {
   animated_sprite_physic->physic_enabled = animated_sprite_flash(&animated_sprite_physic->animated_sprite);
+}
+
+void animated_sprite_physic_destroy(Animated_Sprite_Physic *animated_sprite_physic) {
+  animated_sprite_physic_hide(animated_sprite_physic);
+  animated_sprite_destroy(&animated_sprite_physic->animated_sprite);
 }
 
   //--------------------------------------------------------------------------//
@@ -543,7 +553,6 @@ void image_set_position(Image *image, short x, short y) {
   pictureSetPos(&image->pic, x, y);
 }
 
-
 void image_hide(Image *image) {
   pictureHide(&image->pic);
   image->flash.visible = false;
@@ -625,6 +634,10 @@ void image_physic_flash(Image_Physic *image_physic) {
 void image_physic_shrunk(Image_Physic *image_physic, WORD shrunk_value) {
   shrunk(image_physic->image.pic.baseSprite, image_physic->image.pic.info->tileWidth, shrunk_value);
   // todo (minor) - shrunk box
+}
+
+void image_physic_destroy(Image_Physic *image_physic) {
+  image_destroy(&image_physic->image);
 }
 
 void image_shrunk_centroid(Image *image, short center_x, short center_y, WORD shrunk_value) {
@@ -886,6 +899,8 @@ void scroller_init(Scroller *s, scrollerInfo *si, paletteInfo *pali) {
   s->si = si;
   s->pali = pali;
 }
+
+// TODO : scroller_destroy()
 
   /*-----------*/
  /* -shrunk   */

@@ -287,6 +287,13 @@ void animated_sprite_set_animation(Animated_Sprite *animated_sprite, WORD anim);
  */
 BOOL animated_sprite_flash(Animated_Sprite *animated_sprite);
 
+/**
+ * \brief destroy animated sprite
+ * @param Animated_Sprite* Animated_Sprite pointer
+ * \return void
+*/
+void animated_sprite_destroy(Animated_Sprite *animated_sprite);
+
   /*--------------------------*/
  /* -animated_sprite_physic  */
 /*--------------------------*/
@@ -336,6 +343,12 @@ void animated_sprite_physic_show(Animated_Sprite_Physic *animated_sprite_physic)
  * @param Animated_Sprite_Physic* Animated_Sprite_Physic pointer
  */
 void animated_sprite_physic_flash(Animated_Sprite_Physic *animated_sprite_physic);
+
+/**
+ * \brief destroy Animated_Sprite_Physic
+ * @param Animated_Sprite_Physic* Animated_Sprite_Physic pointer
+ */
+void animated_sprite_physic_destroy(Animated_Sprite_Physic *animated_sprite_physic);
 
 
   //--------------------------------------------------------------------------//
@@ -594,6 +607,13 @@ void image_shrunk_centroid(picture *p, pictureInfo *pi, short centerPosX, short 
 void image_flash(picture *p, BYTE freq);
 WORD image_get_sprite_index_autoinc(pictureInfo *pi);
 */
+
+/**
+ * \brief destroy Image_Physic
+ * @param Image_Physic pointer
+ */
+void image_physic_destroy(Image_Physic *image_physic);
+
 
 
   //--------------------------------------------------------------------------//
