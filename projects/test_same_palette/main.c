@@ -9,7 +9,7 @@ static Animated_Sprite player;
 static Scroller backgroung;
 
 int main(void) {
-  GPU_INIT
+  gpu_init();
   scroller_init(&backgroung, &background_sprite, &background_sprite_Palettes);
   image_init(&planet, &planet04_sprite, &background_sprite_Palettes);
   animated_sprite_init(&player, &player_sprite, &background_sprite_Palettes);

@@ -12,7 +12,7 @@ int main(void) {
   static Image logo;
   static paletteInfo logo_swap_palette;
   BYTE i = 0;
-  GPU_INIT
+  gpu_init();
   image_init(&logo, &logo_sprite, &logo_sprite_Palettes);
   image_display(&logo, 50, 100);
   logo_swap_palette.palCount = logo.pali->palCount;

@@ -18,7 +18,7 @@ static Image planets[PLANETS_MAX];
 
 static void init() {
   WORD i = 0;
-  GPU_INIT
+  gpu_init();
   for (i = 0; i < PLANETS_MAX; i++) image_init(&planets[i], &planet04_sprite, &planet04_sprite_Palettes);
 }
 

@@ -7,7 +7,7 @@ int main(void) {
   Animated_Sprite player;
   Scroller background;
   Image planet;
-  GPU_INIT
+  gpu_init();
   image_init(&planet, &planet04_sprite, &planet04_sprite_Palettes);
   animated_sprite_init(&player, &player_sprite, &player_sprite_Palettes);
   scroller_init(&background, &background_sprite, &background_sprite_Palettes);

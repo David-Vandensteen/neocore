@@ -7,7 +7,7 @@ NEOCORE_INIT
 Animated_Sprite_Physic player;
 
 int main(void) {
-  GPU_INIT
+  gpu_init();
   animated_sprite_physic_init(
     &player,
     &player_sprite,

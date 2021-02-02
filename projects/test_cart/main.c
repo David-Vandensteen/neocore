@@ -8,7 +8,7 @@ static void display();
 static void update();
 
 static void init() {
-  GPU_INIT
+  gpu_init();
 }
 
 static void display() {

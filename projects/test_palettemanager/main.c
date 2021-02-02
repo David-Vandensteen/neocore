@@ -12,7 +12,7 @@ static void update();
 static Image planet01, planet02, planet03;
 
 static void init() {
-  GPU_INIT
+  gpu_init();
   image_init(&planet01, &planet04_sprite, &planet04_sprite_Palettes);
   image_init(&planet02, &planet04_sprite, &planet04_sprite_Palettes);
   image_init(&planet03, &planet04_sprite, &player_sprite_Palettes);

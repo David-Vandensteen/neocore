@@ -16,7 +16,7 @@ static BYTE track_num = 2;
 
 static void init() {
   cdda_play(track_num);
-  GPU_INIT
+  gpu_init();
   scroller_init(&spectrum02, &spectrum02_sprite, &spectrum02_sprite_Palettes);
   image_init(&k7, &k7_sprite, &k7_sprite_Palettes);
   image_init(&play, &play_sprite, &play_sprite_Palettes);

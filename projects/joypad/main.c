@@ -9,7 +9,7 @@
 NEOCORE_INIT
 
 int main(void) {
-  GPU_INIT
+  gpu_init();
   while(1) {
     WAIT_VBL
     logger_init();
@@ -28,6 +28,6 @@ int main(void) {
 
     SCClose();
   };
-	SCClose();
+  SCClose();
   return 0;
 }

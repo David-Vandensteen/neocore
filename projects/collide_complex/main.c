@@ -92,7 +92,7 @@ static void update() {
 }
 
 int main(void) {
-  GPU_INIT
+  gpu_init();
   init();
   display();
   while(1) {

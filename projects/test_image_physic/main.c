@@ -7,7 +7,7 @@ NEOCORE_INIT
 Image_Physic planet04;
 
 int main(void) {
-  GPU_INIT
+  gpu_init();
   image_physic_init(&planet04, &planet04_sprite, &planet04_sprite_Palettes, 10, 10, 10, 10);
   flash_init(&planet04.image.flash, true, 10, 10);
   image_physic_display(&planet04, 100, 100);

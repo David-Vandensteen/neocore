@@ -11,7 +11,7 @@ static Box *asteroids_box[ASTEROID_MAX];
 
 int main(void) {
   BYTE i = 0;
-  GPU_INIT
+  gpu_init();
   animated_sprite_physic_init(&player, &player_sprite, &player_sprite_Palettes, 48, 16, 0, 0);
   animated_sprite_physic_display(&player, 10, 10, PLAYER_SPRITE_ANIM_IDLE);
   for (i = 0; i < ASTEROID_MAX; i++) {
