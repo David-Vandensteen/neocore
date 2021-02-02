@@ -32,7 +32,7 @@ int main(void) {
     if (!joypad_is_down() && !joypad_is_up()) { animated_sprite_set_animation(&player, PLAYER_SPRITE_ANIM_IDLE); }
 
     scroller_move(&background, 1, 0);
-    if (background.s.scrlPosX > 512)  scrollerSetPos(&background, 0, background.s.scrlPosY);
+    if (background.s.scrlPosX > 512)  scrollerSetPos(&background.s, 0, background.s.scrlPosY);
     animated_sprite_animate(&player);
     SCClose();
   };
