@@ -534,6 +534,23 @@ WORD get_max_sprite_index_used() {
   return max;
 }
 
+WORD get_max_free_palette_index() {
+  WORD i, max = 0;
+  for (i = 0; i < PALETTE_INDEX_MANAGER_MAX; i++) {
+    if (palette_index_manager_status[i] == (paletteInfo*) NULL) max++;
+  }
+  return max;
+}
+
+WORD get_max_palette_index_used() {
+  WORD i, max = 0;
+  for (i = 0; i < PALETTE_INDEX_MANAGER_MAX; i++) {
+    if (palette_index_manager_status[i] != (paletteInfo*) NULL) max++;
+  }
+  return max;
+}
+
+
   //--------------------------------------------------------------------------//
  //                                  -I                                      //
 //--------------------------------------------------------------------------//

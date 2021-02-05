@@ -457,10 +457,22 @@ char        get_sin(WORD index);
 WORD        get_max_free_sprite_index();
 
 /**
- * \brief return mas index used
+ * \brief return max sprite index used
  * \return WORD
  */
 WORD        get_max_sprite_index_used();
+
+/**
+ * \brief return max free palette index
+ * \return WORD
+ */
+WORD      get_max_free_palette_index();
+
+/**
+ * \brief return max palette index used
+ * \return WORD
+ */
+ WORD     get_max_palette_index_used();
 
   //--------------------------------------------------------------------------//
  //                                  -I                                      //
