@@ -42,7 +42,6 @@ static void update() {
   logger_init();
   logger_dword("F : ", DAT_frameCounter);
   logger_word("FD : ", DAT_droppedFrames);
-  logger_word("S : ", get_sprite_index());
   // BURN
   /*
   for (i = 1; i < 0xFFFF; i++ ) {
