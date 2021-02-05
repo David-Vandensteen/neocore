@@ -1,5 +1,6 @@
 #include <neocore.h>
 #include <math.h>
+// #include "externs.h"
 
 NEOCORE_INIT
 
@@ -8,7 +9,7 @@ static void display();
 static void update();
 
 static void init() {
-  GPU_INIT
+  gpu_init();
 }
 
 static void display() {
@@ -22,6 +23,7 @@ static void update() {
 
 int main(void) {
   init();
+  // display()
   while(1) {
     wait_vbl();
     update();
