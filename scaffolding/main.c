@@ -1,5 +1,4 @@
 #include <neocore.h>
-#include <math.h>
 // #include "externs.h"
 
 NEOCORE_INIT
