@@ -518,6 +518,22 @@ char get_sin(WORD index) {
   return sinTable[index];
 }
 
+WORD get_max_free_sprite_index() {
+  WORD i, max = 0;
+  for (i = 0; i < SPRITE_INDEX_MANAGER_MAX; i++) {
+    if (sprite_index_manager_status[i] != true) max++;
+  }
+  return max;
+}
+
+WORD get_max_sprite_index_used() {
+  WORD i, max = 0;
+  for (i = 0; i < SPRITE_INDEX_MANAGER_MAX; i++) {
+    if (sprite_index_manager_status[i] != false) max++;
+  }
+  return max;
+}
+
   //--------------------------------------------------------------------------//
  //                                  -I                                      //
 //--------------------------------------------------------------------------//

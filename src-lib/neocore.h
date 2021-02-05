@@ -434,6 +434,9 @@ void flash_init(Flash *flash, BOOL enabled, short frequency, short lengh);
   //---------------------------------------------------------------------------//
  //                                  -G                                      //
 //--------------------------------------------------------------------------//
+/**
+ * \brief init gpu
+ */
 void inline gpu_init();
 
 /**
@@ -446,6 +449,18 @@ WORD        get_shrunk_proportional_table(WORD index);
  * @param index
  */
 char        get_sin(WORD index);
+
+/**
+ * \brief return max free sprite index
+ * \return WORD
+ */
+WORD        get_max_free_sprite_index();
+
+/**
+ * \brief return mas index used
+ * \return WORD
+ */
+WORD        get_max_sprite_index_used();
 
   //--------------------------------------------------------------------------//
  //                                  -I                                      //
