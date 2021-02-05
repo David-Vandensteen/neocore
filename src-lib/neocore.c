@@ -149,9 +149,12 @@ static void palette_index_manager_set(paletteInfo *pi, WORD index) {
 }
 
 static void palette_index_manager_set_free(paletteInfo *pi) {
-  // TODO : search the pointer into the array
   WORD i = 0;
-  // for (i = index; i < index + max; i++) palette_index_manager_status[i] = (paletteInfo*) null;
+  for (i = 0; i <PALETTE_INDEX_MANAGER_MAX; i++) {
+    if (palette_index_manager_status[i] == pi) {
+      palette_index_manager_status[i] = (paletteInfo*) NULL;
+    }
+  }
 }
 
 static WORD palette_index_manager_use(paletteInfo *pi) {
