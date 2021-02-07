@@ -873,6 +873,10 @@ void inline logger_pictureInfo(char *label, pictureInfo *pi) {
   //--------------------------------------------------------------------------//
  //                                  -P                                      //
 //--------------------------------------------------------------------------//
+void palette_destroy(paletteInfo* pi) {
+  palette_index_manager_set_free(pi);
+  // TODO : put black palette
+}
 
   //--------------------------------------------------------------------------//
  //                                  -V                                      //
