@@ -135,7 +135,7 @@ run-mame: iso
 	del $(shell cygpath -w $(MAMEFOLDER))\roms\neocdz\*.chd /q
 
 #	$(shell cygpath -w $(CHDMAN)) createcd -i "$(shell cygpath -w $(FILEISO))" -o "$(shell cygpath -w $(FILECHD))" --force
-	$(shell cygpath -w $(CHDMAN)) createcd -i "CDDA.cue" -o "$(shell cygpath -w $(FILECHD))" --force
+	$(shell cygpath -w $(CHDMAN)) createcd -i "C:\Users\10015228\Documents\github\neocore\projects\CDDA\CDDA.cue" -o "$(shell cygpath -w $(FILECHD))" --force
 
 	powershell -ExecutionPolicy Bypass -File ..\..\scripts\mame-hash-writer.ps1 $(PROJECTNAME) $(shell cygpath -w $(FILECHD)) $(shell cygpath -w $(MAMEHASH))
 	start cmd /c "$(shell cygpath -w $(MAMEFOLDER))\mame64.exe -rompath $(shell cygpath -w $(MAMEFOLDER))\roms -hashpath $(shell cygpath -w $(MAMEFOLDER))\hash -cfg_directory $(shell cygpath -w $(TEMP)) -nvram_directory $(shell cygpath -w $(TEMP)) -window -skip_gameinfo neocdz $(PROJECTNAME)"
