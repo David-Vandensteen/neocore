@@ -472,9 +472,10 @@ void cdda_play(BYTE track) {
   }
 }
 
-void inline clear_vram() { // todo (minor) - disable interrupt
+void inline clear_vram() {
   WORD addr = 0x0000;
   WORD addr_end = 0x8FFF;
+  disableIRQ();
   for (addr = addr; addr <= addr_end; addr++) {
     SC234Put(addr, 0);
   }
@@ -482,6 +483,7 @@ void inline clear_vram() { // todo (minor) - disable interrupt
   wait_vbl_max(10);
   SCClose();
   wait_vbl_max(10);
+  enableIRQ();
 }
 
 void clear_sprite_index_table() { sprite_index_manager_init(); }
