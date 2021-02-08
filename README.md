@@ -11,11 +11,11 @@ collide, shrunking, sprite ...
 # Neocore
 Library &amp; toolchain for Neo Geo CD develop.
 
-I'm **David Vandensteen** and i write Neocore for my shoot em up game on Neo Geo CD
+I write Neocore for make my shoot em up game on Neo Geo CD
 (**Flamble**) http://azertyvortex.free.fr/flamble
 
 Neocore provide high level functions over Neo Dev Kit (**Fabrice Martinez, Jeff Kurtz, al**) & DATLib 0.2 (**HPMAN**)
-The Makefile contain many rules (make sprite, make zip, make iso, make cue, make run, make hot-reload...)
+The Makefile contain many rules (make sprite, make zip, make iso, make cue, make run, make serve...)
 
 I share my tools and my code, these could possibly help your projects on this platform !!!
 
@@ -34,7 +34,7 @@ Graphics by **Grass**
 ```cmd
 install.bat
 ```
-The install script download sdk, emulator (Raine), CD structure template ... everything you need to do a Neo Geo CD project
+The install script download sdk, emulator (Raine), CD structure template ... everything you need to do a Neo Geo CD project   
 After install, all is available from
 ```cmd
 %appdata%\neocore
@@ -81,6 +81,16 @@ The compiled resources output folder is:
 cd projects\collide
 mak sprite
 mak
+```
+## Run
+With raine   
+```cmd
+mak run-raine
+```
+
+With mame
+```cmd
+mak run-mame
 ```
 
 ## Project clean rebuild
