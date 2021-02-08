@@ -40,6 +40,7 @@ After install, all is available from
 %appdata%\neocore
 ```
 
+**if you need to re-install, just remove %appdata%\neocore before launch install.bat**
 #
 
 ## Compiling the lib
