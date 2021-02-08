@@ -132,7 +132,6 @@ run-mame: iso
 	echo Try to kill mame process...
 	powershell "try { taskkill /IM mame64.exe /f } catch { }; exit 0"
 
-# TODO : remove all CHD files
 	del $(shell cygpath -w $(MAMEFOLDER))\roms\neocdz\*.chd /q
 
 	$(shell cygpath -w $(CHDMAN)) createcd -i "$(shell cygpath -w $(FILEISO))" -o "$(shell cygpath -w $(FILECHD))" --force
@@ -144,6 +143,8 @@ run-raine: zip
 	powershell -ExecutionPolicy Bypass -File ..\..\scripts\raine-start.ps1 $(shell cygpath -w $(RAINE)) $(shell cygpath -w $(FILEZIP))
 
 run: run-raine
+
+# TODO : chd rule
 
 zip: $(FILEPRG) iso
 	echo Try to kill raine32.exe process...
