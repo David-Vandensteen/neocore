@@ -484,6 +484,9 @@ void inline clear_vram() { // todo (minor) - disable interrupt
   wait_vbl_max(10);
 }
 
+void clear_sprite_index_table() { sprite_index_manager_init(); }
+void clear_palette_index_table() { palette_index_manager_init(); }
+
   //--------------------------------------------------------------------------//
  //                                  -F                                      //
 //--------------------------------------------------------------------------//
@@ -940,7 +943,11 @@ void scroller_init(Scroller *s, scrollerInfo *si, paletteInfo *pali) {
   s->pali = pali;
 }
 
-// TODO : scroller_destroy()
+void scroller_destroy(Scroller *s) {
+  sprite_index_manager_set_free(s->s.baseSprite, 21);
+  clearSprites(s->s.baseSprite, 21);
+}
+
 
   /*-----------*/
  /* -shrunk   */

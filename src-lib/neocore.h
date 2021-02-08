@@ -408,6 +408,16 @@ void box_resize(Box *Box, short edge); // todo (minor) - deprecated ?
 void inline clear_vram();
 
 /**
+ * \brief clear sprite index table
+ */
+void clear_sprite_index_table();
+
+/**
+ * \brief clear palette inde table
+ */
+void clear_palette_index_table();
+
+/**
  * \brief Play CD Audio Track
  * @param track
  */
@@ -775,6 +785,12 @@ void        scroller_move(Scroller *s, short x, short y);
  * @param y
  */
 void        scroller_set_position(Scroller *s, short x, short y);
+
+/**
+ * \brief scroller destroy
+ * @param Scroller* pointer
+ */
+void       scrollert_destroy(Scroller *s);
 
   /*-----------*/
  /* -shrunk   */
