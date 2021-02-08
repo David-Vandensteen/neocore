@@ -9,12 +9,10 @@ static Animated_Sprite player;
 static Scroller backgroung;
 
 int main(void) {
-  GPU_INIT
+  gpu_init();
   scroller_init(&backgroung, &background_sprite, &background_sprite_Palettes);
   image_init(&planet, &planet04_sprite, &background_sprite_Palettes);
   animated_sprite_init(&player, &player_sprite, &background_sprite_Palettes);
-
-  palette_disable_auto_index();
 
   scroller_display(&backgroung, 0, 0);
   image_display(&planet, 100, 150);
@@ -22,7 +20,7 @@ int main(void) {
 
 
   while(1) {
-    WAIT_VBL
+    wait_vbl();
     logger_init();
     logger_byte("PALI PLAYER ", player.as.basePalette);
     logger_byte("PALI PLANET ", planet.pic.basePalette);

@@ -3,7 +3,6 @@ Param(
 )
 [String] $neobuildTemp = "$env:TEMP\neocore"
 [String] $toolsHost = "http://azertyvortex.free.fr/download"
-#[String] $toolsHost = "http://127.0.0.1:8080/download"
 
 function createFolder([String] $_item){
   if( !(Test-path($_item))){
@@ -23,6 +22,13 @@ function raine{
   Write-Host "setup raine emulator"
   downloadHttp $toolsHost/neobuild-raine.zip $neobuildTemp\neobuild-raine.zip
   expandZip $neobuildTemp\neobuild-raine.zip $neobuildData
+  Start-Sleep 5
+}
+
+function mame{
+  Write-Host "setup mame emulator"
+  downloadHttp $toolsHost/neocore-mame.zip $neobuildTemp\neocore-mame.zip
+  expandZip $neobuildTemp\neocore-mame.zip $neobuildData
   Start-Sleep 5
 }
 
@@ -55,9 +61,7 @@ function testPathBreak([String] $pathToTest) {
 
 function testPsVersion() {
   if ($psversiontable.psversion.major -lt 5) {
-    downloadHttp $toolsHost/Win7AndW2K8R2-KB3191566-x64.zip $neobuildTemp\Win7AndW2K8R2-KB3191566-x64.zip
-    expandZip $neobuildTemp\Win7AndW2K8R2-KB3191566-x64.zip $neobuildTemp
-    powershell -File $neobuildTemp\Install-WMF5.1.ps1
+    Write-Host "Error ... update WMF"
     break 0
   }
 }
@@ -107,8 +111,8 @@ function _main{
   cdTemplate
   raine
   raineConfig
+  mame
   bin
 }
 
 _main
-

@@ -7,7 +7,7 @@ NEOCORE_INIT
 Animated_Sprite_Physic player;
 
 int main(void) {
-  GPU_INIT
+  gpu_init();
   animated_sprite_physic_init(
     &player,
     &player_sprite,
@@ -28,7 +28,7 @@ int main(void) {
   flash_init(&player.animated_sprite.flash, true, 10, 10);
 
   while(1) {
-    WAIT_VBL
+    wait_vbl();
     logger_init();
     animated_sprite_animate(&player.animated_sprite);
     logger_box("BOX : ", &player.box);

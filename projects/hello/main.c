@@ -9,9 +9,9 @@
 NEOCORE_INIT
 
 int main(void) {
-  GPU_INIT
+  gpu_init();
   while(1) {
-    WAIT_VBL;
+    wait_vbl();
     logger_init();
     /* logger set automatically the cursor position on next line */
     logger_info("HELLO NEO GEO !!!");

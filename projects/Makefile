@@ -6,7 +6,7 @@ PROJECTNAME = $(PROJECT)
 
 NEOBUILDTEMP = $(shell cygpath -u $(TEMP))/neocore/$(PROJECTNAME)
 
-FILECUE = $(shell cygpath -u $(NEOBUILDTEMP)\$(PROJECTNAME).cue)
+FILECUE = $(PROJECTNAME).cue
 FILEISO = $(shell cygpath -u $(NEOBUILDTEMP)\$(PROJECTNAME).iso)
 FILEZIP = $(shell cygpath -u $(NEOBUILDTEMP)\$(PROJECTNAME).zip)
 ISONAME = $(PROJECTNAME).iso
@@ -19,11 +19,14 @@ FILEPRG = $(NEOBUILDTEMP)/$(PROJECTNAME).prg
 FILESPRITE = $(NEOBUILDTEMP)/SPR
 NEOBUILDDATA = $(shell cygpath -u $(APPDATA))/neocore
 RAINE = $(NEOBUILDDATA)/raine/raine32.exe
+
+MAMEFOLDER = $(NEOBUILDDATA)/mame
+MAMEHASH = $(MAMEFOLDER)\hash\neocd.xml
+
+CHDMAN = $(NEOBUILDDATA)/bin/chdman.exe
+FILECHD = $(MAMEFOLDER)/roms/neocdz/$(PROJECTNAME).chd
 CDTEMPLATE = $(NEOBUILDDATA)/cd_template
 
-#######
-#	CMD #
-#######
 MKDIR = $(shell cygpath -w $(NEOBUILDDATA))\bin\mkdir.exe
 CP = $(shell cygpath -w $(NEOBUILDDATA))\bin\cp.exe
 RM = $(shell cygpath -w $(NEOBUILDDATA))\bin\rm.exe
@@ -125,17 +128,31 @@ $(FILESPRITE).cd:
 	if exist char.bin CharSplit.exe char.bin -cd $(shell cygpath -w $(FILESPRITE))
 	$(RM) -f char.bin
 
-run: zip
-# todo (minor) - raine parametric position
+run-mame: iso
+	echo Try to kill mame process...
+	powershell "try { taskkill /IM mame64.exe /f } catch { }; exit 0"
+
+	del $(shell cygpath -w $(MAMEFOLDER))\roms\neocdz\*.chd /q
+
+	$(shell cygpath -w $(CHDMAN)) createcd -i "$(shell cygpath -w $(FILEISO))" -o "$(shell cygpath -w $(FILECHD))" --force
+
+	powershell -ExecutionPolicy Bypass -File ..\..\scripts\mame-hash-writer.ps1 $(PROJECTNAME) $(shell cygpath -w $(FILECHD)) $(shell cygpath -w $(MAMEHASH))
+	start cmd /c "$(shell cygpath -w $(MAMEFOLDER))\mame64.exe -rompath $(shell cygpath -w $(MAMEFOLDER))\roms -hashpath $(shell cygpath -w $(MAMEFOLDER))\hash -cfg_directory $(shell cygpath -w $(TEMP)) -nvram_directory $(shell cygpath -w $(TEMP)) -window -skip_gameinfo neocdz $(PROJECTNAME)"
+
+run-raine: zip
 	powershell -ExecutionPolicy Bypass -File ..\..\scripts\raine-start.ps1 $(shell cygpath -w $(RAINE)) $(shell cygpath -w $(FILEZIP))
 
-zip: $(FILEPRG) iso
-	$(ZIP) -j $(shell cygpath -u $(FILEZIP)) $(NEOBUILDTEMP)/iso/*
+run: run-raine
 
-iso: $(FILEPRG)
+# TODO : chd rule
+
+zip: $(FILEPRG) iso
 	echo Try to kill raine32.exe process...
 	powershell "try { taskkill /IM raine32.exe /f } catch { }; exit 0"
 
+	$(ZIP) -j $(shell cygpath -u $(FILEZIP)) $(NEOBUILDTEMP)/iso/*
+
+iso: $(FILEPRG)
 	$(RM) -rf $(NEOBUILDTEMP)/iso
 	$(MKDIR) -p $(NEOBUILDTEMP)/iso
 	$(CP) -f $(CDTEMPLATE)/* $(NEOBUILDTEMP)/iso
@@ -145,7 +162,7 @@ ifneq ("$(wildcard $(FILESPRITE).cd)","")
 endif
 	$(MKISOFS) -o $(FILEISO) -pad $(NEOBUILDTEMP)/iso
 
-cue:
+add-cue:
 	echo CATALOG 0000000000000 > $(FILECUE)
 	echo FILE "$(ISONAME)" BINARY >> $(FILECUE)
 	echo TRACK 01 MODE1/2048 >> $(FILECUE)
@@ -154,9 +171,6 @@ cue:
 	echo TRACK 02 AUDIO >> $(FILECUE)
 	echo PREGAP 00:00:59 >> $(FILECUE)
 	echo INDEX 01 00:00:00 >> $(FILECUE)
-
-clean-sprite:
-	$(RM) -f $(FILESPRITE).cd
 
 clean:
 	echo Try to kill raine32.exe process...
@@ -167,8 +181,6 @@ clean:
 	$(RM) -f palettes.s
 	$(RM) -f maps.s
 	$(RM) -f externs.h
-
-clean-build: clean init sprite $(FILEPRG)
 
 serve:
 	powershell -ExecutionPolicy Bypass -File ..\..\scripts\neocore-hot-reload.ps1 .

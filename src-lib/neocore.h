@@ -1,6 +1,6 @@
 /*
-	David Vandensteen
-	2018
+  David Vandensteen
+  2018
 */
   // short  ->  2 bytes
   // word   ->  2 bytes
@@ -22,13 +22,11 @@
   } bkp_ram_info; \
   bkp_ram_info bkp_data;
 
-#define GPU_INIT  gpu_init();
-
 #define __ALIGN1__      __attribute__ ((aligned (1)))
 #define __ALIGN2__      __attribute__ ((aligned (2)))
 #define __ALIGN4__      __attribute__ ((aligned (4)))
-#define __ALIGN64__ 		__attribute__ ((aligned (64)))
-#define __ALIGN128__		__attribute__ ((aligned (128)))
+#define __ALIGN64__     __attribute__ ((aligned (64)))
+#define __ALIGN128__    __attribute__ ((aligned (128)))
 
 #define MULT2              << 1
 #define MULT4              << 2
@@ -49,13 +47,13 @@
 
 #define SHRUNK_TABLE_PROP_SIZE    0x2fe
 
-#define JOYPAD  		    	BYTE p1, ps;
-#define JOYPAD_READ		    p1 = volMEMBYTE(P1_CURRENT); ps = volMEMBYTE(PS_CURRENT);
+#define JOYPAD            BYTE p1, ps;
+#define JOYPAD_READ       p1 = volMEMBYTE(P1_CURRENT); ps = volMEMBYTE(PS_CURRENT);
 #define JOYPAD_READ_EDGE  p1 = volMEMBYTE(P1_EDGE); ps = volMEMBYTE(PS_EDGE);
-#define JOYPAD_IS_UP			p1&JOY_UP
-#define JOYPAD_IS_DOWN		p1&JOY_DOWN
-#define JOYPAD_IS_LEFT		p1&JOY_LEFT
-#define JOYPAD_IS_RIGHT		p1&JOY_RIGHT
+#define JOYPAD_IS_UP      p1&JOY_UP
+#define JOYPAD_IS_DOWN    p1&JOY_DOWN
+#define JOYPAD_IS_LEFT    p1&JOY_LEFT
+#define JOYPAD_IS_RIGHT   p1&JOY_RIGHT
 #define JOYPAD_IS_START   ps&P1_START
 #define JOYPAD_IS_A       p1&JOY_A
 #define JOYPAD_IS_B       p1&JOY_B
@@ -73,6 +71,9 @@
 
 #define SHRUNK_EXTRACT_X(value) value >> 8
 #define SHRUNK_EXTRACT_Y(value) (BYTE)value
+
+#define SPRITE_INDEX_MANAGER_MAX  384
+#define PALETTE_INDEX_MANAGER_MAX 256
 
 enum direction { NONE, UP, DOWN, LEFT, RIGHT };
 
@@ -286,6 +287,13 @@ void animated_sprite_set_animation(Animated_Sprite *animated_sprite, WORD anim);
  */
 BOOL animated_sprite_flash(Animated_Sprite *animated_sprite);
 
+/**
+ * \brief destroy animated sprite
+ * @param Animated_Sprite* Animated_Sprite pointer
+ * \return void
+*/
+void animated_sprite_destroy(Animated_Sprite *animated_sprite);
+
   /*--------------------------*/
  /* -animated_sprite_physic  */
 /*--------------------------*/
@@ -335,6 +343,12 @@ void animated_sprite_physic_show(Animated_Sprite_Physic *animated_sprite_physic)
  * @param Animated_Sprite_Physic* Animated_Sprite_Physic pointer
  */
 void animated_sprite_physic_flash(Animated_Sprite_Physic *animated_sprite_physic);
+
+/**
+ * \brief destroy Animated_Sprite_Physic
+ * @param Animated_Sprite_Physic* Animated_Sprite_Physic pointer
+ */
+void animated_sprite_physic_destroy(Animated_Sprite_Physic *animated_sprite_physic);
 
 
   //--------------------------------------------------------------------------//
@@ -388,7 +402,16 @@ void box_resize(Box *Box, short edge); // todo (minor) - deprecated ?
   //--------------------------------------------------------------------------//
  //                                  -C                                      //
 //--------------------------------------------------------------------------//
+/**
+ *  \brief VRAM Clear
+ */
 void inline clear_vram();
+
+/**
+ * \brief Play CD Audio Track
+ * @param track
+ */
+void cdda_play(BYTE track);
 
   //--------------------------------------------------------------------------//
  //                                  -F                                      //
@@ -408,31 +431,13 @@ void inline fix_print_neocore(int x, int y, char *label);
  */
 void flash_init(Flash *flash, BOOL enabled, short frequency, short lengh);
 
-  //-----------------------------------------------------------------s---------//
+  //---------------------------------------------------------------------------//
  //                                  -G                                      //
 //--------------------------------------------------------------------------//
+/**
+ * \brief init gpu
+ */
 void inline gpu_init();
-/**
- * \return WORD the current sprite_index
- */
-WORD        get_sprite_index();
-
-/**
- * @param pictureInfo* pointer to DATLib structure
- * \return WORD the sprite_index after add sprites from pictureInfo
- */
-WORD        get_sprite_index_from_picture(pictureInfo *pi);
-
-/**
- * @param spriteInfo* pointer to DATLib structure
- * \return WORD the sprite_index after add sprites from spriteInfo
- */
-WORD        get_sprite_index_from_sprite(spriteInfo *si);
-
-/**
- * \return BYTE current palette_index
- */
-BYTE        get_palette_index();
 
 /**
  * @param index
@@ -444,6 +449,30 @@ WORD        get_shrunk_proportional_table(WORD index);
  * @param index
  */
 char        get_sin(WORD index);
+
+/**
+ * \brief return max free sprite index
+ * \return WORD
+ */
+WORD        get_max_free_sprite_index();
+
+/**
+ * \brief return max sprite index used
+ * \return WORD
+ */
+WORD        get_max_sprite_index_used();
+
+/**
+ * \brief return max free palette index
+ * \return WORD
+ */
+WORD      get_max_free_palette_index();
+
+/**
+ * \brief return max palette index used
+ * \return WORD
+ */
+ WORD     get_max_palette_index_used();
 
   //--------------------------------------------------------------------------//
  //                                  -I                                      //
@@ -515,6 +544,12 @@ BOOL image_flash(Image *image);
  * @param shrunk use shrunk_forge function for make a WORD with width & heigh value
  */
 void image_shrunk_centroid(Image *image, short center_x, short center_y, WORD shrunk_value);
+
+/**
+ * \brief image destroy
+ * @param Image* Image pointer
+ */
+void image_destroy(Image *image);
 
   /*------------------*/
  /*  -image_physic   */
@@ -600,6 +635,13 @@ void image_flash(picture *p, BYTE freq);
 WORD image_get_sprite_index_autoinc(pictureInfo *pi);
 */
 
+/**
+ * \brief destroy Image_Physic
+ * @param Image_Physic pointer
+ */
+void image_physic_destroy(Image_Physic *image_physic);
+
+
 
   //--------------------------------------------------------------------------//
  //                                  -J                                      //
@@ -643,20 +685,15 @@ void inline logger_pictureInfo(char *label, pictureInfo *pi);
   //--------------------------------------------------------------------------//
  //                                  -P                                      //
 //--------------------------------------------------------------------------//
-  /*-----------*/
- /* -palette  */
-/*-----------*/
 /**
- * \brief Disable auto management of palette index
+ * \brief palette destroy
+ * @param paletteInfo*
  */
-void palette_disable_auto_index();
+void palette_destroy(paletteInfo* pi);
 
-/**
- * \brief Enable auto management of palette index
- */
-void palette_enable_auto_index();
-
-// m
+  //--------------------------------------------------------------------------//
+ //                                  -M                                      //
+//--------------------------------------------------------------------------//
 //void mask_display(picture pic[], Vec2short vec[], BYTE vector_max); // todo (minor) - rename ? (vectorsDisplay)
 void mask_update(short x, short y, Vec2short vec[], Vec2short offset[], BYTE vector_max); // todo (minor) - rename ? (vectorsDebug)
 // todo (minor) - hardcode point\dot asset
@@ -708,16 +745,6 @@ BOOL vector_is_left(short x, short y, short v1x, short v1y, short v2x, short v2y
   //--------------------------------------------------------------------------//
  //                                  -S                                      //
 //--------------------------------------------------------------------------//
-/**
- * @param index
- */
-void        set_sprite_index(WORD index);
-
-/**
- * @param index
- */
-BYTE        set_palette_index(BYTE index);
-
   /*-----------*/
  /* -scroller */
 /*-----------*/
@@ -804,6 +831,6 @@ WORD        shrunk_range(WORD addr_start, WORD addr_end, WORD shrunk_value);
  * @param vbl Number of frames to wait
  */
 DWORD inline wait_vbl_max(WORD nb);
-#define WAIT_VBL waitVBlank();
+#define wait_vbl(); waitVBlank();
 
 #endif

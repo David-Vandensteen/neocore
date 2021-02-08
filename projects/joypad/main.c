@@ -9,9 +9,9 @@
 NEOCORE_INIT
 
 int main(void) {
-  GPU_INIT
+  gpu_init();
   while(1) {
-    WAIT_VBL
+    wait_vbl();
     logger_init();
     logger_info("INTERACT WITH JOYPAD ...");
     joypad_update_edge();
@@ -28,6 +28,6 @@ int main(void) {
 
     SCClose();
   };
-	SCClose();
+  SCClose();
   return 0;
 }

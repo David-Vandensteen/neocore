@@ -95,12 +95,8 @@ void bullet_player_display(short x, short y) {
   BYTE i = 0;
   for (i = 0; i < BULLET_MAX; i++) {
     animated_sprite_physic_display(&sprites[i], x + (i * BULLET_XOFFSET), y, BULLET_IMG_ANIM_IDLE);
-    // same Palette
-    set_palette_index(sprites[0].animated_sprite.as.basePalette);
     animated_sprite_physic_hide(&sprites[i]);
   }
-  //set the next palette index
-  set_palette_index(sprites[0].animated_sprite.as.baseSprite + 1);
   animated_sprite_show(&sprites[0].animated_sprite);
 }
 

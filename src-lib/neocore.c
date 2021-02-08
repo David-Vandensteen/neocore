@@ -1,6 +1,6 @@
 /*
-	David Vandensteen
-	2018
+  David Vandensteen
+  2018
 */
 
 #include <DATlib.h>
@@ -10,14 +10,42 @@
 #include <math.h>
 
   /*------------------*/
- /* -static          */
+ /* -define          */
 /*------------------*/
 
-static WORD sprite_index = 1;
-static BYTE palette_index = 16;
+#define CDDA_PLAY_TRACK_02 \
+  asm("loop_track_02:"); \
+  asm(" move.w #0x0002,%d0"); \
+  asm(" tst.b  0x10F6D9"); \
+  asm(" beq.s  loop_track_02"); \
+  asm(" jsr  0xC0056A"); \
 
-static BOOL palette_auto_index = true;
-static BOOL sprite_auto_index = true;
+#define CDDA_PLAY_TRACK_03 \
+  asm("loop_track_03:"); \
+  asm(" move.w #0x0003,%d0"); \
+  asm(" tst.b  0x10F6D9"); \
+  asm(" beq.s  loop_track_03"); \
+  asm(" jsr  0xC0056A"); \
+
+#define CDDA_PLAY_TRACK_04 \
+  asm("loop_track_04:"); \
+  asm(" move.w #0x0004,%d0"); \
+  asm(" tst.b  0x10F6D9"); \
+  asm(" beq.s  loop_track_04"); \
+  asm(" jsr  0xC0056A"); \
+
+#define CDDA_PLAY_TRACK_05 \
+  asm("loop_track_05:"); \
+  asm(" move.w #0x0005,%d0"); \
+  asm(" tst.b  0x10F6D9"); \
+  asm(" beq.s  loop_track_05"); \
+  asm(" jsr  0xC0056A"); \
+
+  /*------------------*/
+ /* -static          */
+/*------------------*/
+static BOOL sprite_index_manager_status[SPRITE_INDEX_MANAGER_MAX];
+static paletteInfo *palette_index_manager_status[PALETTE_INDEX_MANAGER_MAX];
 
 static BOOL collide_point(short x, short y, Vec2short vec[], BYTE vector_max);
 static const WORD shrunk_table_prop[] = { 0x000 , 0x001 , 0x002 , 0x003 , 0x004 , 0x005 , 0x006 , 0x007 , 0x008 , 0x009 , 0x00a , 0x00b , 0x00c , 0x00d , 0x00e , 0x00f , 0x010 , 0x111 , 0x112 , 0x113 , 0x114 , 0x115 , 0x116 , 0x117 , 0x118 , 0x119 , 0x11a , 0x11b , 0x11c , 0x11d , 0x11e , 0x11f , 0x120 , 0x121 , 0x222 , 0x223 , 0x224 , 0x225 , 0x226 , 0x227 , 0x228 , 0x229 , 0x22a , 0x22b , 0x22c , 0x22d , 0x22e , 0x22f , 0x230 , 0x231 , 0x232 , 0x333 , 0x334 , 0x335 , 0x336 , 0x337 , 0x338 , 0x339 , 0x33a , 0x33b , 0x33c , 0x33d , 0x33e , 0x33f , 0x340 , 0x341 , 0x342 , 0x343 , 0x444 , 0x445 , 0x446 , 0x447 , 0x448 , 0x449 , 0x44a , 0x44b , 0x44c , 0x44d , 0x44e , 0x44f , 0x450 , 0x451 , 0x452 , 0x453 , 0x454 , 0x555 , 0x556 , 0x557 , 0x558 , 0x559 , 0x55a , 0x55b , 0x55c , 0x55d , 0x55e , 0x55f , 0x560 , 0x561 , 0x562 , 0x563 , 0x564 , 0x565 , 0x666 , 0x667 , 0x668 , 0x669 , 0x66a , 0x66b , 0x66c , 0x66d , 0x66e , 0x66f , 0x670 , 0x671 , 0x672 , 0x673 , 0x674 , 0x675 , 0x676 , 0x777 , 0x778 , 0x779 , 0x77a , 0x77b , 0x77c , 0x77d , 0x77e , 0x77f , 0x780 , 0x781 , 0x782 , 0x783 , 0x784 , 0x785 , 0x786 , 0x787 , 0x888 , 0x889 , 0x88a , 0x88b , 0x88c , 0x88d , 0x88e , 0x88f , 0x890 , 0x891 , 0x892 , 0x893 , 0x894 , 0x895 , 0x896 , 0x897 , 0x898 , 0x999 , 0x99a , 0x99b , 0x99c , 0x99d , 0x99e , 0x99f , 0x9a0 , 0x9a1 , 0x9a2 , 0x9a3 , 0x9a4 , 0x9a5 , 0x9a6 , 0x9a7 , 0x9a8 , 0x9a9 , 0xaaa , 0xaab , 0xaac , 0xaad , 0xaae , 0xaaf , 0xab0 , 0xab1 , 0xab2 , 0xab3 , 0xab4 , 0xab5 , 0xab6 , 0xab7 , 0xab8 , 0xab9 , 0xaba , 0xbbb , 0xbbc , 0xbbd , 0xbbe , 0xbbf , 0xbc0 , 0xbc1 , 0xbc2 , 0xbc3 , 0xbc4 , 0xbc5 , 0xbc6 , 0xbc7 , 0xbc8 , 0xbc9 , 0xbca , 0xbcb , 0xccc , 0xccd , 0xcce , 0xccf , 0xcd0 , 0xcd1 , 0xcd2 , 0xcd3 , 0xcd4 , 0xcd5 , 0xcd6 , 0xcd7 , 0xcd8 , 0xcd9 , 0xcda , 0xcdb , 0xcdc , 0xddd , 0xdde , 0xddf , 0xde0 , 0xde1 , 0xde2 , 0xde3 , 0xde4 , 0xde5 , 0xde6 , 0xde7 , 0xde8 , 0xde9 , 0xdea , 0xdeb , 0xdec , 0xded , 0xeee , 0xeef , 0xef0 , 0xef1 , 0xef2 , 0xef3 , 0xef4 , 0xef5 , 0xef6 , 0xef7 , 0xef8 , 0xef9 , 0xefa , 0xefb , 0xefc , 0xefd , 0xefe , 0xfff , 0xefe , 0xefd , 0xefc , 0xefb , 0xefa , 0xef9 , 0xef8 , 0xef7 , 0xef6 , 0xef5 , 0xef4 , 0xef3 , 0xef2 , 0xef1 , 0xef0 , 0xeef , 0xeee , 0xded , 0xdec , 0xdeb , 0xdea , 0xde9 , 0xde8 , 0xde7 , 0xde6 , 0xde5 , 0xde4 , 0xde3 , 0xde2 , 0xde1 , 0xde0 , 0xddf , 0xdde , 0xddd , 0xcdc , 0xcdb , 0xcda , 0xcd9 , 0xcd8 , 0xcd7 , 0xcd6 , 0xcd5 , 0xcd4 , 0xcd3 , 0xcd2 , 0xcd1 , 0xcd0 , 0xccf , 0xcce , 0xccd , 0xccc , 0xbcb , 0xbca , 0xbc9 , 0xbc8 , 0xbc7 , 0xbc6 , 0xbc5 , 0xbc4 , 0xbc3 , 0xbc2 , 0xbc1 , 0xbc0 , 0xbbf , 0xbbe , 0xbbd , 0xbbc , 0xbbb , 0xaba , 0xab9 , 0xab8 , 0xab7 , 0xab6 , 0xab5 , 0xab4 , 0xab3 , 0xab2 , 0xab1 , 0xab0 , 0xaaf , 0xaae , 0xaad , 0xaac , 0xaab , 0xaaa , 0x9a9 , 0x9a8 , 0x9a7 , 0x9a6 , 0x9a5 , 0x9a4 , 0x9a3 , 0x9a2 , 0x9a1 , 0x9a0 , 0x99f , 0x99e , 0x99d , 0x99c , 0x99b , 0x99a , 0x999 , 0x898 , 0x897 , 0x896 , 0x895 , 0x894 , 0x893 , 0x892 , 0x891 , 0x890 , 0x88f , 0x88e , 0x88d , 0x88c , 0x88b , 0x88a , 0x889 , 0x888 , 0x787 , 0x786 , 0x785 , 0x784 , 0x783 , 0x782 , 0x781 , 0x780 , 0x77f , 0x77e , 0x77d , 0x77c , 0x77b , 0x77a , 0x779 , 0x778 , 0x777 , 0x676 , 0x675 , 0x674 , 0x673 , 0x672 , 0x671 , 0x670 , 0x66f , 0x66e , 0x66d , 0x66c , 0x66b , 0x66a , 0x669 , 0x668 , 0x667 , 0x666 , 0x565 , 0x564 , 0x563 , 0x562 , 0x561 , 0x560 , 0x55f , 0x55e , 0x55d , 0x55c , 0x55b , 0x55a , 0x559 , 0x558 , 0x557 , 0x556 , 0x555 , 0x454 , 0x453 , 0x452 , 0x451 , 0x450 , 0x44f , 0x44e , 0x44d , 0x44c , 0x44b , 0x44a , 0x449 , 0x448 , 0x447 , 0x446 , 0x445 , 0x444 , 0x343 , 0x342 , 0x341 , 0x340 , 0x33f , 0x33e , 0x33d , 0x33c , 0x33b , 0x33a , 0x339 , 0x338 , 0x337 , 0x336 , 0x335 , 0x334 , 0x333 , 0x232 , 0x231 , 0x230 , 0x22f , 0x22e , 0x22d , 0x22c , 0x22b , 0x22a , 0x229 , 0x228 , 0x227 , 0x226 , 0x225 , 0x224 , 0x223 , 0x222 , 0x121 , 0x120 , 0x11f , 0x11e , 0x11d , 0x11c , 0x11b , 0x11a , 0x119 , 0x118 , 0x117 , 0x116 , 0x115 , 0x114 , 0x113 , 0x112 , 0x111 , 0x010 , 0x00f , 0x00e , 0x00d , 0x00c , 0x00b , 0x00a , 0x009 , 0x008 , 0x007 , 0x006 , 0x005 , 0x004 , 0x003 , 0x002 , 0x001 , 0x000 , 0x001 , 0x002 , 0x003 , 0x004 , 0x005 , 0x006 , 0x007 , 0x008 , 0x009 , 0x00a , 0x00b , 0x00c , 0x00d , 0x00e , 0x00f , 0x010 , 0x111 , 0x112 , 0x113 , 0x114 , 0x115 , 0x116 , 0x117 , 0x118 , 0x119 , 0x11a , 0x11b , 0x11c , 0x11d , 0x11e , 0x11f , 0x120 , 0x121 , 0x222 , 0x223 , 0x224 , 0x225 , 0x226 , 0x227 , 0x228 , 0x229 , 0x22a , 0x22b , 0x22c , 0x22d , 0x22e , 0x22f , 0x230 , 0x231 , 0x232 , 0x333 , 0x334 , 0x335 , 0x336 , 0x337 , 0x338 , 0x339 , 0x33a , 0x33b , 0x33c , 0x33d , 0x33e , 0x33f , 0x340 , 0x341 , 0x342 , 0x343 , 0x444 , 0x445 , 0x446 , 0x447 , 0x448 , 0x449 , 0x44a , 0x44b , 0x44c , 0x44d , 0x44e , 0x44f , 0x450 , 0x451 , 0x452 , 0x453 , 0x454 , 0x555 , 0x556 , 0x557 , 0x558 , 0x559 , 0x55a , 0x55b , 0x55c , 0x55d , 0x55e , 0x55f , 0x560 , 0x561 , 0x562 , 0x563 , 0x564 , 0x565 , 0x666 , 0x667 , 0x668 , 0x669 , 0x66a , 0x66b , 0x66c , 0x66d , 0x66e , 0x66f , 0x670 , 0x671 , 0x672 , 0x673 , 0x674 , 0x675 , 0x676 , 0x777 , 0x778 , 0x779 , 0x77a , 0x77b , 0x77c , 0x77d , 0x77e , 0x77f , 0x780 , 0x781 , 0x782 , 0x783 , 0x784 , 0x785 , 0x786 , 0x787 , 0x888 , 0x889 , 0x88a , 0x88b , 0x88c , 0x88d , 0x88e , 0x88f , 0x890 , 0x891 , 0x892 , 0x893 , 0x894 , 0x895 , 0x896 , 0x897 , 0x898 , 0x999 , 0x99a , 0x99b , 0x99c , 0x99d , 0x99e , 0x99f , 0x9a0 , 0x9a1 , 0x9a2 , 0x9a3 , 0x9a4 , 0x9a5 , 0x9a6 , 0x9a7 , 0x9a8 , 0x9a9 , 0xaaa , 0xaab , 0xaac , 0xaad , 0xaae , 0xaaf , 0xab0 , 0xab1 , 0xab2 , 0xab3 , 0xab4 , 0xab5 , 0xab6 , 0xab7 , 0xab8 , 0xab9 , 0xaba , 0xbbb , 0xbbc , 0xbbd , 0xbbe , 0xbbf , 0xbc0 , 0xbc1 , 0xbc2 , 0xbc3 , 0xbc4 , 0xbc5 , 0xbc6 , 0xbc7 , 0xbc8 , 0xbc9 , 0xbca , 0xbcb , 0xccc , 0xccd , 0xcce , 0xccf , 0xcd0 , 0xcd1 , 0xcd2 , 0xcd3 , 0xcd4 , 0xcd5 , 0xcd6 , 0xcd7 , 0xcd8 , 0xcd9 , 0xcda , 0xcdb , 0xcdc , 0xddd , 0xdde , 0xddf , 0xde0 , 0xde1 , 0xde2 , 0xde3 , 0xde4 , 0xde5 , 0xde6 , 0xde7 , 0xde8 , 0xde9 , 0xdea , 0xdeb , 0xdec , 0xded , 0xeee , 0xeef , 0xef0 , 0xef1 , 0xef2 , 0xef3 , 0xef4 , 0xef5 , 0xef6 , 0xef7 , 0xef8 , 0xef9 , 0xefa , 0xefb , 0xefc , 0xefd , 0xefe , 0xfff };
@@ -73,6 +101,87 @@ void inline static setPosDefault(){
   y = LOGGER_Y_INIT;
 }
 
+static void sprite_index_manager_init() {
+  WORD i = 0;
+  sprite_index_manager_status[0] = true;
+  for (i = 1; i < SPRITE_INDEX_MANAGER_MAX; i++) sprite_index_manager_status[i] = false;
+}
+
+static void sprite_index_manager_set(WORD index, WORD max) {
+  WORD i = index;
+  for (i = index; i < index + max; i++) sprite_index_manager_status[i] = true;
+}
+
+static void sprite_index_manager_set_free(WORD index, WORD max) {
+  WORD i = index;
+  for (i = index; i < index + max; i++) sprite_index_manager_status[i] = false;
+}
+
+static WORD sprite_index_manager_use(WORD max) {
+  WORD i, j = 0;
+  WORD found = 0;
+  for( i = 0; i < SPRITE_INDEX_MANAGER_MAX; i++) {
+    if (!sprite_index_manager_status[i]) {
+      for (j = i; j < i + max; j++) {
+        if (!sprite_index_manager_status[j]) {
+          found++;
+          if (found >= max) {
+            sprite_index_manager_set(i, max);
+            return i;
+          }
+        } else {
+          found = 0;
+        }
+      }
+    }
+  }
+  return 0; // TODO : no zero return
+}
+
+static void palette_index_manager_init() {
+  WORD i = 0;
+  for (i = 0; i <= 16; i++) palette_index_manager_status[i] = (paletteInfo*) 1;
+}
+
+static void palette_index_manager_set(paletteInfo *pi, WORD index) {
+  WORD i = index;
+  for (i = index; i < index + pi->palCount; i++) palette_index_manager_status[i] = pi;
+}
+
+static void palette_index_manager_set_free(paletteInfo *pi) {
+  WORD i = 0;
+  for (i = 0; i <PALETTE_INDEX_MANAGER_MAX; i++) {
+    if (palette_index_manager_status[i] == pi) {
+      palette_index_manager_status[i] = (paletteInfo*) NULL;
+    }
+  }
+}
+
+static WORD palette_index_manager_use(paletteInfo *pi) {
+  WORD i, j = 0;
+  WORD found = 0;
+  for (i = 0; i < PALETTE_INDEX_MANAGER_MAX; i++) {
+    if (palette_index_manager_status[i] == pi) {
+      return i;
+    } else {
+      if (!palette_index_manager_status[i]) {
+        for (j = i; j < i + pi->palCount; j++) {
+          if (!palette_index_manager_status[j]) {
+            found++;
+            if (found >= pi->palCount) {
+              palette_index_manager_set(pi, i);
+              return i;
+            }
+          }
+        }
+      } else {
+        found = 0;
+      }
+    }
+  }
+  return 0; // TODO : no zero return
+}
+
 WORD inline static countChar(char *txt){
   WORD i = 0;
     while (txt[i] != '\0') {
@@ -100,21 +209,19 @@ void animated_sprite_init(Animated_Sprite *animated_sprite ,spriteInfo *si, pale
 };
 
 void animated_sprite_display(Animated_Sprite *animated_sprite, short x, short y, WORD anim) {
-  BOOL palette_auto_index_state = palette_auto_index;
-  palette_disable_auto_index();
+  WORD palette_index = palette_index_manager_use(animated_sprite->pali);
   aSpriteInit(
     &animated_sprite->as,
     animated_sprite->si,
-		get_sprite_index_from_sprite(animated_sprite->si),
-    get_palette_index(animated_sprite->pali),
+    sprite_index_manager_use(animated_sprite->si->maxWidth),
+    palette_index,
     x,
     y,
     anim,
     FLIP_NONE
   );
-  if (palette_auto_index_state) palette_enable_auto_index();
   palJobPut(
-    get_palette_index(animated_sprite->pali),
+    palette_index,
     animated_sprite->pali->palCount,
     animated_sprite->pali->data
   );
@@ -148,6 +255,11 @@ void animated_sprite_hide(Animated_Sprite *animated_sprite) {
 void animated_sprite_show(Animated_Sprite *animated_sprite) {
   animated_sprite->flash.visible = true;
   aSpriteShow(&animated_sprite->as);
+}
+
+void animated_sprite_destroy(Animated_Sprite *animated_sprite) {
+  animated_sprite_hide(animated_sprite);
+  sprite_index_manager_set_free(animated_sprite->as.baseSprite, animated_sprite->si->maxWidth);
 }
 
   /*--------------------------*/
@@ -214,6 +326,11 @@ void animated_sprite_physic_show(Animated_Sprite_Physic *animated_sprite_physic)
 
 void animated_sprite_physic_flash(Animated_Sprite_Physic *animated_sprite_physic) {
   animated_sprite_physic->physic_enabled = animated_sprite_flash(&animated_sprite_physic->animated_sprite);
+}
+
+void animated_sprite_physic_destroy(Animated_Sprite_Physic *animated_sprite_physic) {
+  animated_sprite_physic_hide(animated_sprite_physic);
+  animated_sprite_destroy(&animated_sprite_physic->animated_sprite);
 }
 
   //--------------------------------------------------------------------------//
@@ -326,6 +443,35 @@ void box_resize(Box *box, short edge) {
   //--------------------------------------------------------------------------//
  //                                  -C                                      //
 //--------------------------------------------------------------------------//
+void cdda_play(BYTE track) {
+  disableIRQ();
+  switch (track) {
+  case 2:
+    CDDA_PLAY_TRACK_02
+    enableIRQ();
+    break;
+
+  case 3:
+    CDDA_PLAY_TRACK_03
+    enableIRQ();
+    break;
+
+  case 4:
+    CDDA_PLAY_TRACK_04
+    enableIRQ();
+    break;
+
+  case 5:
+    CDDA_PLAY_TRACK_05
+    enableIRQ();
+    break;
+
+  default:
+    enableIRQ();
+    break;
+  }
+}
+
 void inline clear_vram() { // todo (minor) - disable interrupt
   WORD addr = 0x0000;
   WORD addr_end = 0x8FFF;
@@ -360,28 +506,8 @@ void inline gpu_init() {
   initGfx();
   volMEMWORD(0x400002) = 0xffff;  // debug text white
   LSPCmode = 0x1c00;              // autoanim speed
-  sprite_index = 1;
-  palette_index = 16;
-}
-
-WORD get_sprite_index() { return sprite_index; }
-
-WORD get_sprite_index_from_picture(pictureInfo *pi) {
-  WORD rt = sprite_index;
-  if (sprite_auto_index) sprite_index += pi->tileWidth;
-  return rt;
-}
-
-WORD get_sprite_index_from_sprite(spriteInfo *si) {
-  WORD rt = sprite_index;
-  if (sprite_auto_index) sprite_index += si->maxWidth;
-  return rt;
-}
-
-BYTE get_palette_index(paletteInfo *pali) {
-	BYTE rt = palette_index;
-  if (palette_auto_index) palette_index += pali->palCount;
-	return rt;
+  sprite_index_manager_init();
+  palette_index_manager_init();
 }
 
 WORD get_shrunk_proportional_table(WORD index) {
@@ -391,6 +517,39 @@ WORD get_shrunk_proportional_table(WORD index) {
 char get_sin(WORD index) {
   return sinTable[index];
 }
+
+WORD get_max_free_sprite_index() {
+  WORD i, max = 0;
+  for (i = 0; i < SPRITE_INDEX_MANAGER_MAX; i++) {
+    if (sprite_index_manager_status[i] != true) max++;
+  }
+  return max;
+}
+
+WORD get_max_sprite_index_used() {
+  WORD i, max = 0;
+  for (i = 0; i < SPRITE_INDEX_MANAGER_MAX; i++) {
+    if (sprite_index_manager_status[i] != false) max++;
+  }
+  return max;
+}
+
+WORD get_max_free_palette_index() {
+  WORD i, max = 0;
+  for (i = 0; i < PALETTE_INDEX_MANAGER_MAX; i++) {
+    if (palette_index_manager_status[i] == (paletteInfo*) NULL) max++;
+  }
+  return max;
+}
+
+WORD get_max_palette_index_used() {
+  WORD i, max = 0;
+  for (i = 0; i < PALETTE_INDEX_MANAGER_MAX; i++) {
+    if (palette_index_manager_status[i] != (paletteInfo*) NULL) max++;
+  }
+  return max;
+}
+
 
   //--------------------------------------------------------------------------//
  //                                  -I                                      //
@@ -409,20 +568,18 @@ void image_init(Image *image, pictureInfo *pi, paletteInfo *pali) {
 }
 
 void image_display(Image *image, short x, short y) {
-  BOOL palette_auto_index_state = palette_auto_index;
-  palette_disable_auto_index();
+  WORD palette_index = palette_index_manager_use(image->pali);
   pictureInit(
     &image->pic,
     image->pi,
-    get_sprite_index_from_picture(image->pi),
-    get_palette_index(image->pali),
+    sprite_index_manager_use(image->pi->tileWidth),
+    palette_index,
     x,
     y,
     FLIP_NONE
   );
-  if (palette_auto_index_state) palette_enable_auto_index();
   palJobPut(
-    get_palette_index(image->pali),
+    palette_index,
     image->pali->palCount,
     image->pali->data
   );
@@ -431,7 +588,6 @@ void image_display(Image *image, short x, short y) {
 void image_set_position(Image *image, short x, short y) {
   pictureSetPos(&image->pic, x, y);
 }
-
 
 void image_hide(Image *image) {
   pictureHide(&image->pic);
@@ -459,6 +615,11 @@ BOOL image_flash(Image *image) {
     }
   }
   return rt;
+}
+
+void image_destroy(Image *image) {
+  image_hide(image);
+  sprite_index_manager_set_free(image->pic.baseSprite, image->pi->tileWidth);
 }
 
   /*------------------*/
@@ -511,6 +672,10 @@ void image_physic_shrunk(Image_Physic *image_physic, WORD shrunk_value) {
   // todo (minor) - shrunk box
 }
 
+void image_physic_destroy(Image_Physic *image_physic) {
+  image_destroy(&image_physic->image);
+}
+
 void image_shrunk_centroid(Image *image, short center_x, short center_y, WORD shrunk_value) {
   shrunk(image->pic.baseSprite, image->pic.info->tileWidth, shrunk_value);
   image_set_position(
@@ -529,9 +694,9 @@ void image_shrunk_centroid(Image *image, short center_x, short center_y, WORD sh
 void inline joypad_debug() {
   JOYPAD_READ
   if (joypad_is_start()) {  fix_print_neocore(10, 11,  "JOYPAD START"); }
-  if (joypad_is_up())	   {  fix_print_neocore(10, 11,  "JOYPAD UP   "); }
-  if (joypad_is_down())	 {  fix_print_neocore(10, 11,  "JOYPAD DOWN "); }
-  if (joypad_is_left())	 {  fix_print_neocore(10, 11,  "JOYPAD LEFT "); }
+  if (joypad_is_up())     {  fix_print_neocore(10, 11,  "JOYPAD UP   "); }
+  if (joypad_is_down())   {  fix_print_neocore(10, 11,  "JOYPAD DOWN "); }
+  if (joypad_is_left())   {  fix_print_neocore(10, 11,  "JOYPAD LEFT "); }
   if (joypad_is_right()) {  fix_print_neocore(10, 11,  "JOYPAD RIGHT"); }
   if (joypad_is_a())     {  fix_print_neocore(10, 11,  "JOYPAD A    "); }
   if (joypad_is_b())     {  fix_print_neocore(10, 11,  "JOYPAD B    "); }
@@ -708,12 +873,10 @@ void inline logger_pictureInfo(char *label, pictureInfo *pi) {
   //--------------------------------------------------------------------------//
  //                                  -P                                      //
 //--------------------------------------------------------------------------//
-  /*-----------*/
- /* -palette  */
-/*-----------*/
-
-void palette_disable_auto_index() { palette_auto_index = false; }
-void palette_enable_auto_index() { palette_auto_index = true; }
+void palette_destroy(paletteInfo* pi) {
+  palette_index_manager_set_free(pi);
+  // TODO : put black palette
+}
 
   //--------------------------------------------------------------------------//
  //                                  -V                                      //
@@ -744,18 +907,6 @@ BOOL vectors_collide(Box *box, Vec2short vec[], BYTE vector_max) {
   //--------------------------------------------------------------------------//
  //                                  -S                                      //
 //--------------------------------------------------------------------------//
-BYTE set_palette_index(BYTE index) {
-	palette_index = index;
-	return palette_index;
-}
-
-void sprite_disable_autoinc() { sprite_auto_index = false; }
-void sprite_enable_autoinc() { sprite_auto_index = true; }
-
-void sprite_set_index(WORD index) {
-	sprite_index = index;
-}
-
   /*-----------*/
  /* -scroller */
 /*-----------*/
@@ -764,20 +915,17 @@ void scroller_set_position(Scroller *s, short x, short y) {
 }
 
 void scroller_display(Scroller *s, short x, short y) {
-  BOOL palette_auto_index_state = palette_auto_index;
-  palette_disable_auto_index();
+  WORD palette_index = palette_index_manager_use(s->pali);
   scrollerInit(
     &s->s,
     s->si,
-    get_sprite_index(),
-    get_palette_index(s->pali),
+    sprite_index_manager_use(21),
+    palette_index,
     x,
     y
   );
-  sprite_index += 21;
-  if (palette_auto_index_state) palette_enable_auto_index();
   palJobPut(
-    get_palette_index(s->pali),
+    palette_index,
     s->pali->palCount,
     s->pali->data
   );
@@ -791,6 +939,8 @@ void scroller_init(Scroller *s, scrollerInfo *si, paletteInfo *pali) {
   s->si = si;
   s->pali = pali;
 }
+
+// TODO : scroller_destroy()
 
   /*-----------*/
  /* -shrunk   */
@@ -819,7 +969,7 @@ WORD shrunk_range(WORD addr_start, WORD addr_end, WORD shrunk_value) {
 }
 
 void shrunk(WORD base_sprite, WORD max_width, WORD value) {
-	shrunk_range(0x8000 + base_sprite, 0x8000 + base_sprite + max_width, value);
+  shrunk_range(0x8000 + base_sprite, 0x8000 + base_sprite + max_width, value);
 }
 
 int shrunk_centroid_get_translated_x(short centerPosX, WORD tileWidth, BYTE shrunkX) {

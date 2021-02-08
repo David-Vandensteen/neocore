@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<chardata>
+  <setup>
+    <starting_tile>256</starting_tile>
+  </setup>
+  <pict id="k7_sprite">
+    <file>assets\gfx\k7.png</file>
+  </pict>
+  <pict id="play_sprite">
+    <file>assets\gfx\play.png</file>
+  </pict>
+  <pict id="stop_sprite">
+    <file>assets\gfx\stop.png</file>
+  </pict>
+  <pict id="next_sprite">
+    <file>assets\gfx\next.png</file>
+  </pict>
+  <scrl id="spectrum02_sprite">
+    <file>assets\gfx\02-spectrum.png</file>
+  </scrl>
+</chardata>
