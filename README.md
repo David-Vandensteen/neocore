@@ -11,7 +11,7 @@ collide, shrunking, sprite ...
 # Neocore
 Library &amp; toolchain for Neo Geo CD develop.
 
-I write Neocore for make my shoot em up game on Neo Geo CD
+I write Neocore to make my shoot em up game on Neo Geo CD
 (**Flamble**) http://azertyvortex.free.fr/flamble
 
 Neocore provide high level functions over Neo Dev Kit (**Fabrice Martinez, Jeff Kurtz, al**) & DATLib 0.2 (**HPMAN**)
