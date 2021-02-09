@@ -6,10 +6,11 @@ PROJECTNAME = $(PROJECT)
 
 NEOBUILDTEMP = $(shell cygpath -u $(TEMP))/neocore/$(PROJECTNAME)
 
-FILECUE = $(PROJECTNAME).cue
+FILECUE = $(shell cygpath -u $(NEOBUILDTEMP)\$(PROJECTNAME).cue)
 FILEISO = $(shell cygpath -u $(NEOBUILDTEMP)\$(PROJECTNAME).iso)
 FILEZIP = $(shell cygpath -u $(NEOBUILDTEMP)\$(PROJECTNAME).zip)
 ISONAME = $(PROJECTNAME).iso
+CUENAME = $(PROJECTNAME).cue
 
 ###################
 #	Global settings #
@@ -128,13 +129,13 @@ $(FILESPRITE).cd:
 	if exist char.bin CharSplit.exe char.bin -cd $(shell cygpath -w $(FILESPRITE))
 	$(RM) -f char.bin
 
-run-mame: iso
+run-mame: iso cue
 	echo Try to kill mame process...
 	powershell "try { taskkill /IM mame64.exe /f } catch { }; exit 0"
 
 	del $(shell cygpath -w $(MAMEFOLDER))\roms\neocdz\*.chd /q
 
-	$(shell cygpath -w $(CHDMAN)) createcd -i "$(shell cygpath -w $(FILEISO))" -o "$(shell cygpath -w $(FILECHD))" --force
+	$(shell cygpath -w $(CHDMAN)) createcd -i "$(shell cygpath -w $(FILECUE))" -o "$(shell cygpath -w $(FILECHD))" --force
 
 	powershell -ExecutionPolicy Bypass -File ..\..\scripts\mame-hash-writer.ps1 $(PROJECTNAME) $(shell cygpath -w $(FILECHD)) $(shell cygpath -w $(MAMEHASH))
 	start cmd /c "$(shell cygpath -w $(MAMEFOLDER))\mame64.exe -rompath $(shell cygpath -w $(MAMEFOLDER))\roms -hashpath $(shell cygpath -w $(MAMEFOLDER))\hash -cfg_directory $(shell cygpath -w $(TEMP)) -nvram_directory $(shell cygpath -w $(TEMP)) -window -skip_gameinfo neocdz $(PROJECTNAME)"
@@ -144,7 +145,8 @@ run-raine: zip
 
 run: run-raine
 
-# TODO : chd rule
+chd: iso cue
+	$(shell cygpath -w $(CHDMAN)) createcd -i "$(shell cygpath -w $(FILECUE))" -o "$(shell cygpath -w $(FILECHD))" --force
 
 zip: $(FILEPRG) iso
 	echo Try to kill raine32.exe process...
@@ -162,15 +164,15 @@ ifneq ("$(wildcard $(FILESPRITE).cd)","")
 endif
 	$(MKISOFS) -o $(FILEISO) -pad $(NEOBUILDTEMP)/iso
 
-add-cue:
-	echo CATALOG 0000000000000 > $(FILECUE)
-	echo FILE "$(ISONAME)" BINARY >> $(FILECUE)
-	echo TRACK 01 MODE1/2048 >> $(FILECUE)
-	echo INDEX 01 00:00:00 >> $(FILECUE)
-	echo FILE "$(ISONAME)" WAVE >> $(FILECUE)
-	echo TRACK 02 AUDIO >> $(FILECUE)
-	echo PREGAP 00:00:59 >> $(FILECUE)
-	echo INDEX 01 00:00:00 >> $(FILECUE)
+cue:
+ifeq ("$(wildcard $(CUENAME))","")
+	echo CATALOG 0000000000000 > $(CUENAME)
+	echo   FILE "$(ISONAME)" BINARY >> $(CUENAME)
+	echo   TRACK 01 MODE1/2048 >> $(CUENAME)
+	echo   INDEX 01 00:00:00 >> $(CUENAME)
+endif
+	$(CP) -f $(CUENAME) $(NEOBUILDTEMP)
+	if exist *.wav $(CP) -f *.wav $(NEOBUILDTEMP)
 
 clean:
 	echo Try to kill raine32.exe process...
@@ -184,5 +186,3 @@ clean:
 
 serve:
 	powershell -ExecutionPolicy Bypass -File ..\..\scripts\neocore-hot-reload.ps1 .
-
-dist:
