@@ -33,6 +33,7 @@ CP = $(shell cygpath -w $(NEOBUILDDATA))\bin\cp.exe
 RM = $(shell cygpath -w $(NEOBUILDDATA))\bin\rm.exe
 ZIP = $(shell cygpath -w $(NEOBUILDDATA))\bin\zip.exe
 MKISOFS = $(shell cygpath -w $(NEOBUILDDATA))\bin\mkisofs.exe
+UNIX2DOS = $(shell cygpath -w $(NEOBUILDDATA))\bin\unix2dos.exe
 
 #######################################
 # Base dir of your m68k gcc toolchain #
@@ -171,6 +172,8 @@ ifeq ("$(wildcard $(CUENAME))","")
 	echo   TRACK 01 MODE1/2048 >> $(CUENAME)
 	echo   INDEX 01 00:00:00 >> $(CUENAME)
 endif
+#  unix2dos ${CUENAME}
+	${UNIX2DOS} ${CUENAME}
 	$(CP) -f $(CUENAME) $(NEOBUILDTEMP)
 	if exist *.wav $(CP) -f *.wav $(NEOBUILDTEMP)
 
