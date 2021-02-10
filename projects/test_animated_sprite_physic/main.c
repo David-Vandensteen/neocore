@@ -33,6 +33,10 @@ int main(void) {
     animated_sprite_animate(&player.animated_sprite);
     logger_box("BOX : ", &player.box);
     animated_sprite_physic_flash(&player);
+    if (DAT_frameCounter == 500) {
+      // animated_sprite_physic_destroy(&player);
+      // animated_sprite_physic_hide(&player);
+    }
     // animated_sprite_physic_move(&player, 1, 0);
     // animated_sprite_physic_shrunk(&player, shrunk_forge(0x5, 0xFB));
     // animated_sprite_physic_set_position(&player, 10, 10);
