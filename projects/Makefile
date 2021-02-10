@@ -139,7 +139,7 @@ run-mame: iso cue
 	$(shell cygpath -w $(CHDMAN)) createcd -i "$(shell cygpath -w $(FILECUE))" -o "$(shell cygpath -w $(FILECHD))" --force
 
 	powershell -ExecutionPolicy Bypass -File ..\..\scripts\mame-hash-writer.ps1 $(PROJECTNAME) $(shell cygpath -w $(FILECHD)) $(shell cygpath -w $(MAMEHASH))
-	start cmd /c "$(shell cygpath -w $(MAMEFOLDER))\mame64.exe -rompath $(shell cygpath -w $(MAMEFOLDER))\roms -hashpath $(shell cygpath -w $(MAMEFOLDER))\hash -cfg_directory $(shell cygpath -w $(TEMP)) -nvram_directory $(shell cygpath -w $(TEMP)) -window -skip_gameinfo neocdz $(PROJECTNAME)"
+	start cmd /c "$(shell cygpath -w $(MAMEFOLDER))\mame64.exe $(MAME_ARGS) -rompath $(shell cygpath -w $(MAMEFOLDER))\roms -hashpath $(shell cygpath -w $(MAMEFOLDER))\hash -cfg_directory $(shell cygpath -w $(TEMP)) -nvram_directory $(shell cygpath -w $(TEMP)) -skip_gameinfo neocdz $(PROJECTNAME)"
 
 run-raine: zip
 	powershell -ExecutionPolicy Bypass -File ..\..\scripts\raine-start.ps1 $(shell cygpath -w $(RAINE)) $(shell cygpath -w $(FILEZIP))

@@ -1,0 +1,1 @@
+set MAME_ARGS=-nowindow

@@ -5,6 +5,9 @@ call %*
 :init
 set NEODEV=%appdata%\neocore\neodev-sdk
 path=%NEODEV%\m68k\bin;%appdata%\neocore\bin;%windir%\System32;%windir%\System32\WindowsPowerShell\v1.0\
+
+if "%MAME_ARGS%" == "" set MAME_ARGS=-window
+
 exit /b 0
 
 :init-sprite
