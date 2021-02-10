@@ -790,7 +790,7 @@ void        scroller_set_position(Scroller *s, short x, short y);
  * \brief scroller destroy
  * @param Scroller* pointer
  */
-void       scrollert_destroy(Scroller *s);
+void       scroller_destroy(Scroller *s);
 
   /*-----------*/
  /* -shrunk   */
