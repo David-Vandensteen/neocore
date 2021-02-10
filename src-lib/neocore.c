@@ -260,6 +260,7 @@ void animated_sprite_show(Animated_Sprite *animated_sprite) {
 void animated_sprite_destroy(Animated_Sprite *animated_sprite) {
   animated_sprite_hide(animated_sprite);
   sprite_index_manager_set_free(animated_sprite->as.baseSprite, animated_sprite->si->maxWidth);
+  clearSprites(animated_sprite->as.baseSprite, animated_sprite->as.tileWidth);
 }
 
   /*--------------------------*/
@@ -479,11 +480,11 @@ void inline clear_vram() {
   for (addr = addr; addr <= addr_end; addr++) {
     SC234Put(addr, 0);
   }
-  SCClose();
-  wait_vbl_max(10);
-  SCClose();
-  wait_vbl_max(10);
   enableIRQ();
+  SCClose();
+  wait_vbl_max(10);
+  SCClose();
+  wait_vbl_max(10);
 }
 
 void clear_sprite_index_table() { sprite_index_manager_init(); }
@@ -625,6 +626,7 @@ BOOL image_flash(Image *image) {
 void image_destroy(Image *image) {
   image_hide(image);
   sprite_index_manager_set_free(image->pic.baseSprite, image->pi->tileWidth);
+  clearSprites(image->pic.baseSprite, image->pi->tileWidth);
 }
 
   /*------------------*/
@@ -678,6 +680,7 @@ void image_physic_shrunk(Image_Physic *image_physic, WORD shrunk_value) {
 }
 
 void image_physic_destroy(Image_Physic *image_physic) {
+  image_physic_hide(image_physic);
   image_destroy(&image_physic->image);
 }
 
