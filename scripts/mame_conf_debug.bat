@@ -1,0 +1,1 @@
+set MAME_ARGS=-window -sound none -debug
