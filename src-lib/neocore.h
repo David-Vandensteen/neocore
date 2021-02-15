@@ -441,6 +441,12 @@ void inline fix_print_neocore(int x, int y, char *label);
  */
 void flash_init(Flash *flash, BOOL enabled, short frequency, short lengh);
 
+/**
+ * \brief return estimated free RAM
+ */
+WORD free_ram_info();
+
+
   //---------------------------------------------------------------------------//
  //                                  -G                                      //
 //--------------------------------------------------------------------------//
