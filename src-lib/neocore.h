@@ -75,6 +75,9 @@
 #define SPRITE_INDEX_MANAGER_MAX  384
 #define PALETTE_INDEX_MANAGER_MAX 256
 
+#define MANUALBOX 0
+#define AUTOBOX 1
+
 enum direction { NONE, UP, DOWN, LEFT, RIGHT };
 
 /**
@@ -191,6 +194,7 @@ typedef struct Image_Physic Image_Physic;
 struct Image_Physic {
   Image image;          /*!< - Image */
   Box box;              /*!< - Box */
+  BOOL autobox_enabled; /*!< - enable autobox */
   BOOL physic_enabled;  /*!< - enable physic (for collide detection capabilities) */
 };
 
@@ -586,7 +590,8 @@ void image_physic_init(
   short box_witdh,
   short box_height,
   short box_width_offset,
-  short box_height_offset
+  short box_height_offset,
+  BOOL autobox_enabled
 );
 
 /**

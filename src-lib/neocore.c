@@ -650,25 +650,35 @@ void image_physic_init(
   short box_witdh,
   short box_height,
   short box_width_offset,
-  short box_height_offset
+  short box_height_offset,
+  BOOL autobox_enabled
 ) {
   image_init(&image_physic->image, pi, pali);
-  box_init(&image_physic->box, box_witdh, box_height, box_width_offset, box_height_offset);
+  image_physic->autobox_enabled = autobox_enabled;
+  if (image_physic->autobox_enabled) {
+    box_init(&image_physic->box, box_witdh, box_height, box_width_offset, box_height_offset);
+  }
 }
 
 void image_physic_display(Image_Physic *image_physic, short x, short y) {
   image_display(&image_physic->image, x, y);
-  box_update(&image_physic->box, x, y);
+  if (image_physic->autobox_enabled) {
+    box_update(&image_physic->box, x, y);
+  }
 }
 
 void image_physic_move(Image_Physic *image_physic, short x_offset, short y_offset) {
   image_move(&image_physic->image, x_offset, y_offset);
-  box_update(&image_physic->box, image_physic->image.pic.posX, image_physic->image.pic.posY);
+  if (image_physic->autobox_enabled) {
+    box_update(&image_physic->box, image_physic->image.pic.posX, image_physic->image.pic.posY);
+  }
 }
 
 void image_physic_set_position(Image_Physic *image_physic, short x, short y) {
   image_set_position(&image_physic->image, x, y);
-  box_update(&image_physic->box, x, y);
+  if (image_physic->autobox_enabled) {
+    box_update(&image_physic->box, x, y);
+  }
 }
 
 void image_physic_hide(Image_Physic *image_physic) {

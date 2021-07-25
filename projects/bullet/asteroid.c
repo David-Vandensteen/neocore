@@ -7,7 +7,7 @@ static BYTE hit;
 
 void asteroid_init() {
   hit = 0;
-  image_physic_init(&asteroid, &asteroid_sprite, &asteroid_sprite_Palettes, 8, 8, 0, 0);
+  image_physic_init(&asteroid, &asteroid_sprite, &asteroid_sprite_Palettes, 8, 8, 0, 0, AUTOBOX);
 }
 
 void asteroid_display() {
