@@ -506,8 +506,8 @@ void flash_init(Flash *flash, BOOL enabled, short frequency, short lengh) {
 WORD free_ram_info() {
   // $000000  $0FFFFF    Vector Table, 68k program (.PRG files), 68k RAM
   // $100000  $00F2FF    WORKRAM_USER  User RAM/Work RAM
-  WORD addr_end = 0x0FFFF, addr_used = 0x0FFFF;
-  WORD used = null;
+  int addr_end = 0x0FFFF, addr_used = 0x0FFFF;
+  int used = null;
   for (addr_used = addr_used; addr_used > 0; addr_used--) {
     if (volMEMBYTE(addr_used)) used++;
   }
