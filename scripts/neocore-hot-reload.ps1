@@ -32,7 +32,7 @@ Param(
 )
 
 function _main{
-  .\mak.bat run
+  .\mak.bat raine
   $sizeLast = (Get-ChildItem $projectPath | Measure-Object -Sum Length | Select-Object Count, Sum).Sum
   $sizeCurrent = $sizeLast
 
