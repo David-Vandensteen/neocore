@@ -15,7 +15,7 @@ I write Neocore to make my shoot em up game on Neo Geo CD
 (**Flamble**) http://azertyvortex.free.fr/flamble
 
 Neocore provide high level functions over Neo Dev Kit (**Fabrice Martinez, Jeff Kurtz, al**) & DATLib 0.2 (**HPMAN**)
-The Makefile contain many rules (make sprite, make zip, make iso, make cue, make run, make serve...)
+The mak script contain many rules (mak sprite, mak zip, mak iso, mak cue, mak run, mak serve...)
 
 I share my tools and my code, these could possibly help your projects on this platform !!!
 
@@ -34,7 +34,7 @@ Graphics by **Grass**
 ```cmd
 install.bat
 ```
-The install script download sdk, emulator (Raine), CD structure template ... everything you need to do a Neo Geo CD project   
+The install script download sdk, emulators (Raine & Mame), CD structure template ... everything you need to do a Neo Geo CD project   
 After install, all is available from
 ```cmd
 %appdata%\neocore
@@ -86,12 +86,12 @@ mak
 ## Run
 With raine   
 ```cmd
-mak run-raine
+mak raine
 ```
 
 With mame
 ```cmd
-mak run-mame
+mak mame
 ```
 
 ## Project clean rebuild

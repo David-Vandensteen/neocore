@@ -1,10 +1,11 @@
-INC = $(NEODEV)/m68k/include
-LIB = $(NEODEV)/m68k/lib
+INC = $(NEODEV)\m68k\include
+LIB = $(NEODEV)\m68k\lib
 
-NEOBUILDDATA = $(shell cygpath -u $(APPDATA))/neocore
-RM = $(shell cygpath -w $(NEOBUILDDATA))\bin\rm.exe
-CP = $(shell cygpath -w $(NEOBUILDDATA))\bin\cp.exe
-MKDIR = $(shell cygpath -w $(NEOBUILDDATA))\bin\mkdir.exe
+NEOBUILDDATA = $(APPDATA)\neocore
+
+RM = $(NEOBUILDDATA)\bin\rm.exe
+CP = $(NEOBUILDDATA)\bin\cp.exe
+MKDIR = $(NEOBUILDDATA)\bin\mkdir.exe
 
 ASFLAGS = -m68000 --register-prefix-optional
 

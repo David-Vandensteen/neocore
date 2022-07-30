@@ -1,39 +1,8 @@
 ####################
 #	Project settings #
 ####################
-
 PROJECTNAME = $(PROJECT)
-
-NEOBUILDTEMP = $(shell cygpath -u $(TEMP))/neocore/$(PROJECTNAME)
-
-FILECUE = $(shell cygpath -u $(NEOBUILDTEMP)\$(PROJECTNAME).cue)
-FILEISO = $(shell cygpath -u $(NEOBUILDTEMP)\$(PROJECTNAME).iso)
-FILEZIP = $(shell cygpath -u $(NEOBUILDTEMP)\$(PROJECTNAME).zip)
-ISONAME = $(PROJECTNAME).iso
-CUENAME = $(PROJECTNAME).cue
-
-###################
-#	Global settings #
-###################Ò
-
-FILEPRG = $(NEOBUILDTEMP)/$(PROJECTNAME).prg
-FILESPRITE = $(NEOBUILDTEMP)/SPR
-NEOBUILDDATA = $(shell cygpath -u $(APPDATA))/neocore
-RAINE = $(NEOBUILDDATA)/raine/raine32.exe
-
-MAMEFOLDER = $(NEOBUILDDATA)/mame
-MAMEHASH = $(MAMEFOLDER)\hash\neocd.xml
-
-CHDMAN = $(NEOBUILDDATA)/bin/chdman.exe
-FILECHD = $(MAMEFOLDER)/roms/neocdz/$(PROJECTNAME).chd
-CDTEMPLATE = $(NEOBUILDDATA)/cd_template
-
-MKDIR = $(shell cygpath -w $(NEOBUILDDATA))\bin\mkdir.exe
-CP = $(shell cygpath -w $(NEOBUILDDATA))\bin\cp.exe
-RM = $(shell cygpath -w $(NEOBUILDDATA))\bin\rm.exe
-ZIP = $(shell cygpath -w $(NEOBUILDDATA))\bin\zip.exe
-MKISOFS = $(shell cygpath -w $(NEOBUILDDATA))\bin\mkisofs.exe
-UNIX2DOS = $(shell cygpath -w $(NEOBUILDDATA))\bin\unix2dos.exe
+NEOBUILDTEMP = $(TEMP)/neocore/$(PROJECTNAME)
 
 #######################################
 # Base dir of your m68k gcc toolchain #
@@ -102,7 +71,7 @@ FIXFILES = $(BASEDIR)/src/shared/fix_font.bmp
 ##############
 # Make rules #
 ##############
-all: init $(FILESPRITE).cd $(FILEPRG)
+all: $(FILEPRG)
 $(FILEPRG) : $(NEOBUILDTEMP)/$(PROJECTNAME).o
 	$(OBJC) -O binary $< $@
 
@@ -115,77 +84,3 @@ $(NEOBUILDTEMP)/%.o: %.c
 
 $(NEOBUILDTEMP)/%.o: %.s
 	$(AS) $(ASFLAGS) $< -o $@
-
-init:
-	$(MKDIR) -p $(NEOBUILDTEMP)
-
-sprite: $(FILESPRITE).cd
-
-dbg:
-	echo $(OBJC)
-	echo $(OBJS)
-
-$(FILESPRITE).cd:
-	if exist chardata.xml BuildChar.exe "chardata.xml"
-	if exist char.bin CharSplit.exe char.bin -cd $(shell cygpath -w $(FILESPRITE))
-	$(RM) -f char.bin
-
-run-mame: iso cue
-	echo Try to kill mame process...
-	powershell "try { taskkill /IM mame64.exe /f } catch { }; exit 0"
-
-	del $(shell cygpath -w $(MAMEFOLDER))\roms\neocdz\*.chd /q
-
-	$(shell cygpath -w $(CHDMAN)) createcd -i "$(shell cygpath -w $(FILECUE))" -o "$(shell cygpath -w $(FILECHD))" --force
-
-	powershell -ExecutionPolicy Bypass -File ..\..\scripts\mame-hash-writer.ps1 $(PROJECTNAME) $(shell cygpath -w $(FILECHD)) $(shell cygpath -w $(MAMEHASH))
-	start cmd /c "$(shell cygpath -w $(MAMEFOLDER))\mame64.exe $(MAME_ARGS) -rompath $(shell cygpath -w $(MAMEFOLDER))\roms -hashpath $(shell cygpath -w $(MAMEFOLDER))\hash -cfg_directory $(shell cygpath -w $(TEMP)) -nvram_directory $(shell cygpath -w $(TEMP)) -skip_gameinfo neocdz $(PROJECTNAME)"
-
-run-raine: zip
-	powershell -ExecutionPolicy Bypass -File ..\..\scripts\raine-start.ps1 $(shell cygpath -w $(RAINE)) $(shell cygpath -w $(FILEZIP))
-
-run: run-raine
-
-chd: iso cue
-	$(shell cygpath -w $(CHDMAN)) createcd -i "$(shell cygpath -w $(FILECUE))" -o "$(shell cygpath -w $(FILECHD))" --force
-
-zip: $(FILEPRG) iso
-	echo Try to kill raine32.exe process...
-	powershell "try { taskkill /IM raine32.exe /f } catch { }; exit 0"
-
-	$(ZIP) -j $(shell cygpath -u $(FILEZIP)) $(NEOBUILDTEMP)/iso/*
-
-iso: $(FILEPRG)
-	$(RM) -rf $(NEOBUILDTEMP)/iso
-	$(MKDIR) -p $(NEOBUILDTEMP)/iso
-	$(CP) -f $(CDTEMPLATE)/* $(NEOBUILDTEMP)/iso
-	$(CP) -f $(FILEPRG) $(NEOBUILDTEMP)/iso/DEMO.PRG
-ifneq ("$(wildcard $(FILESPRITE).cd)","")
-	$(CP) -f $(FILESPRITE).cd $(NEOBUILDTEMP)/iso/DEMO.SPR
-endif
-	$(MKISOFS) -o $(FILEISO) -pad $(NEOBUILDTEMP)/iso
-
-cue:
-ifeq ("$(wildcard $(CUENAME))","")
-	echo CATALOG 0000000000000 > $(CUENAME)
-	echo   FILE "$(ISONAME)" BINARY >> $(CUENAME)
-	echo   TRACK 01 MODE1/2048 >> $(CUENAME)
-	echo   INDEX 01 00:00:00 >> $(CUENAME)
-endif
-#  unix2dos ${CUENAME}
-	${UNIX2DOS} ${CUENAME}
-	$(CP) -f $(CUENAME) $(NEOBUILDTEMP)
-	if exist *.wav $(CP) -f *.wav $(NEOBUILDTEMP)
-
-clean:
-	echo Try to kill raine32.exe process...
-	powershell "try { taskkill /IM raine32.exe /f } catch { }; exit 0"
-
-	$(RM) -rf $(NEOBUILDTEMP)/*
-	$(RM) -rf $(NEOBUILDTEMP)
-	$(RM) -f palettes.s
-	$(RM) -f maps.s
-	$(RM) -f externs.h
-
-serve:
-	powershell -ExecutionPolicy Bypass -File ..\..\scripts\neocore-hot-reload.ps1 .
