@@ -1,12 +1,15 @@
 @echo off
 rem TODO : fix mame hello project (disc error)
-rem TODO : clean *.cue files
+rem TODO : build *.cue files into build cache
 rem TODO : CUE with soundtrack // if exist *.wav $(CP) -f *.wav $(NEOBUILDTEMP)
 rem TODO : rethink tree script folder
+rem TODO : cache folder
 rem TODO : move char.bin
 rem TODO : chd rule
 rem TODO : patch bin.zip (remove useless exe)
 rem TODO : improve test file
+rem TODO : improve log
+rem TODO : add version
 set FILE=Makefile
 set NEOBUILDDATA=%appdata%\neocore
 set NEOBUILDTEMP=%temp%\neocore\%PROJECT%
@@ -82,17 +85,17 @@ if not exist %NEOBUILDTEMP%\iso goto :end
 
 set needBuildZip=0
 
-powershell -ExecutionPolicy Bypass -File ..\..\scripts\hash.ps1 %FILESPRITECD% %HASHPATH%
+powershell -ExecutionPolicy Bypass -File ..\..\scripts\hash.ps1 %NEOBUILDTEMP%\iso\DEMO.SPR %HASHPATH%
 if %errorlevel% GEQ 1 set needBuildZip=1
 
-powershell -ExecutionPolicy Bypass -File ..\..\scripts\hash.ps1 %FILEPRG% %HASHPATH%
+powershell -ExecutionPolicy Bypass -File ..\..\scripts\hash.ps1 %NEOBUILDTEMP%\iso\DEMO.PRG %HASHPATH%
 if %errorlevel% GEQ 1 set needBuildZip=1
 
 if not exist %FILEZIP% set needBuildZip=1
 
 if %needBuildZip% == 0 (
-  echo %FILEPRG% is up to date
-  echo %FILESPRITECD% is up to date
+  echo %NEOBUILDTEMP%\iso\DEMO.SPR is up to date
+  echo %NEOBUILDTEMP%\iso\DEMO.PRG is up to date
   goto :end
 )
 
@@ -138,10 +141,10 @@ if not exist %NEOBUILDTEMP%\iso (
 
 set needBuildIso=0
 
-powershell -ExecutionPolicy Bypass -File ..\..\scripts\hash.ps1 %FILESPRITECD% %HASHPATH%
+powershell -ExecutionPolicy Bypass -File ..\..\scripts\hash.ps1 %NEOBUILDTEMP%\iso\DEMO.SPR %HASHPATH%
 if %errorlevel% GEQ 1 set needBuildIso=1
 
-powershell -ExecutionPolicy Bypass -File ..\..\scripts\hash.ps1 %FILEPRG% %HASHPATH%
+powershell -ExecutionPolicy Bypass -File ..\..\scripts\hash.ps1 %NEOBUILDTEMP%\iso\DEMO.PRG %HASHPATH%
 if %errorlevel% GEQ 1 set needBuildIso=1
 
 if not exist %FILEISO% set needBuildIso=1
@@ -149,8 +152,8 @@ if not exist %NEOBUILDTEMP%\iso\DEMO.PRG set needBuildIso=1
 if not exist %NEOBUILDTEMP%\iso\DEMO.SPR set needBuildIso=1
 
 if %needBuildIso% == 0 (
-  echo %FILEPRG% is up to date
-  echo %FILESPRITECD% is up to date
+  echo %NEOBUILDTEMP%\iso\DEMO.SPR is up to date
+  echo %NEOBUILDTEMP%\iso\DEMO.PRG is up to date
   goto :end
 )
 
@@ -242,13 +245,17 @@ echo -----
 powershell -ExecutionPolicy Bypass -File ..\..\scripts\hash-sprite.ps1 chardata.xml %HASHPATH%
 set needBuildSprite=%errorlevel%
 if not exist chardata.xml set needBuildSprite=0
-echo need build sprites: %needBuildSprite%
-if exist chardata.xml (
-  if not exist palettes.s echo. > palettes.s
-  if not exist maps.s echo. > maps.s
-  if %needBuildSprite%==1 BuildChar.exe "chardata.xml"
-  if exist char.bin CharSplit.exe char.bin -cd %FILESPRITE%
+if not exist chardata.xml (
+  echo error : chardata.xml not found
+  pause
 )
+echo need build sprites: %needBuildSprite%
+if not exist palettes.s echo. > palettes.s
+if not exist maps.s echo. > maps.s
+if exist chardata.xml (
+  if %needBuildSprite%==1 BuildChar.exe "chardata.xml"
+)
+if exist char.bin CharSplit.exe char.bin -cd %FILESPRITE%
 goto :end
 
 :serve

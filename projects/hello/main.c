@@ -5,11 +5,16 @@
 */
 
 #include <neocore.h>
+#include "externs.h"
 
 NEOCORE_INIT
 
+Image neogeoLogo;
+
 int main(void) {
   gpu_init();
+  image_init(&neogeoLogo, &logo, &logo_Palettes);
+  image_display(&neogeoLogo, 100, 160);
   while(1) {
     wait_vbl();
     logger_init();
@@ -24,7 +29,6 @@ int main(void) {
     /* force a position */
     logger_set_position(7, 20);
     logger_info("DAVID VANDENSTEEN");
-
     /* logger is an easy way to write a text without coordinate constraint */
 
     SCClose();
