@@ -43,12 +43,8 @@ PADBYTE = 0xFF
 SRC_C= $(wildcard *.c)
 
 OBJS = $(NEOBUILDTEMP)/crt0_$(OUTPUT).o
-
-ifneq ("$(wildcard chardata.xml)","")
-	OBJS := $(OBJS) $(NEOBUILDTEMP)/palettes.o
-	OBJS := $(OBJS) $(NEOBUILDTEMP)/maps.o
-endif
-
+OBJS := $(OBJS) $(NEOBUILDTEMP)/palettes.o
+OBJS := $(OBJS) $(NEOBUILDTEMP)/maps.o
 OBJS += $(patsubst %.c,$(NEOBUILDTEMP)/%.o,$(wildcard *.c))
 
 LIBS = -lneocore -lDATlib -lmath -lprocess -lc -lgcc
