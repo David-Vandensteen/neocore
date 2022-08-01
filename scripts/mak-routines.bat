@@ -1,4 +1,5 @@
 @echo off
+rem TODO : fix restore path
 rem TODO : CUE with soundtrack // if exist *.wav $(CP) -f *.wav $(NEOBUILDTEMP)
 rem TODO : rethink tree script folder
 rem TODO : move char.bin
@@ -39,7 +40,7 @@ call %*
 :init
 if not exist %NEOBUILDTEMP% md %NEOBUILDTEMP%
 set NEODEV=%appdata%\neocore\neodev-sdk
-path=%NEODEV%\m68k\bin;%appdata%\neocore\bin;%windir%\System32;%windir%\System32\WindowsPowerShell\v1.0\
+set path=%NEODEV%\m68k\bin;%appdata%\neocore\bin;%windir%\System32;%windir%\System32\WindowsPowerShell\v1.0\
 
 if "%MAME_ARGS%" == "" set MAME_ARGS=-window
 
@@ -224,6 +225,7 @@ echo sprite
 echo -----
 powershell -ExecutionPolicy Bypass -File ..\..\scripts\hash-sprite.ps1 chardata.xml %HASHPATH%
 set needBuildSprite=%errorlevel%
+if not exist chardata.xml set needBuildSprite=0
 echo need build sprites: %needBuildSprite%
 if exist chardata.xml (
   if not exist palettes.s echo. > palettes.s
