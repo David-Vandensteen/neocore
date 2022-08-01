@@ -1,5 +1,6 @@
 @echo off
-rem TODO : fix restore path
+rem TODO : fix mame hello project (disc error)
+rem TODO : clean *.cue files
 rem TODO : CUE with soundtrack // if exist *.wav $(CP) -f *.wav $(NEOBUILDTEMP)
 rem TODO : rethink tree script folder
 rem TODO : move char.bin
@@ -35,16 +36,25 @@ set CHDMAN=%NEOBUILDDATA%\bin\chdman.exe
 set MKISOFS=%NEOBUILDDATA%\bin\mkisofs.exe
 set UNIX2DOS=%NEOBUILDDATA%\bin\unix2dos.exe
 
-call %*
-
-:init
+if not defined backupPath set backupPath=%path%
 if not exist %NEOBUILDTEMP% md %NEOBUILDTEMP%
+
 set NEODEV=%appdata%\neocore\neodev-sdk
 set path=%NEODEV%\m68k\bin;%appdata%\neocore\bin;%windir%\System32;%windir%\System32\WindowsPowerShell\v1.0\
 
 if "%MAME_ARGS%" == "" set MAME_ARGS=-window
 
-exit /b 0
+:main
+if "%1" == "clean" goto :clean
+if "%1" == "cue" goto :cue
+if "%1" == "iso" goto :iso
+if "%1" == "raine" goto :raine
+if "%1" == "mame" goto :mame
+if "%1" == "sprite" goto :sprite
+if "%1" == "serve" goto :serve
+if "%1" == "zip" goto :zip
+if "%1" == "" goto :make
+goto :end
 
 :clean
 echo -----
@@ -61,8 +71,8 @@ goto :end
 
 :zip
 powershell "try { taskkill /IM raine32.exe /f } catch { }; exit 0"
-call mak
 call mak sprite
+call mak
 call mak iso
 echo -----
 echo zip
@@ -91,8 +101,8 @@ echo output %FILEZIP%
 goto :end
 
 :cue
-call mak
 call mak sprite
+call mak
 call mak iso
 echo -----
 echo cue
@@ -115,8 +125,8 @@ echo output %FILECUE%
 goto :end
 
 :iso
-call mak
 call mak sprite
+call mak
 echo -----
 echo iso
 echo -----
@@ -158,8 +168,8 @@ echo output %FILEISO%
 goto :end
 
 :mame
-call mak
 call mak sprite
+call mak
 call mak iso
 call mak cue
 echo -----
@@ -195,6 +205,13 @@ start cmd /c "%MAMEFOLDER%\mame64.exe %MAME_ARGS% -rompath %MAMEFOLDER%\roms -ha
 goto :end
 
 :make
+call mak sprite
+set NEODEV=%appdata%\neocore\neodev-sdk
+set path=%NEODEV%\m68k\bin;%appdata%\neocore\bin;%windir%\System32;%windir%\System32\WindowsPowerShell\v1.0\
+
+echo -----
+echo make
+echo -----
 @echo on
 if not exist Makefile set FILE=..\Makefile
 
@@ -203,11 +220,11 @@ if %errorlevel% neq 0 (
   pause
 )
 @echo off
-exit /b %errorlevel%
+goto :end
 
 :raine
-call mak
 call mak sprite
+call mak
 call mak iso
 call mak zip
 echo -----
@@ -219,7 +236,6 @@ powershell -ExecutionPolicy Bypass -File ..\..\scripts\raine-start.ps1 %RAINE% %
 goto :end
 
 :sprite
-call mak
 echo -----
 echo sprite
 echo -----
@@ -240,17 +256,6 @@ echo serve
 powershell -ExecutionPolicy Bypass -File ..\..\scripts\neocore-hot-reload.ps1 .
 goto :end
 
-:main
-call :init
-if "%1" == "clean" goto :clean
-if "%1" == "cue" goto :cue
-if "%1" == "iso" goto :iso
-if "%1" == "raine" goto :raine
-if "%1" == "mame" goto :mame
-if "%1" == "sprite" goto :sprite
-if "%1" == "serve" goto :serve
-if "%1" == "zip" goto :zip
-call :make %*
-
 :end
+if defined backupPath set path=%backupPath%
 exit /b 0
