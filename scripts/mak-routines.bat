@@ -1,5 +1,6 @@
 @echo off
-rem TODO : fix mame hello project (disc error)
+rem TODO : improve log
+rem TODO : rewrite with powershell
 rem TODO : build *.cue files into build cache
 rem TODO : CUE with soundtrack // if exist *.wav $(CP) -f *.wav $(NEOBUILDTEMP)
 rem TODO : rethink tree script folder
@@ -8,7 +9,6 @@ rem TODO : move char.bin
 rem TODO : chd rule
 rem TODO : patch bin.zip (remove useless exe)
 rem TODO : improve test file
-rem TODO : improve log
 rem TODO : add version
 set FILE=Makefile
 set NEOBUILDDATA=%appdata%\neocore
@@ -64,8 +64,8 @@ echo -----
 echo clean
 echo -----
 echo try to kill emulators...
-powershell "try { taskkill /IM mame64.exe /f } catch { }; exit 0"
-powershell "try { taskkill /IM raine32.exe /f } catch { }; exit 0"
+powershell "$ErrorActionPreference = 'silentlycontinue'; Stop-Process -Name mame64, raine32 -Force"
+
 echo clean : %NEOBUILDTEMP%
 echo clean : %FILECHD%
 if exist %NEOBUILDTEMP% rd /S /Q %NEOBUILDTEMP%
@@ -73,7 +73,8 @@ if exist %NEOBUILDTEMP% echo error: %NEOBUILDTEMP% still exist
 goto :end
 
 :zip
-powershell "try { taskkill /IM raine32.exe /f } catch { }; exit 0"
+echo try to kill emulators...
+powershell "$ErrorActionPreference = 'silentlycontinue'; Stop-Process -Name mame64, raine32 -Force"
 call mak sprite
 call mak
 call mak iso
@@ -94,8 +95,8 @@ if %errorlevel% GEQ 1 set needBuildZip=1
 if not exist %FILEZIP% set needBuildZip=1
 
 if %needBuildZip% == 0 (
-  echo %NEOBUILDTEMP%\iso\DEMO.SPR is up to date
-  echo %NEOBUILDTEMP%\iso\DEMO.PRG is up to date
+  echo zip is already up to date
+  echo nothing to do
   goto :end
 )
 
@@ -113,17 +114,16 @@ echo -----
 
 powershell -ExecutionPolicy Bypass -File ..\..\scripts\hash.ps1 %FILECUE% %HASHPATH%
 if %errorlevel% == 0 (
-  echo %FILECUE% is up to date
+  echo cue is already up to date
+  echo nothing to do
   goto :end
 )
 
-echo generate %FILECUE%
 echo CATALOG 0000000000000 > %FILECUE%
 echo   FILE "%ISONAME%" BINARY >> %FILECUE%
 echo   TRACK 01 MODE1/2048 >> %FILECUE%
 echo   INDEX 01 00:00:00 >> %FILECUE%
-%UNIX2DOS% %FILECUE%
-type %FILECUE%
+%UNIX2DOS% %FILECUE% > nul 2>&1
 echo output %FILECUE%
 goto :end
 
@@ -136,7 +136,7 @@ echo -----
 
 if not exist %NEOBUILDTEMP%\iso (
   md %NEOBUILDTEMP%\iso
-  robocopy /MIR %CDTEMPLATE%\ %NEOBUILDTEMP%\iso
+  robocopy /MIR %CDTEMPLATE%\ %NEOBUILDTEMP%\iso > nul
 )
 
 set needBuildIso=0
@@ -152,8 +152,8 @@ if not exist %NEOBUILDTEMP%\iso\DEMO.PRG set needBuildIso=1
 if not exist %NEOBUILDTEMP%\iso\DEMO.SPR set needBuildIso=1
 
 if %needBuildIso% == 0 (
-  echo %NEOBUILDTEMP%\iso\DEMO.SPR is up to date
-  echo %NEOBUILDTEMP%\iso\DEMO.PRG is up to date
+  echo iso is already up to date
+  echo nothing to do
   goto :end
 )
 
@@ -163,10 +163,10 @@ if not exist %CDTEMPLATE% goto :end
 if not exist %FILEPRG% echo error: %FILEPRG% not found
 if not exist %FILEPRG% goto :end
 
-if exist %FILESPRITECD% copy /y %FILESPRITECD% %NEOBUILDTEMP%\iso\DEMO.SPR
+if exist %FILESPRITECD% copy /y %FILESPRITECD% %NEOBUILDTEMP%\iso\DEMO.SPR > nul
 
-copy /y %FILEPRG% %NEOBUILDTEMP%\iso\DEMO.PRG
-%MKISOFS% -o %FILEISO% -pad %NEOBUILDTEMP%\iso
+copy /y %FILEPRG% %NEOBUILDTEMP%\iso\DEMO.PRG > nul
+%MKISOFS% -o %FILEISO% -pad %NEOBUILDTEMP%\iso > nul 2>&1
 echo output %FILEISO%
 goto :end
 
@@ -178,8 +178,8 @@ call mak cue
 echo -----
 echo mame
 echo -----
-echo Try to kill mame process...
-powershell "try { taskkill /IM mame64.exe /f } catch { }; exit 0"
+echo try to kill emulators...
+powershell "$ErrorActionPreference = 'silentlycontinue'; Stop-Process -Name mame64, raine32 -Force"
 if not exist %FILEISO% echo error: %FILEISO% not found
 if not exist %FILEISO% goto :end
 if not exist %FILECUE% echo error: %FILECUE% not found
@@ -193,17 +193,19 @@ powershell -ExecutionPolicy Bypass -File ..\..\scripts\hash.ps1 %FILECUE% %HASHP
 if %errorlevel% GEQ 1 set needBuildChd=1
 
 if %needBuildChd% == 0 (
-  echo %FILECHD% is up to date
+  echo chd is already up to date
+  echo nothing to do
  goto :mame-start-process
 )
 
-%CHDMAN% createcd -i %FILECUE% -o %FILECHD% --force
+%CHDMAN% createcd -i %FILECUE% -o %FILECHD% --force > nul
 echo CUE FILE : %FILECUE%
 echo CHD FILE : %FILECHD%
 echo output %FILECHD%
 powershell -ExecutionPolicy Bypass -File ..\..\scripts\mame-hash-writer.ps1 %PROJECT% %FILECHD% %MAMEHASH%
 
 :mame-start-process
+echo starting mame ...
 start cmd /c "%MAMEFOLDER%\mame64.exe %MAME_ARGS% -rompath %MAMEFOLDER%\roms -hashpath %MAMEFOLDER%\hash -cfg_directory %temp% -nvram_directory %temp% -skip_gameinfo neocdz %PROJECT%"
 goto :end
 
@@ -249,13 +251,16 @@ if not exist chardata.xml (
   echo error : chardata.xml not found
   pause
 )
-echo need build sprites: %needBuildSprite%
 if not exist palettes.s echo. > palettes.s
 if not exist maps.s echo. > maps.s
 if exist chardata.xml (
-  if %needBuildSprite%==1 BuildChar.exe "chardata.xml"
+  if %needBuildSprite% GEQ 1 BuildChar.exe "chardata.xml"
 )
 if exist char.bin CharSplit.exe char.bin -cd %FILESPRITE%
+if %needBuildSprite%==0 (
+  echo sprites are already up to date
+  echo nothing to do
+)
 goto :end
 
 :serve
