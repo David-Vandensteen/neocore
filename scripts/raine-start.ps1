@@ -3,12 +3,6 @@ Param(
   [String] $fileZip
 )
 
-<#
-[String] $neobuildData = "$env:APPDATA\neocore"
-[String] $raineExe = "$neobuildData\raine\raine32.exe"
-[String] $fileZip = "c:\temp\flamble.zip"
-#>
-
 function testPathBreak([String] $pathToTest) {
   if (!(Test-Path($pathToTest))) {
     Write-Host "$pathToTest not found ... exit"
@@ -16,7 +10,7 @@ function testPathBreak([String] $pathToTest) {
   }
 }
 
-function _main{
+function main {
   testPathBreak $fileZip
   testPathBreak $raineExe
   & $raineExe $fileZip
@@ -28,4 +22,4 @@ function _main{
   $wshell.SendKeys("{ESC}")
 }
 
-_main
+main

@@ -14,7 +14,7 @@ function GetHashFilePath($file) {
 function CompareAndApply($file) {
   $hashFilePath = GetHashFilePath $file
   If (-Not (Test-Path -Path $hashFilePath)) {
-    New-Item -Path $hashFilePath -Force
+    New-Item -Path $hashFilePath -Force | Out-Null
     $global:exitCode = 1
   }
 }
@@ -26,7 +26,7 @@ function Parse {
 }
 
 function Main {
-  If ((Test-Path -Path $hashPath) -eq $false) { mkdir $hashPath }
+  If ((Test-Path -Path $hashPath) -eq $false) { mkdir $hashPath | Out-Null }
   If ((Test-Path -Path $xmlFile) -eq $false) {
     Write-Host "$xmlFile not found"
     Exit 2
