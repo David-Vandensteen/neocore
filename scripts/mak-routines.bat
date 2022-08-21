@@ -52,6 +52,7 @@ if "%1" == "clean" goto :clean
 if "%1" == "cue" goto :cue
 if "%1" == "iso" goto :iso
 if "%1" == "raine" goto :raine
+if "%1" == "run" goto :raine
 if "%1" == "mame" goto :mame
 if "%1" == "sprite" goto :sprite
 if "%1" == "serve" goto :serve
