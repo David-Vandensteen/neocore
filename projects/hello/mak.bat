@@ -1,5 +1,2 @@
 @echo off
-set PROJECT=hello
-
-set routine=..\..\scripts\mak-routines.bat
-call %routine% %*
+powershell -ExecutionPolicy Bypass -File mak.ps1 -ProjectName "hello" -Rule %1
