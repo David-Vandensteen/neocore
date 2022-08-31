@@ -1,2 +1,10 @@
 @echo off
-powershell -ExecutionPolicy Bypass -File mak.ps1 -ProjectName "hello" -Rule %1
+rem TODO : update scaffold
+set projectName="hello"
+set builderScript="..\..\scripts\Builder-Manager.ps1"
+
+if "%1"=="" (
+  powershell -ExecutionPolicy Bypass -File %builderScript%  -ProjectName %projectName%
+) else (
+  powershell -ExecutionPolicy Bypass -File %builderScript% -ProjectName %projectName% -Rule %1
+)

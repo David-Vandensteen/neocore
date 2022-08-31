@@ -1,7 +1,7 @@
-Import-Module "..\..\scripts\module-hash.ps1"
-Import-Module "..\..\scripts\module-emulators.ps1"
+Import-Module "..\..\scripts\modules\module-hash.ps1"
+Import-Module "..\..\scripts\modules\module-emulators.ps1"
 
-function Make-Clean {
+function Remove-Project {
   param (
     [Parameter(Mandatory=$true)][String] $ProjectName
   )
@@ -21,40 +21,43 @@ function Set-EnvPath {
   Write-Host "Env Path: $env:path"
 }
 
-function Make-Cue {
+function Write-Cue {
 
 }
 
-function Make-Program {
+function Write-Program {
   param (
-    [Parameter(Mandatory=$true)][String] $ProjectName,
+    [Parameter(Mandatory=$true)][String] $MakeFile,
+    [Parameter(Mandatory=$true)][String] $PRGFile,
     [Parameter(Mandatory=$true)][String] $PathNeoDev,
-    [Parameter(Mandatory=$true)][String] $PathBuild
+    [Parameter(Mandatory=$true)][String] $ProjectName
   )
   Write-Host "make rule"
-  $env:project = $ProjectName
-  $env:neodev = $PathNeoDev
-  $env:neobuildtemp = $PathBuild
-
-  & make -f ..\Makefile
+  $env:PROJECT = $ProjectName
+  $env:NEODEV = $PathNeoDev
+  $env:FILEPRG = $PRGFile
+  Write-Host "env project : $env:project"
+  Write-Host "env neodev : $env:neodev"
+  Write-Host "env fileprg : $env:fileprg"
+  & make -f $MakeFile
 }
 
-function Make-ISO {
+function Write-ISO {
 
 }
 
-function Make-Zip {
+function Write-Zip {
   param (
     [Parameter(Mandatory=$true)][String] $ProjectName
   )
 }
 
-function Make-Sprite {
+function Write-Sprite {
   param (
-    [Parameter(Mandatory=$true)][String] $HashPath,
+    [Parameter(Mandatory=$true)][String] $PathHash,
     [Parameter(Mandatory=$true)][String] $XMLFile
   )
   Write-Host "sprite rule"
-  Set-HashSprites -XMLFile $XMLFile -HashPath "$HashPath\hash"
+  Set-HashSprites -XMLFile $XMLFile -Path $PathHash
   & BuildChar.exe "chardata.xml"
 }
