@@ -58,6 +58,12 @@ function Write-Sprite {
     [Parameter(Mandatory=$true)][String] $XMLFile
   )
   Write-Host "sprite rule"
-  Set-HashSprites -XMLFile $XMLFile -Path $PathHash
-  & BuildChar.exe "chardata.xml"
+  $rt = Set-HashSprites -XMLFile $XMLFile -Path $PathHash
+  If ($rt -eq $true) {
+    Write-Host "debug : build sprite is not required" -ForegroundColor Yellow
+  }
+  if ($rt -eq $false) {
+    Write-Host "debug : build sprite is required" -ForegroundColor Yellow
+    & BuildChar.exe $XMLFile
+  }
 }
