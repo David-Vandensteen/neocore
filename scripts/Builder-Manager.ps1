@@ -28,29 +28,36 @@ function Main {
   Write-Host "Rule : $Rule"
   Write-Host "XMLFile : $XMLFILE"
 
-  Set-EnvPath -PathNeoDevBin $PathNeoDevBin -PathNeocoreBin $PathNeocoreBin
-  if ($Rule -eq "clean") { Remove-Project -ProjectName $ProjectName }
-  if ($Rule -eq "sprite") { 
+  function BuilderProgram { Write-Program -ProjectName $ProjectName -PathNeoDev $PathNeoDev -MakeFile $MakeFile -PRGFile $PRGFile }
+
+  function BuilderSprite {
     Write-Sprite -PathHash $PathHash -XMLFile $XMLFile -Format "-cd" -OutputFile "$env:TEMP\neocore\$ProjectName\$ProjectName"
   }
-  if (($Rule -eq "make") -or ($Rule -eq "") -or (!$Rule) -or ($Rule -eq "default") ) { 
-    Write-Sprite -PathHash $PathHash -XMLFile $XMLFile -Format "-cd" -OutputFile "$env:TEMP\neocore\$ProjectName\$ProjectName"
-    Write-Program -ProjectName $ProjectName -PathNeoDev $PathNeoDev -MakeFile $MakeFile -PRGFile $PRGFile
-  } 
-  if ($Rule -eq "iso") {
+
+  function BuilderISO {
     Write-Iso `
       -PRGFile $PRGFile `
       -OutputFile "$env:TEMP\neocore\$ProjectName\$ProjectName.iso" `
       -PathISOBuildFolder "$env:TEMP\neocore\$ProjectName\iso" `
       -PathCDTemplate "$env:APPDATA\neocore\cd_template" `
       -PathHash "$env:TEMP\neocore\$ProjectName\hash"
-      
       #-MKISOFSBin "$env:APPDATA\neocore\bin\mkisofs.exe" `
   }
+
+  Set-EnvPath -PathNeoDevBin $PathNeoDevBin -PathNeocoreBin $PathNeocoreBin
+  if ($Rule -eq "clean") { Remove-Project -ProjectName $ProjectName }
+  if ($Rule -eq "sprite") { BuilderSprite }
+  if (($Rule -eq "make") -or ($Rule -eq "") -or (!$Rule) -or ($Rule -eq "default") ) { 
+    BuilderSprite
+    BuilderProgram
+  } 
+  if ($Rule -eq "iso") {
+    BuilderISO
+  }
   if ($Rule -eq "cue") {
-    Write-Sprite -PathHash $PathHash -XMLFile $XMLFile -Format "-cd" -OutputFile "$env:TEMP\neocore\$ProjectName\$ProjectName"
-    Write-Program -ProjectName $ProjectName -PathNeoDev $PathNeoDev -MakeFile $MakeFile -PRGFile $PRGFile
-    Write-ISO
+    BuilderSprite
+    BuilderProgram
+    BuilderISO
   }
 }
 
