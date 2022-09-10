@@ -23,7 +23,7 @@ function Set-EnvPath {
 }
 
 function Write-Cue {
-
+  # TODO
 }
 
 function Write-Program {
@@ -31,16 +31,15 @@ function Write-Program {
     [Parameter(Mandatory=$true)][String] $MakeFile,
     [Parameter(Mandatory=$true)][String] $PRGFile,
     [Parameter(Mandatory=$true)][String] $PathNeoDev,
-    [Parameter(Mandatory=$true)][String] $ProjectName
+    [Parameter(Mandatory=$true)][String] $ProjectName,
+    [Parameter(Mandatory=$true)][String] $PathHash
   )
   Write-Host "make rule"
   $env:PROJECT = $ProjectName
   $env:NEODEV = $PathNeoDev
   $env:FILEPRG = $PRGFile
-  Write-Host "debug : env project - $env:project" -ForegroundColor Yellow
-  Write-Host "debug : neodev - $env:neodev" -ForegroundColor Yellow
-  Write-Host "debug : fileprg - $env:fileprg" -ForegroundColor Yellow
   & make -f $MakeFile
+  Write-Host "program is available to $PRGFile" -ForegroundColor DarkMagenta
 }
 
 function Write-ISO {
@@ -50,7 +49,6 @@ function Write-ISO {
     [Parameter(Mandatory=$true)][String] $SpriteFile,
     [Parameter(Mandatory=$true)][String] $PathISOBuildFolder,
     [Parameter(Mandatory=$true)][String] $PathCDTemplate,
-    #[Parameter(Mandatory=$true)][String] $MKISOFSBin,
     [Parameter(Mandatory=$true)][String] $PathHash
   )
   if (-Not(Test-Path -Path $PathHash)) { mkdir -Path $PathHash }
@@ -59,12 +57,6 @@ function Write-ISO {
     Write-Host "error : $PathCDTemplate not found" -ForegroundColor Red
     exit 1
   }
-  <#
-  if (-Not(Test-Path -Path $MKISOFSBin)) {
-    Write-Host "error : $MKISOFSBin not found" -ForegroundColor Red
-    exit 1
-  }
-  #>
   if (-Not(Test-Path -Path $PRGFile)) {
     Write-Host "error : $PRGFile not found" -ForegroundColor Red
     exit 1
@@ -74,19 +66,13 @@ function Write-ISO {
     exit 1
   }
 
-  $rt = Compare-ApplyHash -File $PRGFile -PathHash $PathHash
-  if ($rt -eq $true) {
-    Write-Host "debug : build iso is not required" -ForegroundColor Yellow
-  }
-  if ($rt -eq $false) {
-    Write-Host "debug : build iso is not required" -ForegroundColor Yellow
-  }
+  # TODO : remove PathISOBuildFolder
   Copy-Item -Path "$PathCDTemplate\*" -Destination $PathISOBuildFolder -Recurse -Force
   Copy-Item -Path $PRGFile -Destination "$PathISOBuildFolder\DEMO.PRG" -Force
   Copy-Item -Path $SpriteFile -Destination "$PathISOBuildFolder\DEMO.SPR" -Force
 
-  #& $MKISOFSBin -o "$PathOutFolder\$ProjectName.iso"
   New-IsoFile -Source $PathISOBuildFolder -Path $OutputFile -Force
+  Write-Host "iso is available to $OutputFile" -ForegroundColor DarkMagenta
 }
 
 function Write-Sprite {
@@ -97,14 +83,24 @@ function Write-Sprite {
     [Parameter(Mandatory=$true)][String] $XMLFile
   )
   Write-Host "sprite rule"
-  $rt = Set-HashSprites -XMLFile $XMLFile -Path $PathHash
-  if ($rt -eq $true) {
-    Write-Host "debug : build sprite is not required" -ForegroundColor Yellow
-  }
-  if ($rt -eq $false) {
-    Write-Host "debug : build sprite is required" -ForegroundColor Yellow
-    & BuildChar.exe $XMLFile
-    & CharSplit.exe char.bin $Format $OutputFile
-    Remove-Item -Path char.bin -Force
-  }
+  & BuildChar.exe $XMLFile
+  & CharSplit.exe char.bin "-$Format" $OutputFile
+  Remove-Item -Path char.bin -Force
+  Write-Host "sprite is available to $OutputFile.$Format" -ForegroundColor Green
+}
+
+function Write-Zip {
+  param (
+    [Parameter(Mandatory=$true)][String] $Path,
+    [Parameter(Mandatory=$true)][String] $PathHash,
+    [Parameter(Mandatory=$true)][String] $ISOFile,
+    [Parameter(Mandatory=$true)][String] $OutputFile
+  )
+
+  if ((Test-Path -Path $OutputFile)) { Remove-Item $OutputFile -Force }
+  Add-Type -Assembly System.IO.Compression.FileSystem
+  $compressionLevel = [System.IO.Compression.CompressionLevel]::Optimal
+  [System.IO.Compression.ZipFile]::CreateFromDirectory($Path, $OutputFile, $compressionLevel, $false)
+  Set-Hash -File $OutputFile -PathHash $PathHash  
+  Write-Host "zip is available to $OutputFile" -ForegroundColor DarkMagenta
 }

@@ -15,6 +15,8 @@ function Main {
     [Parameter(Mandatory=$true)][String] $PathNeoDev,
     [Parameter(Mandatory=$true)][String] $PRGFile,
     [String] $Rule,
+    [String] $RaineBin,
+    [String] $MameBin,
     [Parameter(Mandatory=$true)][String] $XMLFile
   )
 
@@ -28,10 +30,15 @@ function Main {
   Write-Host "Rule : $Rule"
   Write-Host "XMLFile : $XMLFILE"
 
-  function BuilderProgram { Write-Program -ProjectName $ProjectName -PathNeoDev $PathNeoDev -MakeFile $MakeFile -PRGFile $PRGFile }
+  if ($RaineBin) { Write-Host "Raine : $RaineBin" }
+  if ($MameBin) { Write-Host "Mame : $MameBin" }
+
+  if ((Test-Path -Path "$env:TEMP\neocore\$ProjectName") -eq $false) { mkdir "$env:TEMP\neocore\$ProjectName" }
+
+  function BuilderProgram { Write-Program -ProjectName $ProjectName -PathNeoDev $PathNeoDev -MakeFile $MakeFile -PRGFile $PRGFile -PathHash $PathHash }
 
   function BuilderSprite {
-    Write-Sprite -PathHash $PathHash -XMLFile $XMLFile -Format "-cd" -OutputFile "$env:TEMP\neocore\$ProjectName\$ProjectName"
+    Write-Sprite -PathHash $PathHash -XMLFile $XMLFile -Format "cd" -OutputFile "$env:TEMP\neocore\$ProjectName\$ProjectName"
   }
 
   function BuilderISO {
@@ -46,9 +53,11 @@ function Main {
   }
 
   function BuilderZip {
-    # TODO : lock files
-    Compress-Archive -Path "$env:TEMP\neocore\$ProjectName\iso\*.*" -DestinationPath "$env:TEMP\neocore\$ProjectName\$ProjectName.zip" -Force
-    #Get-ChildItem -Path "$env:TEMP\neocore\$ProjectName\iso" | Compress-Archive -DestinationPath "$env:TEMP\neocore\$ProjectName\$ProjectName.zip" -Force
+    Write-Zip `
+      -Path "$env:TEMP\neocore\$ProjectName\iso" `
+      -OutputFile "$env:TEMP\neocore\$ProjectName\$ProjectName.zip" `
+      -PathHash $PathHash `
+      -ISOFile "$env:TEMP\neocore\$ProjectName\$ProjectName.iso"
   }
 
   Set-EnvPath -PathNeoDevBin $PathNeoDevBin -PathNeocoreBin $PathNeocoreBin
@@ -74,6 +83,13 @@ function Main {
     BuilderISO
     BuilderZip
   }
+  if ($Rule -eq "run:raine") {
+    BuilderSprite
+    BuilderProgram
+    BuilderISO
+    BuilderZip
+    & $RaineBin "$env:TEMP\neocore\$ProjectName\$ProjectName.zip"
+  }
 }
 
 Main `
@@ -85,4 +101,5 @@ Main `
   -PathNeoDev "$env:appdata\neocore\neodev-sdk" `
   -PRGFile "$env:temp\neocore\$ProjectName\$ProjectName.prg" `
   -Rule $Rule `
-  -XMLFile "chardata.xml"
+  -XMLFile "chardata.xml" `
+  -RaineBin "$env:APPDATA\neocore\raine\raine32.exe"

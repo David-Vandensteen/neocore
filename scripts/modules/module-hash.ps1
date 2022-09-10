@@ -6,13 +6,23 @@ function Get-HashFilePath {
   )
   $name = (Get-ChildItem $File).Name
   $hash = (Get-FileHash $File).Hash
-  Write-Host "debug : hash $PathHash\$name-$hash.hash" -ForegroundColor Yellow
   return [String] "$PathHash\$name-$hash.hash"
 }
+<#
 function Get-Hash {
   param (
     [Parameter(Mandatory=$true)][String] $Path
   )
+}
+#>
+
+function Set-Hash {
+  param (
+    [Parameter(Mandatory=$true)][String] $File,
+    [Parameter(Mandatory=$true)][String] $PathHash
+  )
+  $hashFilePath = Get-HashFilePath -File $File -PathHash $PathHash
+  New-Item -Path $hashFilePath -Force | Out-Null
 }
 
 function Compare-ApplyHash {
@@ -20,17 +30,15 @@ function Compare-ApplyHash {
     [Parameter(Mandatory=$true)][String] $File,
     [Parameter(Mandatory=$true)][String] $PathHash
   )
-  $rt = $true
   $hashFilePath = Get-HashFilePath -File $File -PathHash $PathHash
   If (-Not(Test-Path -Path $hashFilePath)) {
     New-Item -Path $hashFilePath -Force | Out-Null
-    $rt = $false
+    return $false
   }
-  return $rt
+  return $true
 }
 
 function Set-HashSprites {
-  # TODO : test if bin output "char.bin" exist else build is required
   param (
     [Parameter(Mandatory=$true)][String] $XMLFile,
     [Parameter(Mandatory=$true)][String] $Path
