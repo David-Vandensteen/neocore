@@ -47,6 +47,7 @@ function Write-ISO {
   param (
     [Parameter(Mandatory=$true)][String] $PRGFile,
     [Parameter(Mandatory=$true)][String] $OutputFile,
+    [Parameter(Mandatory=$true)][String] $SpriteFile,
     [Parameter(Mandatory=$true)][String] $PathISOBuildFolder,
     [Parameter(Mandatory=$true)][String] $PathCDTemplate,
     #[Parameter(Mandatory=$true)][String] $MKISOFSBin,
@@ -58,14 +59,21 @@ function Write-ISO {
     Write-Host "error : $PathCDTemplate not found" -ForegroundColor Red
     exit 1
   }
+  <#
   if (-Not(Test-Path -Path $MKISOFSBin)) {
     Write-Host "error : $MKISOFSBin not found" -ForegroundColor Red
     exit 1
   }
-  if (-Not(Test-Path -Path $PRGFILE)) {
+  #>
+  if (-Not(Test-Path -Path $PRGFile)) {
     Write-Host "error : $PRGFile not found" -ForegroundColor Red
     exit 1
   }
+  if (-Not(Test-Path -Path $SpriteFile)) {
+    Write-Host "error : $SpriteFile not found" -ForegroundColor Red
+    exit 1
+  }
+
   $rt = Compare-ApplyHash -File $PRGFile -PathHash $PathHash
   if ($rt -eq $true) {
     Write-Host "debug : build iso is not required" -ForegroundColor Yellow
@@ -73,23 +81,12 @@ function Write-ISO {
   if ($rt -eq $false) {
     Write-Host "debug : build iso is not required" -ForegroundColor Yellow
   }
-  # COPY CDTEMPLATE TO ISOFOLDER
   Copy-Item -Path "$PathCDTemplate\*" -Destination $PathISOBuildFolder -Recurse -Force
-
-  # COPY PRG TO ISOFOLDER
-  Copy-Item -Path $PRGFile -Destination $PathISOBuildFolder -Force
-
-  # COPY FILESPRITE TO ISOFOLDER
-
+  Copy-Item -Path $PRGFile -Destination "$PathISOBuildFolder\DEMO.PRG" -Force
+  Copy-Item -Path $SpriteFile -Destination "$PathISOBuildFolder\DEMO.SPR" -Force
 
   #& $MKISOFSBin -o "$PathOutFolder\$ProjectName.iso"
-  New-IsoFile -Source 
-}
-
-function Write-Zip {
-  param (
-    [Parameter(Mandatory=$true)][String] $ProjectName
-  )
+  New-IsoFile -Source $PathISOBuildFolder -Path $OutputFile -Force
 }
 
 function Write-Sprite {

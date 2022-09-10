@@ -37,11 +37,18 @@ function Main {
   function BuilderISO {
     Write-Iso `
       -PRGFile $PRGFile `
+      -SpriteFile "$env:TEMP\neocore\$ProjectName\$ProjectName.cd" `
       -OutputFile "$env:TEMP\neocore\$ProjectName\$ProjectName.iso" `
       -PathISOBuildFolder "$env:TEMP\neocore\$ProjectName\iso" `
       -PathCDTemplate "$env:APPDATA\neocore\cd_template" `
       -PathHash "$env:TEMP\neocore\$ProjectName\hash"
       #-MKISOFSBin "$env:APPDATA\neocore\bin\mkisofs.exe" `
+  }
+
+  function BuilderZip {
+    # TODO : lock files
+    Compress-Archive -Path "$env:TEMP\neocore\$ProjectName\iso\*.*" -DestinationPath "$env:TEMP\neocore\$ProjectName\$ProjectName.zip" -Force
+    #Get-ChildItem -Path "$env:TEMP\neocore\$ProjectName\iso" | Compress-Archive -DestinationPath "$env:TEMP\neocore\$ProjectName\$ProjectName.zip" -Force
   }
 
   Set-EnvPath -PathNeoDevBin $PathNeoDevBin -PathNeocoreBin $PathNeocoreBin
@@ -52,12 +59,20 @@ function Main {
     BuilderProgram
   } 
   if ($Rule -eq "iso") {
+    BuilderSprite
+    BuilderProgram
     BuilderISO
   }
   if ($Rule -eq "cue") {
     BuilderSprite
     BuilderProgram
     BuilderISO
+  }
+  if ($Rule -eq "zip") {
+    BuilderSprite
+    BuilderProgram
+    BuilderISO
+    BuilderZip
   }
 }
 
