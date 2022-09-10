@@ -1,4 +1,3 @@
-Import-Module "..\..\scripts\modules\module-hash.ps1"
 Import-Module "..\..\scripts\modules\module-emulators.ps1"
 Import-Module "..\..\scripts\modules\module-iso.ps1"
 
@@ -31,8 +30,7 @@ function Write-Program {
     [Parameter(Mandatory=$true)][String] $MakeFile,
     [Parameter(Mandatory=$true)][String] $PRGFile,
     [Parameter(Mandatory=$true)][String] $PathNeoDev,
-    [Parameter(Mandatory=$true)][String] $ProjectName,
-    [Parameter(Mandatory=$true)][String] $PathHash
+    [Parameter(Mandatory=$true)][String] $ProjectName
   )
   Write-Host "make rule"
   $env:PROJECT = $ProjectName
@@ -48,10 +46,8 @@ function Write-ISO {
     [Parameter(Mandatory=$true)][String] $OutputFile,
     [Parameter(Mandatory=$true)][String] $SpriteFile,
     [Parameter(Mandatory=$true)][String] $PathISOBuildFolder,
-    [Parameter(Mandatory=$true)][String] $PathCDTemplate,
-    [Parameter(Mandatory=$true)][String] $PathHash
+    [Parameter(Mandatory=$true)][String] $PathCDTemplate
   )
-  if (-Not(Test-Path -Path $PathHash)) { mkdir -Path $PathHash }
   if (-Not(Test-Path -Path $PathISOBuildFolder)) { mkdir -Path $PathISOBuildFolder }
   if (-Not(Test-Path -Path $PathCDTemplate)) {
     Write-Host "error : $PathCDTemplate not found" -ForegroundColor Red
@@ -79,10 +75,10 @@ function Write-Sprite {
   param (
     [Parameter(Mandatory=$true)][String] $Format,
     [Parameter(Mandatory=$true)][String] $OutputFile,
-    [Parameter(Mandatory=$true)][String] $PathHash,
     [Parameter(Mandatory=$true)][String] $XMLFile
   )
   Write-Host "sprite rule"
+  # TODO : catch error
   & BuildChar.exe $XMLFile
   & CharSplit.exe char.bin "-$Format" $OutputFile
   Remove-Item -Path char.bin -Force
@@ -92,7 +88,6 @@ function Write-Sprite {
 function Write-Zip {
   param (
     [Parameter(Mandatory=$true)][String] $Path,
-    [Parameter(Mandatory=$true)][String] $PathHash,
     [Parameter(Mandatory=$true)][String] $ISOFile,
     [Parameter(Mandatory=$true)][String] $OutputFile
   )
@@ -101,6 +96,5 @@ function Write-Zip {
   Add-Type -Assembly System.IO.Compression.FileSystem
   $compressionLevel = [System.IO.Compression.CompressionLevel]::Optimal
   [System.IO.Compression.ZipFile]::CreateFromDirectory($Path, $OutputFile, $compressionLevel, $false)
-  Set-Hash -File $OutputFile -PathHash $PathHash  
   Write-Host "zip is available to $OutputFile" -ForegroundColor DarkMagenta
 }
