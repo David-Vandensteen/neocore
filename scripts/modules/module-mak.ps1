@@ -19,10 +19,22 @@ function Set-EnvPath {
   )
   $env:path = "$PathNeoDevBin;$PathNeocoreBin;$env:windir\System32;$env:windir\System32\WindowsPowerShell\v1.0\"
   Write-Host "Env Path: $env:path"
+  Write-Host "--------------------------------------------"
+  Write-Host ""
 }
 
-function Write-Cue {
+function Write-CUE {
+  param (
+    [Parameter(Mandatory=$true)][String] $CUEFile
+  )
   # TODO
+  <#
+  echo CATALOG 0000000000000 > %FILECUE%
+echo   FILE "%ISONAME%" BINARY >> %FILECUE%
+echo   TRACK 01 MODE1/2048 >> %FILECUE%
+echo   INDEX 01 00:00:00 >> %FILECUE%
+%UNIX2DOS% %FILECUE% > nul 2>&1
+#>
 }
 
 function Write-Program {
@@ -32,12 +44,14 @@ function Write-Program {
     [Parameter(Mandatory=$true)][String] $PathNeoDev,
     [Parameter(Mandatory=$true)][String] $ProjectName
   )
-  Write-Host "make rule"
+  Write-Host "compiling program" -ForegroundColor Yellow
   $env:PROJECT = $ProjectName
   $env:NEODEV = $PathNeoDev
   $env:FILEPRG = $PRGFile
   & make -f $MakeFile
-  Write-Host "program is available to $PRGFile" -ForegroundColor DarkMagenta
+  # TODO : test outfile
+  Write-Host "builded program is available to $PRGFile" -ForegroundColor Green
+  Write-Host ""
 }
 
 function Write-ISO {
@@ -48,7 +62,9 @@ function Write-ISO {
     [Parameter(Mandatory=$true)][String] $PathISOBuildFolder,
     [Parameter(Mandatory=$true)][String] $PathCDTemplate
   )
-  if (-Not(Test-Path -Path $PathISOBuildFolder)) { mkdir -Path $PathISOBuildFolder }
+  Write-Host "compiling ISO" -ForegroundColor Yellow
+  if (Test-Path -Path $PathISOBuildFolder) { Remove-Item $PathISOBuildFolder -Recurse -Force }
+  if (-Not(Test-Path -Path $PathISOBuildFolder)) { mkdir -Path $PathISOBuildFolder | Out-Null }
   if (-Not(Test-Path -Path $PathCDTemplate)) {
     Write-Host "error : $PathCDTemplate not found" -ForegroundColor Red
     exit 1
@@ -61,14 +77,14 @@ function Write-ISO {
     Write-Host "error : $SpriteFile not found" -ForegroundColor Red
     exit 1
   }
-
-  # TODO : remove PathISOBuildFolder
   Copy-Item -Path "$PathCDTemplate\*" -Destination $PathISOBuildFolder -Recurse -Force
   Copy-Item -Path $PRGFile -Destination "$PathISOBuildFolder\DEMO.PRG" -Force
   Copy-Item -Path $SpriteFile -Destination "$PathISOBuildFolder\DEMO.SPR" -Force
 
-  New-IsoFile -Source $PathISOBuildFolder -Path $OutputFile -Force
-  Write-Host "iso is available to $OutputFile" -ForegroundColor DarkMagenta
+  New-IsoFile -Source $PathISOBuildFolder -Path $OutputFile -Force | Out-Null
+  # TODO : test outfile
+  Write-Host "builded ISO is available to $OutputFile" -ForegroundColor Green
+  Write-Host ""
 }
 
 function Write-Sprite {
@@ -77,24 +93,28 @@ function Write-Sprite {
     [Parameter(Mandatory=$true)][String] $OutputFile,
     [Parameter(Mandatory=$true)][String] $XMLFile
   )
-  Write-Host "sprite rule"
+  Write-Host "compiling sprites" -ForegroundColor Yellow
   # TODO : catch error
   & BuildChar.exe $XMLFile
   & CharSplit.exe char.bin "-$Format" $OutputFile
   Remove-Item -Path char.bin -Force
-  Write-Host "sprite is available to $OutputFile.$Format" -ForegroundColor Green
+  # TODO : test outfile
+  Write-Host "builded sprites is available to $OutputFile.$Format" -ForegroundColor Green
+  Write-Host ""
 }
 
-function Write-Zip {
+function Write-ZIP {
   param (
     [Parameter(Mandatory=$true)][String] $Path,
     [Parameter(Mandatory=$true)][String] $ISOFile,
     [Parameter(Mandatory=$true)][String] $OutputFile
   )
-
+  Write-Host "compiling ZIP" -ForegroundColor Yellow
   if ((Test-Path -Path $OutputFile)) { Remove-Item $OutputFile -Force }
   Add-Type -Assembly System.IO.Compression.FileSystem
   $compressionLevel = [System.IO.Compression.CompressionLevel]::Optimal
   [System.IO.Compression.ZipFile]::CreateFromDirectory($Path, $OutputFile, $compressionLevel, $false)
-  Write-Host "zip is available to $OutputFile" -ForegroundColor DarkMagenta
+   # TODO : test outfile
+   Write-Host "builded ZIP is available to $OutputFile" -ForegroundColor Green
+  Write-Host ""
 }

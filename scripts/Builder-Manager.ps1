@@ -13,14 +13,17 @@ function Main {
     [Parameter(Mandatory=$true)][String] $PathNeocoreBin,
     [Parameter(Mandatory=$true)][String] $PathNeoDev,
     [Parameter(Mandatory=$true)][String] $PRGFile,
+    [Parameter(Mandatory=$true)][String] $XMLFile,
     [String] $Rule,
     [String] $RaineBin,
-    [String] $MameBin,
-    [Parameter(Mandatory=$true)][String] $XMLFile
+    [String] $MameBin
   )
-
-  Write-Host "makefile : $MakeFile"
+  # TODO : make ascii art
+  Write-Host ""
+  Write-Host ""
+  Write-Host "project informations" -ForegroundColor Yellow
   Write-Host "projectName : $ProjectName"
+  Write-Host "makefile : $MakeFile"
   Write-Host "pathNeodevBin : $PathNeoDevBin"
   Write-Host "pathNeocoreBin : $PathNeocoreBin"
   Write-Host "pathNeodev : $PathNeoDev"
@@ -30,8 +33,10 @@ function Main {
 
   if ($RaineBin) { Write-Host "Raine : $RaineBin" }
   if ($MameBin) { Write-Host "Mame : $MameBin" }
+  Write-Host "--------------------------------------------"
+  Write-Host ""
 
-  if ((Test-Path -Path "$env:TEMP\neocore\$ProjectName") -eq $false) { mkdir "$env:TEMP\neocore\$ProjectName" }
+  if ((Test-Path -Path "$env:TEMP\neocore\$ProjectName") -eq $false) { mkdir "$env:TEMP\neocore\$ProjectName" | Out-Null }
 
   function BuilderProgram { Write-Program -ProjectName $ProjectName -PathNeoDev $PathNeoDev -MakeFile $MakeFile -PRGFile $PRGFile }
 
@@ -40,7 +45,7 @@ function Main {
   }
 
   function BuilderISO {
-    Write-Iso `
+    Write-ISO `
       -PRGFile $PRGFile `
       -SpriteFile "$env:TEMP\neocore\$ProjectName\$ProjectName.cd" `
       -OutputFile "$env:TEMP\neocore\$ProjectName\$ProjectName.iso" `
@@ -48,8 +53,8 @@ function Main {
       -PathCDTemplate "$env:APPDATA\neocore\cd_template"
   }
 
-  function BuilderZip {
-    Write-Zip `
+  function BuilderZIP {
+    Write-ZIP `
       -Path "$env:TEMP\neocore\$ProjectName\iso" `
       -OutputFile "$env:TEMP\neocore\$ProjectName\$ProjectName.zip" `
       -ISOFile "$env:TEMP\neocore\$ProjectName\$ProjectName.iso"
@@ -58,32 +63,69 @@ function Main {
   Set-EnvPath -PathNeoDevBin $PathNeoDevBin -PathNeocoreBin $PathNeocoreBin
   if ($Rule -eq "clean") { Remove-Project -ProjectName $ProjectName }
   if ($Rule -eq "sprite") { BuilderSprite }
-  if (($Rule -eq "make") -or ($Rule -eq "") -or (!$Rule) -or ($Rule -eq "default") ) { 
+  if (($Rule -eq "make") -or ($Rule -eq "") -or (!$Rule) -or ($Rule -eq "default") ) {
+    Remove-Project -ProjectName $ProjectName
+    mkdir -Path "$env:TEMP\neocore\$ProjectName"
     BuilderSprite
     BuilderProgram
   } 
   if ($Rule -eq "iso") {
+    Remove-Project -ProjectName $ProjectName
+    mkdir -Path "$env:TEMP\neocore\$ProjectName"
     BuilderSprite
     BuilderProgram
     BuilderISO
   }
   if ($Rule -eq "cue") {
+    Remove-Project -ProjectName $ProjectName
+    mkdir -Path "$env:TEMP\neocore\$ProjectName"
     BuilderSprite
     BuilderProgram
     BuilderISO
   }
   if ($Rule -eq "zip") {
+    Remove-Project -ProjectName $ProjectName
+    mkdir -Path "$env:TEMP\neocore\$ProjectName"
     BuilderSprite
     BuilderProgram
     BuilderISO
-    BuilderZip
+    BuilderZIP
+  }
+  if ($Rule -eq "run") {
+    Remove-Project -ProjectName $ProjectName
+    mkdir -Path "$env:TEMP\neocore\$ProjectName"
+    BuilderSprite
+    BuilderProgram
+    BuilderISO
+    BuilderZIP
+    & $RaineBin "$env:TEMP\neocore\$ProjectName\$ProjectName.zip"
   }
   if ($Rule -eq "run:raine") {
+    Remove-Project -ProjectName $ProjectName
+    mkdir -Path "$env:TEMP\neocore\$ProjectName"
     BuilderSprite
     BuilderProgram
     BuilderISO
-    BuilderZip
+    BuilderZIP
     & $RaineBin "$env:TEMP\neocore\$ProjectName\$ProjectName.zip"
+  }
+  if ($Rule -eq "run:mame") {
+    Remove-Project -ProjectName $ProjectName
+    mkdir -Path "$env:TEMP\neocore\$ProjectName"
+    BuilderSprite
+    BuilderProgram
+    BuilderISO
+    BuilderZIP
+    BuilderCUE
+    <#
+    %CHDMAN% createcd -i %FILECUE% -o %FILECHD% --force > nul
+    powershell -ExecutionPolicy Bypass -File ..\..\scripts\mame-hash-writer.ps1 %PROJECT% %FILECHD% %MAMEHASH%
+    #>
+    <#
+    :mame-start-process
+      echo starting mame ...
+      start cmd /c "%MAMEFOLDER%\mame64.exe %MAME_ARGS% -rompath %MAMEFOLDER%\roms -hashpath %MAMEFOLDER%\hash -cfg_directory %temp% -nvram_directory %temp% -skip_gameinfo neocdz %PROJECT%"
+    #>
   }
 }
 
@@ -96,4 +138,5 @@ Main `
   -PRGFile "$env:temp\neocore\$ProjectName\$ProjectName.prg" `
   -Rule $Rule `
   -XMLFile "chardata.xml" `
-  -RaineBin "$env:APPDATA\neocore\raine\raine32.exe"
+  -RaineBin "$env:APPDATA\neocore\raine\raine32.exe" `
+  -MameBin "$env:APPDATA\neocore\mame\mame64.exe"
