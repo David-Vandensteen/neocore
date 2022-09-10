@@ -30,13 +30,25 @@ function Main {
 
   Set-EnvPath -PathNeoDevBin $PathNeoDevBin -PathNeocoreBin $PathNeocoreBin
   if ($Rule -eq "clean") { Remove-Project -ProjectName $ProjectName }
-  if ($Rule -eq "sprite") { Write-Sprite -PathHash $PathHash -XMLFile $XMLFile }
+  if ($Rule -eq "sprite") { 
+    Write-Sprite -PathHash $PathHash -XMLFile $XMLFile -Format "-cd" -OutputFile "$env:TEMP\neocore\$ProjectName\$ProjectName"
+  }
   if (($Rule -eq "make") -or ($Rule -eq "") -or (!$Rule) -or ($Rule -eq "default") ) { 
-    Write-Sprite -PathHash $PathHash -XMLFile $XMLFile
+    Write-Sprite -PathHash $PathHash -XMLFile $XMLFile -Format "-cd" -OutputFile "$env:TEMP\neocore\$ProjectName\$ProjectName"
     Write-Program -ProjectName $ProjectName -PathNeoDev $PathNeoDev -MakeFile $MakeFile -PRGFile $PRGFile
   } 
+  if ($Rule -eq "iso") {
+    Write-Iso `
+      -PRGFile $PRGFile `
+      -OutputFile "$env:TEMP\neocore\$ProjectName\$ProjectName.iso" `
+      -PathISOBuildFolder "$env:TEMP\neocore\$ProjectName\iso" `
+      -PathCDTemplate "$env:APPDATA\neocore\cd_template" `
+      -PathHash "$env:TEMP\neocore\$ProjectName\hash"
+      
+      #-MKISOFSBin "$env:APPDATA\neocore\bin\mkisofs.exe" `
+  }
   if ($Rule -eq "cue") {
-    Write-Sprite -PathHash $PathHash -XMLFile $XMLFile
+    Write-Sprite -PathHash $PathHash -XMLFile $XMLFile -Format "-cd" -OutputFile "$env:TEMP\neocore\$ProjectName\$ProjectName"
     Write-Program -ProjectName $ProjectName -PathNeoDev $PathNeoDev -MakeFile $MakeFile -PRGFile $PRGFile
     Write-ISO
   }
