@@ -8,8 +8,10 @@ function Remove-Project {
   Write-Host "Clean $ProjectName"
   Write-Host "Remove $env:TEMP\neocore\$ProjectName"
   Stop-Emulators
-  if (Test-Path -Path $env:TEMP\neocore\$ProjectName) { Get-ChildItem -Path $env:TEMP\neocore\$ProjectName -Recurse | Remove-Item -force -recurse }
-  if (Test-Path -Path $env:TEMP\neocore\$ProjectName) { Remove-Item $env:TEMP\neocore\$ProjectName -Force }
+  if (Test-Path -Path $env:TEMP\neocore\$ProjectName) {
+    Get-ChildItem -Path $env:TEMP\neocore\$ProjectName -Recurse -ErrorAction SilentlyContinue | Remove-Item -force -Recurse -ErrorAction SilentlyContinue
+  }
+  if (Test-Path -Path $env:TEMP\neocore\$ProjectName) { Remove-Item $env:TEMP\neocore\$ProjectName -Force -ErrorAction SilentlyContinue }
 }
 
 function Set-EnvPath {
@@ -24,17 +26,17 @@ function Set-EnvPath {
 }
 
 function Write-CUE {
-  param (
-    [Parameter(Mandatory=$true)][String] $CUEFile
+  param 
+  (
+    [Parameter(Mandatory=$true)][String] $OutputFile,
+    [Parameter(Mandatory=$true)][String] $ISOName
   )
-  # TODO
-  <#
-  echo CATALOG 0000000000000 > %FILECUE%
-echo   FILE "%ISONAME%" BINARY >> %FILECUE%
-echo   TRACK 01 MODE1/2048 >> %FILECUE%
-echo   INDEX 01 00:00:00 >> %FILECUE%
-%UNIX2DOS% %FILECUE% > nul 2>&1
-#>
+  "CATALOG 0000000000000" | Out-File -FilePath $OutputFile -Force
+  ('FILE "{0}" BINARY' -f $ISOName) | Out-File -FilePath $OutputFile -Append -Force
+  "TRACK 01 MODE1/2048" | Out-File -FilePath $OutputFile -Append -Force
+  "INDEX 01 00:00:00" | Out-File -FilePath $OutputFile -Append -Force
+  Write-Host "builded CUE is available to $OutputFile" -ForegroundColor Green
+  Write-Host ""
 }
 
 function Write-Program {

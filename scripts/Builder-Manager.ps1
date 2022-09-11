@@ -18,9 +18,6 @@ function Main {
     [String] $RaineBin,
     [String] $MameBin
   )
-  # TODO : make ascii art
-  Write-Host ""
-  Write-Host ""
   Write-Host "project informations" -ForegroundColor Yellow
   Write-Host "projectName : $ProjectName"
   Write-Host "makefile : $MakeFile"
@@ -51,6 +48,8 @@ function Main {
       -OutputFile "$env:TEMP\neocore\$ProjectName\$ProjectName.iso" `
       -PathISOBuildFolder "$env:TEMP\neocore\$ProjectName\iso" `
       -PathCDTemplate "$env:APPDATA\neocore\cd_template"
+
+    Write-CUE -OutputFile "$env:TEMP\neocore\$ProjectName\$ProjectName.cue" -ISOName "$ProjectName.iso"
   }
 
   function BuilderZIP {
@@ -64,19 +63,13 @@ function Main {
   if ($Rule -eq "clean") { Remove-Project -ProjectName $ProjectName }
   if ($Rule -eq "sprite") { BuilderSprite }
   if (($Rule -eq "make") -or ($Rule -eq "") -or (!$Rule) -or ($Rule -eq "default") ) {
+    # TODO : BuilderClean
     Remove-Project -ProjectName $ProjectName
     mkdir -Path "$env:TEMP\neocore\$ProjectName"
     BuilderSprite
     BuilderProgram
   } 
   if ($Rule -eq "iso") {
-    Remove-Project -ProjectName $ProjectName
-    mkdir -Path "$env:TEMP\neocore\$ProjectName"
-    BuilderSprite
-    BuilderProgram
-    BuilderISO
-  }
-  if ($Rule -eq "cue") {
     Remove-Project -ProjectName $ProjectName
     mkdir -Path "$env:TEMP\neocore\$ProjectName"
     BuilderSprite
