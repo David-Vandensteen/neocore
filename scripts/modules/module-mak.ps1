@@ -5,8 +5,8 @@ function Remove-Project {
   param (
     [Parameter(Mandatory=$true)][String] $ProjectName
   )
-  Write-Host "Clean $ProjectName"
-  Write-Host "Remove $env:TEMP\neocore\$ProjectName"
+  Write-Host "clean $ProjectName" -ForegroundColor Yellow
+  Write-Host "remove $env:TEMP\neocore\$ProjectName"
   Stop-Emulators
   if (Test-Path -Path $env:TEMP\neocore\$ProjectName) {
     Get-ChildItem -Path $env:TEMP\neocore\$ProjectName -Recurse -ErrorAction SilentlyContinue | Remove-Item -force -Recurse -ErrorAction SilentlyContinue
@@ -25,16 +25,38 @@ function Set-EnvPath {
   Write-Host ""
 }
 
+function Write-Mame {
+  param (
+    [Parameter(Mandatory=$true)][String] $MameBin,
+    [Parameter(Mandatory=$true)][String] $PathMame,
+    #[Parameter(Mandatory=$true)][String] $MameArgs,
+    [Parameter(Mandatory=$true)][String] $CUEFile,
+    [Parameter(Mandatory=$true)][String] $OutputFile
+  )
+  & chdman.exe createcd -i $CUEFile -o $OutputFile --force
+  #& $CHDMANBin createcd -i $CUEFile -o $OutputFile --force
+      <# TODO 
+    %CHDMAN% createcd -i %FILECUE% -o %FILECHD% --force > nul
+    powershell -ExecutionPolicy Bypass -File ..\..\scripts\mame-hash-writer.ps1 %PROJECT% %FILECHD% %MAMEHASH%
+    #>
+    <#
+    :mame-start-process
+      echo starting mame ...
+      start cmd /c "%MAMEFOLDER%\mame64.exe %MAME_ARGS% -rompath %MAMEFOLDER%\roms -hashpath %MAMEFOLDER%\hash -cfg_directory %temp% -nvram_directory %temp% -skip_gameinfo neocdz %PROJECT%"
+    #>
+
+}
+
 function Write-CUE {
   param 
   (
     [Parameter(Mandatory=$true)][String] $OutputFile,
     [Parameter(Mandatory=$true)][String] $ISOName
   )
-  "CATALOG 0000000000000" | Out-File -FilePath $OutputFile -Force
-  ('FILE "{0}" BINARY' -f $ISOName) | Out-File -FilePath $OutputFile -Append -Force
-  "TRACK 01 MODE1/2048" | Out-File -FilePath $OutputFile -Append -Force
-  "INDEX 01 00:00:00" | Out-File -FilePath $OutputFile -Append -Force
+  "CATALOG 0000000000000 " | Out-File -Encoding utf8 -FilePath $OutputFile -Force
+  ('  FILE "{0}" BINARY ' -f $ISOName) | Out-File -Encoding utf8 -FilePath $OutputFile -Append -Force
+  "  TRACK 01 MODE1/2048 " | Out-File -Encoding utf8 -FilePath $OutputFile -Append -Force
+  "  INDEX 01 00:00:00 " | Out-File -Encoding utf8 -FilePath $OutputFile -Append -Force
   Write-Host "builded CUE is available to $OutputFile" -ForegroundColor Green
   Write-Host ""
 }
