@@ -1,9 +1,13 @@
+# TODO : hot reload with mame
+# TODO : mame with param, mame in window mode ...
+
 param (
     [Parameter(Mandatory=$true)][String] $ProjectName,
     [String] $Rule = "default"
 )
 
 Import-Module "..\..\scripts\modules\module-mak.ps1"
+Import-Module "..\..\scripts\modules\module-emulators.ps1"
 
 function Main {
   param (
@@ -16,23 +20,23 @@ function Main {
     [Parameter(Mandatory=$true)][String] $XMLFile,
     [Parameter(Mandatory=$true)][String] $PathMame,
     [Parameter(Mandatory=$true)][String] $Rule,
-    [Parameter(Mandatory=$true)][String] $RaineBin,
-    [Parameter(Mandatory=$true)][String] $MameBin
+    [Parameter(Mandatory=$true)][String] $RaineBin
   )
-  Write-Host "project informations" -ForegroundColor Yellow
-  Write-Host "projectName : $ProjectName"
+  Write-Host "informations" -ForegroundColor Yellow
+  Write-Host "project name : $ProjectName"
   Write-Host "makefile : $MakeFile"
-  Write-Host "pathNeodevBin : $PathNeoDevBin"
-  Write-Host "pathNeocoreBin : $PathNeocoreBin"
-  Write-Host "pathNeodev : $PathNeoDev"
-  Write-Host "PRGFile : $PRGFILE"
-  Write-Host "Rule : $Rule"
-  Write-Host "XMLFile : $XMLFILE"
-  Write-Host "Mame Folder : $PathMame"
-  Write-Host "Raine : $RaineBin"
-  Write-Host "Mame : $MameBin"
+  Write-Host "path neodev bin : $PathNeoDevBin"
+  Write-Host "path neocore bin : $PathNeocoreBin"
+  Write-Host "path neodev : $PathNeoDev"
+  Write-Host "program file : $PRGFILE"
+  Write-Host "required rule : $Rule"
+  Write-Host "graphic data XML file for DATLib : $XMLFILE"
+  Write-Host "mame folder : $PathMame"
+  Write-Host "raine exe : $RaineBin"
   Write-Host "--------------------------------------------"
   Write-Host ""
+
+  Stop-Emulators
 
   function BuilderClean {
     param (
@@ -40,9 +44,8 @@ function Main {
     )
     Remove-Project -ProjectName $ProjectName
   }
-  BuilderClean -ProjectName $ProjectName
+  if ($Rule -notmatch "^only:") { BuilderClean -ProjectName $ProjectName }
   if ((Test-Path -Path "$env:TEMP\neocore\$ProjectName") -eq $false) { mkdir -Path "$env:TEMP\neocore\$ProjectName" | Out-Null }
-
 
   function BuilderProgram { Write-Program -ProjectName $ProjectName -PathNeoDev $PathNeoDev -MakeFile $MakeFile -PRGFile $PRGFile }
 
@@ -63,7 +66,7 @@ function Main {
 
   function BuilderMame {
     Write-Mame `
-      -MameBin $MameBin `
+      -ProjectName $ProjectName `
       -PathMame $PathMame `
       -CUEFile "$env:TEMP\neocore\$ProjectName\$ProjectName.cue" `
       -OutputFile "$PathMame\roms\neocdz\$ProjectName.chd"
@@ -115,6 +118,11 @@ function Main {
     BuilderZIP
     BuilderMame
   }
+  if ($Rule -eq "only:sprite") { BuilderSprite }
+  if ($Rule -eq "only:program") { BuilderProgram }
+  if ($Rule -eq "only:iso") { BuilderISO }
+  if ($Rule -eq "only:zip") { BuilderZIP }
+  if ($Rule -eq "only:mame") { BuilderMame }
 }
 
 Main `
@@ -127,5 +135,4 @@ Main `
   -Rule $Rule `
   -XMLFile "chardata.xml" `
   -RaineBin "$env:APPDATA\neocore\raine\raine32.exe" `
-  -MameBin "$env:APPDATA\neocore\mame\mame64.exe" `
   -PathMame "$env:APPDATA\neocore\mame"
