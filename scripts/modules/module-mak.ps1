@@ -23,32 +23,6 @@ function Set-EnvPath {
   Write-Host ""
 }
 
-function Write-Mame {
-  param (
-    [Parameter(Mandatory=$true)][String] $ProjectName,
-    [Parameter(Mandatory=$true)][String] $PathMame,
-    #[Parameter(Mandatory=$true)][String] $MameArgs,
-    [Parameter(Mandatory=$true)][String] $CUEFile,
-    [Parameter(Mandatory=$true)][String] $OutputFile
-  )
-
-  if ((Test-Path -Path $PathMame) -eq $false) { Write-Host "error - $PathMame not found" -ForegroundColor Red; exit 1 }
-  if ((Test-Path -Path $CUEFile) -eq $false) { Write-Host "error - $CUEFile not founc" -ForegroundColor Red; exit 1 }
-  if ((Test-Path -Path "$PathMame\mame64.exe") -eq $false) { Write-Host "error - mame64.exe is not found in $PathMame" -ForegroundColor Red; exit 1 }
-
-  & chdman.exe createcd -i $CUEFile -o $OutputFile --force
-  if ((Test-Path -Path $OutputFile) -eq $false) { Write-Host "error - $OutputFile is not found" -ForegroundColor Red; exit 1 }
-
-  Write-MameHash -ProjectName $ProjectName -CHDFile $OutputFile -XMLFile "$PathMame\hash\neocd.xml"
-  & "$PathMame\mame64.exe" -rompath "$PathMame\roms" -hashpath "$PathMame\hash" -cfg_directory $env:TEMP -nvram_directory $env:TEMP -skip_gameinfo neocdz $ProjectName
-    <#
-    :mame-start-process
-      echo starting mame ...
-      start cmd /c "%MAMEFOLDER%\mame64.exe %MAME_ARGS% -rompath %MAMEFOLDER%\roms -hashpath %MAMEFOLDER%\hash -cfg_directory %temp% -nvram_directory %temp% -skip_gameinfo neocdz %PROJECT%"
-    #>
-
-}
-
 function Write-CUE {
   param 
   (
@@ -59,8 +33,7 @@ function Write-CUE {
   ('  FILE "{0}" BINARY ' -f $ISOName) | Out-File -Encoding ascii -FilePath $OutputFile -Append -Force
   "  TRACK 01 MODE1/2048 " | Out-File -Encoding ascii -FilePath $OutputFile -Append -Force
   "  INDEX 01 00:00:00 " | Out-File -Encoding ascii -FilePath $OutputFile -Append -Force
-  # TODO or not
-  #& unix2dos $OutputFile
+
   if ((Test-Path -Path $OutputFile) -eq $true) {
     Write-Host "builded CUE is available to $OutputFile" -ForegroundColor Green
     Write-Host ""

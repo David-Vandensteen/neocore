@@ -1,6 +1,13 @@
-# TODO : hot reload with mame
-# TODO : mame with params 
-# TODO : mame in window mode ...
+# TODO : critical hot reload with mame
+# TODO : critical update readme for hot reloading only with mame
+# TODO : critical scafolding
+# TODO : critical update mak.bat in all project
+# TODO : critical build & run all project script
+# TODO : critical remove useless scripts
+# TODO : test on win10-x64 stock (make a branch with readme update)
+# TODO : test on win11 stock (make a branch with readme update)
+# TODO : mame with params
+# TODO : update readme, explain Makefile overload
 
 param (
     [Parameter(Mandatory=$true)][String] $ProjectName,
@@ -9,6 +16,7 @@ param (
 
 Import-Module "..\..\scripts\modules\module-mak.ps1"
 Import-Module "..\..\scripts\modules\module-emulators.ps1"
+Import-Module "..\..\scripts\modules\module-mame.ps1"
 
 function Main {
   param (
@@ -118,6 +126,7 @@ function Main {
     BuilderISO
     BuilderZIP
     BuilderMame
+    Mame -GameName $ProjectName -PathMame $PathMame
   }
   if ($Rule -eq "only:sprite") { BuilderSprite }
   if ($Rule -eq "only:program") { BuilderProgram }
