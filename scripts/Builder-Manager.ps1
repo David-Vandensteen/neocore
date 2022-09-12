@@ -1,12 +1,12 @@
-# TODO : merge on develop
+# TODO : merge into develop
 # TODO : branch - test on win10-x64 stock (with readme update)
 # TODO : branch - test on win11 stock (with readme update)
-# TODO : merge on develop
-# TODO : branch - update readme, explain Makefile overload
-# TODO : merge on develop
-# TODO : branch - mame with params
-# TODO : merge on develop
-# TODO : merge on master
+# TODO : merge into develop
+# TODO : branch - review readme, explain Makefile overload
+# TODO : merge into develop
+# TODO : branch - feat/mame-params
+# TODO : merge into develop
+# TODO : merge into master
 
 param (
     [Parameter(Mandatory=$true)][String] $ProjectName,
