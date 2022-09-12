@@ -1,3 +1,46 @@
+function Write-MameHash {
+  param (
+    [Parameter(Mandatory=$true)][String] $ProjectName,
+    [Parameter(Mandatory=$true)][String] $CHDFile,
+    [Parameter(Mandatory=$true)][String] $XMLFile
+  )
+  function Get-CHDSHA1 {
+    param (
+      [Parameter(Mandatory=$true)][String] $File
+    )
+    $r = (& chdman.exe info  -i $file) | Select-Object -Index 11
+    $r = $r.Split(":")[1].trim()
+    return $r
+  }
+  function Write-MameHashFile {
+    param (
+      [Parameter(Mandatory=$true)][String] $ProjectName,
+      [Parameter(Mandatory=$true)][String] $XMLFile,
+      [Parameter(Mandatory=$true)][String] $SHA1
+    )
+    Set-Content -Path $XMLFile -Value '<?xml version="1.0"?>'
+    Add-Content -Path $XMLFile -Value '<!-- THIS FILE IS GENERATED JUST IN TIME BY NEOCORE -->'
+    Add-Content -Path $XMLFile -Value '<!DOCTYPE softwarelist SYSTEM "softwarelist.dtd">'
+    Add-Content -Path $XMLFile -Value '<softwarelist name="neocd" description="SNK NeoGeo CD CD-ROMs">'
+    Add-Content -Path $XMLFile -Value "<software name=`"$ProjectName`">"
+    Add-Content -Path $XMLFile -Value "<description>$ProjectName</description>"
+    Add-Content -Path $XMLFile -Value '<year>1995</year>'
+    Add-Content -Path $XMLFile -Value "<publisher>$ProjectName</publisher>"
+    Add-Content -Path $XMLFile -Value "<info name=`"alt_title`" value=`"$ProjectName`" />"
+    Add-Content -Path $XMLFile -Value '<info name="serial" value="NGCD-583 (JPN)" />'
+    Add-Content -Path $XMLFile -Value '<info name="release" value="59950502 (JPN)" />'
+    Add-Content -Path $XMLFile -Value '<part name="cdrom" interface="neocd_cdrom">'
+    Add-Content -Path $XMLFile -Value '<diskarea name="cdrom">'
+    Add-Content -Path $XMLFile -Value "<disk name=`"$ProjectName`" sha1=`"$SHA1`"/>"
+    Add-Content -Path $XMLFile -Value '</diskarea>'
+    Add-Content -Path $XMLFile -Value '</part>'
+    Add-Content -Path $XMLFile -Value '</software>'
+    Add-Content -Path $XMLFile -Value '</softwarelist>'  
+  }
+  $SHA1 = Get-CHDSHA1 -File $CHDFile
+  Write-MameHashFile -ProjectName $ProjectName -XMLFile $XMLFile -SHA1 $SHA1
+}
+
 function Write-Mame {
   param (
     [Parameter(Mandatory=$true)][String] $ProjectName,

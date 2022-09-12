@@ -1,5 +1,3 @@
-Import-Module "..\..\scripts\modules\module-mame-hash.ps1"
-
 function Remove-Project {
   param (
     [Parameter(Mandatory=$true)][String] $ProjectName
