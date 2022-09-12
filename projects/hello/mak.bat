@@ -1,5 +1,9 @@
 @echo off
-set PROJECT=hello
+set projectName="hello"
+set builderScript="..\..\scripts\Builder-Manager.ps1"
 
-set routine=..\..\scripts\mak-routines.bat
-call %routine% %*
+if "%1"=="" (
+  powershell -ExecutionPolicy Bypass -File %builderScript%  -ProjectName %projectName%
+) else (
+  powershell -ExecutionPolicy Bypass -File %builderScript% -ProjectName %projectName% -Rule %1
+)

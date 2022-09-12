@@ -86,26 +86,18 @@ mak
 ## Run
 With raine   
 ```cmd
-mak raine
+mak run:raine
 ```
 
 With mame
 ```cmd
-mak mame
+mak run:mame
 ```
 
-## Project clean rebuild
-### Rebuild all
-```cmd
-cd projects\hello
-mak clean && mak init && mak
-```
-Or
+## Project clean
 ```cmd
 cd projects\hello
 mak clean
-mak init
-mak
 ```
 
 ## "Hot reload"
@@ -113,7 +105,7 @@ mak
 cd projects\hello
 mak serve
 ```
-Wait the running of emulator and edit projects\hello\main.c
+Wait the running of the emulator and edit projects\hello\main.c
 Remove **loggerInfo("DAVID VANDENSTEEN");** (for example)
 Save the file
 

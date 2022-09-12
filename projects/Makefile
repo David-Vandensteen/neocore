@@ -80,3 +80,10 @@ $(NEOBUILDTEMP)/%.o: %.c
 
 $(NEOBUILDTEMP)/%.o: %.s
 	$(AS) $(ASFLAGS) $< -o $@
+
+debug:
+	@echo DEBUG
+	@echo PROJECT : $(PROJECTNAME)
+	@echo BASEDIR : $(BASEDIR)
+	@echo NEOBUILDTEMP : $(NEOBUILDTEMP)
+	@echo FILEPRG : $(FILEPRG)
