@@ -1,5 +1,3 @@
-# TODO : critical update readme for hot reloading only with mame
-# TODO : critical scafolding
 # TODO : critical update mak.bat in all project
 # TODO : critical build & run all project script
 # TODO : critical remove useless scripts
