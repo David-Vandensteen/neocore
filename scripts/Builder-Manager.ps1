@@ -1,9 +1,6 @@
-# TODO : critical remove useless scripts
 # TODO : test on win10-x64 stock (make a branch with readme update)
 # TODO : test on win11 stock (make a branch with readme update)
 # TODO : mame with params
-# TODO : log mame run
-# TODO : log raine run
 # TODO : update readme, explain Makefile overload
 
 param (
@@ -116,6 +113,7 @@ function Main {
     BuilderProgram
     BuilderISO
     BuilderZIP
+    Write-Host "lauching raine $ProjectName" -ForegroundColor Yellow
     & $RaineBin "$env:TEMP\neocore\$ProjectName\$ProjectName.zip"
   }
   if ($Rule -eq "run:mame") {
