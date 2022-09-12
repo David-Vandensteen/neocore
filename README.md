@@ -22,7 +22,9 @@ I share my tools and my code, these could possibly help your projects on this pl
 (**Doxygen doc**) http://azertyvortex.free.fr/neocore-doxy/develop/
 
 ***Lot of thing is under development and unoptimized ...***
-***I'm not responsible for any software damage on your computer***
+***I'm not responsible for any software damage ***
+
+*Tested on Windows 10 x64 (09/12/2022)*  
 
 License: MIT
 (c) 2019 [David Vandensteen <dvandensteen@gmail.com>]
