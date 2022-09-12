@@ -86,12 +86,12 @@ mak
 ## Run
 With raine   
 ```cmd
-mak raine
+mak run:raine
 ```
 
 With mame
 ```cmd
-mak mame
+mak run:mame
 ```
 
 ## Project clean rebuild
