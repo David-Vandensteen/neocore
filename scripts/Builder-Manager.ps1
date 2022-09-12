@@ -1,3 +1,4 @@
+# TODO : fix scaffold project Name
 # TODO : critical update mak.bat in all project
 # TODO : critical build & run all project script
 # TODO : critical remove useless scripts

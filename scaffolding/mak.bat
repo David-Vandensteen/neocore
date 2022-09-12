@@ -1,6 +1,5 @@
 @echo off
-rem TODO : update scaffold
-set projectName="hello"
+set projectName="/*project*/"
 set builderScript="..\..\scripts\Builder-Manager.ps1"
 
 if "%1"=="" (
