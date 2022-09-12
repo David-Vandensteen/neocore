@@ -1,7 +1,12 @@
-# TODO : test on win10-x64 stock (make a branch with readme update)
-# TODO : test on win11 stock (make a branch with readme update)
-# TODO : mame with params
-# TODO : update readme, explain Makefile overload
+# TODO : merge on develop
+# TODO : branch - test on win10-x64 stock (with readme update)
+# TODO : branch - test on win11 stock (with readme update)
+# TODO : merge on develop
+# TODO : branch - update readme, explain Makefile overload
+# TODO : merge on develop
+# TODO : branch - mame with params
+# TODO : merge on develop
+# TODO : merge on master
 
 param (
     [Parameter(Mandatory=$true)][String] $ProjectName,
