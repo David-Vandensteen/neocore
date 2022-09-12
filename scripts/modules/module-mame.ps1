@@ -24,6 +24,5 @@ function Mame {
   )
   if ((Test-Path -Path $PathMame) -eq $false) { Write-Host "error - $PathMame not found" -ForegroundColor Red; exit 1 }
   if ((Test-Path -Path "$PathMame\mame64.exe") -eq $false) { Write-Host ("error - {0}\mame64.exe not found" -f $PathMame) -ForegroundColor Red; exit 1 }
-  # & "$PathMame\mame64.exe" -window -rompath "$PathMame\roms" -hashpath "$PathMame\hash" -cfg_directory $env:TEMP -nvram_directory $env:TEMP -skip_gameinfo neocdz $GameName
   Start-Process -FilePath "$PathMame\mame64.exe"  -ArgumentList "-window -rompath `"$PathMame\roms`" -hashpath `"$PathMame\hash`" -cfg_directory $env:TEMP -nvram_directory $env:TEMP -skip_gameinfo neocdz $GameName"
 }

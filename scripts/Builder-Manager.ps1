@@ -111,7 +111,8 @@ function Main {
     BuilderProgram
     BuilderISO
     BuilderZIP
-    & $RaineBin "$env:TEMP\neocore\$ProjectName\$ProjectName.zip"
+    BuilderMame
+    Mame -GameName $ProjectName -PathMame $PathMame
   }
   if ($Rule -eq "run:raine") {
     BuilderSprite
