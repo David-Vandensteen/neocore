@@ -1,4 +1,3 @@
-Import-Module "..\..\scripts\modules\module-iso.ps1"
 Import-Module "..\..\scripts\modules\module-mame-hash.ps1"
 
 function Remove-Project {
@@ -121,7 +120,7 @@ function Write-ISO {
   Copy-Item -Path $PRGFile -Destination "$PathISOBuildFolder\DEMO.PRG" -Force
   Copy-Item -Path $SpriteFile -Destination "$PathISOBuildFolder\DEMO.SPR" -Force
 
-  New-IsoFile -Source $PathISOBuildFolder -Path $OutputFile -Force | Out-Null
+  & mkisofs.exe -o $OutputFile -pad $PathISOBuildFolder
   
   if ((Test-Path -Path $OutputFile) -eq $true) {
     Write-Host "builded ISO is available to $OutputFile" -ForegroundColor Green

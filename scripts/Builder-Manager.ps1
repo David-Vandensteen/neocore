@@ -1,5 +1,6 @@
 # TODO : hot reload with mame
-# TODO : mame with param, mame in window mode ...
+# TODO : mame with params 
+# TODO : mame in window mode ...
 
 param (
     [Parameter(Mandatory=$true)][String] $ProjectName,
