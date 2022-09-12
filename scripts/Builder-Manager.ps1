@@ -1,12 +1,9 @@
-# TODO : fix scaffold project Name
-# TODO : critical update mak.bat in all project
-# TODO : critical build & run all project script
+# TODO : critical kill dead terminal in run mode
 # TODO : critical remove useless scripts
 # TODO : test on win10-x64 stock (make a branch with readme update)
 # TODO : test on win11 stock (make a branch with readme update)
 # TODO : mame with params
 # TODO : update readme, explain Makefile overload
-# TODO : kill dead terminal in serve mode
 
 param (
     [Parameter(Mandatory=$true)][String] $ProjectName,

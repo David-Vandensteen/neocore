@@ -1,5 +1,4 @@
 @echo off
-rem TODO : update scaffold
 set projectName="hello"
 set builderScript="..\..\scripts\Builder-Manager.ps1"
 

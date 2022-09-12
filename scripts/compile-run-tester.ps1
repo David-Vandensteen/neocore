@@ -8,7 +8,7 @@ function compileProject($name) {
   pushd ..\projects\$name
   .\mak.bat clean
   if ($LASTEXITCODE -ne 0) { Write-Host "break"; Write-Host $env:error; break }
-  .\mak.bat raine
+  .\mak.bat run
   if ($LASTEXITCODE -ne 0) { break }
   sleep $killTime
   popd
