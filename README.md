@@ -25,6 +25,7 @@ I share my tools and my code, these could possibly help your projects on this pl
 ***I'm not responsible for any software damage ***
 
 *Tested on Windows 10 x64 (09/12/2022)*  
+*Tested on Windows 11 (09/13/2022)*  
 
 License: MIT
 (c) 2019 [David Vandensteen <dvandensteen@gmail.com>]
@@ -47,7 +48,7 @@ After install, all is available from
 
 ## Compiling the lib
 ```cmd
-mak
+.\mak
 ```
 mak overwrite path environment variable during the compilation.
 its avoid collisions with other bin, sdk, gcc...
@@ -59,53 +60,46 @@ its avoid collisions with other bin, sdk, gcc...
 ## Make Hello
 ```cmd
 cd projects\hello
-mak run
+.\mak run
 ```
 #
 
 ## Make your first project
 ```cmd
-mak init-project
+.\mak init-project
 Project name : myfirst
 ```
 A new folder (projects\\myfirst) has been scaffolded
 Now compile and run it:
 ```cmd
 cd projects\myfirst
-mak run
+.\mak run
 ```
 The compiled resources output folder is:
 ```cmd
 %temp%\neocore\myfirst
 ```
-
-## Sprite
-```cmd
-cd projects\collide
-mak sprite
-mak
-```
 ## Run
 With raine   
 ```cmd
-mak run:raine
+.\mak run:raine
 ```
 
 With mame
 ```cmd
-mak run:mame
+.\mak run:mame
 ```
 
 ## Project clean
 ```cmd
 cd projects\hello
-mak clean
+.\mak clean
 ```
 
 ## "Hot reload"
 ```cmd
 cd projects\hello
-mak serve
+.\mak serve
 ```
 Wait the running of the emulator and edit projects\hello\main.c
 Remove **loggerInfo("DAVID VANDENSTEEN");** (for example)
@@ -120,11 +114,7 @@ Some problems currently:
 ## Make ISO
 ```cmd
 cd projects\hello
-mak iso
-```
-The iso file is generated at:
-```cmd
-%temp%\neocore\hello\hello.iso
+.\mak iso
 ```
 
 ## CDDA play ... (todo)
