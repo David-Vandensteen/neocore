@@ -1,1 +1,0 @@
-set MAME_ARGS=-window -sound none -frameskip 10

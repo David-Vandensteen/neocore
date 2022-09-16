@@ -77,6 +77,10 @@ function Main {
       -ISOFile "$env:TEMP\neocore\$ProjectName\$ProjectName.iso"
   }
 
+  function RunnerMame {
+    Mame -GameName $ProjectName -PathMame $PathMame -XMLArgsFile "$env:APPDATA\neocore\mame-args.xml"
+  }
+
   Set-EnvPath -PathNeoDevBin $PathNeoDevBin -PathNeocoreBin $PathNeocoreBin
   if ($Rule -eq "clean") { exit 0 }
   if ($Rule -eq "sprite") { BuilderSprite }
@@ -101,7 +105,7 @@ function Main {
     BuilderISO
     BuilderZIP
     BuilderMame
-    Mame -GameName $ProjectName -PathMame $PathMame
+    RunnerMame
   }
   if ($Rule -eq "run:raine") {
     BuilderSprite
@@ -117,7 +121,7 @@ function Main {
     BuilderISO
     BuilderZIP
     BuilderMame
-    Mame -GameName $ProjectName -PathMame $PathMame
+    RunnerMame
   }
   if ($Rule -eq "serve") {
     While ($true) {
