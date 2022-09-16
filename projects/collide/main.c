@@ -24,7 +24,8 @@ int main(void) {
     (asteroid_sprite.tileWidth MULT8),
     32,
     0,
-    0
+    0,
+    AUTOBOX
   );
   animated_sprite_physic_display(&player, 10, 10, PLAYER_SPRITE_ANIM_IDLE);
   image_physic_display(&asteroid, 100, 100);

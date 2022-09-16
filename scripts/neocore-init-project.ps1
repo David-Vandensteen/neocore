@@ -17,11 +17,12 @@ function copyFile([boolean] $_exit, [String] $_src, [String] $_dest){
   }
 }
 
-function copyFiles{
+function copyFiles {
   copyFile 0 scaffolding\common_crt0_cd.s projects\$projectName
   copyFile 0 scaffolding\crt0_cd.s projects\$projectName
   copyFile 0 scaffolding\mak.bat projects\$projectName
   copyFile 0 scaffolding\chardata.xml projects\$projectName
+  copyFile 0 scaffolding\assets\gfx\logo.png projects\$projectName\assets\gfx\logo.png
 }
 
 function configureMakefile{

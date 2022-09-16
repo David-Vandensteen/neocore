@@ -3,6 +3,9 @@
   <setup>
     <starting_tile>256</starting_tile>
   </setup>
+  <pict id="dot_sprite">
+    <file>assets\gfx\dot.png</file>
+  </pict>
   <pict id="planet04_sprite">
     <file>assets\gfx\planet04.png</file>
     <flips>xyz</flips>

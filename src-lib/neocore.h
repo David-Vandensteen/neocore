@@ -75,6 +75,9 @@
 #define SPRITE_INDEX_MANAGER_MAX  384
 #define PALETTE_INDEX_MANAGER_MAX 256
 
+#define MANUALBOX 0
+#define AUTOBOX 1
+
 enum direction { NONE, UP, DOWN, LEFT, RIGHT };
 
 /**
@@ -191,6 +194,7 @@ typedef struct Image_Physic Image_Physic;
 struct Image_Physic {
   Image image;          /*!< - Image */
   Box box;              /*!< - Box */
+  BOOL autobox_enabled; /*!< - enable autobox */
   BOOL physic_enabled;  /*!< - enable physic (for collide detection capabilities) */
 };
 
@@ -408,6 +412,16 @@ void box_resize(Box *Box, short edge); // todo (minor) - deprecated ?
 void inline clear_vram();
 
 /**
+ * \brief clear sprite index table
+ */
+void clear_sprite_index_table();
+
+/**
+ * \brief clear palette inde table
+ */
+void clear_palette_index_table();
+
+/**
  * \brief Play CD Audio Track
  * @param track
  */
@@ -430,6 +444,12 @@ void inline fix_print_neocore(int x, int y, char *label);
  * @param lengh
  */
 void flash_init(Flash *flash, BOOL enabled, short frequency, short lengh);
+
+/**
+ * \brief return estimated free RAM
+ */
+WORD free_ram_info();
+
 
   //---------------------------------------------------------------------------//
  //                                  -G                                      //
@@ -570,7 +590,8 @@ void image_physic_init(
   short box_witdh,
   short box_height,
   short box_width_offset,
-  short box_height_offset
+  short box_height_offset,
+  BOOL autobox_enabled
 );
 
 /**
@@ -775,6 +796,12 @@ void        scroller_move(Scroller *s, short x, short y);
  * @param y
  */
 void        scroller_set_position(Scroller *s, short x, short y);
+
+/**
+ * \brief scroller destroy
+ * @param Scroller* pointer
+ */
+void       scroller_destroy(Scroller *s);
 
   /*-----------*/
  /* -shrunk   */

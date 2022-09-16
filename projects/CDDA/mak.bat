@@ -1,8 +1,9 @@
 @echo off
-set PROJECT=CDDA
+set projectName="CDDA"
+set builderScript="..\..\scripts\Builder-Manager.ps1"
 
-set routine=..\..\scripts\mak-routines.bat
-set backupPath=%path%
-
-call %routine% :main %*
-path=%backupPath%
+if "%1"=="" (
+  powershell -ExecutionPolicy Bypass -File %builderScript%  -ProjectName %projectName%
+) else (
+  powershell -ExecutionPolicy Bypass -File %builderScript% -ProjectName %projectName% -Rule %1
+)

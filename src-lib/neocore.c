@@ -260,6 +260,7 @@ void animated_sprite_show(Animated_Sprite *animated_sprite) {
 void animated_sprite_destroy(Animated_Sprite *animated_sprite) {
   animated_sprite_hide(animated_sprite);
   sprite_index_manager_set_free(animated_sprite->as.baseSprite, animated_sprite->si->maxWidth);
+  clearSprites(animated_sprite->as.baseSprite, animated_sprite->as.tileWidth);
 }
 
   /*--------------------------*/
@@ -472,17 +473,22 @@ void cdda_play(BYTE track) {
   }
 }
 
-void inline clear_vram() { // todo (minor) - disable interrupt
+void inline clear_vram() {
   WORD addr = 0x0000;
   WORD addr_end = 0x8FFF;
+  disableIRQ();
   for (addr = addr; addr <= addr_end; addr++) {
     SC234Put(addr, 0);
   }
+  enableIRQ();
   SCClose();
   wait_vbl_max(10);
   SCClose();
   wait_vbl_max(10);
 }
+
+void clear_sprite_index_table() { sprite_index_manager_init(); }
+void clear_palette_index_table() { palette_index_manager_init(); }
 
   //--------------------------------------------------------------------------//
  //                                  -F                                      //
@@ -495,6 +501,17 @@ void flash_init(Flash *flash, BOOL enabled, short frequency, short lengh) {
   flash->enabled = enabled;
   flash->frequency = frequency;
   flash->lengh = lengh;
+}
+
+WORD free_ram_info() {
+  // $000000  $0FFFFF    Vector Table, 68k program (.PRG files), 68k RAM
+  // $100000  $00F2FF    WORKRAM_USER  User RAM/Work RAM
+  int addr_end = 0x0FFFF, addr_used = 0x0FFFF;
+  int used = null;
+  for (addr_used = addr_used; addr_used > 0; addr_used--) {
+    if (volMEMBYTE(addr_used)) used++;
+  }
+  return addr_end - used;
 }
 
   //--------------------------------------------------------------------------//
@@ -620,6 +637,7 @@ BOOL image_flash(Image *image) {
 void image_destroy(Image *image) {
   image_hide(image);
   sprite_index_manager_set_free(image->pic.baseSprite, image->pi->tileWidth);
+  clearSprites(image->pic.baseSprite, image->pi->tileWidth);
 }
 
   /*------------------*/
@@ -632,25 +650,35 @@ void image_physic_init(
   short box_witdh,
   short box_height,
   short box_width_offset,
-  short box_height_offset
+  short box_height_offset,
+  BOOL autobox_enabled
 ) {
   image_init(&image_physic->image, pi, pali);
-  box_init(&image_physic->box, box_witdh, box_height, box_width_offset, box_height_offset);
+  image_physic->autobox_enabled = autobox_enabled;
+  if (image_physic->autobox_enabled) {
+    box_init(&image_physic->box, box_witdh, box_height, box_width_offset, box_height_offset);
+  }
 }
 
 void image_physic_display(Image_Physic *image_physic, short x, short y) {
   image_display(&image_physic->image, x, y);
-  box_update(&image_physic->box, x, y);
+  if (image_physic->autobox_enabled) {
+    box_update(&image_physic->box, x, y);
+  }
 }
 
 void image_physic_move(Image_Physic *image_physic, short x_offset, short y_offset) {
   image_move(&image_physic->image, x_offset, y_offset);
-  box_update(&image_physic->box, image_physic->image.pic.posX, image_physic->image.pic.posY);
+  if (image_physic->autobox_enabled) {
+    box_update(&image_physic->box, image_physic->image.pic.posX, image_physic->image.pic.posY);
+  }
 }
 
 void image_physic_set_position(Image_Physic *image_physic, short x, short y) {
   image_set_position(&image_physic->image, x, y);
-  box_update(&image_physic->box, x, y);
+  if (image_physic->autobox_enabled) {
+    box_update(&image_physic->box, x, y);
+  }
 }
 
 void image_physic_hide(Image_Physic *image_physic) {
@@ -673,6 +701,7 @@ void image_physic_shrunk(Image_Physic *image_physic, WORD shrunk_value) {
 }
 
 void image_physic_destroy(Image_Physic *image_physic) {
+  image_physic_hide(image_physic);
   image_destroy(&image_physic->image);
 }
 
@@ -940,7 +969,11 @@ void scroller_init(Scroller *s, scrollerInfo *si, paletteInfo *pali) {
   s->pali = pali;
 }
 
-// TODO : scroller_destroy()
+void scroller_destroy(Scroller *s) {
+  sprite_index_manager_set_free(s->s.baseSprite, 21);
+  clearSprites(s->s.baseSprite, 21);
+}
+
 
   /*-----------*/
  /* -shrunk   */

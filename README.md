@@ -15,14 +15,17 @@ I write Neocore to make my shoot em up game on Neo Geo CD
 (**Flamble**) http://azertyvortex.free.fr/flamble
 
 Neocore provide high level functions over Neo Dev Kit (**Fabrice Martinez, Jeff Kurtz, al**) & DATLib 0.2 (**HPMAN**)
-The Makefile contain many rules (make sprite, make zip, make iso, make cue, make run, make serve...)
+The mak script contain many rules (mak sprite, mak zip, mak iso, mak cue, mak run, mak serve...)
 
 I share my tools and my code, these could possibly help your projects on this platform !!!
 
 (**Doxygen doc**) http://azertyvortex.free.fr/neocore-doxy/develop/
 
 ***Lot of thing is under development and unoptimized ...***
-***I'm not responsible for any software damage on your computer***
+***I'm not responsible for any software damage ***
+
+*Tested on Windows 10 x64 (09/12/2022)*  
+*Tested on Windows 11 (09/13/2022)*  
 
 License: MIT
 (c) 2019 [David Vandensteen <dvandensteen@gmail.com>]
@@ -34,7 +37,7 @@ Graphics by **Grass**
 ```cmd
 install.bat
 ```
-The install script download sdk, emulator (Raine), CD structure template ... everything you need to do a Neo Geo CD project   
+The install script download sdk, emulators (Raine & Mame), CD structure template ... everything you need to do a Neo Geo CD project   
 After install, all is available from
 ```cmd
 %appdata%\neocore
@@ -45,7 +48,7 @@ After install, all is available from
 
 ## Compiling the lib
 ```cmd
-mak
+.\mak
 ```
 mak overwrite path environment variable during the compilation.
 its avoid collisions with other bin, sdk, gcc...
@@ -57,63 +60,48 @@ its avoid collisions with other bin, sdk, gcc...
 ## Make Hello
 ```cmd
 cd projects\hello
-mak run
+.\mak run
 ```
 #
 
 ## Make your first project
 ```cmd
-mak init-project
+.\mak init-project
 Project name : myfirst
 ```
 A new folder (projects\\myfirst) has been scaffolded
 Now compile and run it:
 ```cmd
 cd projects\myfirst
-mak run
+.\mak run
 ```
 The compiled resources output folder is:
 ```cmd
 %temp%\neocore\myfirst
 ```
-
-## Sprite
-```cmd
-cd projects\collide
-mak sprite
-mak
-```
 ## Run
 With raine   
 ```cmd
-mak run-raine
+.\mak run:raine
 ```
 
 With mame
 ```cmd
-mak run-mame
+.\mak run:mame
 ```
 
-## Project clean rebuild
-### Rebuild all
+## Project clean
 ```cmd
 cd projects\hello
-mak clean && mak init && mak
-```
-Or
-```cmd
-cd projects\hello
-mak clean
-mak init
-mak
+.\mak clean
 ```
 
 ## "Hot reload"
 ```cmd
 cd projects\hello
-mak serve
+.\mak serve
 ```
-Wait the running of emulator and edit projects\hello\main.c
+Wait the running of the emulator and edit projects\hello\main.c
 Remove **loggerInfo("DAVID VANDENSTEEN");** (for example)
 Save the file
 
@@ -126,11 +114,7 @@ Some problems currently:
 ## Make ISO
 ```cmd
 cd projects\hello
-mak iso
-```
-The iso file is generated at:
-```cmd
-%temp%\neocore\hello\hello.iso
+.\mak iso
 ```
 
 ## CDDA play ... (todo)

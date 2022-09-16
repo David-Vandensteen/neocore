@@ -1,8 +1,9 @@
 @echo off
-set PROJECT=test_animated_sprite_physic
+set projectName="test_animated_sprite_physic"
+set builderScript="..\..\scripts\Builder-Manager.ps1"
 
-set routine=..\..\scripts\mak-routines.bat
-set backupPath=%path%
-
-call %routine% :main %*
-path=%backupPath%
+if "%1"=="" (
+  powershell -ExecutionPolicy Bypass -File %builderScript%  -ProjectName %projectName%
+) else (
+  powershell -ExecutionPolicy Bypass -File %builderScript% -ProjectName %projectName% -Rule %1
+)

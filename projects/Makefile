@@ -1,37 +1,8 @@
 ####################
 #	Project settings #
 ####################
-
 PROJECTNAME = $(PROJECT)
-
-NEOBUILDTEMP = $(shell cygpath -u $(TEMP))/neocore/$(PROJECTNAME)
-
-FILECUE = $(PROJECTNAME).cue
-FILEISO = $(shell cygpath -u $(NEOBUILDTEMP)\$(PROJECTNAME).iso)
-FILEZIP = $(shell cygpath -u $(NEOBUILDTEMP)\$(PROJECTNAME).zip)
-ISONAME = $(PROJECTNAME).iso
-
-###################
-#	Global settings #
-###################Ò
-
-FILEPRG = $(NEOBUILDTEMP)/$(PROJECTNAME).prg
-FILESPRITE = $(NEOBUILDTEMP)/SPR
-NEOBUILDDATA = $(shell cygpath -u $(APPDATA))/neocore
-RAINE = $(NEOBUILDDATA)/raine/raine32.exe
-
-MAMEFOLDER = $(NEOBUILDDATA)/mame
-MAMEHASH = $(MAMEFOLDER)\hash\neocd.xml
-
-CHDMAN = $(NEOBUILDDATA)/bin/chdman.exe
-FILECHD = $(MAMEFOLDER)/roms/neocdz/$(PROJECTNAME).chd
-CDTEMPLATE = $(NEOBUILDDATA)/cd_template
-
-MKDIR = $(shell cygpath -w $(NEOBUILDDATA))\bin\mkdir.exe
-CP = $(shell cygpath -w $(NEOBUILDDATA))\bin\cp.exe
-RM = $(shell cygpath -w $(NEOBUILDDATA))\bin\rm.exe
-ZIP = $(shell cygpath -w $(NEOBUILDDATA))\bin\zip.exe
-MKISOFS = $(shell cygpath -w $(NEOBUILDDATA))\bin\mkisofs.exe
+NEOBUILDTEMP = $(TEMP)/neocore/$(PROJECTNAME)
 
 #######################################
 # Base dir of your m68k gcc toolchain #
@@ -72,12 +43,8 @@ PADBYTE = 0xFF
 SRC_C= $(wildcard *.c)
 
 OBJS = $(NEOBUILDTEMP)/crt0_$(OUTPUT).o
-
-ifneq ("$(wildcard chardata.xml)","")
-	OBJS := $(OBJS) $(NEOBUILDTEMP)/palettes.o
-	OBJS := $(OBJS) $(NEOBUILDTEMP)/maps.o
-endif
-
+OBJS := $(OBJS) $(NEOBUILDTEMP)/palettes.o
+OBJS := $(OBJS) $(NEOBUILDTEMP)/maps.o
 OBJS += $(patsubst %.c,$(NEOBUILDTEMP)/%.o,$(wildcard *.c))
 
 LIBS = -lneocore -lDATlib -lmath -lprocess -lc -lgcc
@@ -100,7 +67,7 @@ FIXFILES = $(BASEDIR)/src/shared/fix_font.bmp
 ##############
 # Make rules #
 ##############
-all: init $(FILESPRITE).cd $(FILEPRG)
+all: $(FILEPRG)
 $(FILEPRG) : $(NEOBUILDTEMP)/$(PROJECTNAME).o
 	$(OBJC) -O binary $< $@
 
@@ -114,75 +81,9 @@ $(NEOBUILDTEMP)/%.o: %.c
 $(NEOBUILDTEMP)/%.o: %.s
 	$(AS) $(ASFLAGS) $< -o $@
 
-init:
-	$(MKDIR) -p $(NEOBUILDTEMP)
-
-sprite: $(FILESPRITE).cd
-
-dbg:
-	echo $(OBJC)
-	echo $(OBJS)
-
-$(FILESPRITE).cd:
-	if exist chardata.xml BuildChar.exe "chardata.xml"
-	if exist char.bin CharSplit.exe char.bin -cd $(shell cygpath -w $(FILESPRITE))
-	$(RM) -f char.bin
-
-run-mame: iso
-	echo Try to kill mame process...
-	powershell "try { taskkill /IM mame64.exe /f } catch { }; exit 0"
-
-	del $(shell cygpath -w $(MAMEFOLDER))\roms\neocdz\*.chd /q
-
-	$(shell cygpath -w $(CHDMAN)) createcd -i "$(shell cygpath -w $(FILEISO))" -o "$(shell cygpath -w $(FILECHD))" --force
-
-	powershell -ExecutionPolicy Bypass -File ..\..\scripts\mame-hash-writer.ps1 $(PROJECTNAME) $(shell cygpath -w $(FILECHD)) $(shell cygpath -w $(MAMEHASH))
-	start cmd /c "$(shell cygpath -w $(MAMEFOLDER))\mame64.exe -rompath $(shell cygpath -w $(MAMEFOLDER))\roms -hashpath $(shell cygpath -w $(MAMEFOLDER))\hash -cfg_directory $(shell cygpath -w $(TEMP)) -nvram_directory $(shell cygpath -w $(TEMP)) -window -skip_gameinfo neocdz $(PROJECTNAME)"
-
-run-raine: zip
-	powershell -ExecutionPolicy Bypass -File ..\..\scripts\raine-start.ps1 $(shell cygpath -w $(RAINE)) $(shell cygpath -w $(FILEZIP))
-
-run: run-raine
-
-# TODO : chd rule
-
-zip: $(FILEPRG) iso
-	echo Try to kill raine32.exe process...
-	powershell "try { taskkill /IM raine32.exe /f } catch { }; exit 0"
-
-	$(ZIP) -j $(shell cygpath -u $(FILEZIP)) $(NEOBUILDTEMP)/iso/*
-
-iso: $(FILEPRG)
-	$(RM) -rf $(NEOBUILDTEMP)/iso
-	$(MKDIR) -p $(NEOBUILDTEMP)/iso
-	$(CP) -f $(CDTEMPLATE)/* $(NEOBUILDTEMP)/iso
-	$(CP) -f $(FILEPRG) $(NEOBUILDTEMP)/iso/DEMO.PRG
-ifneq ("$(wildcard $(FILESPRITE).cd)","")
-	$(CP) -f $(FILESPRITE).cd $(NEOBUILDTEMP)/iso/DEMO.SPR
-endif
-	$(MKISOFS) -o $(FILEISO) -pad $(NEOBUILDTEMP)/iso
-
-add-cue:
-	echo CATALOG 0000000000000 > $(FILECUE)
-	echo FILE "$(ISONAME)" BINARY >> $(FILECUE)
-	echo TRACK 01 MODE1/2048 >> $(FILECUE)
-	echo INDEX 01 00:00:00 >> $(FILECUE)
-	echo FILE "$(ISONAME)" WAVE >> $(FILECUE)
-	echo TRACK 02 AUDIO >> $(FILECUE)
-	echo PREGAP 00:00:59 >> $(FILECUE)
-	echo INDEX 01 00:00:00 >> $(FILECUE)
-
-clean:
-	echo Try to kill raine32.exe process...
-	powershell "try { taskkill /IM raine32.exe /f } catch { }; exit 0"
-
-	$(RM) -rf $(NEOBUILDTEMP)/*
-	$(RM) -rf $(NEOBUILDTEMP)
-	$(RM) -f palettes.s
-	$(RM) -f maps.s
-	$(RM) -f externs.h
-
-serve:
-	powershell -ExecutionPolicy Bypass -File ..\..\scripts\neocore-hot-reload.ps1 .
-
-dist:
+debug:
+	@echo DEBUG
+	@echo PROJECT : $(PROJECTNAME)
+	@echo BASEDIR : $(BASEDIR)
+	@echo NEOBUILDTEMP : $(NEOBUILDTEMP)
+	@echo FILEPRG : $(FILEPRG)
