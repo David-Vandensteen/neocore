@@ -50,7 +50,7 @@ function Write-Mame {
   )
 
   if ((Test-Path -Path $PathMame) -eq $false) { Write-Host "error - $PathMame not found" -ForegroundColor Red; exit 1 }
-  if ((Test-Path -Path $CUEFile) -eq $false) { Write-Host "error - $CUEFile not founc" -ForegroundColor Red; exit 1 }
+  if ((Test-Path -Path $CUEFile) -eq $false) { Write-Host "error - $CUEFile not found" -ForegroundColor Red; exit 1 }
   if ((Test-Path -Path "$PathMame\mame64.exe") -eq $false) { Write-Host "error - mame64.exe is not found in $PathMame" -ForegroundColor Red; exit 1 }
 
   Write-Host "compiling CHD" -ForegroundColor Yellow
@@ -65,14 +65,20 @@ function Write-Mame {
   Write-MameHash -ProjectName $ProjectName -CHDFile $OutputFile -XMLFile "$PathMame\hash\neocd.xml"
 }
 
-# TODO : mame args ... override in env ?
 function Mame {
   param (
     [Parameter(Mandatory=$true)][String] $GameName,
-    [Parameter(Mandatory=$true)][String] $PathMame
+    [Parameter(Mandatory=$true)][String] $PathMame,
+    [Parameter(Mandatory=$true)][String] $XMLArgsFile
   )
+  $defaultMameArgs = "$mameArgs -rompath `"$PathMame\roms`" -hashpath `"$PathMame\hash`" -cfg_directory $env:TEMP -nvram_directory $env:TEMP -skip_gameinfo neocdz $GameName"
+
+  $mameArgs = "-window"
+  if (Test-Path -Path $XMLArgsFile) { $mameArgs = (Select-Xml -Path $XMLArgsFile -XPath '/mame/args').Node.InnerXML }
+  
   if ((Test-Path -Path $PathMame) -eq $false) { Write-Host "error - $PathMame not found" -ForegroundColor Red; exit 1 }
   if ((Test-Path -Path "$PathMame\mame64.exe") -eq $false) { Write-Host ("error - {0}\mame64.exe not found" -f $PathMame) -ForegroundColor Red; exit 1 }
   Write-Host "launching mame $GameName" -ForegroundColor Yellow
-  Start-Process -NoNewWindow -FilePath "$PathMame\mame64.exe" -ArgumentList "-window -rompath `"$PathMame\roms`" -hashpath `"$PathMame\hash`" -cfg_directory $env:TEMP -nvram_directory $env:TEMP -skip_gameinfo neocdz $GameName"
+  Write-Host "$PathMame\mame64.exe $mameArgs $defaultMameArgs"
+  Start-Process -NoNewWindow -FilePath "$PathMame\mame64.exe" -ArgumentList "$mameArgs $defaultMameArgs"
 }
