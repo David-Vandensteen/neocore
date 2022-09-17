@@ -130,7 +130,7 @@ function Main {
       BuilderISO
       BuilderZIP
       BuilderMame
-      Mame -GameName $ProjectName -PathMame $PathMame
+      RunnerMame
       Watch-Folder -Path "."
       Stop-Emulators  
     }
