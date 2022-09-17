@@ -71,7 +71,7 @@ function Mame {
     [Parameter(Mandatory=$true)][String] $PathMame,
     [Parameter(Mandatory=$true)][String] $XMLArgsFile
   )
-  $defaultMameArgs = "$mameArgs -rompath `"$PathMame\roms`" -hashpath `"$PathMame\hash`" -cfg_directory $env:TEMP -nvram_directory $env:TEMP -skip_gameinfo neocdz $GameName"
+  $defaultMameArgs = "-rompath `"$PathMame\roms`" -hashpath `"$PathMame\hash`" -cfg_directory $env:TEMP -nvram_directory $env:TEMP -skip_gameinfo neocdz $GameName"
 
   $mameArgs = "-window"
   if (Test-Path -Path $XMLArgsFile) { $mameArgs = (Select-Xml -Path $XMLArgsFile -XPath '/mame/args').Node.InnerXML }
