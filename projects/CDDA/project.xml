@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <sound>
+    <cdda>
+      <tracks>
+        <track>
+          <id>2</id>
+          <file>soundtrack-02-lotus-turbo-challenge-2.wav</file>
+          <pregap>00:02:00</pregap>
+        </track>
+        <track>
+          <id>3</id>
+          <file>soundtrack-03-turrican-2.wav</file>
+          <pregap>00:02:00</pregap>
+        </track>
+        <track>
+          <id>4</id>
+          <file>soundtrack-04-turrican-3.wav</file>
+          <pregap>00:02:00</pregap>
+        </track>
+      </tracks>
+    </cdda>
+  </sound>
+</project>

@@ -15,10 +15,11 @@ function Main {
     [Parameter(Mandatory=$true)][String] $PathNeocoreBin,
     [Parameter(Mandatory=$true)][String] $PathNeoDev,
     [Parameter(Mandatory=$true)][String] $PRGFile,
-    [Parameter(Mandatory=$true)][String] $XMLFile,
+    [Parameter(Mandatory=$true)][String] $XMLDATFile,
     [Parameter(Mandatory=$true)][String] $PathMame,
     [Parameter(Mandatory=$true)][String] $Rule,
-    [Parameter(Mandatory=$true)][String] $RaineBin
+    [Parameter(Mandatory=$true)][String] $RaineBin,
+    [xml] $Config
   )
   Write-Host "informations" -ForegroundColor Yellow
   Write-Host "project name : $ProjectName"
@@ -28,7 +29,7 @@ function Main {
   Write-Host "path neodev : $PathNeoDev"
   Write-Host "program file : $PRGFILE"
   Write-Host "required rule : $Rule"
-  Write-Host "graphic data XML file for DATLib : $XMLFILE"
+  Write-Host "graphic data XML file for DATLib : $XMLDATFile"
   Write-Host "mame folder : $PathMame"
   Write-Host "raine exe : $RaineBin"
   Write-Host "--------------------------------------------"
@@ -48,7 +49,7 @@ function Main {
   function BuilderProgram { Write-Program -ProjectName $ProjectName -PathNeoDev $PathNeoDev -MakeFile $MakeFile -PRGFile $PRGFile }
 
   function BuilderSprite {
-    Write-Sprite -XMLFile $XMLFile -Format "cd" -OutputFile "$env:TEMP\neocore\$ProjectName\$ProjectName"
+    Write-Sprite -XMLFile $XMLDATFile -Format "cd" -OutputFile "$env:TEMP\neocore\$ProjectName\$ProjectName"
   }
 
   function BuilderISO {
@@ -59,7 +60,14 @@ function Main {
       -PathISOBuildFolder "$env:TEMP\neocore\$ProjectName\iso" `
       -PathCDTemplate "$env:APPDATA\neocore\cd_template"
 
-    Write-CUE -OutputFile "$env:TEMP\neocore\$ProjectName\$ProjectName.cue" -ISOName "$ProjectName.iso"
+    $configCDDA = $null
+
+    if ($Config.project.sound.cdda.tracks.track) { $configCDDA = $config.project.sound.cdda }
+
+    Write-CUE `
+      -OutputFile "$env:TEMP\neocore\$ProjectName\$ProjectName.cue" `
+      -ISOName "$ProjectName.iso" `
+      -Config $configCDDA
   }
 
   function BuilderMame {
@@ -142,6 +150,9 @@ function Main {
   if ($Rule -eq "only:mame") { BuilderMame }
 }
 
+$config = $null
+if (Test-Path -Path "project.xml") { $config = (Get-Content -Path project.xml) }
+
 Main `
   -MakeFile "..\Makefile" `
   -ProjectName $ProjectName `
@@ -150,6 +161,7 @@ Main `
   -PathNeoDev "$env:appdata\neocore\neodev-sdk" `
   -PRGFile "$env:temp\neocore\$ProjectName\$ProjectName.prg" `
   -Rule $Rule `
-  -XMLFile "chardata.xml" `
+  -XMLDATFile "chardata.xml" `
+  -Config  $config `
   -RaineBin "$env:APPDATA\neocore\raine\raine32.exe" `
   -PathMame "$env:APPDATA\neocore\mame"
