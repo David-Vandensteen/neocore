@@ -10,7 +10,7 @@ static void update();
 
 static BOOL k7_direction = false;
 
-static Image k7, play, next, stop;
+static Image k7;
 static Scroller spectrum02;
 static BYTE track_num = 2;
 
@@ -19,23 +19,17 @@ static void init() {
   gpu_init();
   scroller_init(&spectrum02, &spectrum02_sprite, &spectrum02_sprite_Palettes);
   image_init(&k7, &k7_sprite, &k7_sprite_Palettes);
-  image_init(&play, &play_sprite, &play_sprite_Palettes);
-  image_init(&stop, &stop_sprite, &stop_sprite_Palettes);
-  image_init(&next, &next_sprite, &next_sprite_Palettes);
 }
 
 static void display() {
   scroller_display(&spectrum02, 0, 0);
   image_display(&k7, 30, 30);
-  image_display(&play, 60, 180);
-  image_display(&stop, 90, 180);
-  image_display(&next, 120, 180);
 }
 
 static void update() {
   logger_init();
   joypad_update_edge();
-  logger_byte("TRACK NUMBER : ", track_num);
+  logger_byte("AUDIO TRACK : ", track_num - 1);
   if (DAT_frameCounter % 2 == 0) {
     scroller_move(&spectrum02, 1, 0);
     if (spectrum02.s.scrlPosX > 960) scroller_set_position(&spectrum02, 0, spectrum02.s.scrlPosY);
