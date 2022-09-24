@@ -243,7 +243,7 @@ cd projects\CDDA
 .\download-assets
 .\mak run
 ```
-In the emulator, use joypad right and left to change audio track
+In the emulator, use joypad right and left to change audio track  
 See projects\CDDA\project.xml for set the audio file
 
 ## DATlib GFX asset build doc... (todo)
