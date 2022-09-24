@@ -21,7 +21,6 @@ function Main {
     [Parameter(Mandatory=$true)][String] $RaineBin,
     [xml] $Config
   )
-  Write-Host "informations" -ForegroundColor Yellow
   Write-Host "project name : $ProjectName"
   Write-Host "makefile : $MakeFile"
   Write-Host "path neodev bin : $PathNeoDevBin"
@@ -63,11 +62,13 @@ function Main {
     $configCDDA = $null
 
     if ($Config.project.sound.cdda.tracks.track) { $configCDDA = $config.project.sound.cdda }
-
+    
     Write-CUE `
       -OutputFile "$env:TEMP\neocore\$ProjectName\$ProjectName.cue" `
       -ISOName "$ProjectName.iso" `
       -Config $configCDDA
+    
+    Robocopy /MIR assets "$env:TEMP\neocore\$ProjectName\assets"
   }
 
   function BuilderMame {
@@ -87,6 +88,11 @@ function Main {
 
   function RunnerMame {
     Mame -GameName $ProjectName -PathMame $PathMame -XMLArgsFile "$env:APPDATA\neocore\mame-args.xml"
+  }
+
+  function RunnerRaine {
+    Write-Host "lauching raine $ProjectName" -ForegroundColor Yellow
+    & $RaineBin "$env:TEMP\neocore\$ProjectName\$ProjectName.zip"
   }
 
   Set-EnvPath -PathNeoDevBin $PathNeoDevBin -PathNeocoreBin $PathNeocoreBin
@@ -120,8 +126,7 @@ function Main {
     BuilderProgram
     BuilderISO
     BuilderZIP
-    Write-Host "lauching raine $ProjectName" -ForegroundColor Yellow
-    & $RaineBin "$env:TEMP\neocore\$ProjectName\$ProjectName.zip"
+    RunnerRaine
   }
   if ($Rule -eq "run:mame") {
     BuilderSprite
@@ -148,10 +153,18 @@ function Main {
   if ($Rule -eq "only:iso") { BuilderISO }
   if ($Rule -eq "only:zip") { BuilderZIP }
   if ($Rule -eq "only:mame") { BuilderMame }
+  if ($Rule -eq "only:run") { RunnerMame }
+  if ($Rule -eq "only:run:mame") { RunnerMame }
+  if ($Rule -eq "only:run:raine") { RunnerRaine }
 }
 
+Write-Host "informations" -ForegroundColor Yellow
+
 $config = $null
-if (Test-Path -Path "project.xml") { $config = (Get-Content -Path project.xml) }
+if (Test-Path -Path "project.xml") {
+  Write-Host "Config File : project.xml"
+  $config = (Get-Content -Path project.xml)
+}
 
 Main `
   -MakeFile "..\Makefile" `

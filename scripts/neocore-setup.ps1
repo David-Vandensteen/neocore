@@ -60,12 +60,12 @@ function Download {
     [Parameter(Mandatory=$true)][String] $URL,
     [Parameter(Mandatory=$true)][String] $Path
   )
-  Write-Host "Download : $URL $Path"
+  Write-Host "Download - $URL $Path"
   Import-Module BitsTransfer
 
   $start_time = Get-Date
   Start-BitsTransfer -Source $URL -Destination $Path
-  Write-Output "Time taken: $((Get-Date).Subtract($start_time).Seconds) second(s)"
+  Write-Output "Time taken - $((Get-Date).Subtract($start_time).Seconds) second(s)"
 }
 
 function Main {

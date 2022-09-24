@@ -5,17 +5,17 @@
       <tracks>
         <track>
           <id>2</id>
-          <file>soundtrack-02-lotus-turbo-challenge-2.wav</file>
+          <file>assets\sounds\cdda\The Moon - High Orbit.wav</file>
           <pregap>00:02:00</pregap>
         </track>
         <track>
           <id>3</id>
-          <file>soundtrack-03-turrican-2.wav</file>
+          <file>assets\sounds\cdda\Sweet_Mermaids.wav</file>
           <pregap>00:02:00</pregap>
         </track>
         <track>
           <id>4</id>
-          <file>soundtrack-04-turrican-3.wav</file>
+          <file>assets\sounds\cdda\Level One.wav</file>
           <pregap>00:02:00</pregap>
         </track>
       </tracks>
