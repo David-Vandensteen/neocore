@@ -3,7 +3,7 @@
   <sound>
     <cdda>
       <tracks>
-        <track>
+        <track><!-- track id 1 is reserved for the binary program -->
           <id>2</id>
           <file>assets\sounds\cdda\The Moon - High Orbit.wav</file>
           <pregap>00:02:00</pregap>
