@@ -1,3 +1,4 @@
+# TODO : change BuilderZIP
 param (
     [Parameter(Mandatory=$true)][String] $ProjectName,
     [String] $Rule = "default"
@@ -92,7 +93,9 @@ function Main {
 
   function RunnerRaine {
     Write-Host "lauching raine $ProjectName" -ForegroundColor Yellow
-    & $RaineBin "$env:TEMP\neocore\$ProjectName\$ProjectName.zip"
+    # TODO : change zip rule
+    #& $RaineBin "$env:TEMP\neocore\$ProjectName\$ProjectName.zip"
+    & $RaineBin "$env:TEMP\neocore\$ProjectName\$ProjectName.cue"
   }
 
   Set-EnvPath -PathNeoDevBin $PathNeoDevBin -PathNeocoreBin $PathNeocoreBin
@@ -117,7 +120,7 @@ function Main {
     BuilderSprite
     BuilderProgram
     BuilderISO
-    BuilderZIP
+    #BuilderZIP
     BuilderMame
     RunnerMame
   }
@@ -125,14 +128,14 @@ function Main {
     BuilderSprite
     BuilderProgram
     BuilderISO
-    BuilderZIP
+    #BuilderZIP
     RunnerRaine
   }
   if ($Rule -eq "run:mame") {
     BuilderSprite
     BuilderProgram
     BuilderISO
-    BuilderZIP
+    #BuilderZIP
     BuilderMame
     RunnerMame
   }
@@ -141,7 +144,6 @@ function Main {
       BuilderSprite
       BuilderProgram
       BuilderISO
-      BuilderZIP
       BuilderMame
       RunnerMame
       Watch-Folder -Path "."
