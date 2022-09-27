@@ -34,9 +34,9 @@ After install, all is available from
   
 ## Compiling the lib
 ```cmd
-.\mak
+.\build-neocore
 ```
-mak script overwrite path environment variable during the compilation.  
+This script override path environment variable during the compilation.  
 its avoid collisions with other bin, sdk, gcc...  
 **Whenever you pull or change branches, consider you need rebuilding the library.**
   
