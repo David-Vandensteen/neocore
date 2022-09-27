@@ -89,17 +89,7 @@ cd projects\myfirst
 The compiled resources output folder is:
 ```cmd
 %temp%\neocore\myfirst
-```
-  
-## Run
-
-  
-## Project clean
-```cmd
-cd projects\hello
-.\mak clean
-```
-  
+```  
 ## "Hot reload"
 ```cmd
 cd projects\hello
