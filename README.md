@@ -104,14 +104,8 @@ The hot-reload process will rebuild & run your project automaticaly.
   
 Some problems currently:  
 * The process is not a real watcher (the rebuild is triggered only if the folder size change)  
-* When you break this process, path is not restored in the current terminal (close & reopen a new terminal)
-  
-## Make ISO
-```cmd
-cd projects\hello
-.\mak iso
-```
-  
+* When you break this process, path is not restored in the current terminal (close & reopen a new terminal)  
+    
 ## CDDA play ... (in progress)
 ``` cmd
 cd projects\CDDA
