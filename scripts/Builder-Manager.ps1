@@ -1,3 +1,4 @@
+# TODO : change BuilderZIP
 param (
     [Parameter(Mandatory=$true)][String] $ProjectName,
     [String] $Rule = "default"
@@ -15,12 +16,12 @@ function Main {
     [Parameter(Mandatory=$true)][String] $PathNeocoreBin,
     [Parameter(Mandatory=$true)][String] $PathNeoDev,
     [Parameter(Mandatory=$true)][String] $PRGFile,
-    [Parameter(Mandatory=$true)][String] $XMLFile,
+    [Parameter(Mandatory=$true)][String] $XMLDATFile,
     [Parameter(Mandatory=$true)][String] $PathMame,
     [Parameter(Mandatory=$true)][String] $Rule,
-    [Parameter(Mandatory=$true)][String] $RaineBin
+    [Parameter(Mandatory=$true)][String] $RaineBin,
+    [xml] $Config
   )
-  Write-Host "informations" -ForegroundColor Yellow
   Write-Host "project name : $ProjectName"
   Write-Host "makefile : $MakeFile"
   Write-Host "path neodev bin : $PathNeoDevBin"
@@ -28,7 +29,7 @@ function Main {
   Write-Host "path neodev : $PathNeoDev"
   Write-Host "program file : $PRGFILE"
   Write-Host "required rule : $Rule"
-  Write-Host "graphic data XML file for DATLib : $XMLFILE"
+  Write-Host "graphic data XML file for DATLib : $XMLDATFile"
   Write-Host "mame folder : $PathMame"
   Write-Host "raine exe : $RaineBin"
   Write-Host "--------------------------------------------"
@@ -48,7 +49,7 @@ function Main {
   function BuilderProgram { Write-Program -ProjectName $ProjectName -PathNeoDev $PathNeoDev -MakeFile $MakeFile -PRGFile $PRGFile }
 
   function BuilderSprite {
-    Write-Sprite -XMLFile $XMLFile -Format "cd" -OutputFile "$env:TEMP\neocore\$ProjectName\$ProjectName"
+    Write-Sprite -XMLFile $XMLDATFile -Format "cd" -OutputFile "$env:TEMP\neocore\$ProjectName\$ProjectName"
   }
 
   function BuilderISO {
@@ -59,7 +60,16 @@ function Main {
       -PathISOBuildFolder "$env:TEMP\neocore\$ProjectName\iso" `
       -PathCDTemplate "$env:APPDATA\neocore\cd_template"
 
-    Write-CUE -OutputFile "$env:TEMP\neocore\$ProjectName\$ProjectName.cue" -ISOName "$ProjectName.iso"
+    $configCDDA = $null
+
+    if ($Config.project.sound.cdda.tracks.track) { $configCDDA = $config.project.sound.cdda }
+    
+    Write-CUE `
+      -OutputFile "$env:TEMP\neocore\$ProjectName\$ProjectName.cue" `
+      -ISOName "$ProjectName.iso" `
+      -Config $configCDDA
+    
+    Robocopy /MIR assets "$env:TEMP\neocore\$ProjectName\assets"
   }
 
   function BuilderMame {
@@ -79,6 +89,13 @@ function Main {
 
   function RunnerMame {
     Mame -GameName $ProjectName -PathMame $PathMame -XMLArgsFile "$env:APPDATA\neocore\mame-args.xml"
+  }
+
+  function RunnerRaine {
+    Write-Host "lauching raine $ProjectName" -ForegroundColor Yellow
+    # TODO : change zip rule
+    #& $RaineBin "$env:TEMP\neocore\$ProjectName\$ProjectName.zip"
+    & $RaineBin "$env:TEMP\neocore\$ProjectName\$ProjectName.cue"
   }
 
   Set-EnvPath -PathNeoDevBin $PathNeoDevBin -PathNeocoreBin $PathNeocoreBin
@@ -103,7 +120,7 @@ function Main {
     BuilderSprite
     BuilderProgram
     BuilderISO
-    BuilderZIP
+    #BuilderZIP
     BuilderMame
     RunnerMame
   }
@@ -111,15 +128,14 @@ function Main {
     BuilderSprite
     BuilderProgram
     BuilderISO
-    BuilderZIP
-    Write-Host "lauching raine $ProjectName" -ForegroundColor Yellow
-    & $RaineBin "$env:TEMP\neocore\$ProjectName\$ProjectName.zip"
+    #BuilderZIP
+    RunnerRaine
   }
   if ($Rule -eq "run:mame") {
     BuilderSprite
     BuilderProgram
     BuilderISO
-    BuilderZIP
+    #BuilderZIP
     BuilderMame
     RunnerMame
   }
@@ -128,7 +144,6 @@ function Main {
       BuilderSprite
       BuilderProgram
       BuilderISO
-      BuilderZIP
       BuilderMame
       RunnerMame
       Watch-Folder -Path "."
@@ -140,6 +155,17 @@ function Main {
   if ($Rule -eq "only:iso") { BuilderISO }
   if ($Rule -eq "only:zip") { BuilderZIP }
   if ($Rule -eq "only:mame") { BuilderMame }
+  if ($Rule -eq "only:run") { RunnerMame }
+  if ($Rule -eq "only:run:mame") { RunnerMame }
+  if ($Rule -eq "only:run:raine") { RunnerRaine }
+}
+
+Write-Host "informations" -ForegroundColor Yellow
+
+$config = $null
+if (Test-Path -Path "project.xml") {
+  Write-Host "Config File : project.xml"
+  $config = (Get-Content -Path project.xml)
 }
 
 Main `
@@ -150,6 +176,7 @@ Main `
   -PathNeoDev "$env:appdata\neocore\neodev-sdk" `
   -PRGFile "$env:temp\neocore\$ProjectName\$ProjectName.prg" `
   -Rule $Rule `
-  -XMLFile "chardata.xml" `
+  -XMLDATFile "chardata.xml" `
+  -Config  $config `
   -RaineBin "$env:APPDATA\neocore\raine\raine32.exe" `
   -PathMame "$env:APPDATA\neocore\mame"
