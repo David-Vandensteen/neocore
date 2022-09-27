@@ -77,7 +77,7 @@ or
 ```
 ## Make your first project
 ```cmd
-.\mak init-project
+.\build-neocore init-project
 Project name : myfirst
 ```
 A new folder (projects\\myfirst) has been scaffolded  
