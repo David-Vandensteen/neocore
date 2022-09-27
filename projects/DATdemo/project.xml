@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <name>DATdemo</name>
+  <makefile>..\Makefile</makefile>
+  <XMLDATFile>chardata.xml</XMLDATFile>
+  <!-- for using cdda audio tracks, uncomment & set up your files
+  Warning: track id 1 is reserved for the binary program
+  <sound>
+    <cdda>
+      <tracks>
+        <track>
+          <id>2</id>
+          <file>assets\sounds\cdda\track-1.wav</file>
+          <pregap>00:02:00</pregap>
+        </track>
+        <track>
+          <id>3</id>
+          <file>assets\sounds\cdda\track-2.wav</file>
+          <pregap>00:02:00</pregap>
+        </track>
+        <track>
+          <id>4</id>
+          <file>assets\sounds\cdda\track-3.wav</file>
+          <pregap>00:02:00</pregap>
+        </track>
+      </tracks>
+    </cdda>
+  </sound>
+-->
+</project>
