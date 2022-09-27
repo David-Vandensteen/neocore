@@ -1,7 +1,8 @@
 # TODO : change BuilderZIP
 param (
-    [Parameter(Mandatory=$true)][String] $ProjectName,
-    [String] $Rule = "default"
+  #[Parameter(Mandatory=$true)][String] $ProjectName,
+  [Parameter(Mandatory=$true)][String] $ConfigFile,
+  [String] $Rule = "default"
 )
 
 Import-Module "..\..\scripts\modules\module-mak.ps1"
@@ -29,6 +30,7 @@ function Main {
   Write-Host "path neodev : $PathNeoDev"
   Write-Host "program file : $PRGFILE"
   Write-Host "required rule : $Rule"
+  Write-Host "project setting file : $XMLProjectSettingFile"
   Write-Host "graphic data XML file for DATLib : $XMLDATFile"
   Write-Host "mame folder : $PathMame"
   Write-Host "raine exe : $RaineBin"
@@ -162,10 +164,13 @@ function Main {
 
 Write-Host "informations" -ForegroundColor Yellow
 
+# TODO : xml config must be split by main ...
+# TODO : remove ProjectName here
 $config = $null
-if (Test-Path -Path "project.xml") {
+if (Test-Path -Path $ConfigFile) {
   Write-Host "Config File : project.xml"
-  $config = (Get-Content -Path project.xml)
+  [xml]$config = (Get-Content -Path project.xml)
+  $ProjectName = $config.project.name
 }
 
 Main `
