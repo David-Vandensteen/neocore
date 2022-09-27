@@ -6,7 +6,7 @@
 Neocore is a library &amp; toolchain for developing on Neo Geo CD.  
 I write Neocore to make my shoot em up game on Neo Geo CD (**Flamble**) http://azertyvortex.free.fr/flamble  
 
-Neocore provide high level functions over Neo Dev Kit (**Fabrice Martinez, Jeff Kurtz, al**) & DATLib 0.2 (**HPMAN**)  
+Neocore provide high level functions over Neo Dev Kit (**Fabrice Martinez, Jeff Kurtz, al**) & DATlib 0.2 (**HPMAN**)  
   
 I share my tools and my code, these could possibly help your projects on this platform.  
 (**Doxygen doc**) http://azertyvortex.free.fr/neocore-doxy/develop/  
@@ -116,8 +116,15 @@ cd projects\CDDA
 In the emulator, use joypad right and left to change audio track  
 See projects\CDDA\project.xml for set the audio file
   
-## DATlib GFX asset build doc... (todo)
-how to build your own gfx...
+## DATlib assets (in progress)
+For making your own graphics, see the DATlib ref available here: (after install)
+%appdata%\neocore\neodev-sdk\DATlib-LibraryReference.pdf
+  
+DATlib Framer tool is available here:  
+%appdata%\neocore\neodev-sdk\m68k\bin\Framer.exe
+  
+The Animator tool is available here:  
+%appdata%\neocore\neodev-sdk\m68k\bin\Animator.exe
   
 ## SoundFX ... (todo)
   
