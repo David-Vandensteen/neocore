@@ -2,7 +2,7 @@
 <project>
   <name>CDDA</name>
   <makefile>..\Makefile</makefile>
-  <XMLDATFile>config\chardata.xml</XMLDATFile>
+  <XMLDATFile>config\sprites.xml</XMLDATFile>
   <sound>
     <cdda>
       <tracks>
