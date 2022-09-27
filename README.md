@@ -1,5 +1,6 @@
 # Neocore
 ![Platform](https://img.shields.io/badge/platform-%20%7C%20windows-lightgrey)![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)  
+  
 ![](https://media.giphy.com/media/TLfbmyW3523z24WONz/giphy.gif) ![](https://media.giphy.com/media/iFUh5AEPD4XfvpsvJh/giphy.gif)![](https://media.giphy.com/media/iJObJsdx6ud4zI7cS1/giphy.gif)
 
 Neocore is a library &amp; toolchain for developing on Neo Geo CD.  
@@ -39,12 +40,41 @@ mak script overwrite path environment variable during the compilation.
 its avoid collisions with other bin, sdk, gcc...  
 **Whenever you pull or change branches, consider you need rebuilding the library.**
   
-## Make Hello
+## Build a included example
 ```cmd
 cd projects\hello
 .\mak run
 ```
   
+## Mak rules
+Clean the builded resources
+```cmd
+.\mak clean
+```
+Build sprites
+```cmd
+.\mak sprite
+```
+Build the program
+```cmd
+.\mak
+```
+Build the ISO file
+```cmd
+.\mak iso
+```
+**Run with Raine**
+```cmd
+.\mak run:raine
+```
+**Run with Mame**
+```cmd
+.\mak run:mame
+```
+or
+```cmd
+.\mak run
+```
 ## Make your first project
 ```cmd
 .\mak init-project
@@ -62,18 +92,7 @@ The compiled resources output folder is:
 ```
   
 ## Run
-With Raine
-```cmd
-.\mak run:raine
-```
-With Mame
-```cmd
-.\mak run:mame
-```
-or
-```cmd
-.\mak run
-```
+
   
 ## Project clean
 ```cmd
