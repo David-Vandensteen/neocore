@@ -162,6 +162,12 @@ function Main {
   if ($Rule -eq "only:run:raine") { RunnerRaine }
 }
 
+
+if ((Test-Path -Path $ConfigFile) -eq $false) {
+  Write-Host "Config $ConfigFile not found" -ForegroundColor Red
+  exit 1
+}
+
 Write-Host "informations" -ForegroundColor Yellow
 
 # TODO : Config to ConfigSound or ConfigCDDA ...
