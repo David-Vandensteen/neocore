@@ -21,7 +21,7 @@ function Main {
     [Parameter(Mandatory=$true)][String] $PathMame,
     [Parameter(Mandatory=$true)][String] $Rule,
     [Parameter(Mandatory=$true)][String] $RaineBin,
-    [xml] $Config
+    [Parameter(Mandatory=$true)][xml] $Config
   )
   Write-Host "project name : $ProjectName"
   Write-Host "makefile : $MakeFile"
@@ -164,24 +164,24 @@ function Main {
 
 Write-Host "informations" -ForegroundColor Yellow
 
-# TODO : xml config must be split by main ...
-# TODO : remove ProjectName here
-$config = $null
-if (Test-Path -Path $ConfigFile) {
-  Write-Host "Config File : project.xml"
-  [xml]$config = (Get-Content -Path project.xml)
-  $ProjectName = $config.project.name
-}
+# TODO : Config to ConfigSound or ConfigCDDA ...
+# TODO : refactor entry point
+
+Write-Host "Config file : $ConfigFile"
+[xml]$config = (Get-Content -Path $ConfigFile)
+$projectName = $config.project.name
+$makefile = $config.project.makefile
+$XMLDATFile = $config.project.XMLDATFile
 
 Main `
-  -MakeFile "..\Makefile" `
-  -ProjectName $ProjectName `
+  -MakeFile $makefile `
+  -ProjectName $projectName `
   -PathNeoDevBin "$env:appdata\neocore\neodev-sdk\m68k\bin" `
   -PathNeocoreBin "$env:appdata\neocore\bin" `
   -PathNeoDev "$env:appdata\neocore\neodev-sdk" `
   -PRGFile "$env:temp\neocore\$ProjectName\$ProjectName.prg" `
   -Rule $Rule `
-  -XMLDATFile "chardata.xml" `
+  -XMLDATFile $XMLDATFile `
   -Config  $config `
   -RaineBin "$env:APPDATA\neocore\raine\raine32.exe" `
   -PathMame "$env:APPDATA\neocore\mame"
