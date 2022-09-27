@@ -117,7 +117,7 @@ In the emulator, use joypad right and left to change audio track
 See projects\CDDA\project.xml for set the audio file
   
 ## DATlib assets (in progress)
-For making your own graphics, see the DATlib ref available here: (after install)
+For making your own graphics, see the DATlib ref available here: (after install)  
 %appdata%\neocore\neodev-sdk\DATlib-LibraryReference.pdf
   
 DATlib Framer tool is available here:  
