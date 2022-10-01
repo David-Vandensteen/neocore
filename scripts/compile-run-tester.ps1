@@ -29,16 +29,12 @@ function _main {
   compileProject "palette_swap"
   compileProject "shrunk"
   compileProject "shrunk_centroid"
-
-  # TODO : fix project
-  # compileProject "shrunk_physic"
-
   compileProject "sprite"
   compileProject "test_animated_sprite"
   compileProject "test_animated_sprite_physic"
   compileProject "test_image"
   compileProject "test_image_physic"
-  compileProject "test_limit"  
+  compileProject "test_limit"
   compileProject "test_palettemanager"
   compileProject "test_same_palette"
   compileProject "test_scroller"
