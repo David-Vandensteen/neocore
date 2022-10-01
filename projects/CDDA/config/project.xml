@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
+  <name>CDDA</name>
+  <makefile>..\Makefile</makefile>
+  <XMLDATFile>config\sprites.xml</XMLDATFile>
   <sound>
     <cdda>
       <tracks>

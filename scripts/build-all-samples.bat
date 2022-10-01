@@ -1,1 +1,1 @@
-powershell -ExecutionPolicy Bypass -File compile-run-tester.ps1 compile 30
+powershell -ExecutionPolicy Bypass -File compile-run-tester.ps1 compile 0

@@ -1,9 +1,9 @@
 @echo off
-set projectName="test_same_palette"
+set projectSetting="config\project.xml"
 set builderScript="..\..\scripts\Builder-Manager.ps1"
 
 if "%1"=="" (
-  powershell -ExecutionPolicy Bypass -File %builderScript%  -ProjectName %projectName%
+  powershell -ExecutionPolicy Bypass -File %builderScript%  -ConfigFile %projectSetting%
 ) else (
-  powershell -ExecutionPolicy Bypass -File %builderScript% -ProjectName %projectName% -Rule %1
+  powershell -ExecutionPolicy Bypass -File %builderScript% -ConfigFile %projectSetting% -Rule %1
 )

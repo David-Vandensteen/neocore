@@ -1,7 +1,8 @@
 # TODO : change BuilderZIP
 param (
-    [Parameter(Mandatory=$true)][String] $ProjectName,
-    [String] $Rule = "default"
+  #[Parameter(Mandatory=$true)][String] $ProjectName,
+  [Parameter(Mandatory=$true)][String] $ConfigFile,
+  [String] $Rule = "default"
 )
 
 Import-Module "..\..\scripts\modules\module-mak.ps1"
@@ -20,7 +21,7 @@ function Main {
     [Parameter(Mandatory=$true)][String] $PathMame,
     [Parameter(Mandatory=$true)][String] $Rule,
     [Parameter(Mandatory=$true)][String] $RaineBin,
-    [xml] $Config
+    [Parameter(Mandatory=$true)][xml] $Config
   )
   Write-Host "project name : $ProjectName"
   Write-Host "makefile : $MakeFile"
@@ -29,6 +30,7 @@ function Main {
   Write-Host "path neodev : $PathNeoDev"
   Write-Host "program file : $PRGFILE"
   Write-Host "required rule : $Rule"
+  Write-Host "project setting file : $XMLProjectSettingFile"
   Write-Host "graphic data XML file for DATLib : $XMLDATFile"
   Write-Host "mame folder : $PathMame"
   Write-Host "raine exe : $RaineBin"
@@ -160,23 +162,32 @@ function Main {
   if ($Rule -eq "only:run:raine") { RunnerRaine }
 }
 
-Write-Host "informations" -ForegroundColor Yellow
 
-$config = $null
-if (Test-Path -Path "project.xml") {
-  Write-Host "Config File : project.xml"
-  $config = (Get-Content -Path project.xml)
+if ((Test-Path -Path $ConfigFile) -eq $false) {
+  Write-Host "Config $ConfigFile not found" -ForegroundColor Red
+  exit 1
 }
 
+Write-Host "informations" -ForegroundColor Yellow
+
+# TODO : Config to ConfigSound or ConfigCDDA ...
+# TODO : refactor entry point
+
+Write-Host "Config file : $ConfigFile"
+[xml]$config = (Get-Content -Path $ConfigFile)
+$projectName = $config.project.name
+$makefile = $config.project.makefile
+$XMLDATFile = $config.project.XMLDATFile
+
 Main `
-  -MakeFile "..\Makefile" `
-  -ProjectName $ProjectName `
+  -MakeFile $makefile `
+  -ProjectName $projectName `
   -PathNeoDevBin "$env:appdata\neocore\neodev-sdk\m68k\bin" `
   -PathNeocoreBin "$env:appdata\neocore\bin" `
   -PathNeoDev "$env:appdata\neocore\neodev-sdk" `
   -PRGFile "$env:temp\neocore\$ProjectName\$ProjectName.prg" `
   -Rule $Rule `
-  -XMLDATFile "chardata.xml" `
+  -XMLDATFile $XMLDATFile `
   -Config  $config `
   -RaineBin "$env:APPDATA\neocore\raine\raine32.exe" `
   -PathMame "$env:APPDATA\neocore\mame"
