@@ -111,15 +111,15 @@ Some problems currently:
 * The process is not a real watcher (the rebuild is triggered only if the folder size change)  
 * When you break this process, path is not restored in the current terminal (close & reopen a new terminal)  
     
-## CDDA play ... (in progress)
+## CDDA
 ``` cmd
 cd projects\CDDA
 .\download-assets
 .\mak run
 ```
   
-In the emulator, use joypad right and left to change audio track  
-See projects `\CDDA\config\project.xml` for set the audio file.
+In the emulator, use joypad right and left to change audio track.  
+See `.\CDDA\config\project.xml` for understanding how to set the audio file.
   
 ## DATlib assets (in progress)
 For making your own graphics, see the DATlib ref available here: (after install)  
