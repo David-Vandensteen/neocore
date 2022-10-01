@@ -90,7 +90,7 @@ The compiled resources output folder is:
 ```cmd
 %temp%\neocore\myfirst
 ```  
-See `projects\myfirst\config\mak.bat`    
+See `projects\myfirst\mak.bat`    
 `projects\myfirst\config\project.xml`  
 and `projects\myfirst\config\sprites.xml`  
 for settings.
