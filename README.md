@@ -1,7 +1,7 @@
 # Neocore
 ![Platform](https://img.shields.io/badge/platform-%20%7C%20windows-lightgrey) ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)  
   
-![](https://media.giphy.com/media/TLfbmyW3523z24WONz/giphy.gif) ![](https://media.giphy.com/media/iFUh5AEPD4XfvpsvJh/giphy.gif)![](https://media.giphy.com/media/iJObJsdx6ud4zI7cS1/giphy.gif)
+![](https://media.giphy.com/media/TLfbmyW3523z24WONz/giphy.gif) ![](https://media.giphy.com/media/iFUh5AEPD4XfvpsvJh/giphy.gif) ![](https://media.giphy.com/media/iJObJsdx6ud4zI7cS1/giphy.gif)
 
 Neocore is a library &amp; toolchain for developing on Neo Geo CD.  
 I write Neocore to make my shoot em up game on Neo Geo CD (**Flamble**) http://azertyvortex.free.fr/flamble  
