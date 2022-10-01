@@ -47,27 +47,27 @@ cd projects\hello
 ```
   
 ## Mak rules
-Clean the builded resources
+- Clean the builded resources
 ```cmd
 .\mak clean
 ```
-Build sprites
+- Build sprites
 ```cmd
 .\mak sprite
 ```
-Build the program
+- Build the program
 ```cmd
 .\mak
 ```
-Build the ISO file
+- Build the ISO file
 ```cmd
 .\mak iso
 ```
-**Run with Raine**
+- **Run with Raine**
 ```cmd
 .\mak run:raine
 ```
-**Run with Mame**
+- **Run with Mame**
 ```cmd
 .\mak run:mame
 ```
