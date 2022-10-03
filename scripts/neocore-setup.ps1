@@ -78,7 +78,7 @@ function Main {
   Install-CDTemplate
   Install-Raine
   Update-RaineConfig
-  Install-Mame
+  #Install-Mame
   Install-Bin
 }
 
