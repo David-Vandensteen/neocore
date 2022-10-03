@@ -1,3 +1,5 @@
+Import-Module "..\..\scripts\modules\module-download.ps1"
+
 function Write-MameHash {
   param (
     [Parameter(Mandatory=$true)][String] $ProjectName,
@@ -35,7 +37,7 @@ function Write-MameHash {
     Add-Content -Path $XMLFile -Value '</diskarea>'
     Add-Content -Path $XMLFile -Value '</part>'
     Add-Content -Path $XMLFile -Value '</software>'
-    Add-Content -Path $XMLFile -Value '</softwarelist>'  
+    Add-Content -Path $XMLFile -Value '</softwarelist>'
   }
   $SHA1 = Get-CHDSHA1 -File $CHDFile
   Write-MameHashFile -ProjectName $ProjectName -XMLFile $XMLFile -SHA1 $SHA1
@@ -48,7 +50,10 @@ function Write-Mame {
     [Parameter(Mandatory=$true)][String] $CUEFile,
     [Parameter(Mandatory=$true)][String] $OutputFile
   )
-
+  if ((Test-Path -Path "$PathMame\mame64.exe") -eq $false) {
+    Download -URL "http://azertyvortex.free.fr/download/neocore-mame.zip" -Path "$env:TEMP\neocore"
+    Expand-Archive -Path "$env:TEMP\neocore\neocore-mame.zip" -DestinationPath "$env:APPDATA\neocore"
+  }
   if ((Test-Path -Path $PathMame) -eq $false) { Write-Host "error - $PathMame not found" -ForegroundColor Red; exit 1 }
   if ((Test-Path -Path $CUEFile) -eq $false) { Write-Host "error - $CUEFile not found" -ForegroundColor Red; exit 1 }
   if ((Test-Path -Path "$PathMame\mame64.exe") -eq $false) { Write-Host "error - mame64.exe is not found in $PathMame" -ForegroundColor Red; exit 1 }
@@ -75,7 +80,7 @@ function Mame {
 
   $mameArgs = "-window"
   if (Test-Path -Path $XMLArgsFile) { $mameArgs = (Select-Xml -Path $XMLArgsFile -XPath '/mame/args').Node.InnerXML }
-  
+
   if ((Test-Path -Path $PathMame) -eq $false) { Write-Host "error - $PathMame not found" -ForegroundColor Red; exit 1 }
   if ((Test-Path -Path "$PathMame\mame64.exe") -eq $false) { Write-Host ("error - {0}\mame64.exe not found" -f $PathMame) -ForegroundColor Red; exit 1 }
   Write-Host "launching mame $GameName" -ForegroundColor Yellow
