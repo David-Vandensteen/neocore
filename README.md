@@ -119,7 +119,7 @@ cd projects\CDDA
 ```
   
 In the emulator, use joypad right and left to change audio track.  
-See `.\CDDA\config\project.xml` for understanding how to set the audio file.
+See `.\projects\CDDA\config\project.xml` for understanding how to set the audio file.
   
 ## DATlib assets (in progress)
 For making your own graphics, see the DATlib ref available here: (after install)  
