@@ -3,12 +3,12 @@ Import-Module "..\..\scripts\modules\module-download.ps1"
 function Install-CDTemplate {
   param (
     [Parameter(Mandatory=$true)][String] $URL,
-    [Parameter(Mandatory=$true)][String] $PathDonwload,
+    [Parameter(Mandatory=$true)][String] $PathDownload,
     [Parameter(Mandatory=$true)][String] $PathInstall
   )
-  Download -URL $URL -Path $PathDonwload
-  Expand-Archive -Path "$PathDonwload\neobuild-cd_template.zip" -DestinationPath $PathInstall
-  Remove-Item -Path "$PathDonwload\neobuild-cd_template.zip" -Force
+  Download -URL $URL -Path $PathDownload
+  Expand-Archive -Path "$PathDownload\neobuild-cd_template.zip" -DestinationPath $PathInstall
+  Remove-Item -Path "$PathDownload\neobuild-cd_template.zip" -Force
 }
 
 function Write-ISO {
@@ -20,7 +20,7 @@ function Write-ISO {
     [Parameter(Mandatory=$true)][String] $PathCDTemplate
   )
   if ((Test-Path -Path $PathCDTemplate) -eq $false) {
-    Install-CDTemplate -URL "http://azertyvortex.free.fr/download/neobuild-cd_template.zip" -PathDonwload "$env:TEMP\neocore" -PathInstall "$env:APPDATA\neocore"
+    Install-CDTemplate -URL "http://azertyvortex.free.fr/download/neobuild-cd_template.zip" -PathDownload "$env:TEMP\neocore" -PathInstall "$env:APPDATA\neocore"
   }
   Write-Host "compiling ISO" -ForegroundColor Yellow
   if (Test-Path -Path $PathISOBuildFolder) { Remove-Item $PathISOBuildFolder -Recurse -Force }

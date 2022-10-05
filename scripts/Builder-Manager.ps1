@@ -1,3 +1,4 @@
+# TODO : expand archive -force in modules
 # TODO : change BuilderZIP
 param (
   #[Parameter(Mandatory=$true)][String] $ProjectName,
@@ -5,6 +6,7 @@ param (
   [String] $Rule = "default"
 )
 
+Import-Module "..\..\scripts\modules\module-sdk.ps1"
 Import-Module "..\..\scripts\modules\module-mak.ps1"
 Import-Module "..\..\scripts\modules\module-emulators.ps1"
 Import-Module "..\..\scripts\modules\module-mame.ps1"
@@ -41,6 +43,10 @@ function Main {
   Write-Host ""
 
   Stop-Emulators
+
+  if ((Test-Path -Path $PathNeoDevBin) -eq $false) { Install-SDK }
+  if ((Test-Path -Path $PathNeocoreBin) -eq $false) { Install-SDK }
+  if ((Test-Path -Path $PathNeoDev) -eq $false) { Install-SDK }
 
   function BuilderClean {
     param (

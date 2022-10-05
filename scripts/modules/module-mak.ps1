@@ -1,3 +1,4 @@
+# TODO : split all into modules ... module-mak is deprecated
 function Remove-Project {
   param (
     [Parameter(Mandatory=$true)][String] $ProjectName
