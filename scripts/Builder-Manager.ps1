@@ -8,6 +8,7 @@ param (
 Import-Module "..\..\scripts\modules\module-mak.ps1"
 Import-Module "..\..\scripts\modules\module-emulators.ps1"
 Import-Module "..\..\scripts\modules\module-mame.ps1"
+Import-Module "..\..\scripts\modules\module-raine.ps1"
 
 function Main {
   param (
@@ -20,7 +21,8 @@ function Main {
     [Parameter(Mandatory=$true)][String] $XMLDATFile,
     [Parameter(Mandatory=$true)][String] $PathMame,
     [Parameter(Mandatory=$true)][String] $Rule,
-    [Parameter(Mandatory=$true)][String] $RaineBin,
+    [Parameter(Mandatory=$true)][String] $RaineBin, # TODO : useless
+    [Parameter(Mandatory=$true)][String] $PathRaine,
     [Parameter(Mandatory=$true)][xml] $Config
   )
   Write-Host "project name : $ProjectName"
@@ -33,7 +35,7 @@ function Main {
   Write-Host "project setting file : $XMLProjectSettingFile"
   Write-Host "graphic data XML file for DATLib : $XMLDATFile"
   Write-Host "mame folder : $PathMame"
-  Write-Host "raine exe : $RaineBin"
+  Write-Host "raine folder : $PathRaine"
   Write-Host "--------------------------------------------"
   Write-Host ""
 
@@ -65,12 +67,12 @@ function Main {
     $configCDDA = $null
 
     if ($Config.project.sound.cdda.tracks.track) { $configCDDA = $config.project.sound.cdda }
-    
+
     Write-CUE `
       -OutputFile "$env:TEMP\neocore\$ProjectName\$ProjectName.cue" `
       -ISOName "$ProjectName.iso" `
       -Config $configCDDA
-    
+
     Robocopy /MIR assets "$env:TEMP\neocore\$ProjectName\assets"
   }
 
@@ -94,10 +96,7 @@ function Main {
   }
 
   function RunnerRaine {
-    Write-Host "lauching raine $ProjectName" -ForegroundColor Yellow
-    # TODO : change zip rule
-    #& $RaineBin "$env:TEMP\neocore\$ProjectName\$ProjectName.zip"
-    & $RaineBin "$env:TEMP\neocore\$ProjectName\$ProjectName.cue"
+    Raine -File "$env:TEMP\neocore\$ProjectName\$ProjectName.cue" -PathRaine $PathRaine
   }
 
   Set-EnvPath -PathNeoDevBin $PathNeoDevBin -PathNeocoreBin $PathNeocoreBin
@@ -106,13 +105,14 @@ function Main {
   if (($Rule -eq "make") -or ($Rule -eq "") -or (!$Rule) -or ($Rule -eq "default") ) {
     BuilderSprite
     BuilderProgram
-  } 
+  }
   if ($Rule -eq "iso") {
     BuilderSprite
     BuilderProgram
     BuilderISO
   }
   if ($Rule -eq "zip") {
+    # TODO : change zip rule
     BuilderSprite
     BuilderProgram
     BuilderISO
@@ -149,7 +149,7 @@ function Main {
       BuilderMame
       RunnerMame
       Watch-Folder -Path "."
-      Stop-Emulators  
+      Stop-Emulators
     }
   }
   if ($Rule -eq "only:sprite") { BuilderSprite }
@@ -179,6 +179,7 @@ $projectName = $config.project.name
 $makefile = $config.project.makefile
 $XMLDATFile = $config.project.XMLDATFile
 
+# TODO : useless RaineBin
 Main `
   -MakeFile $makefile `
   -ProjectName $projectName `
@@ -190,4 +191,5 @@ Main `
   -XMLDATFile $XMLDATFile `
   -Config  $config `
   -RaineBin "$env:APPDATA\neocore\raine\raine32.exe" `
+  -PathRaine "$env:APPDATA\neocore\raine" `
   -PathMame "$env:APPDATA\neocore\mame"

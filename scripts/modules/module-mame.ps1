@@ -1,5 +1,15 @@
 Import-Module "..\..\scripts\modules\module-download.ps1"
 
+function Install-Mame {
+  param (
+    [Parameter(Mandatory=$true)][String] $URL,
+    [Parameter(Mandatory=$true)][String] $PathDownload,
+    [Parameter(Mandatory=$true)][String] $PathInstall
+  )
+  Download -URL $URL -Path $PathDownload
+  Expand-Archive -Path "$env:TEMP\neocore\neocore-mame.zip" -DestinationPath $PathInstall
+  Remove-Item -Path "$env:TEMP\neocore\neocore-mame.zip" -Force
+}
 function Write-MameHash {
   param (
     [Parameter(Mandatory=$true)][String] $ProjectName,
@@ -50,9 +60,8 @@ function Write-Mame {
     [Parameter(Mandatory=$true)][String] $CUEFile,
     [Parameter(Mandatory=$true)][String] $OutputFile
   )
-  if ((Test-Path -Path "$PathMame\mame64.exe") -eq $false) {
-    Download -URL "http://azertyvortex.free.fr/download/neocore-mame.zip" -Path "$env:TEMP\neocore"
-    Expand-Archive -Path "$env:TEMP\neocore\neocore-mame.zip" -DestinationPath "$env:APPDATA\neocore"
+  if ((Test-Path -Path $PathMame) -eq $false) {
+    Install-Mame -URL "http://azertyvortex.free.fr/download/neocore-mame.zip" -PathDownload "$env:TEMP\neocore" -PathInstall "$env:APPDATA\neocore"
   }
   if ((Test-Path -Path $PathMame) -eq $false) { Write-Host "error - $PathMame not found" -ForegroundColor Red; exit 1 }
   if ((Test-Path -Path $CUEFile) -eq $false) { Write-Host "error - $CUEFile not found" -ForegroundColor Red; exit 1 }
