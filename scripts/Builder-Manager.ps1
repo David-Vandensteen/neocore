@@ -9,6 +9,7 @@ Import-Module "..\..\scripts\modules\module-mak.ps1"
 Import-Module "..\..\scripts\modules\module-emulators.ps1"
 Import-Module "..\..\scripts\modules\module-mame.ps1"
 Import-Module "..\..\scripts\modules\module-raine.ps1"
+Import-Module "..\..\scripts\modules\module-iso.ps1"
 
 function Main {
   param (
