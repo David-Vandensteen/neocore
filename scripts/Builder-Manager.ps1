@@ -1,17 +1,34 @@
-# TODO : expand archive -force in modules
 # TODO : change BuilderZIP
 param (
-  #[Parameter(Mandatory=$true)][String] $ProjectName,
   [Parameter(Mandatory=$true)][String] $ConfigFile,
   [String] $Rule = "default"
 )
 
 Import-Module "..\..\scripts\modules\module-sdk.ps1"
-Import-Module "..\..\scripts\modules\module-mak.ps1"
 Import-Module "..\..\scripts\modules\module-emulators.ps1"
-Import-Module "..\..\scripts\modules\module-mame.ps1"
-Import-Module "..\..\scripts\modules\module-raine.ps1"
-Import-Module "..\..\scripts\modules\module-iso.ps1"
+
+function Remove-Project {
+  param (
+    [Parameter(Mandatory=$true)][String] $ProjectName
+  )
+  Write-Host "clean $ProjectName project" -ForegroundColor Yellow
+  Write-Host "remove $env:TEMP\neocore\$ProjectName"
+  if (Test-Path -Path $env:TEMP\neocore\$ProjectName) {
+    Get-ChildItem -Path $env:TEMP\neocore\$ProjectName -Recurse -ErrorAction SilentlyContinue | Remove-Item -force -Recurse -ErrorAction SilentlyContinue
+  }
+  if (Test-Path -Path $env:TEMP\neocore\$ProjectName) { Remove-Item $env:TEMP\neocore\$ProjectName -Force -ErrorAction SilentlyContinue }
+}
+
+function Set-EnvPath {
+  param (
+    [Parameter(Mandatory=$true)][String] $PathNeoDevBin,
+    [Parameter(Mandatory=$true)][String] $PathNeocoreBin
+  )
+  $env:path = "$PathNeoDevBin;$PathNeocoreBin;$env:windir\System32;$env:windir\System32\WindowsPowerShell\v1.0\"
+  Write-Host "Env Path: $env:path"
+  Write-Host "--------------------------------------------"
+  Write-Host ""
+}
 
 function Main {
   param (
@@ -24,7 +41,6 @@ function Main {
     [Parameter(Mandatory=$true)][String] $XMLDATFile,
     [Parameter(Mandatory=$true)][String] $PathMame,
     [Parameter(Mandatory=$true)][String] $Rule,
-    [Parameter(Mandatory=$true)][String] $RaineBin, # TODO : useless
     [Parameter(Mandatory=$true)][String] $PathRaine,
     [Parameter(Mandatory=$true)][xml] $Config
   )
@@ -59,13 +75,18 @@ function Main {
   if ($Rule -notmatch "^only:") { BuilderClean -ProjectName $ProjectName }
   if ((Test-Path -Path "$env:TEMP\neocore\$ProjectName") -eq $false) { mkdir -Path "$env:TEMP\neocore\$ProjectName" | Out-Null }
 
-  function BuilderProgram { Write-Program -ProjectName $ProjectName -PathNeoDev $PathNeoDev -MakeFile $MakeFile -PRGFile $PRGFile }
+  function BuilderProgram {
+    Import-Module "..\..\scripts\modules\module-program.ps1"
+    Write-Program -ProjectName $ProjectName -PathNeoDev $PathNeoDev -MakeFile $MakeFile -PRGFile $PRGFile
+  }
 
   function BuilderSprite {
+    Import-Module "..\..\scripts\modules\module-sprite.ps1"
     Write-Sprite -XMLFile $XMLDATFile -Format "cd" -OutputFile "$env:TEMP\neocore\$ProjectName\$ProjectName"
   }
 
   function BuilderISO {
+    Import-Module "..\..\scripts\modules\module-iso.ps1"
     Write-ISO `
       -PRGFile $PRGFile `
       -SpriteFile "$env:TEMP\neocore\$ProjectName\$ProjectName.cd" `
@@ -94,6 +115,7 @@ function Main {
   }
 
   function BuilderZIP {
+    Import-Module "..\..\scripts\modules\module-zip.ps1"
     Write-ZIP `
       -Path "$env:TEMP\neocore\$ProjectName\iso" `
       -OutputFile "$env:TEMP\neocore\$ProjectName\$ProjectName.zip" `
@@ -128,6 +150,7 @@ function Main {
     BuilderZIP
   }
   if ($Rule -eq "run") {
+    Import-Module "..\..\scripts\modules\module-mame.ps1"
     BuilderSprite
     BuilderProgram
     BuilderISO
@@ -136,6 +159,7 @@ function Main {
     RunnerMame
   }
   if ($Rule -eq "run:raine") {
+    Import-Module "..\..\scripts\modules\module-raine.ps1"
     BuilderSprite
     BuilderProgram
     BuilderISO
@@ -143,6 +167,7 @@ function Main {
     RunnerRaine
   }
   if ($Rule -eq "run:mame") {
+    Import-Module "..\..\scripts\modules\module-mame.ps1"
     BuilderSprite
     BuilderProgram
     BuilderISO
@@ -151,6 +176,7 @@ function Main {
     RunnerMame
   }
   if ($Rule -eq "serve") {
+    Import-Module "..\..\scripts\modules\module-watcher.ps1"
     While ($true) {
       BuilderSprite
       BuilderProgram
@@ -171,24 +197,18 @@ function Main {
   if ($Rule -eq "only:run:raine") { RunnerRaine }
 }
 
-
 if ((Test-Path -Path $ConfigFile) -eq $false) {
   Write-Host "Config $ConfigFile not found" -ForegroundColor Red
   exit 1
 }
 
 Write-Host "informations" -ForegroundColor Yellow
-
-# TODO : Config to ConfigSound or ConfigCDDA ...
-# TODO : refactor entry point
-
 Write-Host "Config file : $ConfigFile"
 [xml]$config = (Get-Content -Path $ConfigFile)
 $projectName = $config.project.name
 $makefile = $config.project.makefile
 $XMLDATFile = $config.project.XMLDATFile
 
-# TODO : useless RaineBin
 Main `
   -MakeFile $makefile `
   -ProjectName $projectName `
@@ -199,6 +219,5 @@ Main `
   -Rule $Rule `
   -XMLDATFile $XMLDATFile `
   -Config  $config `
-  -RaineBin "$env:APPDATA\neocore\raine\raine32.exe" `
   -PathRaine "$env:APPDATA\neocore\raine" `
   -PathMame "$env:APPDATA\neocore\mame"
