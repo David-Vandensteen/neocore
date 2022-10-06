@@ -21,17 +21,6 @@ License: MIT
 (c) 2019 [David Vandensteen <dvandensteen@gmail.com>]  
 Graphics by **Grass**  
   
-## Set Up
-```cmd
-.\install.bat
-```
-This install script download sdk, emulators (Raine & Mame), CD structure template ... everything you need to make and build a Neo Geo CD project  
-After install, all is available from
-```cmd
-%appdata%\neocore
-```
-**if you need to re-install, just remove %appdata%\neocore before launch install.bat**
-  
 ## Compiling the lib
 ```cmd
 .\build-neocore
