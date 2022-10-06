@@ -15,6 +15,11 @@ function Write-Sprite {
     Write-Host "error - Invalid dimension" -ForegroundColor Red
     exit 1
   }
+  if (Select-String -Path "$PATH_BUILD\sprite.log" -Pattern "est pas valide") {
+    Write-Host "error - Invalid parameter" -ForegroundColor Red
+    exit 1
+  }
+
 
   & CharSplit.exe char.bin "-$Format" $OutputFile
   Remove-Item -Path char.bin -Force
