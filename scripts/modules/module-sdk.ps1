@@ -24,8 +24,7 @@ function Install-Neodev {
 
 function Install-Neocore {
  pushd ..\..\
- Start-Process -File .\build-neocore.bat -Wait
- #& build-neocore.bat
+ .\build-neocore.bat
  popd
 }
 
