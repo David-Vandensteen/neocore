@@ -1,3 +1,3 @@
 @echo off
-set OUTFILE=%APPDATA%\neocore\mame-args.xml
+set OUTFILE=..\build\mame-args.xml
 del %OUTFILE% /F /Q
