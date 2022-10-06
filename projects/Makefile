@@ -4,7 +4,8 @@
 PROJECTNAME = $(PROJECT)
 
 # TODO : review NEOBUILDTEMP
-NEOBUILDTEMP = $(TEMP)/neocore/$(PROJECTNAME)
+#NEOBUILDTEMP = $(TEMP)/neocore/$(PROJECTNAME)
+NEOBUILDTEMP = ../../build/projects/$(PROJECTNAME)
 
 #######################################
 # Base dir of your m68k gcc toolchain #

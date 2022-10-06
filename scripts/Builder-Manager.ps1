@@ -64,6 +64,7 @@ function Main {
   Write-Host "raine folder : $PathRaine"
   Write-Host "spool folder for download : $PATH_SPOOL"
   Write-Host "neocore folder : $PATH_NEOCORE"
+  Write-Host "path build : $PATH_BUILD"
   Write-Host "--------------------------------------------"
   Write-Host ""
 
@@ -82,7 +83,6 @@ function Main {
     Remove-Project -ProjectName $ProjectName
   }
   if ($Rule -notmatch "^only:") { BuilderClean -ProjectName $ProjectName }
-  if ((Test-Path -Path "$env:TEMP\neocore\$ProjectName") -eq $false) { mkdir -Path "$env:TEMP\neocore\$ProjectName" | Out-Null }
 
   function BuilderProgram {
     Import-Module "..\..\scripts\modules\module-program.ps1"
@@ -91,16 +91,16 @@ function Main {
 
   function BuilderSprite {
     Import-Module "..\..\scripts\modules\module-sprite.ps1"
-    Write-Sprite -XMLFile $XMLDATFile -Format "cd" -OutputFile "$env:TEMP\neocore\$ProjectName\$ProjectName"
+    Write-Sprite -XMLFile $XMLDATFile -Format "cd" -OutputFile "$PATH_BUILD\$ProjectName"
   }
 
   function BuilderISO {
     Import-Module "..\..\scripts\modules\module-iso.ps1"
     Write-ISO `
       -PRGFile $PRGFile `
-      -SpriteFile "$env:TEMP\neocore\$ProjectName\$ProjectName.cd" `
-      -OutputFile "$env:TEMP\neocore\$ProjectName\$ProjectName.iso" `
-      -PathISOBuildFolder "$env:TEMP\neocore\$ProjectName\iso" `
+      -SpriteFile "$PATH_BUILD\$ProjectName.cd" `
+      -OutputFile "$PATH_BUILD\$ProjectName.iso" `
+      -PathISOBuildFolder "$PATH_BUILD\iso" `
       -PathCDTemplate "$PATH_NEOCORE\cd_template"
 
     $configCDDA = $null
@@ -108,12 +108,12 @@ function Main {
     if ($Config.project.sound.cdda.tracks.track) { $configCDDA = $config.project.sound.cdda }
 
     Write-CUE `
-      -OutputFile "$env:TEMP\neocore\$ProjectName\$ProjectName.cue" `
+      -OutputFile "$PATH_BUILD\$ProjectName.cue" `
       -ISOName "$ProjectName.iso" `
       -Config $configCDDA
 
-    Write-Host "copy assets to $env:TEMP\neocore\$ProjectName\assets" -ForegroundColor Green
-    Robocopy /MIR assets "$env:TEMP\neocore\$ProjectName\assets" | Out-Null
+    Write-Host "copy assets to $PATH_BUILD\assets" -ForegroundColor Green
+    Robocopy /MIR assets "$PATH_BUILD\assets" | Out-Null
     # TODO : check lastexitcode
   }
 
@@ -121,24 +121,24 @@ function Main {
     Write-Mame `
       -ProjectName $ProjectName `
       -PathMame $PathMame `
-      -CUEFile "$env:TEMP\neocore\$ProjectName\$ProjectName.cue" `
+      -CUEFile "$PATH_BUILD\$ProjectName.cue" `
       -OutputFile "$PathMame\roms\neocdz\$ProjectName.chd"
   }
 
   function BuilderZIP {
     Import-Module "..\..\scripts\modules\module-zip.ps1"
     Write-ZIP `
-      -Path "$env:TEMP\neocore\$ProjectName\iso" `
-      -OutputFile "$env:TEMP\neocore\$ProjectName\$ProjectName.zip" `
-      -ISOFile "$env:TEMP\neocore\$ProjectName\$ProjectName.iso"
+      -Path "$PATH_BUILD\iso" `
+      -OutputFile "$PATH_BUILD\$ProjectName.zip" `
+      -ISOFile "$PATH_BUILD\$ProjectName.iso"
   }
 
   function RunnerMame {
-    Mame -GameName $ProjectName -PathMame $PathMame -XMLArgsFile "$env:APPDATA\neocore\mame-args.xml"
+    Mame -GameName $ProjectName -PathMame $PathMame -XMLArgsFile "$PATH_NEOCORE\mame-args.xml"
   }
 
   function RunnerRaine {
-    Raine -File "$env:TEMP\neocore\$ProjectName\$ProjectName.cue" -PathRaine $PathRaine
+    Raine -File "$PATH_BUILD\$ProjectName.cue" -PathRaine $PathRaine
   }
 
   Set-EnvPath -PathNeoDevBin $PathNeoDevBin -PathNeocoreBin $PathNeocoreBin
@@ -221,7 +221,7 @@ $projectName = $config.project.name
 $makefile = $config.project.makefile
 $XMLDATFile = $config.project.XMLDATFile
 
-$pathBuild = "..\..\build"
+$pathBuild = "..\..\build\projects\$projectName"
 $pathNeocore = "..\..\build"
 
 if ((Test-Path -Path $pathBuild) -eq $false) { New-Item -Path $pathBuild -ItemType Directory -Force }
@@ -236,11 +236,11 @@ Main `
   -PathNeoDevBin "$PATH_NEOCORE\neodev-sdk\m68k\bin" `
   -PathNeocoreBin "$PATH_NEOCORE\bin" `
   -PathNeoDev "$PATH_NEOCORE\neodev-sdk" `
-  -PRGFile "$env:TEMP\neocore\$ProjectName\$ProjectName.prg" `
+  -PRGFile "$PATH_BUILD\$ProjectName.prg" `
   -Rule $Rule `
   -XMLDATFile $XMLDATFile `
   -Config  $config `
   -PathRaine "$PATH_NEOCORE\raine" `
   -PathMame "$PATH_NEOCORE\mame" `
   -BaseURL "http://azertyvortex.free.fr/download" `
-  -PathSpool "$PATH_BUILD\spool"
+  -PathSpool "$PATH_NEOCORE\spool"
