@@ -1,7 +1,9 @@
 INC = $(NEODEV)\m68k\include
 LIB = $(NEODEV)\m68k\lib
 
-NEOBUILDDATA = $(APPDATA)\neocore
+# TODO : parametric NEOBUILDATA
+#NEOBUILDDATA = $(APPDATA)\neocore
+NEOBUILDDATA = build
 
 RM = $(NEOBUILDDATA)\bin\rm.exe
 CP = $(NEOBUILDDATA)\bin\cp.exe

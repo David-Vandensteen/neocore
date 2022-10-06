@@ -2,6 +2,8 @@
 #	Project settings #
 ####################
 PROJECTNAME = $(PROJECT)
+
+# TODO : review NEOBUILDTEMP
 NEOBUILDTEMP = $(TEMP)/neocore/$(PROJECTNAME)
 
 #######################################
