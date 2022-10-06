@@ -1,3 +1,4 @@
+build/
 *.wav
 .vscode
 SPR.cd
