@@ -1,4 +1,4 @@
-# TODO (minor) - improve errorlevel break
+# TODO : refactor
 param (
   [string] $op,
   [string] $killTime
