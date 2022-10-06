@@ -7,7 +7,15 @@ function Write-Sprite {
   Write-Host "compiling sprites" -ForegroundColor Yellow
   if ((Test-Path -Path $XMLFile) -eq $false) { Write-Host "error - $XMLFile not found" -ForegroundColor Red; exit 1 }
 
-  & BuildChar.exe $XMLFile
+  Start-Process -File BuildChar.exe -NoNewWindow -ArgumentList($XMLFile) -Wait -RedirectStandardOutput "$PATH_BUILD\sprite.log"
+
+  Get-Content -Path "$PATH_BUILD\sprite.log" -Force
+
+  if (Select-String -Path "$PATH_BUILD\sprite.log" -Pattern "Invalid dimension") {
+    Write-Host "error - Invalid dimension" -ForegroundColor Red
+    exit 1
+  }
+
   & CharSplit.exe char.bin "-$Format" $OutputFile
   Remove-Item -Path char.bin -Force
 
