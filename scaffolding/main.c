@@ -22,7 +22,7 @@ static void update() {
 
 int main(void) {
   init();
-  // display()
+  // display();
   while(1) {
     wait_vbl();
     update();
