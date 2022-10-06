@@ -44,12 +44,12 @@ function Main {
     [Parameter(Mandatory=$true)][String] $PathRaine,
     [Parameter(Mandatory=$true)][String] $BaseURL,
     [Parameter(Mandatory=$true)][String] $PathSpool,
-    [Parameter(Mandatory=$true)][String] $PathNeocore,
     [Parameter(Mandatory=$true)][xml] $Config
   )
   $BASE_URL = $BaseURL
   $PATH_SPOOL = $PathSpool
-  $PATH_NEOCORE = $PathNeocore
+
+  if ((Test-Path -Path $PATH_SPOOL) -eq $false) { New-Item -Path $PATH_SPOOL -ItemType Directory -Force }
 
   Write-Host "project name : $ProjectName"
   Write-Host "makefile : $MakeFile"
@@ -68,10 +68,6 @@ function Main {
   Write-Host ""
 
   Stop-Emulators
-
-  if ((Test-Path -Path $PATH_SPOOL) -eq $false) {
-    New-Item -Path $PATH_SPOOL -ItemType Directory -Force
-  }
 
   if ((Test-Path -Path $PathNeoDevBin) -eq $false) { Install-SDK }
   if ((Test-Path -Path $PathNeocoreBin) -eq $false) { Install-SDK }
@@ -105,7 +101,7 @@ function Main {
       -SpriteFile "$env:TEMP\neocore\$ProjectName\$ProjectName.cd" `
       -OutputFile "$env:TEMP\neocore\$ProjectName\$ProjectName.iso" `
       -PathISOBuildFolder "$env:TEMP\neocore\$ProjectName\iso" `
-      -PathCDTemplate "$env:APPDATA\neocore\cd_template"
+      -PathCDTemplate "$PATH_NEOCORE\cd_template"
 
     $configCDDA = $null
 
@@ -116,7 +112,8 @@ function Main {
       -ISOName "$ProjectName.iso" `
       -Config $configCDDA
 
-    Robocopy /MIR assets "$env:TEMP\neocore\$ProjectName\assets"
+    Write-Host "copy assets to $env:TEMP\neocore\$ProjectName\assets" -ForegroundColor Green
+    Robocopy /MIR assets "$env:TEMP\neocore\$ProjectName\assets" | Out-Null
   }
 
   function BuilderMame {
@@ -189,6 +186,7 @@ function Main {
     RunnerMame
   }
   if ($Rule -eq "serve") {
+    Import-Module "..\..\scripts\modules\module-mame.ps1"
     Import-Module "..\..\scripts\modules\module-watcher.ps1"
     While ($true) {
       BuilderSprite
@@ -222,18 +220,26 @@ $projectName = $config.project.name
 $makefile = $config.project.makefile
 $XMLDATFile = $config.project.XMLDATFile
 
+$pathBuild = "..\..\build"
+$pathNeocore = "..\..\build"
+
+if ((Test-Path -Path $pathBuild) -eq $false) { New-Item -Path $pathBuild -ItemType Directory -Force }
+if ((Test-Path -Path $pathNeocore) -eq $false) { New-Item -Path $pathNeocore -ItemType Directory -Force }
+
+$PATH_BUILD = (Resolve-Path -Path $pathBuild).Path
+$PATH_NEOCORE = (Resolve-Path -Path $pathNeocore).Path
+
 Main `
   -MakeFile $makefile `
   -ProjectName $projectName `
-  -PathNeoDevBin "$env:APPDATA\neocore\neodev-sdk\m68k\bin" `
-  -PathNeocoreBin "$env:APPDATA\neocore\bin" `
-  -PathNeoDev "$env:APPDATA\neocore\neodev-sdk" `
+  -PathNeoDevBin "$PATH_NEOCORE\neodev-sdk\m68k\bin" `
+  -PathNeocoreBin "$PATH_NEOCORE\bin" `
+  -PathNeoDev "$PATH_NEOCORE\neodev-sdk" `
   -PRGFile "$env:TEMP\neocore\$ProjectName\$ProjectName.prg" `
   -Rule $Rule `
   -XMLDATFile $XMLDATFile `
   -Config  $config `
-  -PathRaine "$env:APPDATA\neocore\raine" `
-  -PathMame "$env:APPDATA\neocore\mame" `
+  -PathRaine "$PATH_NEOCORE\raine" `
+  -PathMame "$PATH_NEOCORE\mame" `
   -BaseURL "http://azertyvortex.free.fr/download" `
-  -PathSpool "$env:TEMP\neocore\spool" `
-  -PathNeocore "$env:APPDATA\neocore"
+  -PathSpool "$PATH_BUILD\spool"
