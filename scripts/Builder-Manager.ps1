@@ -47,6 +47,8 @@ function Main {
   if ((Test-Path -Path $PathNeoDevBin) -eq $false) { Install-SDK }
   if ((Test-Path -Path $PathNeocoreBin) -eq $false) { Install-SDK }
   if ((Test-Path -Path $PathNeoDev) -eq $false) { Install-SDK }
+  if ((Test-Path -Path "$PathNeoDev\m68k\include\neocore.h") -eq $false) { Install-SDK }
+  if ((Test-Path -Path "$PathNeoDev\m68k\lib\libneocore.a") -eq $false) { Install-SDK }
 
   function BuilderClean {
     param (

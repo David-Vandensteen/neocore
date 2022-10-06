@@ -20,26 +20,7 @@ I share my tools and my code, these could possibly help your projects on this pl
 License: MIT  
 (c) 2019 [David Vandensteen <dvandensteen@gmail.com>]  
 Graphics by **Grass**  
-  
-## Set Up
-```cmd
-.\install.bat
-```
-This install script download sdk, emulators (Raine & Mame), CD structure template ... everything you need to make and build a Neo Geo CD project  
-After install, all is available from
-```cmd
-%appdata%\neocore
-```
-**if you need to re-install, just remove %appdata%\neocore before launch install.bat**
-  
-## Compiling the lib
-```cmd
-.\build-neocore
-```
-This script override path environment variable during the compilation.  
-its avoid collisions with other bin, sdk, gcc...  
-**Whenever you pull or change branches, consider you need rebuilding the library.**
-  
+    
 ## Build a included example
 ```cmd
 cd projects\hello
@@ -136,6 +117,14 @@ The Animator tool is available here:
 %appdata%\neocore\neodev-sdk\m68k\bin\Animator.exe
 ```
   
+## Compiling the lib (necessary if you update it)
+**If you pull or change branches, consider you need rebuilding the library.**
+```cmd
+.\build-neocore
+```
+This script override path environment variable during the compilation.  
+its avoid collisions with other bin, sdk, gcc...  
+
 ## SoundFX ... (todo)
   
 ___***Warn : mak script override path environment variable during the compiling, if u have some problems after using it, just close and restart a new command terminal***___
