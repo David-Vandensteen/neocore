@@ -114,6 +114,7 @@ function Main {
 
     Write-Host "copy assets to $env:TEMP\neocore\$ProjectName\assets" -ForegroundColor Green
     Robocopy /MIR assets "$env:TEMP\neocore\$ProjectName\assets" | Out-Null
+    # TODO : check lastexitcode
   }
 
   function BuilderMame {

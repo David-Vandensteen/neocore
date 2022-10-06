@@ -1,3 +1,4 @@
+rem TODO : make a custom makefile without neocore link
 @echo off
 set projectSetting="project.xml"
 set builderScript="..\..\scripts\Builder-Manager.ps1"
