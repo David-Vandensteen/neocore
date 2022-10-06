@@ -8,15 +8,11 @@ Import-Module "..\..\scripts\modules\module-sdk.ps1"
 Import-Module "..\..\scripts\modules\module-emulators.ps1"
 
 function Remove-Project {
-  param (
-    [Parameter(Mandatory=$true)][String] $ProjectName
-  )
-  Write-Host "clean $ProjectName project" -ForegroundColor Yellow
-  Write-Host "remove $env:TEMP\neocore\$ProjectName"
-  if (Test-Path -Path $env:TEMP\neocore\$ProjectName) {
-    Get-ChildItem -Path $env:TEMP\neocore\$ProjectName -Recurse -ErrorAction SilentlyContinue | Remove-Item -force -Recurse -ErrorAction SilentlyContinue
+  Write-Host "clean $PATH_BUILD" -ForegroundColor Yellow
+  if (Test-Path -Path $PATH_BUILD) {
+    Get-ChildItem -Path $PATH_BUILD -Recurse -ErrorAction SilentlyContinue | Remove-Item -force -Recurse -ErrorAction SilentlyContinue
   }
-  if (Test-Path -Path $env:TEMP\neocore\$ProjectName) { Remove-Item $env:TEMP\neocore\$ProjectName -Force -ErrorAction SilentlyContinue }
+  if (Test-Path -Path $PATH_BUILD) { Remove-Item $PATH_BUILD -Force -ErrorAction SilentlyContinue }
 }
 
 function Set-EnvPath {
@@ -76,13 +72,8 @@ function Main {
   if ((Test-Path -Path "$PathNeoDev\m68k\include\neocore.h") -eq $false) { Install-SDK }
   if ((Test-Path -Path "$PathNeoDev\m68k\lib\libneocore.a") -eq $false) { Install-SDK }
 
-  function BuilderClean {
-    param (
-      [Parameter(Mandatory=$true)][String] $ProjectName
-    )
-    Remove-Project -ProjectName $ProjectName
-  }
-  if ($Rule -notmatch "^only:") { BuilderClean -ProjectName $ProjectName }
+  if ($Rule -notmatch "^only:") { Remove-Project }
+  if ((Test-Path -Path $PATH_BUILD) -eq $false) { New-Item -Path $PATH_BUILD -ItemType Directory -Force }
 
   function BuilderProgram {
     Import-Module "..\..\scripts\modules\module-program.ps1"
@@ -224,8 +215,8 @@ $XMLDATFile = $config.project.XMLDATFile
 $pathBuild = "..\..\build\projects\$projectName"
 $pathNeocore = "..\..\build"
 
-if ((Test-Path -Path $pathBuild) -eq $false) { New-Item -Path $pathBuild -ItemType Directory -Force }
 if ((Test-Path -Path $pathNeocore) -eq $false) { New-Item -Path $pathNeocore -ItemType Directory -Force }
+if ((Test-Path -Path $pathBuild) -eq $false) { New-Item -Path $pathBuild -ItemType Directory -Force }
 
 $PATH_BUILD = (Resolve-Path -Path $pathBuild).Path
 $PATH_NEOCORE = (Resolve-Path -Path $pathNeocore).Path
