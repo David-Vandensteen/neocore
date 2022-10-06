@@ -17,6 +17,8 @@ I share my tools and my code, these could possibly help your projects on this pl
 *Tested on Windows 10 x64 (09/12/2022)*  
 *Tested on Windows 11 (09/13/2022)*  
   
+Compatibility problems : the lib is mainly tested on Raine & Mame emulators    
+
 License: MIT  
 (c) 2019 [David Vandensteen <dvandensteen@gmail.com>]  
 Graphics by **Grass**  
@@ -28,6 +30,8 @@ cd projects\hello
 ```
   
 ## Mak rules
+___***Warn : mak script override path environment variable during the compiling, if u have some problems after using it, just close and restart a new command terminal***___
+
 - Clean the builded resources
 ```cmd
 .\mak clean
@@ -117,8 +121,10 @@ The Animator tool is available here:
 %appdata%\neocore\neodev-sdk\m68k\bin\Animator.exe
 ```
   
-## Compiling the lib (necessary if you update it)
-**If you pull or change branches, consider you need rebuilding the library.**
+## Pull or checkout another branches
+**BE CAREFUL : You need to remove build folder `.\build` for supress cache files before compiling a project**  
+
+## Compiling the lib (necessary if you tweak or modify Neocore Neo-Geo lib)
 ```cmd
 .\build-neocore
 ```
@@ -126,5 +132,5 @@ This script override path environment variable during the compilation.
 its avoid collisions with other bin, sdk, gcc...  
 
 ## SoundFX ... (todo)
-  
-___***Warn : mak script override path environment variable during the compiling, if u have some problems after using it, just close and restart a new command terminal***___
+## Use Neocore toolchain for DATlib project (without Neocore lib) (todo)
+## Use Neocore toolchain for Neodev vanilla project (without DATlib & Neocore lib) (todo)
