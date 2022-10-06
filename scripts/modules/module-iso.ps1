@@ -9,7 +9,7 @@ function Write-ISO {
     [Parameter(Mandatory=$true)][String] $PathCDTemplate
   )
   if ((Test-Path -Path $PathCDTemplate) -eq $false) {
-    Install-Component -URL "http://azertyvortex.free.fr/download/neobuild-cd_template.zip" -PathDownload "$env:TEMP\neocore" -PathInstall "$env:APPDATA\neocore"
+    Install-Component -URL "$BASE_URL/neobuild-cd_template.zip" -PathDownload $PATH_SPOOL -PathInstall $PATH_NEOCORE
   }
   Write-Host "compiling ISO" -ForegroundColor Yellow
   if (Test-Path -Path $PathISOBuildFolder) { Remove-Item $PathISOBuildFolder -Recurse -Force }

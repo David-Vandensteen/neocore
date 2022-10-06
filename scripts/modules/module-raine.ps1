@@ -18,7 +18,7 @@ function Raine {
     Write-Host "error - $File not found" -ForegroundColor Red
   }
   if ((Test-Path -Path $PathRaine) -eq $false) {
-    Install-Component -URL "http://azertyvortex.free.fr/download/neobuild-raine.zip" -PathDownload "$env:TEMP\neocore" -PathInstall "$env:APPDATA\neocore"
+    Install-Component -URL "$BASE_URL/neobuild-raine.zip" -PathDownload $PATH_SPOOL -PathInstall $PATH_NEOCORE
     Update-Raine -Path $PathRaine
   }
   Write-Host "lauching raine $File" -ForegroundColor Yellow

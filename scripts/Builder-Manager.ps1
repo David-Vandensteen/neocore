@@ -42,8 +42,15 @@ function Main {
     [Parameter(Mandatory=$true)][String] $PathMame,
     [Parameter(Mandatory=$true)][String] $Rule,
     [Parameter(Mandatory=$true)][String] $PathRaine,
+    [Parameter(Mandatory=$true)][String] $BaseURL,
+    [Parameter(Mandatory=$true)][String] $PathSpool,
+    [Parameter(Mandatory=$true)][String] $PathNeocore,
     [Parameter(Mandatory=$true)][xml] $Config
   )
+  $BASE_URL = $BaseURL
+  $PATH_SPOOL = $PathSpool
+  $PATH_NEOCORE = $PathNeocore
+
   Write-Host "project name : $ProjectName"
   Write-Host "makefile : $MakeFile"
   Write-Host "path neodev bin : $PathNeoDevBin"
@@ -55,10 +62,16 @@ function Main {
   Write-Host "graphic data XML file for DATLib : $XMLDATFile"
   Write-Host "mame folder : $PathMame"
   Write-Host "raine folder : $PathRaine"
+  Write-Host "spool folder for download : $PATH_SPOOL"
+  Write-Host "neocore folder : $PATH_NEOCORE"
   Write-Host "--------------------------------------------"
   Write-Host ""
 
   Stop-Emulators
+
+  if ((Test-Path -Path $PATH_SPOOL) -eq $false) {
+    New-Item -Path $PATH_SPOOL -ItemType Directory -Force
+  }
 
   if ((Test-Path -Path $PathNeoDevBin) -eq $false) { Install-SDK }
   if ((Test-Path -Path $PathNeocoreBin) -eq $false) { Install-SDK }
@@ -212,12 +225,15 @@ $XMLDATFile = $config.project.XMLDATFile
 Main `
   -MakeFile $makefile `
   -ProjectName $projectName `
-  -PathNeoDevBin "$env:appdata\neocore\neodev-sdk\m68k\bin" `
-  -PathNeocoreBin "$env:appdata\neocore\bin" `
-  -PathNeoDev "$env:appdata\neocore\neodev-sdk" `
-  -PRGFile "$env:temp\neocore\$ProjectName\$ProjectName.prg" `
+  -PathNeoDevBin "$env:APPDATA\neocore\neodev-sdk\m68k\bin" `
+  -PathNeocoreBin "$env:APPDATA\neocore\bin" `
+  -PathNeoDev "$env:APPDATA\neocore\neodev-sdk" `
+  -PRGFile "$env:TEMP\neocore\$ProjectName\$ProjectName.prg" `
   -Rule $Rule `
   -XMLDATFile $XMLDATFile `
   -Config  $config `
   -PathRaine "$env:APPDATA\neocore\raine" `
-  -PathMame "$env:APPDATA\neocore\mame"
+  -PathMame "$env:APPDATA\neocore\mame" `
+  -BaseURL "http://azertyvortex.free.fr/download" `
+  -PathSpool "$env:TEMP\neocore\spool" `
+  -PathNeocore "$env:APPDATA\neocore"

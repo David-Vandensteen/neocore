@@ -51,7 +51,7 @@ function Write-Mame {
     [Parameter(Mandatory=$true)][String] $OutputFile
   )
   if ((Test-Path -Path $PathMame) -eq $false) {
-    Install-Component -URL "http://azertyvortex.free.fr/download/neocore-mame.zip" -PathDownload "$env:TEMP\neocore" -PathInstall "$env:APPDATA\neocore"
+    Install-Component -URL "$BASE_URL/neocore-mame.zip" -PathDownload $PATH_SPOOL -PathInstall $PATH_NEOCORE
   }
   if ((Test-Path -Path $PathMame) -eq $false) { Write-Host "error - $PathMame not found" -ForegroundColor Red; exit 1 }
   if ((Test-Path -Path $CUEFile) -eq $false) { Write-Host "error - $CUEFile not found" -ForegroundColor Red; exit 1 }
