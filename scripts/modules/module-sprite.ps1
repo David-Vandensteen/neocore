@@ -1,3 +1,4 @@
+# TODO : extend buildChar with error level output
 function Write-Sprite {
   param (
     [Parameter(Mandatory=$true)][String] $Format,
@@ -20,6 +21,10 @@ function Write-Sprite {
     exit 1
   }
 
+  if ((Test-Path -Path "assets\gfx\*.*_reject.*") -eq $true) { # TODO : recursive search
+    Write-Host "error - Sprite reject... check color depth" -ForegroundColor Red
+    exit 1
+  }
 
   & CharSplit.exe char.bin "-$Format" $OutputFile
   Remove-Item -Path char.bin -Force
