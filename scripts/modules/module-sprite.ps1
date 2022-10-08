@@ -21,13 +21,10 @@ function Write-Sprite {
     exit 1
   }
 
-  #if ((Test-Path -Path "assets\gfx\*.*_reject.*") -eq $true) { # TODO : recursive search
-  #  Write-Host "error - Sprite reject... check color depth" -ForegroundColor Red
-  #  exit 1
-  #}
   if ((Get-ChildItem -Path "." -Filter "*.*_reject.*" -Recurse -ErrorAction SilentlyContinue -Force).Length -ne 0) {
-    Write-Host "Fix sprite and remove *_reject file(s) in your project before launch a new build ..." -ForegroundColor Red
-    Write-Host "error - Sprite reject... check color depth" -ForegroundColor Red
+    Write-Host "Open reject *_reject file(s)" -ForegroundColor Red
+    Write-Host "Fix asset and remove *_reject file(s) in your project before launch a new build ..." -ForegroundColor Red
+    Write-Host "error - Sprite reject..." -ForegroundColor Red
     exit 1
   }
 
