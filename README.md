@@ -14,10 +14,10 @@ I share my tools and my code, these could possibly help your projects on this pl
 ***Lot of thing is under development and unoptimized ...***
 ***I'm not responsible for any software damage***  
   
-*Tested on Windows 10 x64 (09/12/2022)*  
-*Tested on Windows 11 (09/13/2022)*  
+*Tested on Windows 10 x64 (2022-10-08)* (commit: 4558f94e6eea4cbb4fe28dcab5190995e3fe3a02)  
+*Tested on Windows 11 (09/13/2022-09-13)* (commit: bf49e7935ab66b7abefc4fda89d9865b533c6469)
   
-Compatibility problems : the lib is mainly tested on Raine & Mame emulators    
+Compatibility problems : the lib is mainly tested on Raine & Mame emulators.    
 
 License: MIT  
 (c) 2019 [David Vandensteen <dvandensteen@gmail.com>]  
