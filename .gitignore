@@ -1,3 +1,4 @@
+build/
 *.wav
 .vscode
 SPR.cd
@@ -13,3 +14,4 @@ as.exe.stackdump
 *.prg
 projects/ngcd-flamble-003
 projects/ngcd-music-disk
+projects/geowave
