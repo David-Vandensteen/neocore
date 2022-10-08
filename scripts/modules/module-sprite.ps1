@@ -1,3 +1,4 @@
+# TODO : patch buildChar with error level output
 function Write-Sprite {
   param (
     [Parameter(Mandatory=$true)][String] $Format,
@@ -17,6 +18,16 @@ function Write-Sprite {
   }
   if (Select-String -Path "$PATH_BUILD\sprite.log" -Pattern "est pas valide") {
     Write-Host "error - Invalid parameter" -ForegroundColor Red
+    exit 1
+  }
+
+  #if ((Test-Path -Path "assets\gfx\*.*_reject.*") -eq $true) { # TODO : recursive search
+  #  Write-Host "error - Sprite reject... check color depth" -ForegroundColor Red
+  #  exit 1
+  #}
+  if ((Get-ChildItem -Path "." -Filter "*.*_reject.*" -Recurse -ErrorAction SilentlyContinue -Force).Length -ne 0) {
+    Write-Host "Fix sprite and remove *_reject file(s) in your project before launch a new build ..." -ForegroundColor Red
+    Write-Host "error - Sprite reject... check color depth" -ForegroundColor Red
     exit 1
   }
 
