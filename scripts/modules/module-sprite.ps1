@@ -1,4 +1,4 @@
-# TODO : extend buildChar with error level output
+# TODO : patch buildChar with error level output
 function Write-Sprite {
   param (
     [Parameter(Mandatory=$true)][String] $Format,
@@ -21,10 +21,16 @@ function Write-Sprite {
     exit 1
   }
 
-  if ((Test-Path -Path "assets\gfx\*.*_reject.*") -eq $true) { # TODO : recursive search
+  #if ((Test-Path -Path "assets\gfx\*.*_reject.*") -eq $true) { # TODO : recursive search
+  #  Write-Host "error - Sprite reject... check color depth" -ForegroundColor Red
+  #  exit 1
+  #}
+  if ((Get-ChildItem -Path "." -Filter "*.*_reject.*" -Recurse -ErrorAction SilentlyContinue -Force).Length -ne 0) {
+    Write-Host "Fix sprite and remove *_reject file(s) in your project before launch a new build ..." -ForegroundColor Red
     Write-Host "error - Sprite reject... check color depth" -ForegroundColor Red
     exit 1
   }
+
 
   & CharSplit.exe char.bin "-$Format" $OutputFile
   Remove-Item -Path char.bin -Force
