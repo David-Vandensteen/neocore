@@ -1,4 +1,5 @@
-Import-Module "$PATH_TOOLCHAIN\scripts\modules\module-download.ps1"
+# TODO : download command for project
+Import-Module "..\..\toolchain\scripts\modules\module-download.ps1"
 
 if ((Test-Path -Path "assets\sounds\cdda") -eq $false) {
   New-Item -Path "assets\sounds\cdda" -ItemType Directory

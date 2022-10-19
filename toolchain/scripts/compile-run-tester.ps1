@@ -5,7 +5,7 @@ param (
 )
 
 function compileProject($name) {
-  pushd ..\projects\$name
+  pushd ..\..\projects\$name
   .\mak.bat clean
   if ($name -eq "CDDA") { .\download-assets.bat }
   if ($LASTEXITCODE -ne 0) { Write-Host "break"; Write-Host $env:error; break }

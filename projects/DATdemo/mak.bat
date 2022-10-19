@@ -1,7 +1,7 @@
 rem TODO : make a custom makefile without neocore link
 @echo off
 set projectSetting="project.xml"
-set builderScript="..\..\scripts\Builder-Manager.ps1"
+set builderScript="..\..\toolchain\scripts\Builder-Manager.ps1"
 
 if "%1"=="" (
   powershell -ExecutionPolicy Bypass -File %builderScript%  -ConfigFile %projectSetting%

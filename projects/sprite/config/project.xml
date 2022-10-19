@@ -2,6 +2,8 @@
 <project>
   <name>sprite</name>
   <makefile>..\Makefile</makefile>
+  <toolchainPath>..\..\toolchain</toolchainPath>
+  <buildPath>..\..\build</buildPath>
   <XMLDATFile>config\sprites.xml</XMLDATFile>
   <!-- for using cdda audio tracks, uncomment & set up your files
   Warning: track id 1 is reserved for the binary program

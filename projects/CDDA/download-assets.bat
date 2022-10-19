@@ -1,1 +1,1 @@
-powershell -ExecutionPolicy Bypass -File ..\..\scripts\cdda-project\download-assets.ps1
+powershell -ExecutionPolicy Bypass -File ..\..\toolchain\scripts\cdda-project\download-assets.ps1

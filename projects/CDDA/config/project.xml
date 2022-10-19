@@ -2,6 +2,8 @@
 <project>
   <name>CDDA</name>
   <makefile>..\Makefile</makefile>
+  <toolchainPath>..\..\toolchain</toolchainPath>
+  <buildPath>..\..\build</buildPath>
   <XMLDATFile>config\sprites.xml</XMLDATFile>
   <sound>
     <cdda>
