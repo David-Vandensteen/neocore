@@ -228,6 +228,10 @@ $pathBuild = "$pathNeocore\$projectName"
 #$pathBuild = "..\..\build\projects\$projectName"
 #$pathNeocore = "..\..\build"
 
+if ($projectName -eq "") {
+  Write-Host "error : add the project name in : $ConfigFile" -ForegroundColor Red
+}
+
 if ((Test-Path -Path $pathNeocore) -eq $false) { New-Item -Path $pathNeocore -ItemType Directory -Force }
 if ((Test-Path -Path $pathBuild) -eq $false) { New-Item -Path $pathBuild -ItemType Directory -Force }
 

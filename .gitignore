@@ -12,6 +12,6 @@ externs.h
 as.exe.stackdump
 *.o
 *.prg
-projects/ngcd-flamble-003
-projects/ngcd-music-disk
-projects/geowave
+samples/ngcd-flamble-003
+samples/ngcd-music-disk
+samples/geowave

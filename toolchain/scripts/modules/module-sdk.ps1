@@ -1,7 +1,7 @@
 Import-Module "$PATH_TOOLCHAIN\scripts\modules\module-install-component.ps1"
 
 function Install-Neocore {
- pushd ..\..\
+ pushd ..\..\src-lib
  .\build-neocore.bat
  if ($LASTEXITCODE -ne 0) {
   popd

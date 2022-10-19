@@ -1,7 +1,7 @@
 @echo off
 rem TODO : parmetric folder bin & neodev
 set backupPath=%path%
-set NEODEV=build\neodev-sdk
+set NEODEV=..\build\neodev-sdk
 path=%NEODEV%\m68k\bin;build\bin;%windir%\System32;%windir%\System32\WindowsPowerShell\v1.0\
 set error=0
 @echo on
