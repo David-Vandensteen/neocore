@@ -4,9 +4,6 @@ param (
   [String] $Rule = "default"
 )
 
-Import-Module "..\..\scripts\modules\module-sdk.ps1"
-Import-Module "..\..\scripts\modules\module-emulators.ps1"
-
 function Remove-Project {
   Write-Host "clean $PATH_BUILD" -ForegroundColor Yellow
   if (Test-Path -Path $PATH_BUILD) {
@@ -42,6 +39,19 @@ function Main {
     [Parameter(Mandatory=$true)][String] $PathSpool,
     [Parameter(Mandatory=$true)][xml] $Config
   )
+  $pathToolchain = $Config.project.toolchainPath
+  Write-Host "path toolchain : $pathToolchain"
+
+  if ((Test-Path -Path $pathToolchain) -eq $false) {
+    Write-Host "error : Toolchain path $pathToolchain not found" -ForegroundColor Red
+    exit 1
+  }
+
+  $PATH_TOOLCHAIN = $pathToolchain
+
+  Import-Module "$PATH_TOOLCHAIN\scripts\modules\module-sdk.ps1"
+  Import-Module "$PATH_TOOLCHAIN\scripts\modules\module-emulators.ps1"
+
   $BASE_URL = $BaseURL
   $PATH_SPOOL = $PathSpool
 
@@ -76,17 +86,17 @@ function Main {
   if ((Test-Path -Path $PATH_BUILD) -eq $false) { New-Item -Path $PATH_BUILD -ItemType Directory -Force }
 
   function BuilderProgram {
-    Import-Module "..\..\scripts\modules\module-program.ps1"
+    Import-Module "$PATH_TOOLCHAIN\scripts\modules\module-program.ps1"
     Write-Program -ProjectName $ProjectName -PathNeoDev $PathNeoDev -MakeFile $MakeFile -PRGFile $PRGFile
   }
 
   function BuilderSprite {
-    Import-Module "..\..\scripts\modules\module-sprite.ps1"
+    Import-Module "$PATH_TOOLCHAIN\scripts\modules\module-sprite.ps1"
     Write-Sprite -XMLFile $XMLDATFile -Format "cd" -OutputFile "$PATH_BUILD\$ProjectName"
   }
 
   function BuilderISO {
-    Import-Module "..\..\scripts\modules\module-iso.ps1"
+    Import-Module "$PATH_TOOLCHAIN\scripts\modules\module-iso.ps1"
     Write-ISO `
       -PRGFile $PRGFile `
       -SpriteFile "$PATH_BUILD\$ProjectName.cd" `
@@ -117,7 +127,7 @@ function Main {
   }
 
   function BuilderZIP {
-    Import-Module "..\..\scripts\modules\module-zip.ps1"
+    Import-Module "$PATH_TOOLCHAIN\scripts\modules\module-zip.ps1"
     Write-ZIP `
       -Path "$PATH_BUILD\iso" `
       -OutputFile "$PATH_BUILD\$ProjectName.zip" `
@@ -152,7 +162,7 @@ function Main {
     BuilderZIP
   }
   if ($Rule -eq "run") {
-    Import-Module "..\..\scripts\modules\module-mame.ps1"
+    Import-Module "$PATH_TOOLCHAIN\scripts\modules\module-mame.ps1"
     BuilderSprite
     BuilderProgram
     BuilderISO
@@ -161,7 +171,7 @@ function Main {
     RunnerMame
   }
   if ($Rule -eq "run:raine") {
-    Import-Module "..\..\scripts\modules\module-raine.ps1"
+    Import-Module "$PATH_TOOLCHAIN\scripts\modules\module-raine.ps1"
     BuilderSprite
     BuilderProgram
     BuilderISO
@@ -169,7 +179,7 @@ function Main {
     RunnerRaine
   }
   if ($Rule -eq "run:mame") {
-    Import-Module "..\..\scripts\modules\module-mame.ps1"
+    Import-Module "$PATH_TOOLCHAIN\scripts\modules\module-mame.ps1"
     BuilderSprite
     BuilderProgram
     BuilderISO
@@ -178,8 +188,8 @@ function Main {
     RunnerMame
   }
   if ($Rule -eq "serve") {
-    Import-Module "..\..\scripts\modules\module-mame.ps1"
-    Import-Module "..\..\scripts\modules\module-watcher.ps1"
+    Import-Module "$PATH_TOOLCHAIN\scripts\modules\module-mame.ps1"
+    Import-Module "$PATH_TOOLCHAIN\scripts\modules\module-watcher.ps1"
     While ($true) {
       BuilderSprite
       BuilderProgram
@@ -207,6 +217,7 @@ if ((Test-Path -Path $ConfigFile) -eq $false) {
 
 Write-Host "informations" -ForegroundColor Yellow
 Write-Host "Config file : $ConfigFile"
+
 [xml]$config = (Get-Content -Path $ConfigFile)
 $projectName = $config.project.name
 $makefile = $config.project.makefile

@@ -1,8 +1,8 @@
-Import-Module "..\..\scripts\modules\module-download.ps1"
+Import-Module "$PATH_TOOLCHAIN\scripts\modules\module-download.ps1"
 
 if ((Test-Path -Path "assets\sounds\cdda") -eq $false) {
   New-Item -Path "assets\sounds\cdda" -ItemType Directory
-} 
+}
 
 if ((Test-Path -Path "assets\sounds\cdda\Sweet_Mermaids.wav") -eq $false) {
   Download -URL "http://azertyvortex.free.fr/download/Sweet_Mermaids.wav" -Path "./assets/sounds/cdda"

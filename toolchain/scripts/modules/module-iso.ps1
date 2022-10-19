@@ -1,4 +1,4 @@
-Import-Module "..\..\scripts\modules\module-install-component.ps1"
+Import-Module "$PATH_TOOLCHAIN\scripts\modules\module-install-component.ps1"
 
 function Write-ISO {
   param (

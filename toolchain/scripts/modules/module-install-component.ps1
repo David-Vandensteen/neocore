@@ -1,4 +1,4 @@
-Import-Module "..\..\scripts\modules\module-download.ps1"
+Import-Module "$PATH_TOOLCHAIN\scripts\modules\module-download.ps1"
 
 function Install-Component {
   param (
