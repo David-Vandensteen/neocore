@@ -222,9 +222,11 @@ Write-Host "Config file : $ConfigFile"
 $projectName = $config.project.name
 $makefile = $config.project.makefile
 $XMLDATFile = $config.project.XMLDATFile
+$pathNeocore = $config.project.buildPath
+$pathBuild = "$pathNeocore\$projectName"
 
-$pathBuild = "..\..\build\projects\$projectName"
-$pathNeocore = "..\..\build"
+#$pathBuild = "..\..\build\projects\$projectName"
+#$pathNeocore = "..\..\build"
 
 if ((Test-Path -Path $pathNeocore) -eq $false) { New-Item -Path $pathNeocore -ItemType Directory -Force }
 if ((Test-Path -Path $pathBuild) -eq $false) { New-Item -Path $pathBuild -ItemType Directory -Force }
