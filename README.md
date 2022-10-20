@@ -62,7 +62,7 @@ or
 ```
 ## Make your first experimentation
 ```cmd
-xcopy /E /I template samples\awesome-project
+xcopy /E /I template\sample samples\awesome-project
 ```
 
 Edit project.xml and set the project name  
@@ -118,7 +118,7 @@ See `.\samples\CDDA\config\project.xml` for understanding how to set the audio f
 xcopy /E /I src-lib c:\mygit\neogeo\mygame\neocore\src-lib
 copy manifest.xml c:\mygit\neogeo\mygame\neocore
 xcopy /E /I toolchain c:\mygit\neogeo\mygame\neocore\toolchain
-xcopy /E /I template c:\mygit\neogeo\mygame\src
+xcopy /E /I templates\project c:\mygit\neogeo\mygame\src
 echo Edit project.xml and set the project name
 notepad c:\mygit\neogeo\mygame\src\config\project.xml
 echo done
