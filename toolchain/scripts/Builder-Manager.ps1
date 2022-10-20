@@ -42,6 +42,11 @@ function Main {
   $pathToolchain = $Config.project.toolchainPath
   Write-Host "path toolchain : $pathToolchain"
 
+  if ((Test-Path -Path $pathToolchain\..\manifest.xml) -eq $false) {
+    Write-Host "error : manifest.xml not found" -ForegroundColor Red
+    exit 1
+  }
+
   if ((Test-Path -Path $pathToolchain) -eq $false) {
     Write-Host "error : Toolchain path $pathToolchain not found" -ForegroundColor Red
     exit 1
