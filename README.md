@@ -25,7 +25,7 @@ Graphics by **Grass**
     
 ## Build a included example
 ```cmd
-cd projects\hello
+cd samples\hello
 .\mak run
 ```
   
@@ -104,13 +104,13 @@ Some problems currently:
     
 ## CDDA
 ``` cmd
-cd projects\CDDA
+cd samples\CDDA
 .\download-assets
 .\mak run
 ```
   
 In the emulator, use joypad right and left to change audio track.  
-See `.\projects\CDDA\config\project.xml` for understanding how to set the audio file.
+See `.\samples\CDDA\config\project.xml` for understanding how to set the audio file.
   
 ## DATlib assets (in progress)
 For making your own graphics, see the DATlib ref available here: (after install)  
