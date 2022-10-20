@@ -60,21 +60,30 @@ or
 ```cmd
 .\mak run
 ```
-## Make your first project
+## Make your first experimentation
 ```cmd
-.\build-neocore init-project
-Project name : myfirst
+xcopy /E /I template samples\awesome-project
 ```
-A new folder (projects\\myfirst) has been scaffolded  
-Now compile and run it:  
+
+Edit project.xml and set the project name  
 ```cmd
-cd projects\myfirst
+notepad samples\awesome-project\config\project.xml
+```
+
+```xml
+<project>
+  <name>awesome-project</name>
+```
+
+Compile and run it  
+
+```cmd
+cd samples\awesome-project
 .\mak run
 ```
 
-See `projects\myfirst\mak.bat`    
-`projects\myfirst\config\project.xml`  
-and `projects\myfirst\config\sprites.xml`  
+See `samples\awesome-project\config\project.xml`  
+and `samples\awesome-project\config\sprites.xml`  
 for settings.
 
 ## "Hot reload"
@@ -123,7 +132,8 @@ The Animator tool is available here:
 
 ## Compiling the lib (necessary if you tweak or modify Neocore Neo-Geo lib)
 ```cmd
-.\build-neocore
+cd src-lib
+.\build-neocore.bat
 ```
 This script override path environment variable during the compilation.  
 its avoid collisions with other bin, sdk, gcc...  
