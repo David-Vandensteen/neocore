@@ -81,6 +81,9 @@ function Main {
 
   Stop-Emulators
 
+  Set-EnvPath -PathNeoDevBin $PathNeoDevBin -PathNeocoreBin $PathNeocoreBin
+  $env:NEODEV = $PathNeoDev
+
   if ((Test-Path -Path $PathNeoDevBin) -eq $false) { Install-SDK }
   if ((Test-Path -Path $PathNeocoreBin) -eq $false) { Install-SDK }
   if ((Test-Path -Path $PathNeoDev) -eq $false) { Install-SDK }
@@ -147,7 +150,6 @@ function Main {
     Raine -File "$PATH_BUILD\$ProjectName.cue" -PathRaine $PathRaine
   }
 
-  Set-EnvPath -PathNeoDevBin $PathNeoDevBin -PathNeocoreBin $PathNeocoreBin
   if ($Rule -eq "clean") { exit 0 }
   if ($Rule -eq "sprite") { BuilderSprite }
   if (($Rule -eq "make") -or ($Rule -eq "") -or (!$Rule) -or ($Rule -eq "default") ) {
