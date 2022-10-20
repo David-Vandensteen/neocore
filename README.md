@@ -111,6 +111,14 @@ cd samples\CDDA
   
 In the emulator, use joypad right and left to change audio track.  
 See `.\samples\CDDA\config\project.xml` for understanding how to set the audio file.
+
+## Make a "standalone" project
+```cmd
+xcopy /E /I src-lib c:\mygit\neogeo\mygame\neocore\src-lib
+copy manifest.xml c:\mygit\neogeo\mygame\neocore
+xcopy /E /I toolchain c:\mygit\neogeo\mygame\neocore\toolchain
+xcopy /E /I template c:\mygit\neogeo\mygame\src
+```
   
 ## DATlib assets (in progress)
 For making your own graphics, see the DATlib ref available here: (after install)  
