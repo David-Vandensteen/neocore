@@ -7,7 +7,7 @@ function Install-Component {
     [Parameter(Mandatory=$true)][String] $PathInstall
   )
   $fileName = Split-Path -Path $URL -Leaf
-  Write-Host "$fileName is nedeed" -ForegroundColor Yellow
+  Logger-Info -Message "$fileName is nedeed"
   Download -URL $URL -Path $PathDownload
   Expand-Archive -Path "$PathDownload\$fileName" -DestinationPath $PathInstall -Force
   Remove-Item -Path "$PathDownload\$fileName" -Force

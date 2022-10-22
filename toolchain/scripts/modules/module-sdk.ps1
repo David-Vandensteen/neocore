@@ -6,7 +6,7 @@ function Install-Neocore {
  .\build-neocore.bat
  if ($LASTEXITCODE -ne 0) {
   popd
-  Write-Host "error - lib neocore was not builded" -ForegroundColor Red
+  Logger-Error -Message  "lib neocore was not builded"
   exit $LASTEXITCODE
  }
  popd

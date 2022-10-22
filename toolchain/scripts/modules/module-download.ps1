@@ -8,5 +8,5 @@ function Download {
 
   $start_time = Get-Date
   Start-BitsTransfer -Source $URL -Destination $Path
-  Write-Output "Time taken - $((Get-Date).Subtract($start_time).Seconds) second(s)"
+  Write-Host "Time taken - $((Get-Date).Subtract($start_time).Seconds) second(s)"
 }

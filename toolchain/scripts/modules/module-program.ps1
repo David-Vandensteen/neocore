@@ -5,8 +5,8 @@ function Write-Program {
     [Parameter(Mandatory=$true)][String] $PathNeoDev,
     [Parameter(Mandatory=$true)][String] $ProjectName
   )
-  Write-Host "compiling program" -ForegroundColor Yellow
-  if ((Test-Path -Path $MakeFile) -eq $false) { Write-Host "error - $MakeFile not found" -ForegroundColor Red; exit 1 }
+  Logger-Step -Message "compiling program"
+  if ((Test-Path -Path $MakeFile) -eq $false) { Logger-Error -Message "$MakeFile not found" }
 
   $env:PROJECT = $ProjectName
   $env:NEODEV = $PathNeoDev
@@ -14,10 +14,7 @@ function Write-Program {
   $env:PATHBUILD = $PATH_BUILD
   & make -f $MakeFile
   if ((Test-Path -Path $PRGFile) -eq $true) {
-    Write-Host "builded program is available to $PRGFile" -ForegroundColor Green
+    Logger-Success "builded program is available to $PRGFile"
     Write-Host ""
-  } else {
-    Write-Host "error - $PRGFile was not generated" -ForegroundColor Red
-    exit 1
-  }
+  } else { Logger-Error -Message "error - $PRGFile was not generated" }
 }

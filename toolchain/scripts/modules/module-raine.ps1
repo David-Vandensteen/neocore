@@ -14,13 +14,11 @@ function Raine {
     [Parameter(Mandatory=$true)][String] $File,
     [Parameter(Mandatory=$true)][String] $PathRaine
   )
-  if ((Test-Path -Path $File) -eq $false) {
-    Write-Host "error - $File not found" -ForegroundColor Red
-  }
+  if ((Test-Path -Path $File) -eq $false) { Logger-Error -Message "$File not found" }
   if ((Test-Path -Path $PathRaine) -eq $false) {
     Install-Component -URL "$BASE_URL/neobuild-raine.zip" -PathDownload $PATH_SPOOL -PathInstall $PATH_NEOCORE
     Update-Raine -Path $PathRaine
   }
-  Write-Host "lauching raine $File" -ForegroundColor Yellow
+  Logger-Step -Message "lauching raine $File"
   & "$PathRaine\raine32.exe" $File
 }
