@@ -62,7 +62,7 @@ or
 ```
 ## Create your first experimentation
 ```cmd
-xcopy /E /I template\sample samples\awesome-project
+xcopy /E /I templates\sample samples\awesome-project
 ```
 
 Edit project.xml and set the project name  
