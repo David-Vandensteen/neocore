@@ -39,7 +39,11 @@ function Main {
     [Parameter(Mandatory=$true)][String] $PathSpool,
     [Parameter(Mandatory=$true)][xml] $Config
   )
+
+  $pathDist = $Config.project.distPath
   $pathToolchain = $Config.project.toolchainPath
+  $version = $Config.project.version
+
   Write-Host "path toolchain : $pathToolchain"
 
   if ((Test-Path -Path $pathToolchain\..\manifest.xml) -eq $false) {
@@ -63,6 +67,7 @@ function Main {
   if ((Test-Path -Path $PATH_SPOOL) -eq $false) { New-Item -Path $PATH_SPOOL -ItemType Directory -Force }
 
   Write-Host "project name : $ProjectName"
+  Write-Host "project version : $version"
   Write-Host "makefile : $MakeFile"
   Write-Host "path neodev bin : $PathNeoDevBin"
   Write-Host "path neocore bin : $PathNeocoreBin"
@@ -76,6 +81,7 @@ function Main {
   Write-Host "spool folder for download : $PATH_SPOOL"
   Write-Host "neocore folder : $PATH_NEOCORE"
   Write-Host "path build : $PATH_BUILD"
+  Write-Host "path dist : $pathDist"
   Write-Host "--------------------------------------------"
   Write-Host ""
 
@@ -92,6 +98,7 @@ function Main {
 
   if ($Rule -notmatch "^only:") { Remove-Project }
   if ((Test-Path -Path $PATH_BUILD) -eq $false) { New-Item -Path $PATH_BUILD -ItemType Directory -Force }
+  if ((Test-Path -Path $pathDist) -eq $false) { New-Item -Path $pathDist -ItemType Directory -Force }
 
   function BuilderProgram {
     Import-Module "$PATH_TOOLCHAIN\scripts\modules\module-program.ps1"
@@ -207,6 +214,24 @@ function Main {
       Stop-Emulators
     }
   }
+  if ($Rule -eq "dist") {
+    Import-Module "$PATH_TOOLCHAIN\scripts\modules\module-mame.ps1"
+    BuilderSprite
+    BuilderProgram
+    BuilderISO
+    BuilderMame
+    if ((Test-Path -Path "$pathDist\$ProjectName\$version")) {
+      Write-Host "error : $pathDist\$ProjectName\$version already exist" -ForegroundColor Red
+      exit 1
+    } else { New-Item -Path "$pathDist\$ProjectName\$version" -ItemType Directory -Force }
+    New-Item -Path "$pathDist\$ProjectName\$version\iso" -ItemType Directory -Force
+    New-Item -Path "$pathDist\$ProjectName\$version\mame" -ItemType Directory -Force
+    Copy-Item -Path "$PATH_BUILD\$ProjectName.iso" -Destination "$pathDist\$ProjectName\$version\iso"
+    Copy-Item -Path "$PATH_BUILD\$ProjectName.cue" -Destination "$pathDist\$ProjectName\$version\iso"
+    # TODO : sound tracks
+    Copy-Item -Path "$PathMame\roms\neocdz\$ProjectName.chd" -Destination "$pathDist\$ProjectName\$version\mame"
+    Copy-Item -Path "$PathMame\hash\neocd.xml" -Destination "$pathDist\$ProjectName\$version\mame"
+  }
   if ($Rule -eq "only:sprite") { BuilderSprite }
   if ($Rule -eq "only:program") { BuilderProgram }
   if ($Rule -eq "only:iso") { BuilderISO }
@@ -231,9 +256,6 @@ $makefile = $config.project.makefile
 $XMLDATFile = $config.project.XMLDATFile
 $pathNeocore = $config.project.buildPath
 $pathBuild = "$pathNeocore\$projectName"
-
-#$pathBuild = "..\..\build\projects\$projectName"
-#$pathNeocore = "..\..\build"
 
 if ($projectName -eq "") {
   Write-Host "error : add the project name in : $ConfigFile" -ForegroundColor Red
