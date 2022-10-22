@@ -1,4 +1,8 @@
 # TODO : change BuilderZIP
+# TODO : rule dist:iso
+# TODO : rule dist:mame
+# TODO : mame is not needed to make a mame dist
+
 param (
   [Parameter(Mandatory=$true)][String] $ConfigFile,
   [String] $Rule = "default"
@@ -39,7 +43,11 @@ function Main {
     [Parameter(Mandatory=$true)][String] $PathSpool,
     [Parameter(Mandatory=$true)][xml] $Config
   )
+
+  $pathDist = $Config.project.distPath
   $pathToolchain = $Config.project.toolchainPath
+  $version = $Config.project.version
+
   Write-Host "path toolchain : $pathToolchain"
 
   if ((Test-Path -Path $pathToolchain\..\manifest.xml) -eq $false) {
@@ -63,6 +71,7 @@ function Main {
   if ((Test-Path -Path $PATH_SPOOL) -eq $false) { New-Item -Path $PATH_SPOOL -ItemType Directory -Force }
 
   Write-Host "project name : $ProjectName"
+  Write-Host "project version : $version"
   Write-Host "makefile : $MakeFile"
   Write-Host "path neodev bin : $PathNeoDevBin"
   Write-Host "path neocore bin : $PathNeocoreBin"
@@ -76,6 +85,7 @@ function Main {
   Write-Host "spool folder for download : $PATH_SPOOL"
   Write-Host "neocore folder : $PATH_NEOCORE"
   Write-Host "path build : $PATH_BUILD"
+  Write-Host "path dist : $pathDist"
   Write-Host "--------------------------------------------"
   Write-Host ""
 
@@ -92,6 +102,7 @@ function Main {
 
   if ($Rule -notmatch "^only:") { Remove-Project }
   if ((Test-Path -Path $PATH_BUILD) -eq $false) { New-Item -Path $PATH_BUILD -ItemType Directory -Force }
+  if ((Test-Path -Path $pathDist) -eq $false) { New-Item -Path $pathDist -ItemType Directory -Force }
 
   function BuilderProgram {
     Import-Module "$PATH_TOOLCHAIN\scripts\modules\module-program.ps1"
@@ -116,14 +127,14 @@ function Main {
 
     if ($Config.project.sound.cdda.tracks.track) { $configCDDA = $config.project.sound.cdda }
 
+    Write-Host "copy assets to $PATH_BUILD\assets" -ForegroundColor Blue
+    Robocopy /MIR assets "$PATH_BUILD\assets" | Out-Null
+    # TODO : check lastexitcode
+
     Write-CUE `
       -OutputFile "$PATH_BUILD\$ProjectName.cue" `
       -ISOName "$ProjectName.iso" `
       -Config $configCDDA
-
-    Write-Host "copy assets to $PATH_BUILD\assets" -ForegroundColor Green
-    Robocopy /MIR assets "$PATH_BUILD\assets" | Out-Null
-    # TODO : check lastexitcode
   }
 
   function BuilderMame {
@@ -207,6 +218,22 @@ function Main {
       Stop-Emulators
     }
   }
+  if ($Rule -eq "dist") {
+    Import-Module "$PATH_TOOLCHAIN\scripts\modules\module-mame.ps1"
+    Import-Module "$PATH_TOOLCHAIN\scripts\modules\module-dist.ps1"
+    BuilderSprite
+    BuilderProgram
+    BuilderISO
+    BuilderMame
+    Write-Dist `
+      -ProjectName $ProjectName `
+      -PathDestination "$pathDist\$ProjectName\$version" `
+      -ISOFile "$PATH_BUILD\$ProjectName.iso" `
+      -CUEFile "$PATH_BUILD\$ProjectName.cue" `
+      -CHDFile "$PathMame\roms\neocdz\$ProjectName.chd" `
+      -HashFile "$PathMame\hash\neocd.xml"
+
+  }
   if ($Rule -eq "only:sprite") { BuilderSprite }
   if ($Rule -eq "only:program") { BuilderProgram }
   if ($Rule -eq "only:iso") { BuilderISO }
@@ -231,9 +258,6 @@ $makefile = $config.project.makefile
 $XMLDATFile = $config.project.XMLDATFile
 $pathNeocore = $config.project.buildPath
 $pathBuild = "$pathNeocore\$projectName"
-
-#$pathBuild = "..\..\build\projects\$projectName"
-#$pathNeocore = "..\..\build"
 
 if ($projectName -eq "") {
   Write-Host "error : add the project name in : $ConfigFile" -ForegroundColor Red

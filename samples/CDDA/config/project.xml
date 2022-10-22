@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
   <name>CDDA</name>
+  <version>1.0.0</version>
   <makefile>..\Makefile</makefile>
   <toolchainPath>..\..\toolchain</toolchainPath>
   <buildPath>..\..\build</buildPath>
+  <distPath>..\..\dist</distPath>
   <XMLDATFile>config\sprites.xml</XMLDATFile>
   <sound>
     <cdda>

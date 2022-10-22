@@ -6,14 +6,26 @@ param (
 
 function compileProject($name) {
   pushd ..\samples\$name
-  .\mak.bat clean
+  .\mak.ps1 clean
+  if ($LASTEXITCODE -ne 0) { break }
   if ($name -eq "CDDA") { .\download-assets.bat }
-  if ($LASTEXITCODE -ne 0) { Write-Host "break"; Write-Host $env:error; break }
-  .\mak.bat run
+  .\mak.ps1 dist
   if ($LASTEXITCODE -ne 0) { break }
   sleep $killTime
   popd
 }
+
+# function compileProject($name) {
+#   pushd ..\samples\$name
+#   .\mak.bat clean
+#   if ($name -eq "CDDA") { .\download-assets.bat }
+#   if ($LASTEXITCODE -ne 0) { Write-Host "break"; Write-Host $env:error; break }
+#   #.\mak.bat run
+#   .\mak.bat dist
+#   if ($LASTEXITCODE -ne 0) { pause }
+#   sleep $killTime
+#   popd
+# }
 
 function _main {
   write-host $op $makeArg $killTime
