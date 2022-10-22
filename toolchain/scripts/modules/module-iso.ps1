@@ -11,21 +11,12 @@ function Write-ISO {
   if ((Test-Path -Path $PathCDTemplate) -eq $false) {
     Install-Component -URL "$BASE_URL/neobuild-cd_template.zip" -PathDownload $PATH_SPOOL -PathInstall $PATH_NEOCORE
   }
-  Write-Host "compiling ISO" -ForegroundColor Yellow
+  Logger-Step -Message "compiling ISO"
   if (Test-Path -Path $PathISOBuildFolder) { Remove-Item $PathISOBuildFolder -Recurse -Force }
   if (-Not(Test-Path -Path $PathISOBuildFolder)) { mkdir -Path $PathISOBuildFolder | Out-Null }
-  if (-Not(Test-Path -Path $PathCDTemplate)) {
-    Write-Host "error - $PathCDTemplate not found" -ForegroundColor Red
-    exit 1
-  }
-  if (-Not(Test-Path -Path $PRGFile)) {
-    Write-Host "error - $PRGFile not found" -ForegroundColor Red
-    exit 1
-  }
-  if (-Not(Test-Path -Path $SpriteFile)) {
-    Write-Host "error - $SpriteFile not found" -ForegroundColor Red
-    exit 1
-  }
+  if (-Not(Test-Path -Path $PathCDTemplate)) { Logger-Error -Message "$PathCDTemplate not found" }
+  if (-Not(Test-Path -Path $PRGFile)) { Logger-Error -Message "$PRGFile not found" }
+  if (-Not(Test-Path -Path $SpriteFile)) { Logger-Error -Message "$SpriteFile not found" }
   Copy-Item -Path "$PathCDTemplate\*" -Destination $PathISOBuildFolder -Recurse -Force
   Copy-Item -Path $PRGFile -Destination "$PathISOBuildFolder\DEMO.PRG" -Force
   Copy-Item -Path $SpriteFile -Destination "$PathISOBuildFolder\DEMO.SPR" -Force
@@ -33,12 +24,9 @@ function Write-ISO {
   & mkisofs.exe -o $OutputFile -pad $PathISOBuildFolder
 
   if ((Test-Path -Path $OutputFile) -eq $true) {
-    Write-Host "builded ISO is available to $OutputFile" -ForegroundColor Green
+    Logger-Success -Message "builded ISO is available to $OutputFile"
     Write-Host ""
-  } else {
-    Write-Host "error - $OutputFile was not generated" -ForegroundColor Red
-    exit 1
-  }
+  } else { Logger-Error -Message "$OutputFile was not generated" }
 }
 
 function Write-CUE {
@@ -73,12 +61,9 @@ function Write-CUE {
   (Get-Content -Path $OutputFile -Raw).Replace("`r`n","`n") | Set-Content -Path $OutputFile -Force -NoNewline
 
   if ((Test-Path -Path $OutputFile) -eq $true) {
-    Write-Host "builded CUE is available to $OutputFile" -ForegroundColor Green
+    Logger-Success -Message "builded CUE is available to $OutputFile"
     Write-Host ""
-  } else {
-    Write-Host "error - $OutputFile was not generated" -ForegroundColor Red
-    exit 1
-  }
+  } else { Logger-Error -Message "error - $OutputFile was not generated" }
 }
 
 

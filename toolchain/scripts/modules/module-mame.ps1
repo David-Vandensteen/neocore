@@ -57,13 +57,12 @@ function Write-Mame {
   if ((Test-Path -Path $CUEFile) -eq $false) { Write-Host "error - $CUEFile not found" -ForegroundColor Red; exit 1 }
   if ((Test-Path -Path "$PathMame\mame64.exe") -eq $false) { Write-Host "error - mame64.exe is not found in $PathMame" -ForegroundColor Red; exit 1 }
 
-  Write-Host "compiling CHD" -ForegroundColor Yellow
+  Logger-Step -Message "compiling CHD"
   & chdman.exe createcd -i $CUEFile -o $OutputFile --force
   if ((Test-Path -Path $OutputFile) -eq $false) {
-    Write-Host "error - $OutputFile was not generated" -ForegroundColor Red
-    exit 1
+    Logger-Error -Message "$OutputFile was not generated"
   } else {
-    Write-Host "builded CHD is available to $OutputFile" -ForegroundColor Green
+    Logger-Success -Message "builded CHD is available to $OutputFile"
     Write-Host ""
   }
   Write-MameHash -ProjectName $ProjectName -CHDFile $OutputFile -XMLFile "$PathMame\hash\neocd.xml"
@@ -80,9 +79,9 @@ function Mame {
   $mameArgs = "-window"
   if (Test-Path -Path $XMLArgsFile) { $mameArgs = (Select-Xml -Path $XMLArgsFile -XPath '/mame/args').Node.InnerXML }
 
-  if ((Test-Path -Path $PathMame) -eq $false) { Write-Host "error - $PathMame not found" -ForegroundColor Red; exit 1 }
+  if ((Test-Path -Path $PathMame) -eq $false) { Logger-Error -Message "$PathMame not found" }
   if ((Test-Path -Path "$PathMame\mame64.exe") -eq $false) { Write-Host ("error - {0}\mame64.exe not found" -f $PathMame) -ForegroundColor Red; exit 1 }
-  Write-Host "launching mame $GameName" -ForegroundColor Yellow
+  Logger-Step -Message "launching mame $GameName"
   Write-Host "$PathMame\mame64.exe $mameArgs $defaultMameArgs"
   Start-Process -NoNewWindow -FilePath "$PathMame\mame64.exe" -ArgumentList "$mameArgs $defaultMameArgs"
 }

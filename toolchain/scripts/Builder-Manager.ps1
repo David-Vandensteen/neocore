@@ -8,6 +8,40 @@ param (
   [String] $Rule = "default"
 )
 
+function Check {
+  param ([Parameter(Mandatory=$true)][xml] $Config)
+  function Check-XMLError {
+    param ([Parameter(Mandatory=$true)][String] $Entry)
+    Write-Host "error : xml $Entry not found" -ForegroundColor Red
+    exit 1
+  }
+  function Check-PathError {
+    param ([Parameter(Mandatory=$true)][String] $Path)
+    Write-Host "error : $Path not found" -ForegroundColor Red
+    exit 1
+  }
+  function Check-XML {
+    if (-Not($Config.project.name)) { Check-XMLError -Entry "project.name" }
+    if (-Not($Config.project.version)) { Check-XMLError -Entry "project.version" }
+    if (-Not($Config.project.makefile)) { Check-XMLError -Entry "project.makefile" }
+    if (-Not($Config.project.toolchainPath)) { Check-XMLError -Entry "project.toolchainPath" }
+    if (-Not($Config.project.buildPath)) { Check-XMLError -Entry "project.buildPath" }
+    if (-Not($Config.project.distPath)) { Check-XMLError -Entry "project.distPath" }
+    if (-Not($Config.project.XMLDATFile)) { Check-XMLError -Entry "project.XMLDATFile" }
+  }
+  function Check-Path {
+    if ((Test-Path -Path $Config.project.makefile) -eq $false) { Check-PathError -Path $Config.project.makefile }
+    if ((Test-Path -Path $Config.project.toolchainPath) -eq $false) { Check-PathError -Path $Config.project.toolchainPath }
+    if ((Test-Path -Path $Config.project.XMLDATFile) -eq $false) { Check-PathError -Path $Config.project.XMLDATFile }
+    if ((Test-Path -Path "$($Config.project.toolchainPath)\..\manifest.xml") -eq $false) { Check-PathError -Path "$($Config.project.toolchainPath)\..\manifest.xml" }
+
+  }
+  Write-Host "check config" -ForegroundColor Blue
+  Check-XML
+  Check-Path
+  Write-Host "config is compliant" -ForegroundColor Green
+}
+
 function Remove-Project {
   Write-Host "clean $PATH_BUILD" -ForegroundColor Yellow
   if (Test-Path -Path $PATH_BUILD) {
@@ -44,24 +78,16 @@ function Main {
     [Parameter(Mandatory=$true)][xml] $Config
   )
 
+  Check -Config $Config
   $pathDist = $Config.project.distPath
   $pathToolchain = $Config.project.toolchainPath
   $version = $Config.project.version
 
   Write-Host "path toolchain : $pathToolchain"
 
-  if ((Test-Path -Path $pathToolchain\..\manifest.xml) -eq $false) {
-    Write-Host "error : manifest.xml not found" -ForegroundColor Red
-    exit 1
-  }
-
-  if ((Test-Path -Path $pathToolchain) -eq $false) {
-    Write-Host "error : Toolchain path $pathToolchain not found" -ForegroundColor Red
-    exit 1
-  }
-
   $PATH_TOOLCHAIN = $pathToolchain
 
+  Import-Module "$PATH_TOOLCHAIN\scripts\modules\module-logger.ps1"
   Import-Module "$PATH_TOOLCHAIN\scripts\modules\module-sdk.ps1"
   Import-Module "$PATH_TOOLCHAIN\scripts\modules\module-emulators.ps1"
 

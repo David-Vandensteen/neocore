@@ -3,7 +3,7 @@ function Watch-Folder {
    [Parameter(Mandatory=$true)][String] $Path
   )
   if ((Test-Path -Path $Path) -eq $false) { Write-Host "error - $Path not found" -ForegroundColor Red; exit 1 }
-  Write-Host "waiting change in $Path" -ForegroundColor Yellow
+  Logger-Step -Message "waiting change in $Path"
 
   $sizeLast = (Get-ChildItem -Path $Path | Measure-Object -Sum Length | Select-Object Count, Sum).Sum
   $sizeCurrent = $sizeLast
