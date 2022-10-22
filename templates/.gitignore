@@ -1,0 +1,12 @@
+build/
+*.wav
+.vscode
+SPR.cd
+char.bin
+maps.s
+output.map
+palettes.s
+externs.h
+as.exe.stackdump
+*.o
+*.prg
