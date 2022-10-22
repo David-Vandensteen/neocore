@@ -1,4 +1,3 @@
-# TODO : change BuilderZIP
 # TODO : rule dist:iso
 # TODO : rule dist:mame
 # TODO : mame is not needed to make a mame dist
@@ -198,19 +197,11 @@ function Main {
     BuilderProgram
     BuilderISO
   }
-  if ($Rule -eq "zip") {
-    # TODO : change zip rule
-    BuilderSprite
-    BuilderProgram
-    BuilderISO
-    BuilderZIP
-  }
   if ($Rule -eq "run") {
     Import-Module "$PATH_TOOLCHAIN\scripts\modules\module-mame.ps1"
     BuilderSprite
     BuilderProgram
     BuilderISO
-    #BuilderZIP
     BuilderMame
     RunnerMame
   }
@@ -219,7 +210,6 @@ function Main {
     BuilderSprite
     BuilderProgram
     BuilderISO
-    #BuilderZIP
     RunnerRaine
   }
   if ($Rule -eq "run:mame") {
@@ -227,7 +217,6 @@ function Main {
     BuilderSprite
     BuilderProgram
     BuilderISO
-    #BuilderZIP
     BuilderMame
     RunnerMame
   }
@@ -263,7 +252,6 @@ function Main {
   if ($Rule -eq "only:sprite") { BuilderSprite }
   if ($Rule -eq "only:program") { BuilderProgram }
   if ($Rule -eq "only:iso") { BuilderISO }
-  if ($Rule -eq "only:zip") { BuilderZIP }
   if ($Rule -eq "only:mame") { BuilderMame }
   if ($Rule -eq "only:run") { RunnerMame }
   if ($Rule -eq "only:run:mame") { RunnerMame }
