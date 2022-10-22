@@ -60,7 +60,7 @@ or
 ```cmd
 .\mak run
 ```
-## Make your first experimentation
+## Create your first experimentation
 ```cmd
 xcopy /E /I template\sample samples\awesome-project
 ```
@@ -82,13 +82,13 @@ cd samples\awesome-project
 .\mak run
 ```
 
-See `samples\awesome-project\config\project.xml`  
-and `samples\awesome-project\config\sprites.xml`  
+See `.\samples\awesome-project\config\project.xml`  
+and `.\samples\awesome-project\config\sprites.xml`  
 for settings.
 
 ## "Hot reload"
 ```cmd
-cd projects\hello
+cd samples\hello
 .\mak serve
 ```
   
@@ -112,18 +112,19 @@ cd samples\CDDA
 In the emulator, use joypad right and left to change audio track.  
 See `.\samples\CDDA\config\project.xml` for understanding how to set the audio file.
 
-## Make a "standalone" project
+## Create a "standalone" project
 
 ```cmd
-xcopy /E /I src-lib c:\mygit\neogeo\mygame\neocore\src-lib
-copy manifest.xml c:\mygit\neogeo\mygame\neocore
-xcopy /E /I toolchain c:\mygit\neogeo\mygame\neocore\toolchain
-xcopy /E /I templates\project c:\mygit\neogeo\mygame\src
+xcopy /E /I src-lib c:\my-git\my-game\neocore\src-lib
+copy manifest.xml c:\my-git\my-game\neocore
+copy templates\.gitignore c:\my-git\my-game\.gitignore
+xcopy /E /I toolchain c:\my-git\my-game\neocore\toolchain
+xcopy /E /I templates\project c:\my-git\my-game\src
 echo Edit project.xml and set the project name
-notepad c:\mygit\neogeo\mygame\src\config\project.xml
-echo done
+notepad c:\my-git\my-game\src\config\project.xml
 ```
-  
+* Replace `c:\my-git\my-game` with your real path. 
+
 ## DATlib assets (in progress)
 For making your own graphics, see the DATlib ref available here: (after install)  
 ```cmd
