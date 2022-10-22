@@ -1,4 +1,8 @@
 # TODO : change BuilderZIP
+# TODO : rule dist:iso
+# TODO : rule dist:mame
+# TODO : mame is not needed to make a mame dist
+
 param (
   [Parameter(Mandatory=$true)][String] $ConfigFile,
   [String] $Rule = "default"
@@ -123,14 +127,14 @@ function Main {
 
     if ($Config.project.sound.cdda.tracks.track) { $configCDDA = $config.project.sound.cdda }
 
+    Write-Host "copy assets to $PATH_BUILD\assets" -ForegroundColor Blue
+    Robocopy /MIR assets "$PATH_BUILD\assets" | Out-Null
+    # TODO : check lastexitcode
+
     Write-CUE `
       -OutputFile "$PATH_BUILD\$ProjectName.cue" `
       -ISOName "$ProjectName.iso" `
       -Config $configCDDA
-
-    Write-Host "copy assets to $PATH_BUILD\assets" -ForegroundColor Green
-    Robocopy /MIR assets "$PATH_BUILD\assets" | Out-Null
-    # TODO : check lastexitcode
   }
 
   function BuilderMame {
@@ -216,21 +220,19 @@ function Main {
   }
   if ($Rule -eq "dist") {
     Import-Module "$PATH_TOOLCHAIN\scripts\modules\module-mame.ps1"
+    Import-Module "$PATH_TOOLCHAIN\scripts\modules\module-dist.ps1"
     BuilderSprite
     BuilderProgram
     BuilderISO
     BuilderMame
-    if ((Test-Path -Path "$pathDist\$ProjectName\$version")) {
-      Write-Host "error : $pathDist\$ProjectName\$version already exist" -ForegroundColor Red
-      exit 1
-    } else { New-Item -Path "$pathDist\$ProjectName\$version" -ItemType Directory -Force }
-    New-Item -Path "$pathDist\$ProjectName\$version\iso" -ItemType Directory -Force
-    New-Item -Path "$pathDist\$ProjectName\$version\mame" -ItemType Directory -Force
-    Copy-Item -Path "$PATH_BUILD\$ProjectName.iso" -Destination "$pathDist\$ProjectName\$version\iso"
-    Copy-Item -Path "$PATH_BUILD\$ProjectName.cue" -Destination "$pathDist\$ProjectName\$version\iso"
-    # TODO : sound tracks
-    Copy-Item -Path "$PathMame\roms\neocdz\$ProjectName.chd" -Destination "$pathDist\$ProjectName\$version\mame"
-    Copy-Item -Path "$PathMame\hash\neocd.xml" -Destination "$pathDist\$ProjectName\$version\mame"
+    Write-Dist `
+      -ProjectName $ProjectName `
+      -PathDestination "$pathDist\$ProjectName\$version" `
+      -ISOFile "$PATH_BUILD\$ProjectName.iso" `
+      -CUEFile "$PATH_BUILD\$ProjectName.cue" `
+      -CHDFile "$PathMame\roms\neocdz\$ProjectName.chd" `
+      -HashFile "$PathMame\hash\neocd.xml"
+
   }
   if ($Rule -eq "only:sprite") { BuilderSprite }
   if ($Rule -eq "only:program") { BuilderProgram }
