@@ -6,12 +6,7 @@ char.bin
 maps.s
 output.map
 palettes.s
-test.o
-test.prg
 externs.h
 as.exe.stackdump
 *.o
 *.prg
-samples/ngcd-flamble-003
-samples/ngcd-music-disk
-samples/geowave

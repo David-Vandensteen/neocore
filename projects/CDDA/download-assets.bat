@@ -1,1 +1,0 @@
-powershell -ExecutionPolicy Bypass -File ..\..\scripts\cdda-project\download-assets.ps1
