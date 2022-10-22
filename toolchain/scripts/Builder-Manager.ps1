@@ -33,9 +33,8 @@ function Check {
     if ((Test-Path -Path $Config.project.toolchainPath) -eq $false) { Check-PathError -Path $Config.project.toolchainPath }
     if ((Test-Path -Path $Config.project.XMLDATFile) -eq $false) { Check-PathError -Path $Config.project.XMLDATFile }
     if ((Test-Path -Path "$($Config.project.toolchainPath)\..\manifest.xml") -eq $false) { Check-PathError -Path "$($Config.project.toolchainPath)\..\manifest.xml" }
-
   }
-  Write-Host "check config" -ForegroundColor Blue
+  Write-Host "check config" -ForegroundColor Yellow
   Check-XML
   Check-Path
   Write-Host "config is compliant" -ForegroundColor Green
@@ -168,14 +167,6 @@ function Main {
       -PathMame $PathMame `
       -CUEFile "$PATH_BUILD\$ProjectName.cue" `
       -OutputFile "$PathMame\roms\neocdz\$ProjectName.chd"
-  }
-
-  function BuilderZIP {
-    Import-Module "$PATH_TOOLCHAIN\scripts\modules\module-zip.ps1"
-    Write-ZIP `
-      -Path "$PATH_BUILD\iso" `
-      -OutputFile "$PATH_BUILD\$ProjectName.zip" `
-      -ISOFile "$PATH_BUILD\$ProjectName.iso"
   }
 
   function RunnerMame {
