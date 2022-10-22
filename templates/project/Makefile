@@ -2,9 +2,7 @@
 #	Project settings #
 ####################
 PROJECTNAME = $(PROJECT)
-
-# TODO : review NEOBUILDTEMP
-NEOBUILDTEMP = ../build/$(PROJECTNAME)
+NEOBUILDTEMP = $(PATHBUILD)
 
 #######################################
 # Base dir of your m68k gcc toolchain #
