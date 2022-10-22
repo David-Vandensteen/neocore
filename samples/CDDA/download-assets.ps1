@@ -1,5 +1,15 @@
-# TODO : download command for project
-Import-Module "..\..\toolchain\scripts\modules\module-download.ps1"
+function Download {
+  param (
+    [Parameter(Mandatory=$true)][String] $URL,
+    [Parameter(Mandatory=$true)][String] $Path
+  )
+  Write-Host "Download - $URL $Path"
+  Import-Module BitsTransfer
+
+  $start_time = Get-Date
+  Start-BitsTransfer -Source $URL -Destination $Path
+  Write-Output "Time taken - $((Get-Date).Subtract($start_time).Seconds) second(s)"
+}
 
 if ((Test-Path -Path "assets\sounds\cdda") -eq $false) {
   New-Item -Path "assets\sounds\cdda" -ItemType Directory
