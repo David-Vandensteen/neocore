@@ -116,6 +116,10 @@ See `.\samples\CDDA\config\project.xml` for understanding how to set the audio f
 With powershell
 ```cmd
 $project = "c:\my-git\my-game"
+```
+* Replace `c:\my-git\my-game` with your real path. 
+
+```cmd
 xcopy /E /I src-lib $project\neocore\src-lib
 copy manifest.xml $project\neocore
 copy templates\.gitignore $project\.gitignore
@@ -127,6 +131,10 @@ notepad $project\src\config\project.xml
 With cmd
 ```cmd
 set project=c:\my-git\my-game
+```
+* Replace `c:\my-git\my-game` with your real path. 
+
+```cmd
 xcopy /E /I src-lib %project%\neocore\src-lib
 copy manifest.xml %project%\neocore
 copy templates\.gitignore %project%\.gitignore
@@ -135,7 +143,6 @@ xcopy /E /I templates\project %project%\src
 echo Edit project.xml and set the project name
 notepad %project%\src\config\project.xml
 ```
-* Replace `c:\my-git\my-game` with your real path. 
 
 ## DATlib assets (in progress)
 For making your own graphics, see the DATlib ref available here: (after install)  
