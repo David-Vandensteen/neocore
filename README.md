@@ -59,6 +59,10 @@ or
 ```cmd
 .\mak run
 ```
+- Delivery ISO and Mame
+```cmd
+.\mak dist
+```
 ## Create your first experimentation
 ```cmd
 xcopy /E /I templates\sample samples\awesome-project
