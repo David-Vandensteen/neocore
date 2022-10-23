@@ -25,7 +25,7 @@ Graphics by **Grass**
     
 ## Build a included example
 ```cmd
-cd projects\hello
+cd samples\hello
 .\mak run
 ```
   
@@ -60,26 +60,35 @@ or
 ```cmd
 .\mak run
 ```
-## Make your first project
+## Create your first experimentation
 ```cmd
-.\build-neocore init-project
-Project name : myfirst
+xcopy /E /I templates\sample samples\awesome-project
 ```
-A new folder (projects\\myfirst) has been scaffolded  
-Now compile and run it:  
+
+Edit project.xml and set the project name  
 ```cmd
-cd projects\myfirst
+notepad samples\awesome-project\config\project.xml
+```
+
+```xml
+<project>
+  <name>awesome-project</name>
+```
+
+Compile and run it  
+
+```cmd
+cd samples\awesome-project
 .\mak run
 ```
 
-See `projects\myfirst\mak.bat`    
-`projects\myfirst\config\project.xml`  
-and `projects\myfirst\config\sprites.xml`  
+See `.\samples\awesome-project\config\project.xml`  
+and `.\samples\awesome-project\config\sprites.xml`  
 for settings.
 
 ## "Hot reload"
 ```cmd
-cd projects\hello
+cd samples\hello
 .\mak serve
 ```
   
@@ -95,14 +104,27 @@ Some problems currently:
     
 ## CDDA
 ``` cmd
-cd projects\CDDA
+cd samples\CDDA
 .\download-assets
 .\mak run
 ```
   
 In the emulator, use joypad right and left to change audio track.  
-See `.\projects\CDDA\config\project.xml` for understanding how to set the audio file.
-  
+See `.\samples\CDDA\config\project.xml` for understanding how to set the audio file.
+
+## Create a "standalone" project
+
+```cmd
+xcopy /E /I src-lib c:\my-git\my-game\neocore\src-lib
+copy manifest.xml c:\my-git\my-game\neocore
+copy templates\.gitignore c:\my-git\my-game\.gitignore
+xcopy /E /I toolchain c:\my-git\my-game\neocore\toolchain
+xcopy /E /I templates\project c:\my-git\my-game\src
+echo Edit project.xml and set the project name
+notepad c:\my-git\my-game\src\config\project.xml
+```
+* Replace `c:\my-git\my-game` with your real path. 
+
 ## DATlib assets (in progress)
 For making your own graphics, see the DATlib ref available here: (after install)  
 ```cmd
@@ -123,7 +145,8 @@ The Animator tool is available here:
 
 ## Compiling the lib (necessary if you tweak or modify Neocore Neo-Geo lib)
 ```cmd
-.\build-neocore
+cd src-lib
+.\build-neocore.bat
 ```
 This script override path environment variable during the compilation.  
 its avoid collisions with other bin, sdk, gcc...  
