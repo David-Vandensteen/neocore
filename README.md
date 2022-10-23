@@ -115,13 +115,14 @@ See `.\samples\CDDA\config\project.xml` for understanding how to set the audio f
 ## Create a "standalone" project
 
 ```cmd
-xcopy /E /I src-lib c:\my-git\my-game\neocore\src-lib
-copy manifest.xml c:\my-git\my-game\neocore
-copy templates\.gitignore c:\my-git\my-game\.gitignore
-xcopy /E /I toolchain c:\my-git\my-game\neocore\toolchain
-xcopy /E /I templates\project c:\my-git\my-game\src
+set project=c:\my-git\my-game
+xcopy /E /I src-lib %project%\neocore\src-lib
+copy manifest.xml %project%\neocore
+copy templates\.gitignore %project%\.gitignore
+xcopy /E /I toolchain %project%\neocore\toolchain
+xcopy /E /I templates\project %project%\src
 echo Edit project.xml and set the project name
-notepad c:\my-git\my-game\src\config\project.xml
+notepad %project%\src\config\project.xml
 ```
 * Replace `c:\my-git\my-game` with your real path. 
 
