@@ -11,7 +11,8 @@ function Write-Program {
   $env:PROJECT = $ProjectName
   $env:NEODEV = $PathNeoDev
   $env:FILEPRG = $PRGFile
-  $env:PATHBUILD = $PATH_BUILD
+  $env:PATHBUILD = $buildConfig.pathBuild
+
   & make -f $MakeFile
   if ((Test-Path -Path $PRGFile) -eq $true) {
     Logger-Success "builded program is available to $PRGFile"

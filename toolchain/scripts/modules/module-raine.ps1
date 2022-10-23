@@ -1,4 +1,4 @@
-Import-Module "$PATH_TOOLCHAIN\scripts\modules\module-install-component.ps1"
+Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-install-component.ps1"
 
 function Update-Raine {
   param (
@@ -16,7 +16,7 @@ function Raine {
   )
   if ((Test-Path -Path $File) -eq $false) { Logger-Error -Message "$File not found" }
   if ((Test-Path -Path $PathRaine) -eq $false) {
-    Install-Component -URL "$BASE_URL/neobuild-raine.zip" -PathDownload $PATH_SPOOL -PathInstall $PATH_NEOCORE
+    Install-Component -URL "$($buildConfig.baseURL)/neobuild-raine.zip" -PathDownload $buildConfig.pathSpool -PathInstall $buildConfig.pathNeocore
     Update-Raine -Path $PathRaine
   }
   Logger-Step -Message "lauching raine $File"

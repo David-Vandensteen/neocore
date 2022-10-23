@@ -1,8 +1,8 @@
-Import-Module "$PATH_TOOLCHAIN\scripts\modules\module-install-component.ps1"
+Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-install-component.ps1"
 
 function Install-Neocore {
- #pushd ..\..\src-lib
- pushd $PATH_TOOLCHAIN\..\src-lib
+ #pushd $PATH_TOOLCHAIN\..\src-lib
+ pushd "$($buildConfig.pathToolchain)\..\src-lib"
  .\build-neocore.bat
  if ($LASTEXITCODE -ne 0) {
   popd
@@ -13,7 +13,7 @@ function Install-Neocore {
 }
 
 function Install-SDK {
-  Install-Component -URL "$BASE_URL/neocore-bin.zip" -PathDownload $PATH_SPOOL -PathInstall $PATH_NEOCORE
-  Install-Component -URL "$BASE_URL/neodev-sdk.zip" -PathDownload $PATH_SPOOL -PathInstall $PATH_NEOCORE
+  Install-Component -URL "$($buildConfig.baseURL)/neocore-bin.zip" -PathDownload $buildConfig.pathSpool -PathInstall $buildConfig.pathNeocore
+  Install-Component -URL "$($buildConfig.baseURL)/neodev-sdk.zip" -PathDownload $buildConfig.pathSpool -PathInstall $buildConfig.pathNeocore
   Install-Neocore
 }
