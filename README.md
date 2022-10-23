@@ -4,7 +4,6 @@
 ![](https://media.giphy.com/media/TLfbmyW3523z24WONz/giphy.gif) ![](https://media.giphy.com/media/iFUh5AEPD4XfvpsvJh/giphy.gif) ![](https://media.giphy.com/media/iJObJsdx6ud4zI7cS1/giphy.gif)
 
 Neocore is a library &amp; toolchain for developing on Neo Geo CD.  
-I write Neocore to make my shoot em up game on Neo Geo CD (**Flamble**) http://azertyvortex.free.fr/flamble  
 
 Neocore provide high level functions over Neo Dev Kit (**Fabrice Martinez, Jeff Kurtz, al**) & DATlib 0.2 (**HPMAN**)  
   
@@ -21,9 +20,9 @@ Compatibility problems : the lib is mainly tested on Raine & Mame emulators.
 
 License: MIT  
 (c) 2019 [David Vandensteen <dvandensteen@gmail.com>]  
-Graphics by **Grass**  
+Some graphics by **Grass**  
     
-## Build a included example
+## Build and run (with Mame) a included example
 ```cmd
 cd samples\hello
 .\mak run
