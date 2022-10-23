@@ -113,7 +113,18 @@ In the emulator, use joypad right and left to change audio track.
 See `.\samples\CDDA\config\project.xml` for understanding how to set the audio file.
 
 ## Create a "standalone" project
-
+With powershell
+```cmd
+$project = "c:\my-git\my-game"
+xcopy /E /I src-lib $project\neocore\src-lib
+copy manifest.xml $project\neocore
+copy templates\.gitignore $project\.gitignore
+xcopy /E /I toolchain $project\neocore\toolchain
+xcopy /E /I templates\project $project\src
+echo Edit project.xml and set the project name
+notepad $project\src\config\project.xml
+```
+With cmd
 ```cmd
 set project=c:\my-git\my-game
 xcopy /E /I src-lib %project%\neocore\src-lib
