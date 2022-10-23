@@ -8,12 +8,12 @@ function Write-Sprite {
   Logger-Step -Message "compiling sprites"
   if ((Test-Path -Path $XMLFile) -eq $false) { Logger-Error -Message "$XMLFile not found" }
 
-  Start-Process -File BuildChar.exe -NoNewWindow -ArgumentList($XMLFile) -Wait -RedirectStandardOutput "$PATH_BUILD\sprite.log"
+  Start-Process -File BuildChar.exe -NoNewWindow -ArgumentList($XMLFile) -Wait -RedirectStandardOutput "$($buildConfig.pathBuild)\sprite.log"
 
-  Get-Content -Path "$PATH_BUILD\sprite.log" -Force
+  Get-Content -Path "$($buildConfig.pathBuild)\sprite.log" -Force
 
-  if (Select-String -Path "$PATH_BUILD\sprite.log" -Pattern "Invalid dimension") { Logger-Error -Message "Invalid dimension" }
-  if (Select-String -Path "$PATH_BUILD\sprite.log" -Pattern "est pas valide") { Logger-Error -Message "Invalid parameter" }
+  if (Select-String -Path "$($buildConfig.pathBuild)\sprite.log" -Pattern "Invalid dimension") { Logger-Error -Message "Invalid dimension" }
+  if (Select-String -Path "$($buildConfig.pathBuild)\sprite.log" -Pattern "est pas valide") { Logger-Error -Message "Invalid parameter" }
 
   if ((Get-ChildItem -Path "." -Filter "*.*_reject.*" -Recurse -ErrorAction SilentlyContinue -Force).Length -ne 0) {
     Write-Host "Open reject *_reject file(s)" -ForegroundColor Red

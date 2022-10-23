@@ -1,5 +1,5 @@
 @echo off
-
+rem TODO : if no sdk !!! download ?
 set backupPath=%path%
 
 if exist ..\..\build set NEODEV=..\..\build\neodev-sdk

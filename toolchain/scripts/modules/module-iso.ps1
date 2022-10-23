@@ -1,4 +1,4 @@
-Import-Module "$PATH_TOOLCHAIN\scripts\modules\module-install-component.ps1"
+Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-install-component.ps1"
 
 function Write-ISO {
   param (
@@ -9,7 +9,7 @@ function Write-ISO {
     [Parameter(Mandatory=$true)][String] $PathCDTemplate
   )
   if ((Test-Path -Path $PathCDTemplate) -eq $false) {
-    Install-Component -URL "$BASE_URL/neobuild-cd_template.zip" -PathDownload $PATH_SPOOL -PathInstall $PATH_NEOCORE
+    Install-Component -URL "$($buildConfig.baseURL)/neobuild-cd_template.zip" -PathDownload $buildConfig.pathSpool -PathInstall $buildConfig.pathNeocore
   }
   Logger-Step -Message "compiling ISO"
   if (Test-Path -Path $PathISOBuildFolder) { Remove-Item $PathISOBuildFolder -Recurse -Force }

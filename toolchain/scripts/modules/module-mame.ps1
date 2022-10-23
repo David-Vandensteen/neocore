@@ -1,4 +1,4 @@
-Import-Module "$PATH_TOOLCHAIN\scripts\modules\module-install-component.ps1"
+Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-install-component.ps1"
 
 function Write-MameHash {
   param (
@@ -51,7 +51,7 @@ function Write-Mame {
     [Parameter(Mandatory=$true)][String] $OutputFile
   )
   if ((Test-Path -Path $PathMame) -eq $false) {
-    Install-Component -URL "$BASE_URL/neocore-mame.zip" -PathDownload $PATH_SPOOL -PathInstall $PATH_NEOCORE
+    Install-Component -URL "$($buildConfig.baseURL)/neocore-mame.zip" -PathDownload $buildConfig.pathSpool -PathInstall $buildConfig.pathNeocore
   }
   if ((Test-Path -Path $PathMame) -eq $false) { Write-Host "error - $PathMame not found" -ForegroundColor Red; exit 1 }
   if ((Test-Path -Path $CUEFile) -eq $false) { Write-Host "error - $CUEFile not found" -ForegroundColor Red; exit 1 }
