@@ -8,7 +8,7 @@ Neocore is a library &amp; toolchain for developing on Neo Geo CD.
 Neocore provide high level functions over Neo Dev Kit (**Fabrice Martinez, Jeff Kurtz, al**) & DATlib 0.2 (**HPMAN**)  
   
 I share my tools and my code, these could possibly help your projects on this platform.  
-(**Doxygen doc**) http://azertyvortex.free.fr/neocore-doxy/develop/  
+(**Doxygen doc**) http://azertyvortex.free.fr/neocore-doxy/r1  
   
 ***Lot of thing is under development and unoptimized ...***
 ***I'm not responsible for any software damage***  
