@@ -494,6 +494,48 @@ WORD      get_max_free_palette_index();
  */
  WORD     get_max_palette_index_used();
 
+/**
+ * \brief return picture info from image
+ * @param Image struct image
+ * \return struct
+*/
+#define get_image_pictureInfo(image) image.pi
+
+/**
+ * \brief return palette info from image
+ * @param Image struct image
+ * \return struct
+*/
+#define get_image_paletteInfo(image) image.pali
+
+/**
+ * \brief return baseSprite from image
+ * @param Image struct image
+ * \return WORD
+*/
+#define get_image_baseSprite(image) image.pic.baseSprite
+
+/**
+ * \brief return tileWitdh from image
+ * @param Image struct image
+ * \return WORD
+*/
+#define get_image_tileWidth(image) image.pic.info->tileWidth
+
+/**
+ * \brief return posX from image
+ * @param Image struct image
+ * \return short
+*/
+#define get_image_position_x(image) image.pic.posX
+
+/**
+ * \brief return posY from image
+ * @param Image struct image
+ * \return short
+*/
+#define get_image_position_y(image) image.pic.posY
+
   //--------------------------------------------------------------------------//
  //                                  -I                                      //
 //--------------------------------------------------------------------------//
