@@ -4,7 +4,6 @@
 ![](https://media.giphy.com/media/TLfbmyW3523z24WONz/giphy.gif) ![](https://media.giphy.com/media/iFUh5AEPD4XfvpsvJh/giphy.gif) ![](https://media.giphy.com/media/iJObJsdx6ud4zI7cS1/giphy.gif)
 
 Neocore is a library &amp; toolchain for developing on Neo Geo CD.  
-I write Neocore to make my shoot em up game on Neo Geo CD (**Flamble**) http://azertyvortex.free.fr/flamble  
 
 Neocore provide high level functions over Neo Dev Kit (**Fabrice Martinez, Jeff Kurtz, al**) & DATlib 0.2 (**HPMAN**)  
   
@@ -21,9 +20,9 @@ Compatibility problems : the lib is mainly tested on Raine & Mame emulators.
 
 License: MIT  
 (c) 2019 [David Vandensteen <dvandensteen@gmail.com>]  
-Graphics by **Grass**  
+Some graphics by **Grass**  
     
-## Build a included example
+## Build and run (with Mame) a included example
 ```cmd
 cd samples\hello
 .\mak run
@@ -59,6 +58,10 @@ ___***Warn : mak script override path environment variable during the compiling,
 or
 ```cmd
 .\mak run
+```
+- Delivery ISO and Mame
+```cmd
+.\mak dist
 ```
 ## Create your first experimentation
 ```cmd
@@ -113,17 +116,36 @@ In the emulator, use joypad right and left to change audio track.
 See `.\samples\CDDA\config\project.xml` for understanding how to set the audio file.
 
 ## Create a "standalone" project
-
+With powershell
 ```cmd
-xcopy /E /I src-lib c:\my-git\my-game\neocore\src-lib
-copy manifest.xml c:\my-git\my-game\neocore
-copy templates\.gitignore c:\my-git\my-game\.gitignore
-xcopy /E /I toolchain c:\my-git\my-game\neocore\toolchain
-xcopy /E /I templates\project c:\my-git\my-game\src
-echo Edit project.xml and set the project name
-notepad c:\my-git\my-game\src\config\project.xml
+$project = "c:\my-git\my-game"
 ```
 * Replace `c:\my-git\my-game` with your real path. 
+
+```cmd
+xcopy /E /I src-lib $project\neocore\src-lib
+copy manifest.xml $project\neocore
+copy templates\.gitignore $project\.gitignore
+xcopy /E /I toolchain $project\neocore\toolchain
+xcopy /E /I templates\project $project\src
+echo Edit project.xml and set the project name
+notepad $project\src\config\project.xml
+```
+With cmd
+```cmd
+set project=c:\my-git\my-game
+```
+* Replace `c:\my-git\my-game` with your real path. 
+
+```cmd
+xcopy /E /I src-lib %project%\neocore\src-lib
+copy manifest.xml %project%\neocore
+copy templates\.gitignore %project%\.gitignore
+xcopy /E /I toolchain %project%\neocore\toolchain
+xcopy /E /I templates\project %project%\src
+echo Edit project.xml and set the project name
+notepad %project%\src\config\project.xml
+```
 
 ## DATlib assets (in progress)
 For making your own graphics, see the DATlib ref available here: (after install)  
@@ -139,17 +161,20 @@ The Animator tool is available here:
 ```cmd
 %appdata%\neocore\neodev-sdk\m68k\bin\Animator.exe
 ```
-  
-## Pull or checkout another branches
-**BE CAREFUL : You need to remove build folder `.\build` for supress cache files before compiling a project**  
 
-## Compiling the lib (necessary if you tweak or modify Neocore Neo-Geo lib)
+## Compiling the lib (necessary if you develop Neocore lib)
 ```cmd
 cd src-lib
 .\build-neocore.bat
 ```
 This script override path environment variable during the compilation.  
 its avoid collisions with other bin, sdk, gcc...  
+If sdk was not found, build a sample (with mak script) to initialize cache (sdk will install in build folder).  
+
+
+## Pull or checkout another branches
+**BE CAREFUL : You need to remove build folder `.\build` for supress cache files before compiling a project**  
+
 
 ## SoundFX ... (todo)
 ## Use Neocore toolchain for DATlib project (without Neocore lib) (todo)

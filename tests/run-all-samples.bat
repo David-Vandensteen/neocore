@@ -1,1 +1,1 @@
-powershell -ExecutionPolicy Bypass -File compile-run-tester.ps1 compile 30
+powershell -ExecutionPolicy Bypass -File tester.ps1 -Rule "run:mame" -KillTime 30
