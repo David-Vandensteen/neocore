@@ -148,18 +148,18 @@ notepad %project%\src\config\project.xml
 ```
 
 ## DATlib assets (in progress)
-For making your own graphics, see the DATlib ref available here: (after install)  
+For making your own graphics, see the DATlib ref available here: (you need to building a sample for init build folder)  
 ```cmd
-%appdata%\neocore\neodev-sdk\DATlib-LibraryReference.pdf
+.\build\neodev-sdk\DATlib-LibraryReference.pdf
 ```
   
 DATlib Framer tool is available here:  
 ```cmd
-%appdata%\neocore\neodev-sdk\m68k\bin\Framer.exe
+.\build\neodev-sdk\m68k\bin\Framer.exe
 ```
 The Animator tool is available here:  
 ```cmd
-%appdata%\neocore\neodev-sdk\m68k\bin\Animator.exe
+.\build\neodev-sdk\m68k\bin\Animator.exe
 ```
 
 ## Compiling the lib (necessary if you develop Neocore lib)
