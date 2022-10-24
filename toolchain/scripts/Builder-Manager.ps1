@@ -2,7 +2,6 @@
 # David Vandensteen
 # MIT
 
-# TODO : create dist folder just in time
 # TODO : rule dist:iso
 # TODO : rule dist:mame
 # TODO : mame is not needed to make a mame dist
