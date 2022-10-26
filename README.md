@@ -150,7 +150,7 @@ notepad %project%\src\config\project.xml
 ## DATlib assets (in progress)
 For making your own graphics, see the DATlib ref available here: (you need to building a sample for init build folder)  
 ```cmd
-.\build\neodev-sdk\DATlib-LibraryReference.pdf
+.\build\neodev-sdk\doc\DATlib-LibraryReference.pdf
 ```
   
 DATlib Framer tool is available here:  
