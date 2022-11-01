@@ -4,7 +4,7 @@ $projectSetting = "project.xml"
 $toolchainPath = $config.project.toolchainPath
 
 if ($args[0]) {
-  powershell -ExecutionPolicy Bypass -File $toolchainPath\scripts\Builder-Manager.ps1 -ConfigFile config\project.xml -Rule $args[0]
+  powershell -ExecutionPolicy Bypass -File $toolchainPath\scripts\Builder-Manager.ps1 -ConfigFile $projectSetting -Rule $args[0]
 } else {
-  powershell -ExecutionPolicy Bypass -File $toolchainPath\scripts\Builder-Manager.ps1 -ConfigFile config\project.xml
+  powershell -ExecutionPolicy Bypass -File $toolchainPath\scripts\Builder-Manager.ps1 -ConfigFile $projectSetting
 }
