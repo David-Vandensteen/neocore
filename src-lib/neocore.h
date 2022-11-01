@@ -541,6 +541,12 @@ void gfx_animated_sprite_set_animation(GFX_Animated_Sprite *gfx_animated_sprite,
 #define gfx_animated_sprite_animate(gfx_animated_sprite) aSpriteAnimate(gfx_animated_sprite.as)
 
 /**
+ * \brief refresh animation frame
+ * @param GFX_Animated_Sprite_Physic* GFX_Animated_Sprite_Physic pointer
+ */
+#define gfx_animated_sprite_physic_animate(gfx_animated_sprite_physic) gfx_animated_sprite_animate(gfx_animated_sprite_physic.gfx_animated_sprite)
+
+/**
  * \brief refresh flash
  * @param GFX_Animated_Sprite* GFX_Animated_Sprite pointer
  * \return BOOL
