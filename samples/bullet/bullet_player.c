@@ -8,12 +8,12 @@
 #include "bullet_player.h"
 #include "asteroid.h"
 
-static Animated_Sprite_Physic sprites[BULLET_MAX];
+static GFX_Animated_Sprite_Physic sprites[BULLET_MAX];
 
 static BOOL sprites_state[BULLET_MAX];
 static BOOL state;
 
-static Animated_Sprite_Physic *get_free_sprite();
+static GFX_Animated_Sprite_Physic *get_free_sprite();
 
 static void free_sprite(BYTE index);
 static void debug();
@@ -21,7 +21,7 @@ static void update_move();
 static void update_states(short x, short y);
 static void collide();
 
-static Animated_Sprite_Physic *get_free_sprite() {
+static GFX_Animated_Sprite_Physic *get_free_sprite() {
   BYTE i = 0;
   for (i = 0; i < BULLET_MAX; i++) {
     if (!sprites_state[i]) {
@@ -43,7 +43,7 @@ static void collide() {
 
 static void free_sprite(BYTE index) {
   sprites_state[index] = false;
-  animated_sprite_physic_hide(&sprites[index]);
+  gfx_animated_sprite_physic_hide(&sprites[index]);
 }
 
 static void debug() {
@@ -52,7 +52,7 @@ static void debug() {
   for (i = 0; i < BULLET_MAX; i++) {
     logger_bool("STATE ", sprites_state[i]);
   }
-  logger_byte("PAL I :", sprites[0].animated_sprite.as.basePalette);
+  logger_byte("PAL I :", sprites[0].gfx_animated_sprite.as.basePalette);
   if (joypad_is_a()) {
     logger_info("JOYPAD A 1");
   } else {
@@ -61,11 +61,11 @@ static void debug() {
 }
 
 static void update_states(short x, short y) {
-  Animated_Sprite_Physic *free_aSprite;
+  GFX_Animated_Sprite_Physic *free_aSprite;
   free_aSprite = get_free_sprite();
   if (free_aSprite) {
-    animated_sprite_physic_set_position(free_aSprite, x + BULLET_XOFFSET, y);
-    animated_sprite_physic_show(free_aSprite);
+    gfx_animated_sprite_physic_set_position(free_aSprite, x + BULLET_XOFFSET, y);
+    gfx_animated_sprite_physic_show(free_aSprite);
   }
 }
 
@@ -73,9 +73,9 @@ static void update_move() {
   BYTE i = 0;
   for (i = 0; i < BULLET_MAX; i++) {
     if (sprites_state[i]) {
-      animated_sprite_physic_move(&sprites[i], BULLET_SPEED, 0);
-      animated_sprite_animate(&sprites[i].animated_sprite);
-      if (sprites[i].animated_sprite.as.posX > 320) {
+      gfx_animated_sprite_physic_move(&sprites[i], BULLET_SPEED, 0);
+      gfx_animated_sprite_animate(&sprites[i].gfx_animated_sprite);
+      if (sprites[i].gfx_animated_sprite.as.posX > 320) {
         free_sprite(i);
       }
     }
@@ -87,17 +87,17 @@ void bullet_player_init() {
   state = false;
   for (i = 0; i < BULLET_MAX; i++) {
     sprites_state[i] = false;
-    animated_sprite_physic_init(&sprites[i], &bullet_img, &bullet_img_Palettes, 8, 8, 0, 0);
+    gfx_animated_sprite_physic_init(&sprites[i], &bullet_img, &bullet_img_Palettes, 8, 8, 0, 0);
   }
 }
 
 void bullet_player_display(short x, short y) {
   BYTE i = 0;
   for (i = 0; i < BULLET_MAX; i++) {
-    animated_sprite_physic_display(&sprites[i], x + (i * BULLET_XOFFSET), y, BULLET_IMG_ANIM_IDLE);
-    animated_sprite_physic_hide(&sprites[i]);
+    gfx_animated_sprite_physic_display(&sprites[i], x + (i * BULLET_XOFFSET), y, BULLET_IMG_ANIM_IDLE);
+    gfx_animated_sprite_physic_hide(&sprites[i]);
   }
-  animated_sprite_show(&sprites[0].animated_sprite);
+  gfx_animated_sprite_show(&sprites[0].gfx_animated_sprite);
 }
 
 void bullet_player_update(BOOL pstate, short x, short y) {
@@ -111,6 +111,6 @@ void bullet_player_destroy() {
   BYTE i;
   bullet_player_init();
   for (i = 0; i < BULLET_MAX; i++) {
-    animated_sprite_physic_hide(&sprites[i]);
+    gfx_animated_sprite_physic_hide(&sprites[i]);
   }
 }
