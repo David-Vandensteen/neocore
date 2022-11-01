@@ -148,11 +148,11 @@ struct Flash {
 };
 
 /**
- * \struct Animated_Sprite
+ * \struct GFX_Animated_Sprite
  * \brief DATLib aSprite structure encapsulation
  */
-typedef struct Animated_Sprite Animated_Sprite;
-struct Animated_Sprite {
+typedef struct GFX_Animated_Sprite GFX_Animated_Sprite;
+struct GFX_Animated_Sprite {
   aSprite as;         /*!< - as is aSprite DATLib definition */
   spriteInfo *si;     /*!< - si is a pointer to DATLib spriteInfo structure */
   paletteInfo *pali;  /*!< - pali is a pointer to DATLib paletteInfo structure */
@@ -160,11 +160,11 @@ struct Animated_Sprite {
 };
 
 /**
- * \struct Image
+ * \struct GFX_Image
  * \brief DATLib picture structure encapsulation
  */
-typedef struct Image Image;
-struct Image {
+typedef struct GFX_Image GFX_Image;
+struct GFX_Image {
   picture pic;        /*!< - pic is picture DATLib definition */
   pictureInfo *pi;    /*!< - pi is a pointer to DATLib pictureInfo structure */
   paletteInfo *pali;  /*!< - pali is a pointer to DATLib paletteInfo structure */
@@ -172,188 +172,42 @@ struct Image {
 };
 
 /**
- * \struct Animated_Sprite_Physic
- * \brief Animated_Sprite encapsulation with Box
+ * \struct GFX_Animated_Sprite_Physic
+ * \brief GFX_Animated_Sprite encapsulation with Box
  *
- *  Animated_Sprite_Physic can be collide with another Box structure
+ *  GFX_Animated_Sprite_Physic can be collide with another Box structure
  */
-typedef struct Animated_Sprite_Physic Animated_Sprite_Physic;
-struct Animated_Sprite_Physic {
-  Animated_Sprite animated_sprite;  /*!< - Animated_Sprite */
+typedef struct GFX_Animated_Sprite_Physic GFX_Animated_Sprite_Physic;
+struct GFX_Animated_Sprite_Physic {
+  GFX_Animated_Sprite gfx_animated_sprite;  /*!< - GFX_Animated_Sprite */
   Box box;                          /*!< - Box */
   BOOL physic_enabled;              /*!< - enable physic (for collide detection capalities) */
 };
 
 /**
- * \struct Image_Physic
- * \brief Image encapsulation with Box
+ * \struct GFX_Image_Physic
+ * \brief GFX_Image encapsulation with Box
  *
- *  Image_Physic can be collide with another Box structure
+ *  GFX_Image_Physic can be collide with another Box structure
  */
-typedef struct Image_Physic Image_Physic;
-struct Image_Physic {
-  Image image;          /*!< - Image */
+typedef struct GFX_Image_Physic GFX_Image_Physic;
+struct GFX_Image_Physic {
+  GFX_Image gfx_image;  /*!< - GFX_Image */
   Box box;              /*!< - Box */
   BOOL autobox_enabled; /*!< - enable autobox */
   BOOL physic_enabled;  /*!< - enable physic (for collide detection capabilities) */
 };
 
 /**
- * \struct Scroller
+ * \struct GFX_Scroller
  * \brief DATLib scroller structure encapsulation
  */
-typedef struct Scroller Scroller;
-struct Scroller {
+typedef struct GFX_Scroller GFX_Scroller;
+struct GFX_Scroller {
   scroller s;          /*!< - s is a pointer to DATLib scroller struture */
   scrollerInfo *si;    /*!< - si is a pointer to DATLib scrollerInfo structure */
   paletteInfo *pali;   /*!< - pali is a pointer to DATLib paletteInfo structure */
 };
-
-  //--------------------------------------------------------------------------//
- //                                  -A                                      //
-//--------------------------------------------------------------------------//
-  /*------------------*/
- /* -animated_sprite */
-/*------------------*/
-/**
- * @param Animated_Sprite_Physic* Animated_Sprite_Physic pointer
- * @param paletteInfo* pointer to DATLib structure
- * @param witdh of the physic box
- * @param height of the physic box
- * @param width offset to reduce physic box
- * @param height offset to reduce physic box
- */
-void animated_sprite_physic_init(
-  Animated_Sprite_Physic *animated_sprite_physic,
-  spriteInfo *si,
-  paletteInfo *pali,
-  short box_witdh,
-  short box_height,
-  short box_width_offset,
-  short box_height_offset
-);
-
-/**
- * @param Animated_Sprite* Animated_Sprite pointer
- * @param spriteInfo* spriteInfo pointer to DATLib structure
- * @param paletteInfo* paletteInfo pointer to DATLib structure
- */
-void animated_sprite_init(Animated_Sprite *animated_sprite ,spriteInfo *si, paletteInfo *pali);
-
-/**
- * @param Animated_Sprite* Animated_Sprite pointer
- * @param x position
- * @param y position
- * @param anim DATLib macro
- */
-void animated_sprite_display(Animated_Sprite *animated_sprite, short x, short y, WORD anim);
-
-/**
- * @param Animated_Sprite* Animated_Sprite pointer
- * @param x offset
- * @param y offset
- */
-#define animated_sprite_move(animated_sprite, x_offset, y_offset) aSpriteMove(animated_sprite.as, x_offset, y_offset)
-
-/**
- * @param Animated_Sprite* Animated_Sprite pointer
- * @param x
- * @param y
- */
-#define animated_sprite_set_position(animated_sprite, x, y) aSpriteSetPos(animated_sprite.as, x, y)
-
-/**
- * @param Animated_Sprite* Animated_Sprite pointer
- */
-void animated_sprite_hide(Animated_Sprite *animated_sprite);
-
-/**
- * @param Animated_Sprite* Animated_Sprite pointer
- */
-void animated_sprite_show(Animated_Sprite *animated_sprite);
-
-/**
- * @param Animated_Sprite* Animated_Sprite pointer
- * @param anim DATLib macro
- */
-void animated_sprite_set_animation(Animated_Sprite *animated_sprite, WORD anim);
-
-/**
- * \brief refresh animation frame
- * @param Animated_Sprite* Animated_Sprite pointer
- */
-#define animated_sprite_animate(animated_sprite) aSpriteAnimate(animated_sprite.as)
-
-/**
- * \brief refresh flash
- * @param Animated_Sprite* Animated_Sprite pointer
- * \return BOOL
- */
-BOOL animated_sprite_flash(Animated_Sprite *animated_sprite);
-
-/**
- * \brief destroy animated sprite
- * @param Animated_Sprite* Animated_Sprite pointer
- * \return void
-*/
-void animated_sprite_destroy(Animated_Sprite *animated_sprite);
-
-  /*--------------------------*/
- /* -animated_sprite_physic  */
-/*--------------------------*/
-/**
- * @param Animated_Sprite_Physic* Animated_Sprite_Physic pointer
- * @param x
- * @param y
- * @param anim DATLib macro
- */
-void animated_sprite_physic_display(Animated_Sprite_Physic *animated_sprite_physic, short x, short y, WORD anim);
-// void animated_sprite_physic_collide(aSpritePhysic *asp, Box *box); // todo - not implementd ??? needed ???
-
-/**
- * @param Animated_Sprite_Physic* Animated_Sprite_Physic pointer
- * @param x
- * @param y
- */
-void animated_sprite_physic_set_position(Animated_Sprite_Physic *animated_sprite_physic, short x, short y);
-
-/**
- * @param Animated_Sprite_Physic* Animated_Sprite_Physic pointer
- * @param x offset
- * @param y offset
- */
-void animated_sprite_physic_move(Animated_Sprite_Physic *animated_sprite_physic, short x_offset, short y_offset);
-
-/**
- * @param Animated_Sprite_Physic* Animated_Sprite_Physic pointer
- * @param shrunk use shrunk_forge function for make a WORD with width & heigh value
- */
-void animated_sprite_physic_shrunk(Animated_Sprite_Physic *animated_sprite_physic, WORD shrunk_value); // todo (minor)
-
-/**
- * \brief hide a Animated_Sprite_Physic
- * @param Animated_Sprite_Physic* Animated_Sprite_Physic pointer
- */
-void animated_sprite_physic_hide(Animated_Sprite_Physic *animated_sprite_physic);
-
-/**
- * \brief show a Animated_Sprite_Physic
- * @param Animated_Sprite_Physic* Animated_Sprite_Physic pointer
- */
-void animated_sprite_physic_show(Animated_Sprite_Physic *animated_sprite_physic);
-
-/**
- * \brief refresh a Animated_Sprite_Physic flash
- * @param Animated_Sprite_Physic* Animated_Sprite_Physic pointer
- */
-void animated_sprite_physic_flash(Animated_Sprite_Physic *animated_sprite_physic);
-
-/**
- * \brief destroy Animated_Sprite_Physic
- * @param Animated_Sprite_Physic* Animated_Sprite_Physic pointer
- */
-void animated_sprite_physic_destroy(Animated_Sprite_Physic *animated_sprite_physic);
-
 
   //--------------------------------------------------------------------------//
  //                                  -B                                      //
@@ -451,9 +305,311 @@ void flash_init(Flash *flash, BOOL enabled, short frequency, short lengh);
 WORD free_ram_info();
 
 
-  //---------------------------------------------------------------------------//
+  //--------------------------------------------------------------------------//
  //                                  -G                                      //
 //--------------------------------------------------------------------------//
+
+  /*----------------------*/
+ /*      -gfx_image      */
+/*----------------------*/
+/**
+ * @param GFX_Image* GFX_Image pointer
+ * @param pictureInfo* pointer to DATLib structure
+ * @param paletteInfo* pointer to DATLib structure
+ */
+void gfx_image_init(GFX_Image *gfx_image, pictureInfo *pi, paletteInfo *pali);
+
+/**
+ * @param GFX_Image* GFX_Image pointer
+ * @param x
+ * @param y
+ */
+void gfx_image_display(GFX_Image *gfx_image, short x, short y);
+
+/**
+ * @param GFX_Image* GFX_Image pointer
+ * @param x offset
+ * @param y offset
+ */
+#define gfx_image_move(gfx_image, x_offset, y_offset) pictureMove(gfx_image.pic, x_offset, y_offset)
+
+/**
+ * @param GFX_Image* GFX_Image pointer
+ * @param x
+ * @param y
+ */
+void gfx_image_set_position(GFX_Image *gfx_image, short x, short y);
+
+/**
+ * \brief hide GFX_Image
+ * @param GFX_Image* GFX_Image pointer
+ */
+void gfx_image_hide(GFX_Image *gfx_image);
+
+/**
+ * \brief show GFX_Image
+ * @param GFX_Image* GFX_Image pointer
+ */
+void gfx_image_show(GFX_Image *gfx_image);
+
+/**
+ * @param GFX_Image* GFX_Image pointer
+ * \return BOOL true if GFX_Image is visible or false
+ */
+void gfx_image_is_visible(GFX_Image *gfx_image);
+
+/**
+ * @param GFX_Image* GFX_Image pointer
+ */
+BOOL gfx_image_flash(GFX_Image *gfx_image);
+
+/**
+ * @param GFX_Image* GFX_Image pointer
+ * @param x center position
+ * @param y center position
+ * @param shrunk use shrunk_forge function for make a WORD with width & heigh value
+ */
+void gfx_image_shrunk_centroid(GFX_Image *gfx_image, short center_x, short center_y, WORD shrunk_value);
+
+/**
+ * \brief GFX_Image destroy
+ * @param GFX_Image* GFX_Image pointer
+ */
+void gfx_image_destroy(GFX_Image *gfx_image);
+
+  /*----------------------*/
+ /*  -gfx_image_physic   */
+/*----------------------*/
+/**
+ * @param GFX_Image_Physic* GFX_Image_Physic pointer
+ * @param pictureInfo* pointer to DATLib structure
+ * @param paletteInfo* pointer to DATLib structure
+ * @param width Box width
+ * @param height Box height
+ * @param width_offset Box offset reduce
+ * @param height_offset Box offset reduce
+ */
+void gfx_image_physic_init(
+  GFX_Image_Physic *gfx_image_physic,
+  pictureInfo *pi,
+  paletteInfo *pali,
+  short box_witdh,
+  short box_height,
+  short box_width_offset,
+  short box_height_offset,
+  BOOL autobox_enabled
+);
+
+/**
+ * @param GFX_Image_Physic* pointer
+ * @param x
+ * @param y
+ */
+void gfx_image_physic_display(GFX_Image_Physic *gfx_image_physic, short x, short y);
+
+/**
+ * @param GFX_Image_Physic* pointer
+ * @param x offset
+ * @param y offset
+ */
+void gfx_image_physic_move(GFX_Image_Physic *gfx_image_physic, short x_offset, short y_offset);
+
+/**
+ * @param GFX_Image_Physic* pointer
+ * @param x
+ * @param y
+ */
+void gfx_image_physic_set_position(GFX_Image_Physic *gfx_image_physic, short x, short y);
+
+/**
+ * \brief Hide Image_Physic & disable physic
+ * @param GFX_Image_Physic* Pointer
+ */
+void gfx_image_physic_hide(GFX_Image_Physic *gfx_image_physic);
+
+/**
+ * \brief Show GFX_Image_Physic & enable physic
+ * @param GFX_Image_Physic Pointer
+ */
+void gfx_image_physic_show(GFX_Image_Physic *gfx_image_physic);
+
+/**
+ * @param GFX_Image_Physic* Pointer
+ */
+void gfx_image_physic_flash(GFX_Image_Physic *gfx_image_physic);
+
+/**
+ * @param GFX_Image_Physic* pointer
+ * @param shrunk Factor
+ */
+void gfx_image_physic_shrunk(GFX_Image_Physic *gfx_image_physic, WORD shrunk_value); // todo (minor) - shrunk box
+
+/* todo (minor) - deprecated
+void image_physic_shrunk_centroid_init(picturePhysicShrunkCentroid *pps, pictureInfo *pi, paletteInfo *pali, short xCenter, short yCenter);
+void image_physic_shrunk_centroid_set_position(picturePhysicShrunkCentroid *pps, short x, short y);
+void image_physic_shrunk_centroid_move(picturePhysicShrunkCentroid *pps, short xShift, short yShift);
+void image_physic_shrunk_centroid_update(picturePhysicShrunkCentroid *pps, WORD shrunk);
+void image_physic_shrunk_centroid_display(picturePhysicShrunkCentroid *pps, WORD shrunk);
+void image_physic_display(picturePhysic *pp, pictureInfo *pi, paletteInfo *pali, short posX, short posY);
+void image_physic_set_position(picturePhysic *pp, short x, short y);
+void image_physic_move(picturePhysic *pp, short x, short y);
+void image_shrunk(picture *p, pictureInfo *pi, WORD shrunk_value);
+void images_show(picture *p, WORD max, BOOL visible);
+void image5_show(picture5 *pics, BOOL visible);
+void image_display(picture *p, pictureInfo *pi, paletteInfo *pali, short posX, short posY);
+void image_shrunk_centroid(picture *p, pictureInfo *pi, short centerPosX, short centerPosY, WORD shrunk_value);
+void image_flash(picture *p, BYTE freq);
+WORD image_get_sprite_index_autoinc(pictureInfo *pi);
+*/
+
+/**
+ * \brief destroy Image_Physic
+ * @param GFX_Image_Physic pointer
+ */
+void gfx_image_physic_destroy(GFX_Image_Physic *gfx_image_physic);
+
+  /*----------------------*/
+ /* -gfx_animated_sprite */
+/*----------------------*/
+/**
+ * @param GFX_Animated_Sprite_Physic* GFX_Animated_Sprite_Physic pointer
+ * @param paletteInfo* pointer to DATLib structure
+ * @param witdh of the physic box
+ * @param height of the physic box
+ * @param width offset to reduce physic box
+ * @param height offset to reduce physic box
+ */
+void gfx_animated_sprite_physic_init(
+  GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic,
+  spriteInfo *si,
+  paletteInfo *pali,
+  short box_witdh,
+  short box_height,
+  short box_width_offset,
+  short box_height_offset
+);
+
+/**
+ * @param GFX_Animated_Sprite* GFX_Animated_Sprite pointer
+ * @param spriteInfo* spriteInfo pointer to DATLib structure
+ * @param paletteInfo* paletteInfo pointer to DATLib structure
+ */
+void gfx_animated_sprite_init(GFX_Animated_Sprite *gfx_animated_sprite ,spriteInfo *si, paletteInfo *pali);
+
+/**
+ * @param GFX_Animated_Sprite* GFX_Animated_Sprite pointer
+ * @param x position
+ * @param y position
+ * @param anim DATLib macro
+ */
+void gfx_animated_sprite_display(GFX_Animated_Sprite *gfx_animated_sprite, short x, short y, WORD anim);
+
+/**
+ * @param GFX_Animated_Sprite* GFX_Animated_Sprite pointer
+ * @param x offset
+ * @param y offset
+ */
+#define gfx_animated_sprite_move(gfx_animated_sprite, x_offset, y_offset) aSpriteMove(gfx_animated_sprite.as, x_offset, y_offset)
+
+/**
+ * @param GFX_Animated_Sprite* GFX_Animated_Sprite pointer
+ * @param x
+ * @param y
+ */
+#define gfx_animated_sprite_set_position(gfx_animated_sprite, x, y) aSpriteSetPos(gfx_animated_sprite.as, x, y)
+
+/**
+ * @param GFX_Animated_Sprite* GFX_Animated_Sprite pointer
+ */
+void gfx_animated_sprite_hide(GFX_Animated_Sprite *gfx_animated_sprite);
+
+/**
+ * @param GFX_Animated_Sprite* GFX_Animated_Sprite pointer
+ */
+void gfx_animated_sprite_show(GFX_Animated_Sprite *gfx_animated_sprite);
+
+/**
+ * @param GFX_Animated_Sprite* GFX_Animated_Sprite pointer
+ * @param anim DATLib macro
+ */
+void gfx_animated_sprite_set_animation(GFX_Animated_Sprite *gfx_animated_sprite, WORD anim);
+
+/**
+ * \brief refresh animation frame
+ * @param GFX_Animated_Sprite* GFX_Animated_Sprite pointer
+ */
+#define gfx_animated_sprite_animate(gfx_animated_sprite) aSpriteAnimate(gfx_animated_sprite.as)
+
+/**
+ * \brief refresh flash
+ * @param GFX_Animated_Sprite* GFX_Animated_Sprite pointer
+ * \return BOOL
+ */
+BOOL gfx_animated_sprite_flash(GFX_Animated_Sprite *gfx_animated_sprite);
+
+/**
+ * \brief destroy animated sprite
+ * @param GFX_Animated_Sprite* GFX_Animated_Sprite pointer
+ * \return void
+*/
+void gfx_animated_sprite_destroy(GFX_Animated_Sprite *gfx_animated_sprite);
+
+  /*------------------------------*/
+ /* -gfx_animated_sprite_physic  */
+/*------------------------------*/
+/**
+ * @param GFX_Animated_Sprite_Physic* GFXAnimated_Sprite_Physic pointer
+ * @param x
+ * @param y
+ * @param anim DATLib macro
+ */
+void gfx_animated_sprite_physic_display(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short x, short y, WORD anim);
+// void animated_sprite_physic_collide(aSpritePhysic *asp, Box *box); // todo - not implementd ??? needed ???
+
+/**
+ * @param GFX_Animated_Sprite_Physic* GFX_Animated_Sprite_Physic pointer
+ * @param x
+ * @param y
+ */
+void gfx_animated_sprite_physic_set_position(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short x, short y);
+
+/**
+ * @param GFX_Animated_Sprite_Physic* GFX_Animated_Sprite_Physic pointer
+ * @param x offset
+ * @param y offset
+ */
+void gfx_animated_sprite_physic_move(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short x_offset, short y_offset);
+
+/**
+ * @param GFX_Animated_Sprite_Physic* GFX_Animated_Sprite_Physic pointer
+ * @param shrunk use shrunk_forge function for make a WORD with width & heigh value
+ */
+void gfx_animated_sprite_physic_shrunk(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, WORD shrunk_value); // todo (minor)
+
+/**
+ * \brief hide a GFX_Animated_Sprite_Physic
+ * @param GFX_Animated_Sprite_Physic* GFX_Animated_Sprite_Physic pointer
+ */
+void gfx_animated_sprite_physic_hide(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic);
+
+/**
+ * \brief show a GFX_Animated_Sprite_Physic
+ * @param GFX_Animated_Sprite_Physic* GFX_Animated_Sprite_Physic pointer
+ */
+void gfx_animated_sprite_physic_show(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic);
+
+/**
+ * \brief refresh a GFX_Animated_Sprite_Physic flash
+ * @param GFX_Animated_Sprite_Physic* GFX_Animated_Sprite_Physic pointer
+ */
+void gfx_animated_sprite_physic_flash(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic);
+
+/**
+ * \brief destroy GFX_Animated_Sprite_Physic
+ * @param GFX_Animated_Sprite_Physic* GFX_Animated_Sprite_Physic pointer
+ */
+void gfx_animated_sprite_physic_destroy(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic);
+
 /**
  * \brief init gpu
  */
@@ -495,46 +651,46 @@ WORD      get_max_free_palette_index();
  WORD     get_max_palette_index_used();
 
 /**
- * \brief return picture info from image
- * @param Image struct image
+ * \brief return picture info from GFX_Image
+ * @param GFX_Image struct GFX_Image
  * \return struct
 */
-#define get_image_pictureInfo(image) image.pi
+#define get_gfx_image_pictureInfo(gfx_image) gfx_image.pi
 
 /**
- * \brief return palette info from image
- * @param Image struct image
+ * \brief return palette info from GFX_Image
+ * @param GFX_Image struct GFX_Image
  * \return struct
 */
-#define get_image_paletteInfo(image) image.pali
+#define get_gfx_image_paletteInfo(gfx_image) gfx_image.pali
 
 /**
- * \brief return baseSprite from image
- * @param Image struct image
+ * \brief return baseSprite from GFX_Image
+ * @param GFX_Image struct GFX_Image
  * \return WORD
 */
-#define get_image_baseSprite(image) image.pic.baseSprite
+#define get_gfx_image_baseSprite(gfx_image) gfx_image.pic.baseSprite
 
 /**
- * \brief return tileWitdh from image
- * @param Image struct image
+ * \brief return tileWitdh from GFX_Image
+ * @param GFX_Image struct GFX_Image
  * \return WORD
 */
-#define get_image_tileWidth(image) image.pic.info->tileWidth
+#define get_gfx_image_tileWidth(gfx_image) gfx_image.pic.info->tileWidth
 
 /**
- * \brief return posX from image
- * @param Image struct image
+ * \brief return posX from GFX_Image
+ * @param GFX_Image struct GFX_Image
  * \return short
 */
-#define get_image_position_x(image) image.pic.posX
+#define get_gfx_image_position_x(gfx_image) gfx_image.pic.posX
 
 /**
- * \brief return posY from image
- * @param Image struct image
+ * \brief return posY from GFX_Image
+ * @param GFX_Image struct GFX_Image
  * \return short
 */
-#define get_image_position_y(image) image.pic.posY
+#define get_gfx_image_position_y(gfx_image) gfx_image.pic.posY
 
   //--------------------------------------------------------------------------//
  //                                  -I                                      //
@@ -545,164 +701,6 @@ WORD      get_max_free_palette_index();
  */
 BOOL is_visible(Flash *flash);
 
-  /*------------------*/
- /*      -image      */
-/*------------------*/
-/**
- * @param Image* Image pointer
- * @param pictureInfo* pointer to DATLib structure
- * @param paletteInfo* pointer to DATLib structure
- */
-void image_init(Image *image, pictureInfo *pi, paletteInfo *pali);
-
-/**
- * @param Image* Image pointer
- * @param x
- * @param y
- */
-void image_display(Image *image, short x, short y);
-
-/**
- * @param Image* Image pointer
- * @param x offset
- * @param y offset
- */
-#define image_move(image, x_offset, y_offset) pictureMove(image.pic, x_offset, y_offset)
-
-/**
- * @param Image* Image pointer
- * @param x
- * @param y
- */
-void image_set_position(Image *image, short x, short y);
-
-/**
- * \brief hide Image
- * @param Image* Image pointer
- */
-void image_hide(Image *image);
-
-/**
- * \brief show Image
- * @param Image* Image pointer
- */
-void image_show(Image *image);
-
-/**
- * @param Image* Image pointer
- * \return BOOL true if Image is visible or false
- */
-void image_is_visible(Image *image);
-
-/**
- * @param Image* Image pointer
- */
-BOOL image_flash(Image *image);
-
-/**
- * @param Image* Image pointer
- * @param x center position
- * @param y center position
- * @param shrunk use shrunk_forge function for make a WORD with width & heigh value
- */
-void image_shrunk_centroid(Image *image, short center_x, short center_y, WORD shrunk_value);
-
-/**
- * \brief image destroy
- * @param Image* Image pointer
- */
-void image_destroy(Image *image);
-
-  /*------------------*/
- /*  -image_physic   */
-/*------------------*/
-/**
- * @param Image_Physic* Image_Physic pointer
- * @param pictureInfo* pointer to DATLib structure
- * @param paletteInfo* pointer to DATLib structure
- * @param width Box width
- * @param height Box height
- * @param width_offset Box offset reduce
- * @param height_offset Box offset reduce
- */
-void image_physic_init(
-  Image_Physic *image_physic,
-  pictureInfo *pi,
-  paletteInfo *pali,
-  short box_witdh,
-  short box_height,
-  short box_width_offset,
-  short box_height_offset,
-  BOOL autobox_enabled
-);
-
-/**
- * @param Image_Physic* pointer
- * @param x
- * @param y
- */
-void image_physic_display(Image_Physic *image_physic, short x, short y);
-
-/**
- * @param Image_Physic* pointer
- * @param x offset
- * @param y offset
- */
-void image_physic_move(Image_Physic *image_physic, short x_offset, short y_offset);
-
-/**
- * @param Image_Physic* pointer
- * @param x
- * @param y
- */
-void image_physic_set_position(Image_Physic *image_physic, short x, short y);
-
-/**
- * \brief Hide Image_Physic & disable physic
- * @param Image_Physic* Pointer
- */
-void image_physic_hide(Image_Physic *image_physic);
-
-/**
- * \brief Show Image_Physic & enable physic
- * @param Image_Physic Pointer
- */
-void image_physic_show(Image_Physic *image_physic);
-
-/**
- * @param Image_Physic* Pointer
- */
-void image_physic_flash(Image_Physic *image_physic);
-
-/**
- * @param Image_Physic* pointer
- * @param shrunk Factor
- */
-void image_physic_shrunk(Image_Physic *image_physic, WORD shrunk_value); // todo (minor) - shrunk box
-
-/* todo (minor) - deprecated
-void image_physic_shrunk_centroid_init(picturePhysicShrunkCentroid *pps, pictureInfo *pi, paletteInfo *pali, short xCenter, short yCenter);
-void image_physic_shrunk_centroid_set_position(picturePhysicShrunkCentroid *pps, short x, short y);
-void image_physic_shrunk_centroid_move(picturePhysicShrunkCentroid *pps, short xShift, short yShift);
-void image_physic_shrunk_centroid_update(picturePhysicShrunkCentroid *pps, WORD shrunk);
-void image_physic_shrunk_centroid_display(picturePhysicShrunkCentroid *pps, WORD shrunk);
-void image_physic_display(picturePhysic *pp, pictureInfo *pi, paletteInfo *pali, short posX, short posY);
-void image_physic_set_position(picturePhysic *pp, short x, short y);
-void image_physic_move(picturePhysic *pp, short x, short y);
-void image_shrunk(picture *p, pictureInfo *pi, WORD shrunk_value);
-void images_show(picture *p, WORD max, BOOL visible);
-void image5_show(picture5 *pics, BOOL visible);
-void image_display(picture *p, pictureInfo *pi, paletteInfo *pali, short posX, short posY);
-void image_shrunk_centroid(picture *p, pictureInfo *pi, short centerPosX, short centerPosY, WORD shrunk_value);
-void image_flash(picture *p, BYTE freq);
-WORD image_get_sprite_index_autoinc(pictureInfo *pi);
-*/
-
-/**
- * \brief destroy Image_Physic
- * @param Image_Physic pointer
- */
-void image_physic_destroy(Image_Physic *image_physic);
 
 
 
@@ -740,7 +738,7 @@ void inline logger_dword(char *label, DWORD value);
 void inline logger_short(char *label, short value);
 void inline logger_byte(char *label, BYTE value);
 void inline logger_bool(char *label, BOOL value);
-void inline logger_animated_sprite(char *label, Animated_Sprite *animated_sprite);
+void inline logger_animated_sprite(char *label, GFX_Animated_Sprite *gfx_animated_sprite);
 void inline logger_spriteInfo(char *label, spriteInfo *si);
 void inline logger_box(char *label, Box *b);
 void inline logger_pictureInfo(char *label, pictureInfo *pi);
@@ -808,42 +806,42 @@ BOOL vector_is_left(short x, short y, short v1x, short v1y, short v2x, short v2y
   //--------------------------------------------------------------------------//
  //                                  -S                                      //
 //--------------------------------------------------------------------------//
-  /*-----------*/
- /* -scroller */
-/*-----------*/
+  /*---------------*/
+ /* -gfx_scroller */
+/*---------------*/
 /**
- * @param Scroller* Pointer
+ * @param GFX_Scroller* Pointer
  * @param scrollerInfo* Pointer to DATLib structure
  * @param paletteInfo* Pointer to DATLib structure
  */
-void        scroller_init(Scroller *s, scrollerInfo *si, paletteInfo *pali);
+void        gfx_scroller_init(GFX_Scroller *s, scrollerInfo *si, paletteInfo *pali);
 
 /**
- * @param Scroller* Pointer
+ * @param GFX_Scroller* Pointer
  * @param x
  * @param y
  */
-void        scroller_display(Scroller *s, short x, short y);
+void        gfx_scroller_display(GFX_Scroller *s, short x, short y);
 
 /**
- * @param Scroller* Pointer
+ * @param GFX_Scroller* Pointer
  * @param x offset
  * @param y offset
  */
-void        scroller_move(Scroller *s, short x, short y);
+void        gfx_scroller_move(GFX_Scroller *s, short x, short y);
 
 /**
- * @param Scroller* Pointer
+ * @param GFX_Scroller* Pointer
  * @param x
  * @param y
  */
-void        scroller_set_position(Scroller *s, short x, short y);
+void        gfx_scroller_set_position(GFX_Scroller *s, short x, short y);
 
 /**
- * \brief scroller destroy
- * @param Scroller* pointer
+ * \brief GFX_Scroller destroy
+ * @param GFX_Scroller* pointer
  */
-void       scroller_destroy(Scroller *s);
+void       gfx_scroller_destroy(GFX_Scroller *s);
 
   /*-----------*/
  /* -shrunk   */
