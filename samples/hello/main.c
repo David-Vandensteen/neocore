@@ -9,12 +9,12 @@
 
 NEOCORE_INIT
 
-Image neogeoLogo;
+GFX_Image neogeoLogo;
 
 int main(void) {
   gpu_init();
-  image_init(&neogeoLogo, &logo, &logo_Palettes);
-  image_display(&neogeoLogo, 100, 160);
+  gfx_image_init(&neogeoLogo, &logo, &logo_Palettes);
+  gfx_image_display(&neogeoLogo, 100, 160);
   while(1) {
     wait_vbl();
     logger_init();
