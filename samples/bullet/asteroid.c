@@ -7,15 +7,15 @@ static BYTE hit;
 
 void asteroid_init() {
   hit = 0;
-  gfx_image_physic_init(&asteroid, &asteroid_sprite, &asteroid_sprite_Palettes, 8, 8, 0, 0, AUTOBOX);
+  init_gip(&asteroid, &asteroid_sprite, &asteroid_sprite_Palettes, 8, 8, 0, 0, AUTOBOX);
 }
 
 void asteroid_display() {
-  gfx_image_physic_display(&asteroid, 200, 100);
+  display_gip(&asteroid, 200, 100);
 }
 
 void asteroid_update() {
-  logger_init();
+  init_logger();
   logger_byte("HIT", hit);
 }
 

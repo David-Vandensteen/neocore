@@ -2,8 +2,6 @@
 #include <math.h>
 #include "externs.h"
 
-NEOCORE_INIT
-
 static void init();
 static void display();
 static void update();
@@ -16,29 +14,29 @@ static BYTE track_num = 2;
 
 static void init() {
   cdda_play(track_num);
-  gpu_init();
-  gfx_scroller_init(&spectrum02, &spectrum02_sprite, &spectrum02_sprite_Palettes);
-  gfx_image_init(&k7, &k7_sprite, &k7_sprite_Palettes);
+  init_gpu();
+  init_gs(&spectrum02, &spectrum02_sprite, &spectrum02_sprite_Palettes);
+  init_gi(&k7, &k7_sprite, &k7_sprite_Palettes);
 }
 
 static void display() {
-  gfx_scroller_display(&spectrum02, 0, 0);
-  gfx_image_display(&k7, 30, 30);
+  display_gs(&spectrum02, 0, 0);
+  display_gi(&k7, 30, 30);
 }
 
 static void update() {
-  logger_init();
-  joypad_update_edge();
+  init_logger();
+  update_joypad_edge();
   logger_byte("AUDIO TRACK : ", track_num - 1);
   if (DAT_frameCounter % 2 == 0) {
-    gfx_scroller_move(&spectrum02, 1, 0);
-    if (spectrum02.s.scrlPosX > 960) gfx_scroller_set_position(&spectrum02, 0, spectrum02.s.scrlPosY);
+    move_gs(&spectrum02, 1, 0);
+    if (get_x_gs(spectrum02) > 960) set_x_gs(&spectrum02, 0);
   }
   if (DAT_frameCounter % 5 == 0) {
     if (k7_direction) {
-      gfx_image_move(&k7, 1, 0);
+      move_gi(&k7, 1, 0);
     } else {
-      gfx_image_move(&k7, -1, 0);
+      move_gi(&k7, -1, 0);
     }
   }
   if (k7.pic.posX > 50) k7_direction = false;
@@ -53,8 +51,8 @@ int main(void) {
   while(1) {
     wait_vbl();
     update();
-    SCClose();
+    close_vbl();
   };
-  SCClose();
+  close_vbl();
   return 0;
 }

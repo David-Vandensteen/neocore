@@ -2,13 +2,11 @@
 #include <math.h>
 #include "externs.h"
 
-NEOCORE_INIT
-
 GFX_Animated_Sprite_Physic player;
 
 int main(void) {
-  gpu_init();
-  gfx_animated_sprite_physic_init(
+  init_gpu();
+  init_gasp(
     &player,
     &player_sprite,
     &player_sprite_Palettes,
@@ -18,21 +16,21 @@ int main(void) {
     0
   );
 
-  gfx_animated_sprite_physic_display(
+  display_gasp(
     &player,
     100,
     100,
     PLAYER_SPRITE_ANIM_IDLE
   );
 
-  flash_init(&player.gfx_animated_sprite.flash, true, 10, 10);
+  init_flash_gasp(&player, true, 10, 10);
 
   while(1) {
     wait_vbl();
-    logger_init();
-    gfx_animated_sprite_animate(&player.gfx_animated_sprite);
+    init_logger();
+    animate_gasp(&player);
     logger_box("BOX : ", &player.box);
-    gfx_animated_sprite_physic_flash(&player);
+    update_flash_gasp(&player);
     if (DAT_frameCounter == 500) {
       // animated_sprite_physic_destroy(&player);
       // animated_sprite_physic_hide(&player);
@@ -41,8 +39,8 @@ int main(void) {
     // animated_sprite_physic_shrunk(&player, shrunk_forge(0x5, 0xFB));
     // animated_sprite_physic_set_position(&player, 10, 10);
 
-    SCClose();
+    close_vbl();
   };
-  SCClose();
+  close_vbl();
   return 0;
 }

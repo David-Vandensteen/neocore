@@ -2,24 +2,22 @@
 #include <math.h>
 #include "externs.h"
 
-NEOCORE_INIT
-
 GFX_Animated_Sprite player;
 
 int main(void) {
-  gpu_init();
-  gfx_animated_sprite_init(&player, &player_sprite, &player_sprite_Palettes);
-  flash_init(&player.flash, true, 10, 10);
-  gfx_animated_sprite_display(&player, 100, 100, PLAYER_SPRITE_ANIM_IDLE);
+  init_gpu();
+  init_gas(&player, &player_sprite, &player_sprite_Palettes);
+  init_flash_gas(&player, true, 10, 10);
+  display_gas(&player, 100, 100, PLAYER_SPRITE_ANIM_IDLE);
   shrunk(player.as.baseSprite, player.si->maxWidth, shrunk_forge(0x5, 0xFF));
   while(1) {
     wait_vbl();
-    logger_init();
-    gfx_animated_sprite_animate(&player);
-    gfx_animated_sprite_flash(&player);
+    init_logger();
+    animate_gas(&player);
+    update_flash_gas(&player);
     logger_animated_sprite("PLAYER", &player);
-    SCClose();
+    close_vbl();
   };
-  SCClose();
+  close_vbl();
   return 0;
 }

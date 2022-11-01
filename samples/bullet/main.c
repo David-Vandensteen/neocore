@@ -15,12 +15,12 @@ static void update();
 
 static void init() {
   gpu_init();
-  player_init(100, 100);
+  player_init();
   asteroid_init();
 }
 
 static void display() {
-  player_display();
+  player_display(100, 100);
   asteroid_display();
 }
 
@@ -35,8 +35,8 @@ int main(void) {
   while(1) {
     wait_vbl();
     update();
-    SCClose();
+    close_vbl();
   };
-  SCClose();
+  close_vbl();
   return 0;
 }

@@ -2,20 +2,18 @@
 #include <math.h>
 #include "externs.h"
 
-NEOCORE_INIT
-
 static GFX_Scroller background;
 
 int main(void) {
-  gpu_init();
-  gfx_scroller_init(&background, &background_sprite, &background_sprite_Palettes);
-  gfx_scroller_display(&background, 0, 0);
+  init_gpu();
+  init_gs(&background, &background_sprite, &background_sprite_Palettes);
+  display_gs(&background, 0, 0);
   while(1) {
     wait_vbl();
-    gfx_scroller_move(&background, 1, 0);
-    if (background.s.scrlPosX > 512) gfx_scroller_set_position(&background, 0, 0);
-    SCClose();
+    move_gs(&background, 1, 0);
+    if (get_x_gs(background) > 512) set_pos_gs(&background, 0, 0);
+    close_vbl();
   };
-  SCClose();
+  close_vbl();
   return 0;
 }
