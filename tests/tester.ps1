@@ -41,7 +41,6 @@ function Main {
   BuildProject -Path "..\samples\test_animated_sprite" -Rule $Rule -KillTime $KillTime
   BuildProject -Path "..\samples\test_animated_sprite_physic" -Rule $Rule -KillTime $KillTime
   BuildProject -Path "..\samples\test_image" -Rule $Rule -KillTime $KillTime
-  BuildProject -Path "..\samples\test_image_physic" -Rule $Rule -KillTime $KillTime
   BuildProject -Path "..\samples\test_limit" -Rule $Rule -KillTime $KillTime
   BuildProject -Path "..\samples\test_palettemanager" -Rule $Rule -KillTime $KillTime
   BuildProject -Path "..\samples\test_same_palette" -Rule $Rule -KillTime $KillTime
