@@ -14,12 +14,12 @@ static void init();
 static void display();
 static void update();
 
-static Image planets[PLANETS_MAX];
+static GFX_Image planets[PLANETS_MAX];
 
 static void init() {
   WORD i = 0;
   gpu_init();
-  for (i = 0; i < PLANETS_MAX; i++) image_init(&planets[i], &planet04_sprite, &planet04_sprite_Palettes);
+  for (i = 0; i < PLANETS_MAX; i++) gfx_image_init(&planets[i], &planet04_sprite, &planet04_sprite_Palettes);
 }
 
 static void display() {
@@ -30,8 +30,8 @@ static void display() {
     //y = 10 + (i * 3);
     x = 100 + ( i * 10);
     y = 100;
-    image_display(&planets[i], 0, 0 + i);
-    image_shrunk_centroid(&planets[i], x, y, get_shrunk_proportional_table(50));
+    gfx_image_display(&planets[i], 0, 0 + i);
+    gfx_image_shrunk_centroid(&planets[i], x, y, get_shrunk_proportional_table(50));
   }
 }
 
