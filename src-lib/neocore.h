@@ -535,6 +535,12 @@ void gfx_animated_sprite_show(GFX_Animated_Sprite *gfx_animated_sprite);
 void gfx_animated_sprite_set_animation(GFX_Animated_Sprite *gfx_animated_sprite, WORD anim);
 
 /**
+ * @param GFX_Animated_Sprite* GFX_Animated_Sprite_Physic pointer
+ * @param anim DATLib macro
+ */
+#define gfx_animated_sprite_physic_set_animation(gfx_animated_sprite_physic, anim) gfx_animated_sprite_set_animation(gfx_animated_sprite_physic.gfx_animated_sprite, anim)
+
+/**
  * \brief refresh animation frame
  * @param GFX_Animated_Sprite* GFX_Animated_Sprite pointer
  */
