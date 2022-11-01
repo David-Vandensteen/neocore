@@ -41,6 +41,8 @@
   asm(" beq.s  loop_track_05"); \
   asm(" jsr  0xC0056A"); \
 
+NEOCORE_INIT
+
   /*------------------*/
  /* -static          */
 /*------------------*/
@@ -408,7 +410,7 @@ void gfx_image_physic_display(GFX_Image_Physic *gfx_image_physic, short x, short
 }
 
 void gfx_image_physic_move(GFX_Image_Physic *gfx_image_physic, short x_offset, short y_offset) {
-  gfx_image_move(&gfx_image_physic->gfx_image, x_offset, y_offset);
+  move_gi(&gfx_image_physic->gfx_image, x_offset, y_offset);
   if (gfx_image_physic->autobox_enabled) {
     box_update(&gfx_image_physic->box, gfx_image_physic->gfx_image.pic.posX, gfx_image_physic->gfx_image.pic.posY);
   }
@@ -562,10 +564,6 @@ BOOL gfx_animated_sprite_flash(GFX_Animated_Sprite *animated_sprite) {
   return animated_sprite->flash.enabled;
 }
 
-void gfx_animated_sprite_set_animation(GFX_Animated_Sprite *animated_sprite, WORD anim) {
-  aSpriteSetAnim(&animated_sprite->as, anim);
-}
-
 void gfx_animated_sprite_hide(GFX_Animated_Sprite *animated_sprite) {
   animated_sprite->flash.visible = false;
   aSpriteHide(&animated_sprite->as);
@@ -643,10 +641,6 @@ void gfx_animated_sprite_physic_hide(GFX_Animated_Sprite_Physic *gfx_animated_sp
 void gfx_animated_sprite_physic_show(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic) {
   gfx_animated_sprite_show(&gfx_animated_sprite_physic->gfx_animated_sprite);
   gfx_animated_sprite_physic->physic_enabled = true;
-}
-
-void gfx_animated_sprite_physic_flash(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic) {
-  gfx_animated_sprite_physic->physic_enabled = gfx_animated_sprite_flash(&gfx_animated_sprite_physic->gfx_animated_sprite);
 }
 
 void gfx_animated_sprite_physic_destroy(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic) {
@@ -937,10 +931,6 @@ BOOL vectors_collide(Box *box, Vec2short vec[], BYTE vector_max) {
   /*-----------*/
  /* -scroller */
 /*-----------*/
-void gfx_scroller_set_position(GFX_Scroller *s, short x, short y) {
-  scrollerSetPos(&s->s, x, y);
-}
-
 void gfx_scroller_display(GFX_Scroller *s, short x, short y) {
   WORD palette_index = palette_index_manager_use(s->pali);
   scrollerInit(

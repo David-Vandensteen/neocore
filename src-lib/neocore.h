@@ -78,6 +78,118 @@
 #define MANUALBOX 0
 #define AUTOBOX 1
 
+/*----------------*/
+/* REFACTOR      */
+/*--------------*/
+
+// MACRO Language
+
+// init gfx
+#define init_gs(gfx_scroller, scrollerInfo, paletteInfo) gfx_scroller_init(gfx_scroller, scrollerInfo, paletteInfo)
+#define init_gi(gfx_image, pictureInfo, paletteInfo) gfx_image_init(gfx_image, pictureInfo, paletteInfo)
+#define init_gas(gfx_animated_sprite, spriteInfo, paletteInfo) gfx_animated_sprite_init(gfx_animated_sprite, spriteInfo, paletteInfo)
+#define init_gasp(gfx_animated_sprite_physic, spriteInfo, paletteInfo, box_width, box_height, box_width_offset, box_height_offset) \
+  gfx_animated_sprite_physic_init(gfx_animated_sprite_physic, \
+    spriteInfo, \
+    paletteInfo, \
+    box_width, \
+    box_height, \
+    box_width_offset, \
+    box_height_offset\
+  )
+
+#define init_gip(gfx_image_physic, pictureInfo, paletteInfo, box_width, box_height, box_width_offset, box_height_offset, autobox_enabled) \
+  gfx_image_physic_init(gfx_image_physic, \
+    pictureInfo, \
+    paletteInfo, \
+    box_width, \
+    box_height, \
+    box_width_offset, \
+    box_height_offset, \
+    autobox_enabled\
+  )
+
+// end init gfx
+
+// display gfx
+#define display_gs(gfx_scroller, x, y) gfx_scroller_display(gfx_scroller, x, y)
+#define display_gi(gfx_image, x, y) gfx_image_display(gfx_image, x, y)
+#define display_gip(gfx_image_physic, x, y) gfx_image_physic_display(gfx_image_physic, x, y)
+#define display_gas(gfx_animated_sprite, x, y, anim) gfx_animated_sprite_display(gfx_animated_sprite, x, y, anim)
+#define display_gasp(gfx_animated_sprite_physic, x, y, anim) gfx_animated_sprite_physic_display(gfx_animated_sprite_physic, x, y, anim)
+// end display gfx
+
+// get x, get y gfx
+#define get_x_gi(gfx_image) gfx_image.pic.posX
+#define get_y_gi(gfx_image) gfx_image.pic.posY
+
+#define get_x_gas(gfx_animated_sprite) gfx_animated_sprite.as.posX
+#define get_y_gas(gfx_animated_sprite) gfx_animated_sprite.as.posY
+
+#define get_x_gasp(gfx_animated_sprite_physic) gfx_animated_sprite_physic.gfx_animated_sprite.as.posX
+#define get_y_gasp(gfx_animated_sprite_physic) gfx_animated_sprite_physic.gfx_animated_sprite.as.posY
+
+#define get_x_gs(gfx_scroller) gfx_scroller.s.scrlPosX
+#define get_y_gs(gfx_scroller) gfx_scroller.s.scrlPosY
+// end get x, get y gfx
+
+// set x, set y gfx
+// TODO : !!! mmm pointer
+#define set_x_gasp(gfx_animated_sprite_physic, x) gfx_animated_sprite_physic_set_position(&gfx_animated_sprite_physic, x, gfx_animated_sprite_physic.gfx_animated_sprite.as.posY)
+#define set_y_gasp(gfx_animated_sprite_physic, y) gfx_animated_sprite_physic_set_position(&gfx_animated_sprite_physic, gfx_animated_sprite_physic.gfx_animated_sprite.as.posX, y)
+
+#define set_x_gs(gfx_scroller, x) scrollerSetPos(gfx_scroller.s, x, gfx_scroller.s.scrlPosY)
+#define set_y_gs(gfx_scroller, x) scrollerSetPos(gfx_scroller.s, gfx_scroller.s.scrlPosX, y)
+// end set x, set y gfx
+
+// set pos gfx
+#define set_pos_gs(gfx_scroller, x, y) scrollerSetPos(gfx_scroller.s, x, y)
+#define set_pos_gasp(gfx_animated_sprite_physic, x, y) gfx_animated_sprite_physic_set_position(gfx_animated_sprite_physic, x, y)
+// end set pos gfx
+
+// set animation gfx
+#define set_animation_gas(gfx_animated_sprite, anim) aSpriteSetAnim(gfx_animated_sprite.as, anim)
+#define set_animation_gasp(gfx_animated_sprite_physic, anim) aSpriteSetAnim(gfx_animated_sprite_physic.gfx_animated_sprite.as, anim)
+// end set animation gfx
+
+// move gfx
+#define move_gi(gfx_image, x, y) pictureMove(gfx_image.pic, x, y)
+#define move_gas(gfx_animated_sprite, x, y) gfx_animated_sprite_move(gfx_animated_sprite, x, y)
+#define move_gasp(gfx_animated_sprite_physic, x, y) gfx_animated_sprite_physic_move(gfx_animated_sprite_physic, x, y)
+#define move_gs(gfx_scroller, x, y) gfx_scroller_move(gfx_scroller, x, y)
+// end move gfx
+
+// animate gfx
+#define animate_gas(gfx_animated_sprite) aSpriteAnimate(gfx_animated_sprite.as)
+#define animate_gasp(gfx_animated_sprite_physic) aSpriteAnimate(gfx_animated_sprite_physic.gfx_animated_sprite.as)
+// end animate gfx
+
+// flash
+#define init_flash_gasp(gfx_animated_sprite_physic, enabled, frequency, lengh) flash_init(gfx_animated_sprite_physic.gfx_animated_sprite.flash, enabled, frequency, lengh)
+#define init_flash_gas(gfx_animated_sprite, enabled, frequency, lengh) flash_init(gfx_animated_sprite.flash, enabled, frequency, lengh)
+
+#define update_flash_gas(gfx_animated_sprite) gfx_animated_sprite_flash(gfx_animated_sprite)
+#define update_flash_gasp(gfx_animated_sprite_physic) gfx_animated_sprite_flash(gfx_animated_sprite_physic.gfx_animated_sprite)
+// end flash
+
+// hide
+#define hide_gasp(gfx_animated_sprite_physic) gfx_animated_sprite_physic_hide(gfx_animated_sprite_physic)
+//end hide
+
+// show
+#define show_gasp(gfx_animated_sprite_physic) gfx_animated_sprite_physic_show(gfx_animated_sprite_physic)
+// end show
+
+// utils
+#define init_logger() logger_init()
+#define update_joypad_edge() joypad_update_edge()
+#define update_joypad() joypad_update()
+
+#define close_vbl() SCClose()
+#define init_gpu() gpu_init()
+
+
+
 enum direction { NONE, UP, DOWN, LEFT, RIGHT };
 
 /**
@@ -328,13 +440,6 @@ void gfx_image_display(GFX_Image *gfx_image, short x, short y);
 
 /**
  * @param GFX_Image* GFX_Image pointer
- * @param x offset
- * @param y offset
- */
-#define gfx_image_move(gfx_image, x_offset, y_offset) pictureMove(gfx_image.pic, x_offset, y_offset)
-
-/**
- * @param GFX_Image* GFX_Image pointer
  * @param x
  * @param y
  */
@@ -529,12 +634,6 @@ void gfx_animated_sprite_hide(GFX_Animated_Sprite *gfx_animated_sprite);
 void gfx_animated_sprite_show(GFX_Animated_Sprite *gfx_animated_sprite);
 
 /**
- * @param GFX_Animated_Sprite* GFX_Animated_Sprite pointer
- * @param anim DATLib macro
- */
-void gfx_animated_sprite_set_animation(GFX_Animated_Sprite *gfx_animated_sprite, WORD anim);
-
-/**
  * @param GFX_Animated_Sprite* GFX_Animated_Sprite_Physic pointer
  * @param anim DATLib macro
  */
@@ -547,17 +646,18 @@ void gfx_animated_sprite_set_animation(GFX_Animated_Sprite *gfx_animated_sprite,
 #define gfx_animated_sprite_animate(gfx_animated_sprite) aSpriteAnimate(gfx_animated_sprite.as)
 
 /**
- * \brief refresh animation frame
- * @param GFX_Animated_Sprite_Physic* GFX_Animated_Sprite_Physic pointer
- */
-#define gfx_animated_sprite_physic_animate(gfx_animated_sprite_physic) gfx_animated_sprite_animate(gfx_animated_sprite_physic.gfx_animated_sprite)
-
-/**
  * \brief refresh flash
  * @param GFX_Animated_Sprite* GFX_Animated_Sprite pointer
  * \return BOOL
  */
 BOOL gfx_animated_sprite_flash(GFX_Animated_Sprite *gfx_animated_sprite);
+
+/**
+ * \brief refresh flash
+ * @param GFX_Animated_Sprite_Physic* GFX_Animated_Sprite_Physic pointer
+ * \return BOOL
+ */
+#define gfx_animated_sprite_physic_flash(gfx_animated_sprite_physic) gfx_animated_sprite_flash(gfx_animated_sprite_physic.gfx_animated_sprite)
 
 /**
  * \brief destroy animated sprite
@@ -611,12 +711,6 @@ void gfx_animated_sprite_physic_hide(GFX_Animated_Sprite_Physic *gfx_animated_sp
 void gfx_animated_sprite_physic_show(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic);
 
 /**
- * \brief refresh a GFX_Animated_Sprite_Physic flash
- * @param GFX_Animated_Sprite_Physic* GFX_Animated_Sprite_Physic pointer
- */
-void gfx_animated_sprite_physic_flash(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic);
-
-/**
  * \brief destroy GFX_Animated_Sprite_Physic
  * @param GFX_Animated_Sprite_Physic* GFX_Animated_Sprite_Physic pointer
  */
@@ -662,6 +756,8 @@ WORD      get_max_free_palette_index();
  */
  WORD     get_max_palette_index_used();
 
+
+
 /**
  * \brief return picture info from GFX_Image
  * @param GFX_Image struct GFX_Image
@@ -704,6 +800,36 @@ WORD      get_max_free_palette_index();
 */
 #define get_gfx_image_position_y(gfx_image) gfx_image.pic.posY
 
+  /*---------------*/
+ /* -gfx_scroller */
+/*---------------*/
+/**
+ * @param GFX_Scroller* Pointer
+ * @param scrollerInfo* Pointer to DATLib structure
+ * @param paletteInfo* Pointer to DATLib structure
+ */
+void        gfx_scroller_init(GFX_Scroller *s, scrollerInfo *si, paletteInfo *pali);
+
+/**
+ * @param GFX_Scroller* Pointer
+ * @param x
+ * @param y
+ */
+void        gfx_scroller_display(GFX_Scroller *s, short x, short y);
+
+/**
+ * @param GFX_Scroller* Pointer
+ * @param x offset
+ * @param y offset
+ */
+void        gfx_scroller_move(GFX_Scroller *s, short x, short y);
+
+/**
+ * \brief GFX_Scroller destroy
+ * @param GFX_Scroller* pointer
+ */
+void       gfx_scroller_destroy(GFX_Scroller *s);
+
   //--------------------------------------------------------------------------//
  //                                  -I                                      //
 //--------------------------------------------------------------------------//
@@ -712,9 +838,6 @@ WORD      get_max_free_palette_index();
  * \return BOOL
  */
 BOOL is_visible(Flash *flash);
-
-
-
 
   //--------------------------------------------------------------------------//
  //                                  -J                                      //
@@ -818,43 +941,6 @@ BOOL vector_is_left(short x, short y, short v1x, short v1y, short v2x, short v2y
   //--------------------------------------------------------------------------//
  //                                  -S                                      //
 //--------------------------------------------------------------------------//
-  /*---------------*/
- /* -gfx_scroller */
-/*---------------*/
-/**
- * @param GFX_Scroller* Pointer
- * @param scrollerInfo* Pointer to DATLib structure
- * @param paletteInfo* Pointer to DATLib structure
- */
-void        gfx_scroller_init(GFX_Scroller *s, scrollerInfo *si, paletteInfo *pali);
-
-/**
- * @param GFX_Scroller* Pointer
- * @param x
- * @param y
- */
-void        gfx_scroller_display(GFX_Scroller *s, short x, short y);
-
-/**
- * @param GFX_Scroller* Pointer
- * @param x offset
- * @param y offset
- */
-void        gfx_scroller_move(GFX_Scroller *s, short x, short y);
-
-/**
- * @param GFX_Scroller* Pointer
- * @param x
- * @param y
- */
-void        gfx_scroller_set_position(GFX_Scroller *s, short x, short y);
-
-/**
- * \brief GFX_Scroller destroy
- * @param GFX_Scroller* pointer
- */
-void       gfx_scroller_destroy(GFX_Scroller *s);
-
   /*-----------*/
  /* -shrunk   */
 /*-----------*/
