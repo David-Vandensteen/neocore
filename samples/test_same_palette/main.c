@@ -4,20 +4,19 @@
 
 NEOCORE_INIT
 
-static Image planet;
-static Animated_Sprite player;
-static Scroller backgroung;
+static GFX_Image planet;
+static GFX_Animated_Sprite player;
+static GFX_Scroller backgroung;
 
 int main(void) {
   gpu_init();
-  scroller_init(&backgroung, &background_sprite, &background_sprite_Palettes);
-  image_init(&planet, &planet04_sprite, &background_sprite_Palettes);
-  animated_sprite_init(&player, &player_sprite, &background_sprite_Palettes);
+  gfx_scroller_init(&backgroung, &background_sprite, &background_sprite_Palettes);
+  gfx_image_init(&planet, &planet04_sprite, &background_sprite_Palettes);
+  gfx_animated_sprite_init(&player, &player_sprite, &background_sprite_Palettes);
 
-  scroller_display(&backgroung, 0, 0);
-  image_display(&planet, 100, 150);
-  animated_sprite_display(&player, 150, 10, PLAYER_SPRITE_ANIM_IDLE);
-
+  gfx_scroller_display(&backgroung, 0, 0);
+  gfx_image_display(&planet, 100, 150);
+  gfx_animated_sprite_display(&player, 150, 10, PLAYER_SPRITE_ANIM_IDLE);
 
   while(1) {
     wait_vbl();
@@ -29,7 +28,7 @@ int main(void) {
     logger_word("PAL PLAYER ", (int)player.pali);
     logger_word("PAL PLANET ", (int)planet.pali);
     logger_word("PAL BACK   ", (int)backgroung.pali);
-    animated_sprite_animate(&player);
+    gfx_animated_sprite_animate(&player);
     SCClose();
   };
   SCClose();

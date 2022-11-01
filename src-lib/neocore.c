@@ -197,144 +197,6 @@ void inline static autoInc(){
 JOYPAD
 
   //--------------------------------------------------------------------------//
- //                                  -A                                      //
-//--------------------------------------------------------------------------//
-  /*------------------*/
- /* -animated_sprite */
-/*------------------*/
-void animated_sprite_init(Animated_Sprite *animated_sprite ,spriteInfo *si, paletteInfo *pali) {
-  flash_init(&animated_sprite->flash, false, 0, 0);
-  animated_sprite->si = si;
-  animated_sprite->pali = pali;
-};
-
-void animated_sprite_display(Animated_Sprite *animated_sprite, short x, short y, WORD anim) {
-  WORD palette_index = palette_index_manager_use(animated_sprite->pali);
-  aSpriteInit(
-    &animated_sprite->as,
-    animated_sprite->si,
-    sprite_index_manager_use(animated_sprite->si->maxWidth),
-    palette_index,
-    x,
-    y,
-    anim,
-    FLIP_NONE
-  );
-  palJobPut(
-    palette_index,
-    animated_sprite->pali->palCount,
-    animated_sprite->pali->data
-  );
-  aSpriteSetAnim(&animated_sprite->as, anim);
-}
-
-BOOL animated_sprite_flash(Animated_Sprite *animated_sprite) {
-  if (animated_sprite->flash.enabled) {
-    if (DAT_frameCounter % animated_sprite->flash.frequency == 0) {
-      (is_visible(&animated_sprite->flash)) ? animated_sprite_hide(animated_sprite) : animated_sprite_show(animated_sprite);
-      animated_sprite->flash.lengh--;
-      if (animated_sprite->flash.lengh <= 0) {
-        animated_sprite_show(animated_sprite);
-        animated_sprite->flash.enabled = false;
-      }
-    }
-  }
-  return animated_sprite->flash.enabled;
-}
-
-void animated_sprite_set_animation(Animated_Sprite *animated_sprite, WORD anim) {
-  aSpriteSetAnim(&animated_sprite->as, anim);
-}
-
-void animated_sprite_hide(Animated_Sprite *animated_sprite) {
-  animated_sprite->flash.visible = false;
-  aSpriteHide(&animated_sprite->as);
-  clearSprites(animated_sprite->as.baseSprite, animated_sprite->as.tileWidth);
-}
-
-void animated_sprite_show(Animated_Sprite *animated_sprite) {
-  animated_sprite->flash.visible = true;
-  aSpriteShow(&animated_sprite->as);
-}
-
-void animated_sprite_destroy(Animated_Sprite *animated_sprite) {
-  animated_sprite_hide(animated_sprite);
-  sprite_index_manager_set_free(animated_sprite->as.baseSprite, animated_sprite->si->maxWidth);
-  clearSprites(animated_sprite->as.baseSprite, animated_sprite->as.tileWidth);
-}
-
-  /*--------------------------*/
- /* -animated_sprite_physic  */
-/*--------------------------*/
-void animated_sprite_physic_init(
-    Animated_Sprite_Physic *animated_sprite_physic,
-    spriteInfo *si,
-    paletteInfo *pali,
-    short box_witdh,
-    short box_height,
-    short box_width_offset,
-    short box_height_offset
-  ) {
-  box_init(
-    &animated_sprite_physic->box,
-    box_witdh,
-    box_height,
-    box_width_offset,
-    box_height_offset
-  );
-  animated_sprite_physic->physic_enabled = true;
-  animated_sprite_init(
-    &animated_sprite_physic->animated_sprite,
-    si,
-    pali
-  );
-}
-
-void animated_sprite_physic_display(Animated_Sprite_Physic *animated_sprite_physic, short x, short y, WORD anim) {
-  animated_sprite_display(
-    &animated_sprite_physic->animated_sprite,
-    x,
-    y,
-    anim
-  );
-  box_update(&animated_sprite_physic->box, x, y);
-}
-
-void animated_sprite_physic_set_position(Animated_Sprite_Physic *animated_sprite_physic, short x, short y) {
-  animated_sprite_set_position(&animated_sprite_physic->animated_sprite, x, y);
-  box_update(&animated_sprite_physic->box, x, y);
-}
-
-void animated_sprite_physic_move(Animated_Sprite_Physic *animated_sprite_physic, short x_offset, short y_offset) {
-  animated_sprite_move(&animated_sprite_physic->animated_sprite, x_offset, y_offset);
-  box_update(&animated_sprite_physic->box, animated_sprite_physic->animated_sprite.as.posX, animated_sprite_physic->animated_sprite.as.posY);
-}
-
-void animated_sprite_physic_shrunk(Animated_Sprite_Physic *animated_sprite_physic, WORD shrunk_value) {
-  shrunk(animated_sprite_physic->animated_sprite.as.baseSprite, animated_sprite_physic->animated_sprite.si->maxWidth, shrunk_value);
-  // todo (minor) - box resize
-}
-
-void animated_sprite_physic_hide(Animated_Sprite_Physic *animated_sprite_physic) {
-  animated_sprite_hide(&animated_sprite_physic->animated_sprite);
-  animated_sprite_physic->physic_enabled = false;
-}
-
-void animated_sprite_physic_show(Animated_Sprite_Physic *animated_sprite_physic) {
-  animated_sprite_show(&animated_sprite_physic->animated_sprite);
-  animated_sprite_physic->physic_enabled = true;
-}
-
-void animated_sprite_physic_flash(Animated_Sprite_Physic *animated_sprite_physic) {
-  animated_sprite_physic->physic_enabled = animated_sprite_flash(&animated_sprite_physic->animated_sprite);
-}
-
-void animated_sprite_physic_destroy(Animated_Sprite_Physic *animated_sprite_physic) {
-  animated_sprite_physic_hide(animated_sprite_physic);
-  animated_sprite_destroy(&animated_sprite_physic->animated_sprite);
-}
-
-  //--------------------------------------------------------------------------//
  //                                  -B                                      //
 //--------------------------------------------------------------------------//
 BYTE boxes_collide(Box *b, Box *boxes[], BYTE box_max) {
@@ -517,6 +379,281 @@ WORD free_ram_info() {
   //--------------------------------------------------------------------------//
  //                                  -G                                      //
 //--------------------------------------------------------------------------//
+
+  /*----------------------*/
+ /*  -gfx_image_physic   */
+/*----------------------*/
+void gfx_image_physic_init(
+  GFX_Image_Physic *gfx_image_physic,
+  pictureInfo *pi,
+  paletteInfo *pali,
+  short box_witdh,
+  short box_height,
+  short box_width_offset,
+  short box_height_offset,
+  BOOL autobox_enabled
+) {
+  gfx_image_init(&gfx_image_physic->gfx_image, pi, pali);
+  gfx_image_physic->autobox_enabled = autobox_enabled;
+  if (gfx_image_physic->autobox_enabled) {
+    box_init(&gfx_image_physic->box, box_witdh, box_height, box_width_offset, box_height_offset);
+  }
+}
+
+void gfx_image_physic_display(GFX_Image_Physic *gfx_image_physic, short x, short y) {
+  gfx_image_display(&gfx_image_physic->gfx_image, x, y);
+  if (gfx_image_physic->autobox_enabled) {
+    box_update(&gfx_image_physic->box, x, y);
+  }
+}
+
+void gfx_image_physic_move(GFX_Image_Physic *gfx_image_physic, short x_offset, short y_offset) {
+  gfx_image_move(&gfx_image_physic->gfx_image, x_offset, y_offset);
+  if (gfx_image_physic->autobox_enabled) {
+    box_update(&gfx_image_physic->box, gfx_image_physic->gfx_image.pic.posX, gfx_image_physic->gfx_image.pic.posY);
+  }
+}
+
+void gfx_image_physic_set_position(GFX_Image_Physic *gfx_image_physic, short x, short y) {
+  gfx_image_set_position(&gfx_image_physic->gfx_image, x, y);
+  if (gfx_image_physic->autobox_enabled) {
+    box_update(&gfx_image_physic->box, x, y);
+  }
+}
+
+void gfx_image_physic_hide(GFX_Image_Physic *gfx_image_physic) {
+  gfx_image_hide(&gfx_image_physic->gfx_image);
+  gfx_image_physic->physic_enabled = false;
+}
+
+void gfx_image_physic_show(GFX_Image_Physic *gfx_image_physic) {
+  gfx_image_show(&gfx_image_physic->gfx_image);
+  gfx_image_physic->physic_enabled = true;
+}
+
+void gfx_image_physic_flash(GFX_Image_Physic *gfx_image_physic) {
+  gfx_image_physic->physic_enabled = gfx_image_flash(&gfx_image_physic->gfx_image);
+}
+
+void gfx_image_physic_shrunk(GFX_Image_Physic *gfx_image_physic, WORD shrunk_value) {
+  shrunk(gfx_image_physic->gfx_image.pic.baseSprite, gfx_image_physic->gfx_image.pic.info->tileWidth, shrunk_value);
+  // todo (minor) - shrunk box
+}
+
+void gfx_image_physic_destroy(GFX_Image_Physic *gfx_image_physic) {
+  gfx_image_physic_hide(gfx_image_physic);
+  gfx_image_destroy(&gfx_image_physic->gfx_image);
+}
+
+void gfx_image_shrunk_centroid(GFX_Image *gfx_image, short center_x, short center_y, WORD shrunk_value) {
+  shrunk(gfx_image->pic.baseSprite, gfx_image->pic.info->tileWidth, shrunk_value);
+  gfx_image_set_position(
+    gfx_image,
+    shrunk_centroid_get_translated_x(center_x, gfx_image->pi->tileWidth, SHRUNK_EXTRACT_X(shrunk_value)),
+    shrunk_centroid_get_translated_y(center_y, gfx_image->pi->tileHeight, SHRUNK_EXTRACT_Y(shrunk_value))
+  );
+}
+
+  /*----------------------*/
+ /*      -gfx_image      */
+/*----------------------*/
+void gfx_image_init(GFX_Image *gfx_image, pictureInfo *pi, paletteInfo *pali) {
+  flash_init(&gfx_image->flash, false, 0, 0);
+  gfx_image->pali = pali;
+  gfx_image->pi = pi;
+}
+
+void gfx_image_display(GFX_Image *gfx_image, short x, short y) {
+  WORD palette_index = palette_index_manager_use(gfx_image->pali);
+  pictureInit(
+    &gfx_image->pic,
+    gfx_image->pi,
+    sprite_index_manager_use(gfx_image->pi->tileWidth),
+    palette_index,
+    x,
+    y,
+    FLIP_NONE
+  );
+  palJobPut(
+    palette_index,
+    gfx_image->pali->palCount,
+    gfx_image->pali->data
+  );
+}
+
+void gfx_image_set_position(GFX_Image *gfx_image, short x, short y) {
+  pictureSetPos(&gfx_image->pic, x, y);
+}
+
+void gfx_image_hide(GFX_Image *gfx_image) {
+  pictureHide(&gfx_image->pic);
+  gfx_image->flash.visible = false;
+}
+
+void gfx_image_show(GFX_Image *gfx_image) {
+  pictureShow(&gfx_image->pic);
+  gfx_image->flash.visible = true;
+}
+
+BOOL gfx_image_flash(GFX_Image *gfx_image) {
+  BOOL rt = true;
+  if (gfx_image->flash.frequency != 0 && gfx_image->flash.lengh != 0) {
+    if (DAT_frameCounter % gfx_image->flash.frequency == 0) {
+      if (is_visible(&gfx_image->flash)) {
+        gfx_image_hide(gfx_image);
+        rt = false;
+      } else {
+        gfx_image_show(gfx_image);
+        rt = true;
+      }
+      gfx_image->flash.lengh--;
+      if (gfx_image->flash.lengh == 0) gfx_image_show(gfx_image);
+    }
+  }
+  return rt;
+}
+
+void gfx_image_destroy(GFX_Image *gfx_image) {
+  gfx_image_hide(gfx_image);
+  sprite_index_manager_set_free(gfx_image->pic.baseSprite, gfx_image->pi->tileWidth);
+  clearSprites(gfx_image->pic.baseSprite, gfx_image->pi->tileWidth);
+}
+
+  /*----------------------*/
+ /* -gfx_animated_sprite */
+/*----------------------*/
+void gfx_animated_sprite_init(GFX_Animated_Sprite *animated_sprite ,spriteInfo *si, paletteInfo *pali) {
+  flash_init(&animated_sprite->flash, false, 0, 0);
+  animated_sprite->si = si;
+  animated_sprite->pali = pali;
+};
+
+void gfx_animated_sprite_display(GFX_Animated_Sprite *animated_sprite, short x, short y, WORD anim) {
+  WORD palette_index = palette_index_manager_use(animated_sprite->pali);
+  aSpriteInit(
+    &animated_sprite->as,
+    animated_sprite->si,
+    sprite_index_manager_use(animated_sprite->si->maxWidth),
+    palette_index,
+    x,
+    y,
+    anim,
+    FLIP_NONE
+  );
+  palJobPut(
+    palette_index,
+    animated_sprite->pali->palCount,
+    animated_sprite->pali->data
+  );
+  aSpriteSetAnim(&animated_sprite->as, anim);
+}
+
+BOOL gfx_animated_sprite_flash(GFX_Animated_Sprite *animated_sprite) {
+  if (animated_sprite->flash.enabled) {
+    if (DAT_frameCounter % animated_sprite->flash.frequency == 0) {
+      (is_visible(&animated_sprite->flash)) ? gfx_animated_sprite_hide(animated_sprite) : gfx_animated_sprite_show(animated_sprite);
+      animated_sprite->flash.lengh--;
+      if (animated_sprite->flash.lengh <= 0) {
+        gfx_animated_sprite_show(animated_sprite);
+        animated_sprite->flash.enabled = false;
+      }
+    }
+  }
+  return animated_sprite->flash.enabled;
+}
+
+void gfx_animated_sprite_set_animation(GFX_Animated_Sprite *animated_sprite, WORD anim) {
+  aSpriteSetAnim(&animated_sprite->as, anim);
+}
+
+void gfx_animated_sprite_hide(GFX_Animated_Sprite *animated_sprite) {
+  animated_sprite->flash.visible = false;
+  aSpriteHide(&animated_sprite->as);
+  clearSprites(animated_sprite->as.baseSprite, animated_sprite->as.tileWidth);
+}
+
+void gfx_animated_sprite_show(GFX_Animated_Sprite *animated_sprite) {
+  animated_sprite->flash.visible = true;
+  aSpriteShow(&animated_sprite->as);
+}
+
+void gfx_animated_sprite_destroy(GFX_Animated_Sprite *animated_sprite) {
+  gfx_animated_sprite_hide(animated_sprite);
+  sprite_index_manager_set_free(animated_sprite->as.baseSprite, animated_sprite->si->maxWidth);
+  clearSprites(animated_sprite->as.baseSprite, animated_sprite->as.tileWidth);
+}
+
+  /*------------------------------*/
+ /* -gfx_animated_sprite_physic  */
+/*------------------------------*/
+void gfx_animated_sprite_physic_init(
+    GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic,
+    spriteInfo *si,
+    paletteInfo *pali,
+    short box_witdh,
+    short box_height,
+    short box_width_offset,
+    short box_height_offset
+  ) {
+  box_init(
+    &gfx_animated_sprite_physic->box,
+    box_witdh,
+    box_height,
+    box_width_offset,
+    box_height_offset
+  );
+  gfx_animated_sprite_physic->physic_enabled = true;
+  gfx_animated_sprite_init(
+    &gfx_animated_sprite_physic->gfx_animated_sprite,
+    si,
+    pali
+  );
+}
+
+void gfx_animated_sprite_physic_display(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short x, short y, WORD anim) {
+  gfx_animated_sprite_display(
+    &gfx_animated_sprite_physic->gfx_animated_sprite,
+    x,
+    y,
+    anim
+  );
+  box_update(&gfx_animated_sprite_physic->box, x, y);
+}
+
+void gfx_animated_sprite_physic_set_position(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short x, short y) {
+  gfx_animated_sprite_set_position(&gfx_animated_sprite_physic->gfx_animated_sprite, x, y);
+  box_update(&gfx_animated_sprite_physic->box, x, y);
+}
+
+void gfx_animated_sprite_physic_move(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short x_offset, short y_offset) {
+  gfx_animated_sprite_move(&gfx_animated_sprite_physic->gfx_animated_sprite, x_offset, y_offset);
+  box_update(&gfx_animated_sprite_physic->box, gfx_animated_sprite_physic->gfx_animated_sprite.as.posX, gfx_animated_sprite_physic->gfx_animated_sprite.as.posY);
+}
+
+void gfx_animated_sprite_physic_shrunk(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, WORD shrunk_value) {
+  shrunk(gfx_animated_sprite_physic->gfx_animated_sprite.as.baseSprite, gfx_animated_sprite_physic->gfx_animated_sprite.si->maxWidth, shrunk_value);
+  // todo (minor) - box resize
+}
+
+void gfx_animated_sprite_physic_hide(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic) {
+  gfx_animated_sprite_hide(&gfx_animated_sprite_physic->gfx_animated_sprite);
+  gfx_animated_sprite_physic->physic_enabled = false;
+}
+
+void gfx_animated_sprite_physic_show(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic) {
+  gfx_animated_sprite_show(&gfx_animated_sprite_physic->gfx_animated_sprite);
+  gfx_animated_sprite_physic->physic_enabled = true;
+}
+
+void gfx_animated_sprite_physic_flash(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic) {
+  gfx_animated_sprite_physic->physic_enabled = gfx_animated_sprite_flash(&gfx_animated_sprite_physic->gfx_animated_sprite);
+}
+
+void gfx_animated_sprite_physic_destroy(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic) {
+  gfx_animated_sprite_physic_hide(gfx_animated_sprite_physic);
+  gfx_animated_sprite_destroy(&gfx_animated_sprite_physic->gfx_animated_sprite);
+}
+
 void inline gpu_init() {
   backgroundColor(0x7000); // todo (minor) - macro with some colors ...
   clearFixLayer();
@@ -573,145 +710,6 @@ WORD get_max_palette_index_used() {
 //--------------------------------------------------------------------------//
 BOOL is_visible(Flash *flash) {
   return flash->visible;
-}
-
-  /*------------------*/
- /*      -image      */
-/*------------------*/
-void image_init(Image *image, pictureInfo *pi, paletteInfo *pali) {
-  flash_init(&image->flash, false, 0, 0);
-  image->pali = pali;
-  image->pi = pi;
-}
-
-void image_display(Image *image, short x, short y) {
-  WORD palette_index = palette_index_manager_use(image->pali);
-  pictureInit(
-    &image->pic,
-    image->pi,
-    sprite_index_manager_use(image->pi->tileWidth),
-    palette_index,
-    x,
-    y,
-    FLIP_NONE
-  );
-  palJobPut(
-    palette_index,
-    image->pali->palCount,
-    image->pali->data
-  );
-}
-
-void image_set_position(Image *image, short x, short y) {
-  pictureSetPos(&image->pic, x, y);
-}
-
-void image_hide(Image *image) {
-  pictureHide(&image->pic);
-  image->flash.visible = false;
-}
-
-void image_show(Image *image) {
-  pictureShow(&image->pic);
-  image->flash.visible = true;
-}
-
-BOOL image_flash(Image *image) {
-  BOOL rt = true;
-  if (image->flash.frequency != 0 && image->flash.lengh != 0) {
-    if (DAT_frameCounter % image->flash.frequency == 0) {
-      if (is_visible(&image->flash)) {
-        image_hide(image);
-        rt = false;
-      } else {
-        image_show(image);
-        rt = true;
-      }
-      image->flash.lengh--;
-      if (image->flash.lengh == 0) image_show(image);
-    }
-  }
-  return rt;
-}
-
-void image_destroy(Image *image) {
-  image_hide(image);
-  sprite_index_manager_set_free(image->pic.baseSprite, image->pi->tileWidth);
-  clearSprites(image->pic.baseSprite, image->pi->tileWidth);
-}
-
-  /*------------------*/
- /*  -image_physic   */
-/*------------------*/
-void image_physic_init(
-  Image_Physic *image_physic,
-  pictureInfo *pi,
-  paletteInfo *pali,
-  short box_witdh,
-  short box_height,
-  short box_width_offset,
-  short box_height_offset,
-  BOOL autobox_enabled
-) {
-  image_init(&image_physic->image, pi, pali);
-  image_physic->autobox_enabled = autobox_enabled;
-  if (image_physic->autobox_enabled) {
-    box_init(&image_physic->box, box_witdh, box_height, box_width_offset, box_height_offset);
-  }
-}
-
-void image_physic_display(Image_Physic *image_physic, short x, short y) {
-  image_display(&image_physic->image, x, y);
-  if (image_physic->autobox_enabled) {
-    box_update(&image_physic->box, x, y);
-  }
-}
-
-void image_physic_move(Image_Physic *image_physic, short x_offset, short y_offset) {
-  image_move(&image_physic->image, x_offset, y_offset);
-  if (image_physic->autobox_enabled) {
-    box_update(&image_physic->box, image_physic->image.pic.posX, image_physic->image.pic.posY);
-  }
-}
-
-void image_physic_set_position(Image_Physic *image_physic, short x, short y) {
-  image_set_position(&image_physic->image, x, y);
-  if (image_physic->autobox_enabled) {
-    box_update(&image_physic->box, x, y);
-  }
-}
-
-void image_physic_hide(Image_Physic *image_physic) {
-  image_hide(&image_physic->image);
-  image_physic->physic_enabled = false;
-}
-
-void image_physic_show(Image_Physic *image_physic) {
-  image_show(&image_physic->image);
-  image_physic->physic_enabled = true;
-}
-
-void image_physic_flash(Image_Physic *image_physic) {
-  image_physic->physic_enabled = image_flash(&image_physic->image);
-}
-
-void image_physic_shrunk(Image_Physic *image_physic, WORD shrunk_value) {
-  shrunk(image_physic->image.pic.baseSprite, image_physic->image.pic.info->tileWidth, shrunk_value);
-  // todo (minor) - shrunk box
-}
-
-void image_physic_destroy(Image_Physic *image_physic) {
-  image_physic_hide(image_physic);
-  image_destroy(&image_physic->image);
-}
-
-void image_shrunk_centroid(Image *image, short center_x, short center_y, WORD shrunk_value) {
-  shrunk(image->pic.baseSprite, image->pic.info->tileWidth, shrunk_value);
-  image_set_position(
-    image,
-    shrunk_centroid_get_translated_x(center_x, image->pi->tileWidth, SHRUNK_EXTRACT_X(shrunk_value)),
-    shrunk_centroid_get_translated_y(center_y, image->pi->tileHeight, SHRUNK_EXTRACT_Y(shrunk_value))
-  );
 }
 
   //--------------------------------------------------------------------------//
@@ -836,21 +834,21 @@ void inline logger_bool(char *label, BOOL value) {
   #endif
 }
 
-void inline logger_animated_sprite(char *label, Animated_Sprite *animated_sprite) {
+void inline logger_animated_sprite(char *label, GFX_Animated_Sprite *gfx_animated_sprite) {
   #ifdef LOGGER_ON
   logger_info(label);
-  logger_word("BASESPRITE : " , animated_sprite->as.baseSprite);
-  logger_word("BASEPALETTE : ", animated_sprite->as.basePalette);
-  logger_short("POSX : ", animated_sprite->as.posX);
-  logger_short("POSY : ", animated_sprite->as.posY);
-  logger_short("CURRENTSTEPNUM : ", animated_sprite->as.currentStepNum);
-  logger_short("MAXSTEP : ", animated_sprite->as.maxStep);
-  logger_dword("COUNTER : ", animated_sprite->as.counter);
-  logger_word("REPEATS : ", animated_sprite->as.repeats);
-  logger_word("CURRENTFLIP : ", animated_sprite->as.currentFlip);
-  logger_word("TILEWIDTH : ", animated_sprite->as.tileWidth);
-  logger_word("ANIMID : ", animated_sprite->as.animID);
-  logger_word("FLAGS", animated_sprite->as.flags);
+  logger_word("BASESPRITE : " , gfx_animated_sprite->as.baseSprite);
+  logger_word("BASEPALETTE : ", gfx_animated_sprite->as.basePalette);
+  logger_short("POSX : ", gfx_animated_sprite->as.posX);
+  logger_short("POSY : ", gfx_animated_sprite->as.posY);
+  logger_short("CURRENTSTEPNUM : ", gfx_animated_sprite->as.currentStepNum);
+  logger_short("MAXSTEP : ", gfx_animated_sprite->as.maxStep);
+  logger_dword("COUNTER : ", gfx_animated_sprite->as.counter);
+  logger_word("REPEATS : ", gfx_animated_sprite->as.repeats);
+  logger_word("CURRENTFLIP : ", gfx_animated_sprite->as.currentFlip);
+  logger_word("TILEWIDTH : ", gfx_animated_sprite->as.tileWidth);
+  logger_word("ANIMID : ", gfx_animated_sprite->as.animID);
+  logger_word("FLAGS", gfx_animated_sprite->as.flags);
   #endif
 }
 
@@ -939,11 +937,11 @@ BOOL vectors_collide(Box *box, Vec2short vec[], BYTE vector_max) {
   /*-----------*/
  /* -scroller */
 /*-----------*/
-void scroller_set_position(Scroller *s, short x, short y) {
+void gfx_scroller_set_position(GFX_Scroller *s, short x, short y) {
   scrollerSetPos(&s->s, x, y);
 }
 
-void scroller_display(Scroller *s, short x, short y) {
+void gfx_scroller_display(GFX_Scroller *s, short x, short y) {
   WORD palette_index = palette_index_manager_use(s->pali);
   scrollerInit(
     &s->s,
@@ -960,16 +958,16 @@ void scroller_display(Scroller *s, short x, short y) {
   );
 }
 
-void scroller_move(Scroller *s, short x, short y) {
+void gfx_scroller_move(GFX_Scroller *s, short x, short y) {
   scrollerSetPos(&s->s, s->s.scrlPosX + x, s->s.scrlPosY + y);
 }
 
-void scroller_init(Scroller *s, scrollerInfo *si, paletteInfo *pali) {
+void gfx_scroller_init(GFX_Scroller *s, scrollerInfo *si, paletteInfo *pali) {
   s->si = si;
   s->pali = pali;
 }
 
-void scroller_destroy(Scroller *s) {
+void gfx_scroller_destroy(GFX_Scroller *s) {
   sprite_index_manager_set_free(s->s.baseSprite, 21);
   clearSprites(s->s.baseSprite, 21);
 }

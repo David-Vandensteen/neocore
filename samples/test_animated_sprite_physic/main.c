@@ -4,11 +4,11 @@
 
 NEOCORE_INIT
 
-Animated_Sprite_Physic player;
+GFX_Animated_Sprite_Physic player;
 
 int main(void) {
   gpu_init();
-  animated_sprite_physic_init(
+  gfx_animated_sprite_physic_init(
     &player,
     &player_sprite,
     &player_sprite_Palettes,
@@ -18,21 +18,21 @@ int main(void) {
     0
   );
 
-  animated_sprite_physic_display(
+  gfx_animated_sprite_physic_display(
     &player,
     100,
     100,
     PLAYER_SPRITE_ANIM_IDLE
   );
 
-  flash_init(&player.animated_sprite.flash, true, 10, 10);
+  flash_init(&player.gfx_animated_sprite.flash, true, 10, 10);
 
   while(1) {
     wait_vbl();
     logger_init();
-    animated_sprite_animate(&player.animated_sprite);
+    gfx_animated_sprite_animate(&player.gfx_animated_sprite);
     logger_box("BOX : ", &player.box);
-    animated_sprite_physic_flash(&player);
+    gfx_animated_sprite_physic_flash(&player);
     if (DAT_frameCounter == 500) {
       // animated_sprite_physic_destroy(&player);
       // animated_sprite_physic_hide(&player);

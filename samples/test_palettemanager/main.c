@@ -9,20 +9,20 @@ static void init();
 static void display();
 static void update();
 
-static Image planet01, planet02, planet03;
+static GFX_Image planet01, planet02, planet03;
 
 static void init() {
   gpu_init();
-  image_init(&planet01, &planet04_sprite, &planet04_sprite_Palettes);
-  image_init(&planet02, &planet04_sprite, &planet04_sprite_Palettes);
-  image_init(&planet03, &planet04_sprite, &player_sprite_Palettes);
+  gfx_image_init(&planet01, &planet04_sprite, &planet04_sprite_Palettes);
+  gfx_image_init(&planet02, &planet04_sprite, &planet04_sprite_Palettes);
+  gfx_image_init(&planet03, &planet04_sprite, &player_sprite_Palettes);
   //image_init(&planet03, &planet04_sprite, &planet04_sprite_Palettes);
 }
 
 static void display() {
-  image_display(&planet01, 10, 10);
-  image_display(&planet02, 100, 100);
-  image_display(&planet03, 200, 100);
+  gfx_image_display(&planet01, 10, 10);
+  gfx_image_display(&planet02, 100, 100);
+  gfx_image_display(&planet03, 200, 100);
 }
 
 static void update() {

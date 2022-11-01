@@ -9,12 +9,12 @@
 NEOCORE_INIT
 
 int main(void) {
-  static Image logo;
+  static GFX_Image logo;
   static paletteInfo logo_swap_palette;
   BYTE i = 0;
   gpu_init();
-  image_init(&logo, &logo_sprite, &logo_sprite_Palettes);
-  image_display(&logo, 50, 100);
+  gfx_image_init(&logo, &logo_sprite, &logo_sprite_Palettes);
+  gfx_image_display(&logo, 50, 100);
   logo_swap_palette.palCount = logo.pali->palCount;
 
   for (i = 0; i < (logo.pali->palCount MULT16); i++) { logo_swap_palette.data[i] = RAND(0xFFFF); }
