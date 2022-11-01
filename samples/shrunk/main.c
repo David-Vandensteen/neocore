@@ -4,25 +4,25 @@
 NEOCORE_INIT
 
 int main(void) {
-  Image logo1, logo2, logo3;
+  GFX_Image logo1, logo2, logo3;
   BYTE logo1_shrunk_x = 0;
   BYTE logo2_shrunk_y = 0;
   gpu_init();
-  image_init(&logo1, &logo_sprite, &logo_sprite_Palettes);
-  image_init(&logo2, &logo_sprite, &logo_sprite_Palettes);
-  image_init(&logo3, &logo_sprite, &logo_sprite_Palettes);
+  gfx_image_init(&logo1, &logo_sprite, &logo_sprite_Palettes);
+  gfx_image_init(&logo2, &logo_sprite, &logo_sprite_Palettes);
+  gfx_image_init(&logo3, &logo_sprite, &logo_sprite_Palettes);
   logger_init();
   logger_info("HORIZONTAL SHRUNK");
-  image_init(&logo1, &logo_sprite, &logo_sprite_Palettes);
-  image_init(&logo2, &logo_sprite, &logo_sprite_Palettes);
-  image_init(&logo3, &logo_sprite, &logo_sprite_Palettes);
-  image_display(&logo1, 10, 20);
+  gfx_image_init(&logo1, &logo_sprite, &logo_sprite_Palettes);
+  gfx_image_init(&logo2, &logo_sprite, &logo_sprite_Palettes);
+  gfx_image_init(&logo3, &logo_sprite, &logo_sprite_Palettes);
+  gfx_image_display(&logo1, 10, 20);
   logger_set_position(1, 10);
   logger_info("VERTICAL SHRUNK");
-  image_display(&logo2, 10, 80);
+  gfx_image_display(&logo2, 10, 80);
   logger_set_position(1, 19);
   logger_info("PROPORTIONAL SHRUNK");
-  image_display(&logo3, 10, 150);
+  gfx_image_display(&logo3, 10, 150);
 
   while(1) {
     wait_vbl();
