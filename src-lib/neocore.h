@@ -81,8 +81,6 @@
 /* REFACTOR      */
 /*--------------*/
 
-// MACRO Language
-
 // init gfx
 #define init_gs(gfx_scroller_pointer, scrollerInfo_pointer, paletteInfo_pointer) gfx_scroller_init(gfx_scroller_pointer, scrollerInfo_pointer, paletteInfo_pointer)
 #define init_gp(gfx_picture_pointer, pictureInfo_pointer, paletteInfo_pointer) gfx_image_init(gfx_picture_pointer, pictureInfo_pointer, paletteInfo_pointer)
@@ -149,7 +147,6 @@
 
 #define set_pos_gp(gfx_picture_pointer, x, y) pictureSetPos(gfx_picture_pointer->pic, x, y)
 
-
 #define set_pos_gpp(gfx_picture_physic_pointer, x, y) gfx_picture_physic_set_position(gfx_picture_physic_pointer, x, y);
 // end set pos gfx
 
@@ -173,14 +170,23 @@
 
 // hide
 #define hide_gasp(gfx_animated_sprite_physic_pointer) gfx_animated_sprite_physic_hide(gfx_animated_sprite_physic_pointer)
-#define hide_gp(gfx_picture_pointer) pictureHide(&gfx_picture_pointer.pic)
+#define hide_gp(gfx_picture_pointer) pictureHide(gfx_picture_pointer.pic)
 #define hide_gpp(gfx_picture_physic_pointer) pictureHide(gfx_picture_physic_pointer.gfx_picture.pic)
 
 //end hide
 
 // show
 #define show_gasp(gfx_animated_sprite_physic) gfx_animated_sprite_physic_show(gfx_animated_sprite_physic)
+#define show_gpp(gfx_picture_physic_pointer) pictureShow(gfx_picture_physic_pointer.gfx_picture.pic);
 // end show
+
+// destroy
+#define destroy_gpp(gfx_picture_physic_pointer) gfx_picture_destroy(gfx_picture_physic_pointer.gfx_picture)
+// end destroy
+
+// enable / disable physic TODO
+
+//
 
 // utils
 #define init_logger() logger_init()
@@ -191,9 +197,6 @@
 #define init_gpu() gpu_init()
 
 #define get_frame_counter() DAT_frameCounter
-
-#define disable_physic
-#define enable_physic
 
 enum direction { NONE, UP, DOWN, LEFT, RIGHT };
 
@@ -496,24 +499,11 @@ void gfx_picture_physic_set_position(GFX_Picture_Physic *gfx_picture_physic, sho
 // TODO : remove useless
 // void gfx_picture_physic_hide(GFX_Picture_Physic *gfx_picture_physic);
 
-
-/**
- * \brief Show GFX_Picture_Physic & enable physic
- * @param GFX_Picture_Physic Pointer
- */
-void gfx_picture_physic_show(GFX_Picture_Physic *gfx_picture_physic);
-
 /**
  * @param GFX_Picture_Physic* pointer
  * @param shrunk Factor
  */
 void gfx_picture_physic_shrunk(GFX_Picture_Physic *gfx_image_physic, WORD shrunk_value); // todo (minor) - shrunk box
-
-/**
- * \brief destroy GFX_Picture_Physic
- * @param GFX_Picture_Physic pointer
- */
-void gfx_picture_physic_destroy(GFX_Picture_Physic *gfx_picture_physic);
 
   /*----------------------*/
  /* -gfx_animated_sprite */

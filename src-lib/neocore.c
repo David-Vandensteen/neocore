@@ -418,26 +418,9 @@ void gfx_picture_physic_set_position(GFX_Picture_Physic *gfx_picture_physic, sho
   }
 }
 
-/* TODO : remove useless
-void gfx_picture_physic_hide(GFX_Picture_Physic *gfx_picture_physic) {
-  gfx_picture_hide(&gfx_picture_physic->gfx_picture);
-  gfx_picture_physic->physic_enabled = false;
-}
-*/
-
-void gfx_picture_physic_show(GFX_Picture_Physic *gfx_picture_physic) {
-  gfx_picture_show(&gfx_picture_physic->gfx_picture);
-  gfx_picture_physic->physic_enabled = true;
-}
-
 void gfx_picture_physic_shrunk(GFX_Picture_Physic *gfx_picture_physic, WORD shrunk_value) {
   shrunk(gfx_picture_physic->gfx_picture.pic.baseSprite, gfx_picture_physic->gfx_picture.pic.info->tileWidth, shrunk_value);
   // todo (minor) - shrunk box
-}
-
-void gfx_picture_physic_destroy(GFX_Picture_Physic *gfx_picture_physic) {
-  pictureHide(&gfx_picture_physic->gfx_picture.pic);
-  gfx_picture_destroy(&gfx_picture_physic->gfx_picture);
 }
 
 void gfx_picture_shrunk_centroid(GFX_Picture *gfx_picture, short center_x, short center_y, WORD shrunk_value) {
@@ -475,21 +458,12 @@ void gfx_picture_display(GFX_Picture *gfx_picture, short x, short y) {
   );
 }
 
-/* TODO : remove useless
-void gfx_picture_hide(GFX_Picture *gfx_picture) {
-  pictureHide(&gfx_picture->pic);
-  gfx_picture->flash.visible = false;
-}
-*/
-
 void gfx_picture_show(GFX_Picture *gfx_picture) {
   pictureShow(&gfx_picture->pic); // TODO : macro
 }
 
 void gfx_picture_destroy(GFX_Picture *gfx_picture) {
-  // gfx_picture_hide(gfx_picture);
   pictureHide(&gfx_picture->pic);
-
   sprite_index_manager_set_free(gfx_picture->pic.baseSprite, gfx_picture->pi->tileWidth);
   clearSprites(gfx_picture->pic.baseSprite, gfx_picture->pi->tileWidth);
 }
