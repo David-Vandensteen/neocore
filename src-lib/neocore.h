@@ -195,14 +195,14 @@ void display_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short 
 
 void hide_gas(GFX_Animated_Sprite *gfx_animated_sprite);
 
-#define hide_gp(gfx_picture_pointer) pictureHide(gfx_picture_pointer.pic)
-#define hide_gpp(gfx_picture_physic_pointer) pictureHide(gfx_picture_physic_pointer.gfx_picture.pic)
-#define hide_gasp(gfx_animated_sprite_physic_pointer) hide_gas(gfx_animated_sprite_physic_pointer.gfx_animated_sprite)
+void hide_gp(GFX_Picture *gfx_picture);
+void hide_gpp(GFX_Picture_Physic *gfx_picture_physic);
+void hide_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic);
 
-#define show_gas(gfx_animated_sprite_pointer) aSpriteShow(gfx_animated_sprite_pointer.as)
-#define show_gasp(gfx_animated_sprite_physic_pointer) aSpriteShow(gfx_animated_sprite_physic_pointer.gfx_animated_sprite.as)
-#define show_gp(gfx_picture_pointer) pictureShow(gfx_picture_pointer.pic)
-#define show_gpp(gfx_picture_physic_pointer) pictureShow(gfx_picture_physic_pointer.gfx_picture.pic)
+void show_gas(GFX_Animated_Sprite *gfx_animated_sprite);
+void show_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic);
+void show_gp(GFX_Picture *gfx_picture);
+void show_gpp(GFX_Picture_Physic *gfx_picture_physic);
 
   /*------------------*/
  /*  GFX POSITION    */
@@ -210,35 +210,35 @@ void hide_gas(GFX_Animated_Sprite *gfx_animated_sprite);
 
 /* GFX POSITION GETTER */
 
-#define get_x_gas(gfx_animated_sprite) gfx_animated_sprite.as.posX
-#define get_y_gas(gfx_animated_sprite) gfx_animated_sprite.as.posY
+short get_x_gas(GFX_Animated_Sprite gfx_animated_sprite);
+short get_y_gas(GFX_Animated_Sprite gfx_animated_sprite);
 
-#define get_x_gasp(gfx_animated_sprite_physic) gfx_animated_sprite_physic.gfx_animated_sprite.as.posX
-#define get_y_gasp(gfx_animated_sprite_physic) gfx_animated_sprite_physic.gfx_animated_sprite.as.posY
+short get_x_gasp(GFX_Animated_Sprite_Physic gfx_animated_sprite_physic);
+short get_y_gasp(GFX_Animated_Sprite_Physic gfx_animated_sprite_physic);
 
-#define get_x_gp(gfx_picture) gfx_picture.pic.posX
-#define get_y_gp(gfx_picture) gfx_picture.pic.posY
+short get_x_gp(GFX_Picture gfx_picture);
+short get_y_gp(GFX_Picture gfx_picture);
 
-#define get_x_gpp(gfx_picture_physic) gfx_picture_physic.gfx_picture.pic.posX
-#define get_y_gpp(gfx_picture_physic) gfx_picture_physic.gfx_picture.pic.posY
+short get_x_gpp(GFX_Picture_Physic gfx_picture_physic);
+short get_y_gpp(GFX_Picture_Physic gfx_picture_physic);
 
-#define get_x_gs(gfx_scroller) gfx_scroller.s.scrlPosX
-#define get_y_gs(gfx_scroller) gfx_scroller.s.scrlPosY
+short get_x_gs(GFX_Scroller gfx_scroller);
+short get_y_gs(GFX_Scroller gfx_scroller);
 
 /* GFX POSITION SETTER */
 
 void set_pos_gpp(GFX_Picture_Physic *gfx_picture_physic, short x, short y);
 void set_pos_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short x, short y);
 
-#define set_x_gasp(gfx_animated_sprite_physic_pointer, x) set_pos_gasp(gfx_animated_sprite_physic_pointer, x, gfx_animated_sprite_physic.gfx_animated_sprite.as.posY)
-#define set_y_gasp(gfx_animated_sprite_physic_pointer, y) set_pos_gasp(gfx_animated_sprite_physic_pointer, gfx_animated_sprite_physic.gfx_animated_sprite.as.posX, y)
+void set_x_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short x);
+void set_y_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short y);
 
-#define set_x_gs(gfx_scroller_pointer, x) scrollerSetPos(gfx_scroller_pointer.s, x, gfx_scroller_pointer.s.scrlPosY)
-#define set_y_gs(gfx_scroller_pointer, x) scrollerSetPos(gfx_scroller_pointer.s, gfx_scroller_pointer.s.scrlPosX, y)
+void set_x_gs(GFX_Scroller *gfx_scroller, short x);
+void set_y_gs(GFX_Scroller *gfx_scroller, short x);
+void set_pos_gs(GFX_Scroller *gfx_scroller, short x, short y);
 
-#define set_pos_gs(gfx_scroller_pointer, x, y) scrollerSetPos(gfx_scroller_pointer.s, x, y)
-#define set_pos_gas(gfx_animated_sprite_pointer, x, y) aSpriteSetPos(gfx_animated_sprite_pointer.as, x, y)
-#define set_pos_gp(gfx_picture_pointer, x, y) pictureSetPos(gfx_picture_pointer.pic, x, y)
+void set_pos_gas(GFX_Animated_Sprite *gfx_animated_sprite, short x,  short y);
+void set_pos_gp(GFX_Picture *gfx_picture, short x, short y);
 
   /*-------------------*/
  /*  GFX ANIMATION    */
@@ -247,15 +247,16 @@ void set_pos_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short 
 void move_gpp(GFX_Picture_Physic *gfx_picture_physic, short x_offset, short y_offset);
 void move_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short x_offset, short y_offset);
 
-#define move_gas(gfx_animated_sprite, x_offset, y_offset) aSpriteMove(gfx_animated_sprite.as, x_offset, y_offset)
-#define move_gp(gfx_picture_pointer, x, y) pictureMove(gfx_picture_pointer.pic, x, y)
-#define move_gs(gfx_scroller, x, y) scrollerSetPos(&gfx_scroller.s, gfx_scroller.s.scrlPosX + x, gfx_scroller.s.scrlPosY + y)
+void move_gas(GFX_Animated_Sprite *gfx_animated_sprite, short x_offset, short y_offset);
+void move_gp(GFX_Picture *gfx_picture, short x, short y);
+void move_gs(GFX_Scroller gfx_scroller, short x, short y);
 
-#define set_anim_gas(gfx_animated_sprite, anim) aSpriteSetAnim(gfx_animated_sprite.as, anim)
-#define set_anim_gasp(gfx_animated_sprite_physic, anim) aSpriteSetAnim(gfx_animated_sprite_physic.gfx_animated_sprite.as, anim)
+void set_anim_gas(GFX_Animated_Sprite *gfx_animated_sprite, WORD anim);
+void set_anim_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, WORD anim);
 
-#define update_anim_gas(gfx_animated_sprite_pointer) aSpriteAnimate(gfx_animated_sprite_pointer.as)
-#define update_anim_gasp(gfx_animated_sprite_physic_pointer) aSpriteAnimate(gfx_animated_sprite_physic_pointer.gfx_animated_sprite.as)
+void update_anim_gas(GFX_Animated_Sprite *gfx_animated_sprite);
+void update_anim_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic);
+
 
   /*-------------------*/
  /*  GFX DESTROY      */
@@ -265,8 +266,8 @@ void gfx_scroller_destroy(GFX_Scroller *s); // TODO
 void destroy_gp(GFX_Picture *gfx_picture);
 void destroy_gas(GFX_Animated_Sprite *gfx_animated_sprite);
 
-#define destroy_gpp(gfx_picture_physic_pointer) destroy_gp(gfx_picture_physic_pointer.gfx_picture)
-#define destroy_gasp(gfx_animated_sprite_physic_pointer) destroy_gas(gfx_animated_sprite_physic_pointer.gfx_animated_sprite)
+void destroy_gpp(GFX_Picture_Physic *gfx_picture_physic);
+void destroy_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic);
 
   //--------------------------------------------------------------------------//
  //                                   GPU                                    //
