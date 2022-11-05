@@ -858,7 +858,7 @@ BOOL vectors_collide(Box *box, Vec2short vec[], BYTE vector_max) {
   /*-----------*/
  /* -scroller */
 /*-----------*/
-void gfx_scroller_display(GFX_Scroller *s, short x, short y) {
+void display_gs(GFX_Scroller *s, short x, short y) {
   WORD palette_index = palette_index_manager_use(s->pali);
   scrollerInit(
     &s->s,
@@ -875,7 +875,7 @@ void gfx_scroller_display(GFX_Scroller *s, short x, short y) {
   );
 }
 
-void gfx_scroller_init(GFX_Scroller *s, scrollerInfo *si, paletteInfo *pali) {
+void init_gs(GFX_Scroller *s, scrollerInfo *si, paletteInfo *pali) {
   s->si = si;
   s->pali = pali;
 }
@@ -895,8 +895,8 @@ void inline shrunk_addr(WORD addr, WORD shrunk_value) {
 
 WORD shrunk_forge(BYTE xc, BYTE yc) { // todo (minor) - xcF, ycFF
   //F FF - x (hor) , y (vert)
-  // vertical shrinking   8 bit
-  // horizontal shrinking 4 bit
+  // vertical shrinking   8 bits
+  // horizontal shrinking 4 bits
   WORD value = 0;
   value = xc << 8;
   value += yc;
@@ -936,106 +936,6 @@ DWORD inline wait_vbl_max(WORD nb) {
   for (i = 0; i <= nb; i++) waitVBlank();
   return DAT_frameCounter;
 }
-
-
-///////////////////////////////////////////////////////////////////////
-
-/* todo (minor)
-void box_debug_update(picture5 *pics, Box *box) {
-  pictureSetPos(&pics->pic0, box->p0.x, box->p0.y);
-  pictureSetPos(&pics->pic1, box->p1.x, box->p1.y);
-  pictureSetPos(&pics->pic2, box->p2.x, box->p2.y);
-  pictureSetPos(&pics->pic3, box->p3.x, box->p3.y);
-  pictureSetPos(&pics->pic4, box->p4.x, box->p4.y);
-}
-*/
-
-/*
-void box_display(picture5 *pics, Box *box, pictureInfo *pi, paletteInfo *pali) {
-  palette_disable_autoinc();
-  image_display(&pics->pic0, pi, pali, box->p0.x, box->p0.y);
-  image_display(&pics->pic1, pi, pali, box->p1.x, box->p1.y);
-  image_display(&pics->pic2, pi, pali, box->p2.x, box->p2.y);
-  image_display(&pics->pic3, pi, pali, box->p3.x, box->p3.y);
-  palette_enable_autoinc();
-  image_display(&pics->pic4, pi, pali, box->p4.x, box->p4.y);
-}
-*/
-
-/*
-void image_physic_shrunk_centroid_update(picturePhysicShrunkCentroid *pps, WORD shrunk) {
-  image_shrunk_centroid(&pps->pp.p, pps->pi, pps->positionCenter.x, pps->positionCenter.y, shrunk);
-  box_shrunk(&pps->pp.box, &pps->boxOrigin, shrunk);
-}
-
-void image_physic_shrunk_centroid_display(picturePhysicShrunkCentroid *pps, WORD shrunk) {
-  image_physic_display(&pps->pp, pps->pi, pps->pali, pps->positionCenter.x, pps->positionCenter.y);
-  image_shrunk_centroid(&pps->pp.p, pps->pi, pps->positionCenter.x, pps->positionCenter.y, shrunk);
-  BOXCOPY(&pps->pp.box, &pps->boxOrigin);
-}
-
-void image_physic_shrunk_centroid_init(picturePhysicShrunkCentroid *pps, pictureInfo *pi, paletteInfo *pali, short xCenter, short yCenter) {
-  pps->pi = pi;
-  pps->pali = pali;
-  pps->positionCenter.x = xCenter;
-  pps->positionCenter.y = yCenter;
-}
-
-void image_physic_shrunk_centroid_set_position(picturePhysicShrunkCentroid *pps, short x, short y) {
-  pps->positionCenter.x = x;
-  pps->positionCenter.y = y;
-  box_update(&pps->boxOrigin, x, y);
-}
-
-void image_physic_shrunk_centroid_move(picturePhysicShrunkCentroid *pps, short xShift, short yShift) {
-  image_physic_shrunk_centroid_set_position(pps, pps->positionCenter.x + xShift, pps->positionCenter.y + yShift);
-}
-
-void image_physic_display(picturePhysic *pp, pictureInfo *pi, paletteInfo *pali, short posX, short posY) {
-  image_display(&pp->p, pi, pali, posX, posY);
-  box_update(&pp->box, posX, posY);
-}
-
-void image_physic_set_position(picturePhysic *pp, short x, short y) {
-  pictureSetPos(&pp->p, x, y);
-  box_update(&pp->box, x, y);
-}
-*/
-
-/* todo (minor) - deprecated
-WORD image_get_sprite_index_autoinc(pictureInfo *pi) {
-  WORD rt = sprite_index;
-  if (sprite_auto_index) sprite_index += pi->tileWidth;
-  return rt;
-}
-*/
-
-/* todo (minor)
-void image5_show(picture5 *pics, BOOL visible) {
-  if (visible) {
-    pictureShow(&pics->pic0);
-    pictureShow(&pics->pic1);
-    pictureShow(&pics->pic2);
-    pictureShow(&pics->pic3);
-    pictureShow(&pics->pic4);
-  } else {
-    pictureHide(&pics->pic0);
-    pictureHide(&pics->pic1);
-    pictureHide(&pics->pic2);
-    pictureHide(&pics->pic3);
-    pictureHide(&pics->pic4);
-  }
-}
-*/
-
-/* todo (minor)
-void maskDisplay(picture pic[], vec2short vec[], BYTE vector_max) {
-  BYTE i = 0;
-  for (i = 0; i < vector_max; i++) {
-    pic[i] = pictureDisplay(&dot_img, &dot_img_Palettes, vec[i].x, vec[i].y);
-  }
-}
-*/
 
 void mask_update(short x, short y, Vec2short vec[], Vec2short offset[], BYTE vector_max) {
   BYTE i = 0;
