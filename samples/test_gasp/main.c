@@ -54,7 +54,7 @@ int main(void) {
     frame_seq += accumulator;
     if (get_frame_counter() >= (frame_seq - accumulator) && get_frame_counter() < frame_seq) {
       logger_info("DESTROY");
-      destroy_gas(&player);
+      destroy_gasp(&player);
     }
     frame_seq += accumulator;
     if (get_frame_counter() >= (frame_seq - accumulator)) {
