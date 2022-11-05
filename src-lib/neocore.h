@@ -83,7 +83,7 @@
 
 // init gfx
 #define init_gs(gfx_scroller_pointer, scrollerInfo_pointer, paletteInfo_pointer) gfx_scroller_init(gfx_scroller_pointer, scrollerInfo_pointer, paletteInfo_pointer)
-#define init_gp(gfx_picture_pointer, pictureInfo_pointer, paletteInfo_pointer) gfx_image_init(gfx_picture_pointer, pictureInfo_pointer, paletteInfo_pointer)
+#define init_gp(gfx_picture_pointer, pictureInfo_pointer, paletteInfo_pointer) gfx_picture_init(gfx_picture_pointer, pictureInfo_pointer, paletteInfo_pointer)
 #define init_gas(gfx_animated_sprite_pointer, spriteInfo_pointer, paletteInfo_pointer) gfx_animated_sprite_init(gfx_animated_sprite_pointer, spriteInfo_pointer, paletteInfo_pointer)
 #define init_gasp(gfx_animated_sprite_physic_pointer, spriteInfo_pointer, paletteInfo_pointer, box_width, box_height, box_width_offset, box_height_offset) \
   gfx_animated_sprite_physic_init(gfx_animated_sprite_physic_pointer, \
@@ -145,7 +145,7 @@
 #define set_pos_gs(gfx_scroller_pointer, x, y) scrollerSetPos(gfx_scroller_pointer.s, x, y) // TODO : test
 #define set_pos_gasp(gfx_animated_sprite_physic_pointer, x, y) gfx_animated_sprite_physic_set_position(gfx_animated_sprite_physic_pointer, x, y)
 
-#define set_pos_gp(gfx_picture_pointer, x, y) pictureSetPos(gfx_picture_pointer->pic, x, y)
+#define set_pos_gp(gfx_picture_pointer, x, y) pictureSetPos(gfx_picture_pointer.pic, x, y)
 
 #define set_pos_gpp(gfx_picture_physic_pointer, x, y) gfx_picture_physic_set_position(gfx_picture_physic_pointer, x, y);
 // end set pos gfx
@@ -177,10 +177,12 @@
 
 // show
 #define show_gasp(gfx_animated_sprite_physic) gfx_animated_sprite_physic_show(gfx_animated_sprite_physic)
+#define show_gp(gfx_picture_pointer) pictureShow(gfx_picture_pointer.pic)
 #define show_gpp(gfx_picture_physic_pointer) pictureShow(gfx_picture_physic_pointer.gfx_picture.pic);
 // end show
 
 // destroy
+#define destroy_gp(gfx_picture_pointer) gfx_picture_destroy(gfx_picture_pointer)
 #define destroy_gpp(gfx_picture_physic_pointer) gfx_picture_destroy(gfx_picture_physic_pointer.gfx_picture)
 // end destroy
 
