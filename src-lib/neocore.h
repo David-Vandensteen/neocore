@@ -202,7 +202,7 @@ void hide_gas(GFX_Animated_Sprite *gfx_animated_sprite);
 #define show_gas(gfx_animated_sprite_pointer) aSpriteShow(gfx_animated_sprite_pointer.as)
 #define show_gasp(gfx_animated_sprite_physic_pointer) aSpriteShow(gfx_animated_sprite_physic_pointer.gfx_animated_sprite.as)
 #define show_gp(gfx_picture_pointer) pictureShow(gfx_picture_pointer.pic)
-#define show_gpp(gfx_picture_physic_pointer) pictureShow(gfx_picture_physic_pointer.gfx_picture.pic);
+#define show_gpp(gfx_picture_physic_pointer) pictureShow(gfx_picture_physic_pointer.gfx_picture.pic)
 
   /*------------------*/
  /*  GFX POSITION    */
