@@ -202,6 +202,7 @@ JOYPAD
   //--------------------------------------------------------------------------//
  //                                  -B                                      //
 //--------------------------------------------------------------------------//
+
 BYTE boxes_collide(Box *b, Box *boxes[], BYTE box_max) {
   BYTE rt = false;
   BYTE i = 0;
@@ -358,8 +359,9 @@ void clear_palette_index_table() { palette_index_manager_init(); }
   //--------------------------------------------------------------------------//
  //                                  -F                                      //
 //--------------------------------------------------------------------------//
+
 void inline fix_print_neocore(int x, int y, char *label){
-  fixPrint(x, y, 0, 0, label);
+  fixPrint(x, y, 0, 0, label); // TODO : macro
 }
 
 WORD free_ram_info() {
@@ -419,11 +421,6 @@ void set_pos_gpp(GFX_Picture_Physic *gfx_picture_physic, short x, short y) {
   }
 }
 
-void gfx_picture_physic_shrunk(GFX_Picture_Physic *gfx_picture_physic, WORD shrunk_value) {
-  shrunk(gfx_picture_physic->gfx_picture.pic.baseSprite, gfx_picture_physic->gfx_picture.pic.info->tileWidth, shrunk_value);
-  // todo (minor) - shrunk box
-}
-
 void gfx_picture_shrunk_centroid(GFX_Picture *gfx_picture, short center_x, short center_y, WORD shrunk_value) {
   shrunk(gfx_picture->pic.baseSprite, gfx_picture->pic.info->tileWidth, shrunk_value);
   pictureSetPos(
@@ -457,10 +454,6 @@ void display_gp(GFX_Picture *gfx_picture, short x, short y) {
     gfx_picture->pali->palCount,
     gfx_picture->pali->data
   );
-}
-
-void gfx_picture_show(GFX_Picture *gfx_picture) {
-  pictureShow(&gfx_picture->pic); // TODO : macro
 }
 
 void destroy_gp(GFX_Picture *gfx_picture) {
@@ -500,10 +493,6 @@ void display_gas(GFX_Animated_Sprite *animated_sprite, short x, short y, WORD an
 void hide_gas(GFX_Animated_Sprite *animated_sprite) {
   aSpriteHide(&animated_sprite->as);
   clearSprites(animated_sprite->as.baseSprite, animated_sprite->as.tileWidth);
-}
-
-void gfx_animated_sprite_show(GFX_Animated_Sprite *animated_sprite) {
-  aSpriteShow(&animated_sprite->as); // TODO : macro
 }
 
 void destroy_gas(GFX_Animated_Sprite *animated_sprite) {
@@ -550,34 +539,13 @@ void display_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short 
 }
 
 void set_pos_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short x, short y) {
-  gfx_animated_sprite_set_position(&gfx_animated_sprite_physic->gfx_animated_sprite, x, y);
+  aSpriteSetPos(&gfx_animated_sprite_physic->gfx_animated_sprite.as, x, y);
   box_update(&gfx_animated_sprite_physic->box, x, y);
 }
 
 void move_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short x_offset, short y_offset) {
   move_gas(&gfx_animated_sprite_physic->gfx_animated_sprite, x_offset, y_offset);
   box_update(&gfx_animated_sprite_physic->box, gfx_animated_sprite_physic->gfx_animated_sprite.as.posX, gfx_animated_sprite_physic->gfx_animated_sprite.as.posY);
-}
-
-void gfx_animated_sprite_physic_shrunk(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, WORD shrunk_value) {
-  shrunk(gfx_animated_sprite_physic->gfx_animated_sprite.as.baseSprite, gfx_animated_sprite_physic->gfx_animated_sprite.si->maxWidth, shrunk_value);
-  // todo (minor) - box resize
-}
-
-void hide_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic) {
-  aSpriteHide(&gfx_animated_sprite_physic->gfx_animated_sprite.as);
-  //gfx_animated_sprite_hide(&gfx_animated_sprite_physic->gfx_animated_sprite);
-  gfx_animated_sprite_physic->physic_enabled = false;
-}
-
-void show_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic) {
-  gfx_animated_sprite_show(&gfx_animated_sprite_physic->gfx_animated_sprite);
-  gfx_animated_sprite_physic->physic_enabled = true;
-}
-
-void gfx_animated_sprite_physic_destroy(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic) {
-  aSpriteHide(&gfx_animated_sprite_physic->gfx_animated_sprite.as);
-  destroy_gas(&gfx_animated_sprite_physic->gfx_animated_sprite);
 }
 
 void inline gpu_init() {
@@ -595,7 +563,7 @@ WORD get_shrunk_proportional_table(WORD index) {
 }
 
 char get_sin(WORD index) {
-  return sinTable[index];
+  return sinTable[index]; // TODO : macro
 }
 
 WORD get_max_free_sprite_index() {
@@ -636,11 +604,11 @@ WORD get_max_palette_index_used() {
 
 void inline joypad_debug() {
   JOYPAD_READ
-  if (joypad_is_start()) {  fix_print_neocore(10, 11,  "JOYPAD START"); }
+  if (joypad_is_start())  {  fix_print_neocore(10, 11,  "JOYPAD START"); }
   if (joypad_is_up())     {  fix_print_neocore(10, 11,  "JOYPAD UP   "); }
   if (joypad_is_down())   {  fix_print_neocore(10, 11,  "JOYPAD DOWN "); }
   if (joypad_is_left())   {  fix_print_neocore(10, 11,  "JOYPAD LEFT "); }
-  if (joypad_is_right()) {  fix_print_neocore(10, 11,  "JOYPAD RIGHT"); }
+  if (joypad_is_right())  {  fix_print_neocore(10, 11,  "JOYPAD RIGHT"); }
   if (joypad_is_a())     {  fix_print_neocore(10, 11,  "JOYPAD A    "); }
   if (joypad_is_b())     {  fix_print_neocore(10, 11,  "JOYPAD B    "); }
   if (joypad_is_c())     {  fix_print_neocore(10, 11,  "JOYPAD C    "); }
@@ -815,8 +783,7 @@ void inline logger_pictureInfo(char *label, pictureInfo *pi) {
  //                                  -P                                      //
 //--------------------------------------------------------------------------//
 void palette_destroy(paletteInfo* pi) {
-  palette_index_manager_set_free(pi);
-  // TODO : put black palette
+  palette_index_manager_set_free(pi); // TODO : macro
 }
 
   //--------------------------------------------------------------------------//
@@ -883,7 +850,7 @@ void gfx_scroller_destroy(GFX_Scroller *s) {
  /* -shrunk   */
 /*-----------*/
 void inline shrunk_addr(WORD addr, WORD shrunk_value) {
-  SC234Put(addr, shrunk_value);
+  SC234Put(addr, shrunk_value); // TODO : macro
 }
 
 WORD shrunk_forge(BYTE xc, BYTE yc) { // todo (minor) - xcF, ycFF
@@ -906,7 +873,7 @@ WORD shrunk_range(WORD addr_start, WORD addr_end, WORD shrunk_value) {
 }
 
 void shrunk(WORD base_sprite, WORD max_width, WORD value) {
-  shrunk_range(0x8000 + base_sprite, 0x8000 + base_sprite + max_width, value);
+  shrunk_range(0x8000 + base_sprite, 0x8000 + base_sprite + max_width, value); // TODO : macro
 }
 
 int shrunk_centroid_get_translated_x(short centerPosX, WORD tileWidth, BYTE shrunkX) {

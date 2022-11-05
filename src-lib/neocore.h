@@ -6,7 +6,6 @@
 // TODO : rename loggers (ex logger_animate_sprite to log_gas)
 // TODO : parametric macro for CDDA play
 
-
   //--------------------------------------------------------------------------//
  //                             DEFINE                                       //
 //--------------------------------------------------------------------------//
@@ -194,16 +193,14 @@ void display_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short 
  /*  GFX VISIBILITY  */
 /*------------------*/
 
-void gfx_picture_hide(GFX_Picture *gfx_picture);
-void gfx_picture_show(GFX_Picture *gfx_picture);
 void hide_gas(GFX_Animated_Sprite *gfx_animated_sprite);
-void hide_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic);
-void show_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic);
 
 #define hide_gp(gfx_picture_pointer) pictureHide(gfx_picture_pointer.pic)
 #define hide_gpp(gfx_picture_physic_pointer) pictureHide(gfx_picture_physic_pointer.gfx_picture.pic)
+#define hide_gasp(gfx_animated_sprite_physic_pointer) hide_gas(gfx_animated_sprite_physic_pointer.gfx_animated_sprite)
 
 #define show_gas(gfx_animated_sprite_pointer) aSpriteShow(gfx_animated_sprite_pointer.as)
+#define show_gasp(gfx_animated_sprite_physic_pointer) aSpriteShow(gfx_animated_sprite_physic_pointer.gfx_animated_sprite.as)
 #define show_gp(gfx_picture_pointer) pictureShow(gfx_picture_pointer.pic)
 #define show_gpp(gfx_picture_physic_pointer) pictureShow(gfx_picture_physic_pointer.gfx_picture.pic);
 
@@ -260,7 +257,6 @@ void move_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short x_o
 #define update_anim_gas(gfx_animated_sprite_pointer) aSpriteAnimate(gfx_animated_sprite_pointer.as)
 #define update_anim_gasp(gfx_animated_sprite_physic_pointer) aSpriteAnimate(gfx_animated_sprite_physic_pointer.gfx_animated_sprite.as)
 
-
   /*-------------------*/
  /*  GFX DESTROY      */
 /*-------------------*/
@@ -270,6 +266,7 @@ void destroy_gp(GFX_Picture *gfx_picture);
 void destroy_gas(GFX_Animated_Sprite *gfx_animated_sprite);
 
 #define destroy_gpp(gfx_picture_physic_pointer) destroy_gp(gfx_picture_physic_pointer.gfx_picture)
+#define destroy_gasp(gfx_animated_sprite_physic_pointer) destroy_gas(gfx_animated_sprite_physic_pointer.gfx_animated_sprite)
 
   //--------------------------------------------------------------------------//
  //                                   GPU                                    //
@@ -319,8 +316,6 @@ WORD shrunk_range(WORD addr_start, WORD addr_end, WORD shrunk_value);
  //                                PHYSIC                                    //
 //--------------------------------------------------------------------------//
 
-void gfx_picture_physic_shrunk(GFX_Picture_Physic *gfx_image_physic, WORD shrunk_value); // todo (minor) - shrunk box
-
 BYTE boxes_collide(Box *b, Box *boxes[], BYTE box_max);
 BOOL box_collide(Box *b1, Box *b2);
 void box_init(Box *b, short width, short height, short widthOffset, short heightOffset);
@@ -348,24 +343,6 @@ void cdda_play(BYTE track); // TODO : change to play_cdda
 void inline fix_print_neocore(int x, int y, char *label);
 
 WORD free_ram_info();
-
-  /*----------------------*/
- /* -gfx_animated_sprite */
-/*----------------------*/
-
-void gfx_animated_sprite_show(GFX_Animated_Sprite *gfx_animated_sprite);
-
-#define gfx_animated_sprite_set_position(gfx_animated_sprite, x, y) aSpriteSetPos(gfx_animated_sprite.as, x, y)
-#define gfx_animated_sprite_physic_set_animation(gfx_animated_sprite_physic, anim) gfx_animated_sprite_set_animation(gfx_animated_sprite_physic.gfx_animated_sprite, anim)
-#define gfx_animated_sprite_animate(gfx_animated_sprite) aSpriteAnimate(gfx_animated_sprite.as)
-
-  /*------------------------------*/
- /* -gfx_animated_sprite_physic  */
-/*------------------------------*/
-
-void gfx_animated_sprite_physic_shrunk(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, WORD shrunk_value); // todo (minor)
-void gfx_animated_sprite_physic_destroy(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic);
-
 
   /*----------*/
  /* JOYPAD   */
@@ -410,6 +387,5 @@ void vec2short_init(Vec2short *vec, short x, short y);
 void vec2byte_init(Vec2byte *vec, BYTE x, BYTE y);
 BOOL vectors_collide(Box *box, Vec2short vec[], BYTE vector_max);
 BOOL vector_is_left(short x, short y, short v1x, short v1y, short v2x, short v2y);
-
 
 #endif
