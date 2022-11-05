@@ -383,10 +383,10 @@ WORD free_ram_info() {
 //--------------------------------------------------------------------------//
 
   /*----------------------*/
- /*  -gfx_image_physic   */
+ /*  -gfx_picture_physic   */
 /*----------------------*/
-void gfx_image_physic_init(
-  GFX_Image_Physic *gfx_image_physic,
+void gfx_picture_physic_init(
+  GFX_Picture_Physic *gfx_picture_physic,
   pictureInfo *pi,
   paletteInfo *pali,
   short box_witdh,
@@ -395,82 +395,82 @@ void gfx_image_physic_init(
   short box_height_offset,
   BOOL autobox_enabled
 ) {
-  gfx_image_init(&gfx_image_physic->gfx_image, pi, pali);
-  gfx_image_physic->autobox_enabled = autobox_enabled;
-  if (gfx_image_physic->autobox_enabled) {
-    box_init(&gfx_image_physic->box, box_witdh, box_height, box_width_offset, box_height_offset);
+  gfx_picture_init(&gfx_picture_physic->gfx_picture, pi, pali);
+  gfx_picture_physic->autobox_enabled = autobox_enabled;
+  if (gfx_picture_physic->autobox_enabled) {
+    box_init(&gfx_picture_physic->box, box_witdh, box_height, box_width_offset, box_height_offset);
   }
 }
 
-void gfx_image_physic_display(GFX_Image_Physic *gfx_image_physic, short x, short y) {
-  gfx_image_display(&gfx_image_physic->gfx_image, x, y);
-  if (gfx_image_physic->autobox_enabled) {
-    box_update(&gfx_image_physic->box, x, y);
+void gfx_picture_physic_display(GFX_Picture_Physic *gfx_picture_physic, short x, short y) {
+  gfx_picture_display(&gfx_picture_physic->gfx_picture, x, y);
+  if (gfx_picture_physic->autobox_enabled) {
+    box_update(&gfx_picture_physic->box, x, y);
   }
 }
 
-void gfx_image_physic_move(GFX_Image_Physic *gfx_image_physic, short x_offset, short y_offset) {
-  move_gi(&gfx_image_physic->gfx_image, x_offset, y_offset);
-  if (gfx_image_physic->autobox_enabled) {
-    box_update(&gfx_image_physic->box, gfx_image_physic->gfx_image.pic.posX, gfx_image_physic->gfx_image.pic.posY);
+void gfx_picture_physic_move(GFX_Picture_Physic *gfx_picture_physic, short x_offset, short y_offset) {
+  move_gp(&gfx_picture_physic->gfx_picture, x_offset, y_offset);
+  if (gfx_picture_physic->autobox_enabled) {
+    box_update(&gfx_picture_physic->box, gfx_picture_physic->gfx_picture.pic.posX, gfx_picture_physic->gfx_picture.pic.posY);
   }
 }
 
-void gfx_image_physic_set_position(GFX_Image_Physic *gfx_image_physic, short x, short y) {
-  gfx_image_set_position(&gfx_image_physic->gfx_image, x, y);
-  if (gfx_image_physic->autobox_enabled) {
-    box_update(&gfx_image_physic->box, x, y);
+void gfx_picture_physic_set_position(GFX_Picture_Physic *gfx_picture_physic, short x, short y) {
+  gfx_picture_set_position(&gfx_picture_physic->gfx_picture, x, y);
+  if (gfx_picture_physic->autobox_enabled) {
+    box_update(&gfx_picture_physic->box, x, y);
   }
 }
 
-void gfx_image_physic_hide(GFX_Image_Physic *gfx_image_physic) {
-  gfx_image_hide(&gfx_image_physic->gfx_image);
-  gfx_image_physic->physic_enabled = false;
+void gfx_picture_physic_hide(GFX_Picture_Physic *gfx_picture_physic) {
+  gfx_picture_hide(&gfx_picture_physic->gfx_picture);
+  gfx_picture_physic->physic_enabled = false;
 }
 
-void gfx_image_physic_show(GFX_Image_Physic *gfx_image_physic) {
-  gfx_image_show(&gfx_image_physic->gfx_image);
-  gfx_image_physic->physic_enabled = true;
+void gfx_picture_physic_show(GFX_Picture_Physic *gfx_picture_physic) {
+  gfx_picture_show(&gfx_picture_physic->gfx_picture);
+  gfx_picture_physic->physic_enabled = true;
 }
 
-void gfx_image_physic_flash(GFX_Image_Physic *gfx_image_physic) {
-  gfx_image_physic->physic_enabled = gfx_image_flash(&gfx_image_physic->gfx_image);
+void gfx_picture_physic_flash(GFX_Picture_Physic *gfx_picture_physic) {
+  gfx_picture_physic->physic_enabled = gfx_picture_flash(&gfx_picture_physic->gfx_picture);
 }
 
-void gfx_image_physic_shrunk(GFX_Image_Physic *gfx_image_physic, WORD shrunk_value) {
-  shrunk(gfx_image_physic->gfx_image.pic.baseSprite, gfx_image_physic->gfx_image.pic.info->tileWidth, shrunk_value);
+void gfx_picture_physic_shrunk(GFX_Picture_Physic *gfx_picture_physic, WORD shrunk_value) {
+  shrunk(gfx_picture_physic->gfx_picture.pic.baseSprite, gfx_picture_physic->gfx_picture.pic.info->tileWidth, shrunk_value);
   // todo (minor) - shrunk box
 }
 
-void gfx_image_physic_destroy(GFX_Image_Physic *gfx_image_physic) {
-  gfx_image_physic_hide(gfx_image_physic);
-  gfx_image_destroy(&gfx_image_physic->gfx_image);
+void gfx_picture_physic_destroy(GFX_Picture_Physic *gfx_picture_physic) {
+  gfx_picture_physic_hide(gfx_picture_physic);
+  gfx_picture_destroy(&gfx_picture_physic->gfx_picture);
 }
 
-void gfx_image_shrunk_centroid(GFX_Image *gfx_image, short center_x, short center_y, WORD shrunk_value) {
-  shrunk(gfx_image->pic.baseSprite, gfx_image->pic.info->tileWidth, shrunk_value);
-  gfx_image_set_position(
-    gfx_image,
-    shrunk_centroid_get_translated_x(center_x, gfx_image->pi->tileWidth, SHRUNK_EXTRACT_X(shrunk_value)),
-    shrunk_centroid_get_translated_y(center_y, gfx_image->pi->tileHeight, SHRUNK_EXTRACT_Y(shrunk_value))
+void gfx_picture_shrunk_centroid(GFX_Picture *gfx_picture, short center_x, short center_y, WORD shrunk_value) {
+  shrunk(gfx_picture->pic.baseSprite, gfx_picture->pic.info->tileWidth, shrunk_value);
+  gfx_picture_set_position(
+    gfx_picture,
+    shrunk_centroid_get_translated_x(center_x, gfx_picture->pi->tileWidth, SHRUNK_EXTRACT_X(shrunk_value)),
+    shrunk_centroid_get_translated_y(center_y, gfx_picture->pi->tileHeight, SHRUNK_EXTRACT_Y(shrunk_value))
   );
 }
 
   /*----------------------*/
  /*      -gfx_image      */
 /*----------------------*/
-void gfx_image_init(GFX_Image *gfx_image, pictureInfo *pi, paletteInfo *pali) {
-  flash_init(&gfx_image->flash, false, 0, 0);
-  gfx_image->pali = pali;
-  gfx_image->pi = pi;
+void gfx_picture_init(GFX_Picture *gfx_picture, pictureInfo *pi, paletteInfo *pali) {
+  flash_init(&gfx_picture->flash, false, 0, 0);
+  gfx_picture->pali = pali;
+  gfx_picture->pi = pi;
 }
 
-void gfx_image_display(GFX_Image *gfx_image, short x, short y) {
-  WORD palette_index = palette_index_manager_use(gfx_image->pali);
+void gfx_picture_display(GFX_Picture *gfx_picture, short x, short y) {
+  WORD palette_index = palette_index_manager_use(gfx_picture->pali);
   pictureInit(
-    &gfx_image->pic,
-    gfx_image->pi,
-    sprite_index_manager_use(gfx_image->pi->tileWidth),
+    &gfx_picture->pic,
+    gfx_picture->pi,
+    sprite_index_manager_use(gfx_picture->pi->tileWidth),
     palette_index,
     x,
     y,
@@ -478,47 +478,47 @@ void gfx_image_display(GFX_Image *gfx_image, short x, short y) {
   );
   palJobPut(
     palette_index,
-    gfx_image->pali->palCount,
-    gfx_image->pali->data
+    gfx_picture->pali->palCount,
+    gfx_picture->pali->data
   );
 }
 
-void gfx_image_set_position(GFX_Image *gfx_image, short x, short y) {
-  pictureSetPos(&gfx_image->pic, x, y);
+void gfx_picture_set_position(GFX_Picture *gfx_picture, short x, short y) {
+  pictureSetPos(&gfx_picture->pic, x, y); // TODO : change to macro
 }
 
-void gfx_image_hide(GFX_Image *gfx_image) {
-  pictureHide(&gfx_image->pic);
-  gfx_image->flash.visible = false;
+void gfx_picture_hide(GFX_Picture *gfx_picture) {
+  pictureHide(&gfx_picture->pic);
+  gfx_picture->flash.visible = false;
 }
 
-void gfx_image_show(GFX_Image *gfx_image) {
-  pictureShow(&gfx_image->pic);
-  gfx_image->flash.visible = true;
+void gfx_picture_show(GFX_Picture *gfx_picture) {
+  pictureShow(&gfx_picture->pic);
+  gfx_picture->flash.visible = true;
 }
 
-BOOL gfx_image_flash(GFX_Image *gfx_image) {
+BOOL gfx_picture_flash(GFX_Picture *gfx_picture) {
   BOOL rt = true;
-  if (gfx_image->flash.frequency != 0 && gfx_image->flash.lengh != 0) {
-    if (DAT_frameCounter % gfx_image->flash.frequency == 0) {
-      if (is_visible(&gfx_image->flash)) {
-        gfx_image_hide(gfx_image);
+  if (gfx_picture->flash.frequency != 0 && gfx_picture->flash.lengh != 0) {
+    if (DAT_frameCounter % gfx_picture->flash.frequency == 0) {
+      if (is_visible(&gfx_picture->flash)) {
+        gfx_picture_hide(gfx_picture);
         rt = false;
       } else {
-        gfx_image_show(gfx_image);
+        gfx_picture_show(gfx_picture);
         rt = true;
       }
-      gfx_image->flash.lengh--;
-      if (gfx_image->flash.lengh == 0) gfx_image_show(gfx_image);
+      gfx_picture->flash.lengh--;
+      if (gfx_picture->flash.lengh == 0) gfx_picture_show(gfx_picture);
     }
   }
   return rt;
 }
 
-void gfx_image_destroy(GFX_Image *gfx_image) {
-  gfx_image_hide(gfx_image);
-  sprite_index_manager_set_free(gfx_image->pic.baseSprite, gfx_image->pi->tileWidth);
-  clearSprites(gfx_image->pic.baseSprite, gfx_image->pi->tileWidth);
+void gfx_picture_destroy(GFX_Picture *gfx_picture) {
+  gfx_picture_hide(gfx_picture);
+  sprite_index_manager_set_free(gfx_picture->pic.baseSprite, gfx_picture->pi->tileWidth);
+  clearSprites(gfx_picture->pic.baseSprite, gfx_picture->pi->tileWidth);
 }
 
   /*----------------------*/
