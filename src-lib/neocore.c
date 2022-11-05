@@ -44,8 +44,9 @@
 NEOCORE_INIT
 
   /*------------------*/
- /* -static          */
+ /* STATIC           */
 /*------------------*/
+
 static BOOL sprite_index_manager_status[SPRITE_INDEX_MANAGER_MAX];
 static paletteInfo *palette_index_manager_status[PALETTE_INDEX_MANAGER_MAX];
 
@@ -379,7 +380,8 @@ WORD free_ram_info() {
   /*----------------------*/
  /*  -gfx_picture_physic   */
 /*----------------------*/
-void gfx_picture_physic_init(
+
+void init_gpp(
   GFX_Picture_Physic *gfx_picture_physic,
   pictureInfo *pi,
   paletteInfo *pali,
@@ -389,29 +391,28 @@ void gfx_picture_physic_init(
   short box_height_offset,
   BOOL autobox_enabled
 ) {
-  gfx_picture_init(&gfx_picture_physic->gfx_picture, pi, pali);
+  init_gp(&gfx_picture_physic->gfx_picture, pi, pali);
   gfx_picture_physic->autobox_enabled = autobox_enabled;
   if (gfx_picture_physic->autobox_enabled) {
     box_init(&gfx_picture_physic->box, box_witdh, box_height, box_width_offset, box_height_offset);
   }
 }
 
-void gfx_picture_physic_display(GFX_Picture_Physic *gfx_picture_physic, short x, short y) {
-  gfx_picture_display(&gfx_picture_physic->gfx_picture, x, y);
+void display_gpp(GFX_Picture_Physic *gfx_picture_physic, short x, short y) {
+  display_gp(&gfx_picture_physic->gfx_picture, x, y);
   if (gfx_picture_physic->autobox_enabled) {
     box_update(&gfx_picture_physic->box, x, y);
   }
 }
 
-void gfx_picture_physic_move(GFX_Picture_Physic *gfx_picture_physic, short x_offset, short y_offset) {
-  // move_gp(&gfx_picture_physic->gfx_picture, x_offset, y_offset); // TODO : call DAT function
+void move_gpp(GFX_Picture_Physic *gfx_picture_physic, short x_offset, short y_offset) {
   pictureMove(&gfx_picture_physic->gfx_picture.pic, x_offset, y_offset);
   if (gfx_picture_physic->autobox_enabled) {
     box_update(&gfx_picture_physic->box, gfx_picture_physic->gfx_picture.pic.posX, gfx_picture_physic->gfx_picture.pic.posY);
   }
 }
 
-void gfx_picture_physic_set_position(GFX_Picture_Physic *gfx_picture_physic, short x, short y) {
+void set_pos_gpp(GFX_Picture_Physic *gfx_picture_physic, short x, short y) {
   pictureSetPos(&gfx_picture_physic->gfx_picture.pic, x, y);
   if (gfx_picture_physic->autobox_enabled) {
     box_update(&gfx_picture_physic->box, x, y);
@@ -435,12 +436,12 @@ void gfx_picture_shrunk_centroid(GFX_Picture *gfx_picture, short center_x, short
   /*----------------------*/
  /*      -gfx_picture    */
 /*----------------------*/
-void gfx_picture_init(GFX_Picture *gfx_picture, pictureInfo *pi, paletteInfo *pali) {
+void init_gp(GFX_Picture *gfx_picture, pictureInfo *pi, paletteInfo *pali) {
   gfx_picture->pali = pali;
   gfx_picture->pi = pi;
 }
 
-void gfx_picture_display(GFX_Picture *gfx_picture, short x, short y) {
+void display_gp(GFX_Picture *gfx_picture, short x, short y) {
   WORD palette_index = palette_index_manager_use(gfx_picture->pali);
   pictureInit(
     &gfx_picture->pic,
@@ -462,7 +463,7 @@ void gfx_picture_show(GFX_Picture *gfx_picture) {
   pictureShow(&gfx_picture->pic); // TODO : macro
 }
 
-void gfx_picture_destroy(GFX_Picture *gfx_picture) {
+void destroy_gp(GFX_Picture *gfx_picture) {
   pictureHide(&gfx_picture->pic);
   sprite_index_manager_set_free(gfx_picture->pic.baseSprite, gfx_picture->pi->tileWidth);
   clearSprites(gfx_picture->pic.baseSprite, gfx_picture->pi->tileWidth);
@@ -471,12 +472,12 @@ void gfx_picture_destroy(GFX_Picture *gfx_picture) {
   /*----------------------*/
  /* -gfx_animated_sprite */
 /*----------------------*/
-void gfx_animated_sprite_init(GFX_Animated_Sprite *animated_sprite ,spriteInfo *si, paletteInfo *pali) {
+void init_gas(GFX_Animated_Sprite *animated_sprite ,spriteInfo *si, paletteInfo *pali) {
   animated_sprite->si = si;
   animated_sprite->pali = pali;
 };
 
-void gfx_animated_sprite_display(GFX_Animated_Sprite *animated_sprite, short x, short y, WORD anim) {
+void display_gas(GFX_Animated_Sprite *animated_sprite, short x, short y, WORD anim) {
   WORD palette_index = palette_index_manager_use(animated_sprite->pali);
   aSpriteInit(
     &animated_sprite->as,
@@ -496,7 +497,7 @@ void gfx_animated_sprite_display(GFX_Animated_Sprite *animated_sprite, short x, 
   aSpriteSetAnim(&animated_sprite->as, anim);
 }
 
-void gfx_animated_sprite_hide(GFX_Animated_Sprite *animated_sprite) {
+void hide_gas(GFX_Animated_Sprite *animated_sprite) {
   aSpriteHide(&animated_sprite->as);
   clearSprites(animated_sprite->as.baseSprite, animated_sprite->as.tileWidth);
 }
@@ -505,8 +506,8 @@ void gfx_animated_sprite_show(GFX_Animated_Sprite *animated_sprite) {
   aSpriteShow(&animated_sprite->as); // TODO : macro
 }
 
-void gfx_animated_sprite_destroy(GFX_Animated_Sprite *animated_sprite) {
-  gfx_animated_sprite_hide(animated_sprite);
+void destroy_gas(GFX_Animated_Sprite *animated_sprite) {
+  aSpriteHide(&animated_sprite->as);
   sprite_index_manager_set_free(animated_sprite->as.baseSprite, animated_sprite->si->maxWidth);
   clearSprites(animated_sprite->as.baseSprite, animated_sprite->as.tileWidth);
 }
@@ -514,7 +515,7 @@ void gfx_animated_sprite_destroy(GFX_Animated_Sprite *animated_sprite) {
   /*------------------------------*/
  /* -gfx_animated_sprite_physic  */
 /*------------------------------*/
-void gfx_animated_sprite_physic_init(
+void init_gasp(
     GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic,
     spriteInfo *si,
     paletteInfo *pali,
@@ -531,15 +532,15 @@ void gfx_animated_sprite_physic_init(
     box_height_offset
   );
   gfx_animated_sprite_physic->physic_enabled = true;
-  gfx_animated_sprite_init(
+  init_gas(
     &gfx_animated_sprite_physic->gfx_animated_sprite,
     si,
     pali
   );
 }
 
-void gfx_animated_sprite_physic_display(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short x, short y, WORD anim) {
-  gfx_animated_sprite_display(
+void display_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short x, short y, WORD anim) {
+  display_gas(
     &gfx_animated_sprite_physic->gfx_animated_sprite,
     x,
     y,
@@ -548,13 +549,13 @@ void gfx_animated_sprite_physic_display(GFX_Animated_Sprite_Physic *gfx_animated
   box_update(&gfx_animated_sprite_physic->box, x, y);
 }
 
-void gfx_animated_sprite_physic_set_position(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short x, short y) {
+void set_pos_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short x, short y) {
   gfx_animated_sprite_set_position(&gfx_animated_sprite_physic->gfx_animated_sprite, x, y);
   box_update(&gfx_animated_sprite_physic->box, x, y);
 }
 
-void gfx_animated_sprite_physic_move(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short x_offset, short y_offset) {
-  gfx_animated_sprite_move(&gfx_animated_sprite_physic->gfx_animated_sprite, x_offset, y_offset);
+void move_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short x_offset, short y_offset) {
+  move_gas(&gfx_animated_sprite_physic->gfx_animated_sprite, x_offset, y_offset);
   box_update(&gfx_animated_sprite_physic->box, gfx_animated_sprite_physic->gfx_animated_sprite.as.posX, gfx_animated_sprite_physic->gfx_animated_sprite.as.posY);
 }
 
@@ -563,19 +564,20 @@ void gfx_animated_sprite_physic_shrunk(GFX_Animated_Sprite_Physic *gfx_animated_
   // todo (minor) - box resize
 }
 
-void gfx_animated_sprite_physic_hide(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic) {
-  gfx_animated_sprite_hide(&gfx_animated_sprite_physic->gfx_animated_sprite);
+void hide_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic) {
+  aSpriteHide(&gfx_animated_sprite_physic->gfx_animated_sprite.as);
+  //gfx_animated_sprite_hide(&gfx_animated_sprite_physic->gfx_animated_sprite);
   gfx_animated_sprite_physic->physic_enabled = false;
 }
 
-void gfx_animated_sprite_physic_show(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic) {
+void show_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic) {
   gfx_animated_sprite_show(&gfx_animated_sprite_physic->gfx_animated_sprite);
   gfx_animated_sprite_physic->physic_enabled = true;
 }
 
 void gfx_animated_sprite_physic_destroy(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic) {
-  gfx_animated_sprite_physic_hide(gfx_animated_sprite_physic);
-  gfx_animated_sprite_destroy(&gfx_animated_sprite_physic->gfx_animated_sprite);
+  aSpriteHide(&gfx_animated_sprite_physic->gfx_animated_sprite.as);
+  destroy_gas(&gfx_animated_sprite_physic->gfx_animated_sprite);
 }
 
 void inline gpu_init() {

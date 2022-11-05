@@ -74,89 +74,9 @@
 #define MANUALBOX 0
 #define AUTOBOX 1
 
+  /*----------------*/
+ /* REFACTOR       */
 /*----------------*/
-/* REFACTOR      */
-/*--------------*/
-
-
-// get x, get y gfx
-#define get_x_gas(gfx_animated_sprite) gfx_animated_sprite.as.posX
-#define get_y_gas(gfx_animated_sprite) gfx_animated_sprite.as.posY
-
-#define get_x_gasp(gfx_animated_sprite_physic) gfx_animated_sprite_physic.gfx_animated_sprite.as.posX
-#define get_y_gasp(gfx_animated_sprite_physic) gfx_animated_sprite_physic.gfx_animated_sprite.as.posY
-
-#define get_x_gp(gfx_picture) gfx_picture.pic.posX
-#define get_y_gp(gfx_picture) gfx_picture.pic.posY
-
-#define get_x_gpp(gfx_picture_physic) gfx_picture_physic.gfx_picture.pic.posX // TODO : test
-#define get_y_gpp(gfx_picture_physic) gfx_picture_physic.gfx_picture.pic.posY // TODO : test
-
-#define get_x_gs(gfx_scroller) gfx_scroller.s.scrlPosX
-#define get_y_gs(gfx_scroller) gfx_scroller.s.scrlPosY
-// end get x, get y gfx
-
-// set x, set y gfx
-#define set_x_gasp(gfx_animated_sprite_physic_pointer, x) gfx_animated_sprite_physic_set_position(gfx_animated_sprite_physic_pointer, x, gfx_animated_sprite_physic.gfx_animated_sprite.as.posY) // TODO : test
-#define set_y_gasp(gfx_animated_sprite_physic_pointer, y) gfx_animated_sprite_physic_set_position(gfx_animated_sprite_physic_pointer, gfx_animated_sprite_physic.gfx_animated_sprite.as.posX, y) // TODO : test
-
-#define set_x_gs(gfx_scroller_pointer, x) scrollerSetPos(gfx_scroller_pointer.s, x, gfx_scroller_pointer.s.scrlPosY)
-#define set_y_gs(gfx_scroller_pointer, x) scrollerSetPos(gfx_scroller_pointer.s, gfx_scroller_pointer.s.scrlPosX, y)
-// end set x, set y gfx
-
-// set pos gfx
-#define set_pos_gs(gfx_scroller_pointer, x, y) scrollerSetPos(gfx_scroller_pointer.s, x, y) // TODO : test
-#define set_pos_gas(gfx_animated_sprite_pointer, x, y) aSpriteSetPos(gfx_animated_sprite_pointer.as, x, y)
-#define set_pos_gasp(gfx_animated_sprite_physic_pointer, x, y) gfx_animated_sprite_physic_set_position(gfx_animated_sprite_physic_pointer, x, y)
-
-#define set_pos_gp(gfx_picture_pointer, x, y) pictureSetPos(gfx_picture_pointer.pic, x, y)
-
-#define set_pos_gpp(gfx_picture_physic_pointer, x, y) gfx_picture_physic_set_position(gfx_picture_physic_pointer, x, y);
-// end set pos gfx
-
-// set animation gfx
-#define set_anim_gas(gfx_animated_sprite, anim) aSpriteSetAnim(gfx_animated_sprite.as, anim)
-#define set_anim_gasp(gfx_animated_sprite_physic, anim) aSpriteSetAnim(gfx_animated_sprite_physic.gfx_animated_sprite.as, anim)
-// end set animation gfx
-
-// move gfx
-#define move_gp(gfx_picture_pointer, x, y) pictureMove(gfx_picture_pointer.pic, x, y)
-#define move_gpp(gfx_picture_physic_pointer, x, y) gfx_picture_physic_move(gfx_picture_physic_pointer, x, y)
-#define move_gas(gfx_animated_sprite, x, y) gfx_animated_sprite_move(gfx_animated_sprite, x, y)
-#define move_gasp(gfx_animated_sprite_physic, x, y) gfx_animated_sprite_physic_move(gfx_animated_sprite_physic, x, y)
-#define move_gs(gfx_scroller, x, y) scrollerSetPos(&gfx_scroller.s, gfx_scroller.s.scrlPosX + x, gfx_scroller.s.scrlPosY + y)
-// end move gfx
-
-// animate gfx
-#define update_anim_gas(gfx_animated_sprite_pointer) aSpriteAnimate(gfx_animated_sprite_pointer.as)
-#define update_anim_gasp(gfx_animated_sprite_physic_pointer) aSpriteAnimate(gfx_animated_sprite_physic_pointer.gfx_animated_sprite.as)
-// end animate gfx
-
-// hide
-#define hide_gas(gfx_animated_sprite_pointer) gfx_animated_sprite_hide(gfx_animated_sprite_pointer)
-#define hide_gasp(gfx_animated_sprite_physic_pointer) gfx_animated_sprite_physic_hide(gfx_animated_sprite_physic_pointer)
-#define hide_gp(gfx_picture_pointer) pictureHide(gfx_picture_pointer.pic)
-#define hide_gpp(gfx_picture_physic_pointer) pictureHide(gfx_picture_physic_pointer.gfx_picture.pic)
-
-//end hide
-
-// show
-#define show_gas(gfx_animated_sprite_pointer) aSpriteShow(gfx_animated_sprite_pointer.as)
-#define show_gasp(gfx_animated_sprite_physic) gfx_animated_sprite_physic_show(gfx_animated_sprite_physic)
-#define show_gp(gfx_picture_pointer) pictureShow(gfx_picture_pointer.pic)
-#define show_gpp(gfx_picture_physic_pointer) pictureShow(gfx_picture_physic_pointer.gfx_picture.pic);
-// end show
-
-// destroy
-#define destroy_gas(gfx_animated_sprite_pointer) gfx_animated_sprite_destroy(gfx_animated_sprite_pointer)
-#define destroy_gp(gfx_picture_pointer) gfx_picture_destroy(gfx_picture_pointer)
-#define destroy_gpp(gfx_picture_physic_pointer) gfx_picture_destroy(gfx_picture_physic_pointer.gfx_picture)
-#define destroy_gs
-// end destroy
-
-// enable / disable physic TODO
-
-//
 
 // utils
 #define init_logger() logger_init()
@@ -169,6 +89,10 @@
 #define get_frame_counter() DAT_frameCounter
 
 enum direction { NONE, UP, DOWN, LEFT, RIGHT };
+
+  /*-----------------*/
+ /* STRUCTURE       */
+/*-----------------*/
 
 typedef struct Vec2int Vec2int;
 struct Vec2int {
@@ -238,65 +162,140 @@ struct GFX_Scroller {
 };
 
   //--------------------------------------------------------------------------//
- //                                  -GFX                                    //
+ //                                   GFX                                    //
 //--------------------------------------------------------------------------//
 
-  /*--------------*/
- /*  INIT        */
-/*--------------*/
+void gfx_picture_is_visible(GFX_Picture *gfx_picture);
+void gfx_image_shrunk_centroid(GFX_Picture *gfx_picture, short center_x, short center_y, WORD shrunk_value);
+
+  /*------------------*/
+ /*  GFX INIT        */
+/*------------------*/
 
 void init_gs(GFX_Scroller *s, scrollerInfo *si, paletteInfo *pali);
+void init_gp(GFX_Picture *gfx_picture, pictureInfo *pi, paletteInfo *pali);
+void init_gpp(
+  GFX_Picture_Physic *gfx_picture_physic,
+  pictureInfo *pi,
+  paletteInfo *pali,
+  short box_witdh,
+  short box_height,
+  short box_width_offset,
+  short box_height_offset,
+  BOOL autobox_enabled
+);
 
+void init_gas(GFX_Animated_Sprite *gfx_animated_sprite ,spriteInfo *si, paletteInfo *pali);
+void init_gasp(
+  GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic,
+  spriteInfo *si,
+  paletteInfo *pali,
+  short box_witdh,
+  short box_height,
+  short box_width_offset,
+  short box_height_offset
+);
 
-#define init_gp(gfx_picture_pointer, pictureInfo_pointer, paletteInfo_pointer) gfx_picture_init(gfx_picture_pointer, pictureInfo_pointer, paletteInfo_pointer)
-#define init_gas(gfx_animated_sprite_pointer, spriteInfo_pointer, paletteInfo_pointer) gfx_animated_sprite_init(gfx_animated_sprite_pointer, spriteInfo_pointer, paletteInfo_pointer)
-#define init_gasp(gfx_animated_sprite_physic_pointer, spriteInfo_pointer, paletteInfo_pointer, box_width, box_height, box_width_offset, box_height_offset) \
-  gfx_animated_sprite_physic_init(gfx_animated_sprite_physic_pointer, \
-    spriteInfo_pointer, \
-    paletteInfo_pointer, \
-    box_width, \
-    box_height, \
-    box_width_offset, \
-    box_height_offset\
-  )
+  /*------------------*/
+ /*  GFX DISPLAY     */
+/*------------------*/
 
-#define init_gpp(gfx_picture_physic_pointer, pictureInfo_pointer, paletteInfo_pointer, box_width, box_height, box_width_offset, box_height_offset, autobox_enabled) \
-  gfx_picture_physic_init(gfx_picture_physic_pointer, \
-    pictureInfo_pointer, \
-    paletteInfo_pointer, \
-    box_width, \
-    box_height, \
-    box_width_offset, \
-    box_height_offset, \
-    autobox_enabled\
-  )
-
-
-  /*--------------*/
- /*  DISPLAY     */
-/*--------------*/
 void display_gs(GFX_Scroller *s, short x, short y);
+void display_gp(GFX_Picture *gfx_picture, short x, short y);
+void display_gpp(GFX_Picture_Physic *gfx_picture_physic, short x, short y);
+void display_gas(GFX_Animated_Sprite *gfx_animated_sprite, short x, short y, WORD anim);
+void display_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short x, short y, WORD anim);
+
+  /*------------------*/
+ /*  GFX VISIBILITY  */
+/*------------------*/
+
+void gfx_picture_hide(GFX_Picture *gfx_picture);
+void gfx_picture_show(GFX_Picture *gfx_picture);
+void hide_gas(GFX_Animated_Sprite *gfx_animated_sprite);
+void hide_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic);
+void show_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic);
+
+#define hide_gp(gfx_picture_pointer) pictureHide(gfx_picture_pointer.pic)
+#define hide_gpp(gfx_picture_physic_pointer) pictureHide(gfx_picture_physic_pointer.gfx_picture.pic)
+
+#define show_gas(gfx_animated_sprite_pointer) aSpriteShow(gfx_animated_sprite_pointer.as)
+#define show_gp(gfx_picture_pointer) pictureShow(gfx_picture_pointer.pic)
+#define show_gpp(gfx_picture_physic_pointer) pictureShow(gfx_picture_physic_pointer.gfx_picture.pic);
+
+  /*------------------*/
+ /*  GFX POSITION    */
+/*------------------*/
+
+/* GETTER */
+
+#define get_x_gas(gfx_animated_sprite) gfx_animated_sprite.as.posX
+#define get_y_gas(gfx_animated_sprite) gfx_animated_sprite.as.posY
+
+#define get_x_gasp(gfx_animated_sprite_physic) gfx_animated_sprite_physic.gfx_animated_sprite.as.posX
+#define get_y_gasp(gfx_animated_sprite_physic) gfx_animated_sprite_physic.gfx_animated_sprite.as.posY
+
+#define get_x_gp(gfx_picture) gfx_picture.pic.posX
+#define get_y_gp(gfx_picture) gfx_picture.pic.posY
+
+#define get_x_gpp(gfx_picture_physic) gfx_picture_physic.gfx_picture.pic.posX
+#define get_y_gpp(gfx_picture_physic) gfx_picture_physic.gfx_picture.pic.posY
+
+#define get_x_gs(gfx_scroller) gfx_scroller.s.scrlPosX
+#define get_y_gs(gfx_scroller) gfx_scroller.s.scrlPosY
+
+/* SETTER */
+
+void set_pos_gpp(GFX_Picture_Physic *gfx_picture_physic, short x, short y);
+void set_pos_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short x, short y);
 
 
-#define display_gas(gfx_animated_sprite_pointer, x, y, anim) gfx_animated_sprite_display(gfx_animated_sprite_pointer, x, y, anim)
-#define display_gasp(gfx_animated_sprite_physic_pointer, x, y, anim) gfx_animated_sprite_physic_display(gfx_animated_sprite_physic_pointer, x, y, anim)
-#define display_gp(gfx_picture_pointer, x, y) gfx_picture_display(gfx_picture_pointer, x, y)
-#define display_gpp(gfx_picture_physic_pointer, x, y) gfx_picture_physic_display(gfx_picture_physic_pointer, x, y)
+#define set_x_gasp(gfx_animated_sprite_physic_pointer, x) set_pos_gasp(gfx_animated_sprite_physic_pointer, x, gfx_animated_sprite_physic.gfx_animated_sprite.as.posY)
+#define set_y_gasp(gfx_animated_sprite_physic_pointer, y) set_pos_gasp(gfx_animated_sprite_physic_pointer, gfx_animated_sprite_physic.gfx_animated_sprite.as.posX, y)
 
-  /*--------------*/
- /*  DESTROY     */
-/*--------------*/
+#define set_x_gs(gfx_scroller_pointer, x) scrollerSetPos(gfx_scroller_pointer.s, x, gfx_scroller_pointer.s.scrlPosY)
+#define set_y_gs(gfx_scroller_pointer, x) scrollerSetPos(gfx_scroller_pointer.s, gfx_scroller_pointer.s.scrlPosX, y)
+
+#define set_pos_gs(gfx_scroller_pointer, x, y) scrollerSetPos(gfx_scroller_pointer.s, x, y)
+#define set_pos_gas(gfx_animated_sprite_pointer, x, y) aSpriteSetPos(gfx_animated_sprite_pointer.as, x, y)
+
+#define set_pos_gp(gfx_picture_pointer, x, y) pictureSetPos(gfx_picture_pointer.pic, x, y)
+
+  /*-------------------*/
+ /*  GFX ANIMATION    */
+/*-------------------*/
+
+void move_gpp(GFX_Picture_Physic *gfx_picture_physic, short x_offset, short y_offset);
+void move_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short x_offset, short y_offset);
+
+#define move_gas(gfx_animated_sprite, x_offset, y_offset) aSpriteMove(gfx_animated_sprite.as, x_offset, y_offset)
+#define move_gp(gfx_picture_pointer, x, y) pictureMove(gfx_picture_pointer.pic, x, y)
+#define move_gs(gfx_scroller, x, y) scrollerSetPos(&gfx_scroller.s, gfx_scroller.s.scrlPosX + x, gfx_scroller.s.scrlPosY + y)
+
+#define set_anim_gas(gfx_animated_sprite, anim) aSpriteSetAnim(gfx_animated_sprite.as, anim)
+#define set_anim_gasp(gfx_animated_sprite_physic, anim) aSpriteSetAnim(gfx_animated_sprite_physic.gfx_animated_sprite.as, anim)
+
+#define update_anim_gas(gfx_animated_sprite_pointer) aSpriteAnimate(gfx_animated_sprite_pointer.as)
+#define update_anim_gasp(gfx_animated_sprite_physic_pointer) aSpriteAnimate(gfx_animated_sprite_physic_pointer.gfx_animated_sprite.as)
+
+
+  /*-------------------*/
+ /*  GFX DESTROY      */
+/*-------------------*/
+
 void gfx_scroller_destroy(GFX_Scroller *s);
+void destroy_gp(GFX_Picture *gfx_picture);
+void destroy_gas(GFX_Animated_Sprite *gfx_animated_sprite);
+
+#define destroy_gpp(gfx_picture_physic_pointer) destroy_gp(gfx_picture_physic_pointer.gfx_picture)
 
   //--------------------------------------------------------------------------//
  //                                  -B                                      //
 //--------------------------------------------------------------------------//
+
 BYTE boxes_collide(Box *b, Box *boxes[], BYTE box_max);
-
 BOOL box_collide(Box *b1, Box *b2);
-
 void box_init(Box *b, short width, short height, short widthOffset, short heightOffset);
-
 void box_update(Box *b, short x, short y);
 
 // todo (minor)
@@ -307,6 +306,7 @@ void box_resize(Box *Box, short edge); // todo (minor) - deprecated ?
   //--------------------------------------------------------------------------//
  //                                  -C                                      //
 //--------------------------------------------------------------------------//
+
 void inline clear_vram();
 void clear_sprite_index_table();
 void clear_palette_index_table();
@@ -319,130 +319,45 @@ void inline fix_print_neocore(int x, int y, char *label);
 
 WORD free_ram_info();
 
-
-  //--------------------------------------------------------------------------//
- //                                  -G                                      //
-//--------------------------------------------------------------------------//
-
-  /*----------------------*/
- /*      -gfx_picture      */
-/*----------------------*/
-void gfx_picture_init(GFX_Picture *gfx_picture, pictureInfo *pi, paletteInfo *pali);
-void gfx_picture_display(GFX_Picture *gfx_picture, short x, short y);
-void gfx_picture_hide(GFX_Picture *gfx_picture);
-void gfx_picture_show(GFX_Picture *gfx_picture);
-void gfx_picture_is_visible(GFX_Picture *gfx_picture);
-void gfx_image_shrunk_centroid(GFX_Picture *gfx_picture, short center_x, short center_y, WORD shrunk_value);
-void gfx_picture_destroy(GFX_Picture *gfx_picture);
-
   /*----------------------*/
  /*  -gfx_image_physic   */
 /*----------------------*/
-void gfx_picture_physic_init(
-  GFX_Picture_Physic *gfx_picture_physic,
-  pictureInfo *pi,
-  paletteInfo *pali,
-  short box_witdh,
-  short box_height,
-  short box_width_offset,
-  short box_height_offset,
-  BOOL autobox_enabled
-);
 
-void gfx_picture_physic_display(GFX_Picture_Physic *gfx_picture_physic, short x, short y);
-void gfx_picture_physic_move(GFX_Picture_Physic *gfx_picture_physic, short x_offset, short y_offset);
-void gfx_picture_physic_set_position(GFX_Picture_Physic *gfx_picture_physic, short x, short y);
 void gfx_picture_physic_shrunk(GFX_Picture_Physic *gfx_image_physic, WORD shrunk_value); // todo (minor) - shrunk box
 
   /*----------------------*/
  /* -gfx_animated_sprite */
 /*----------------------*/
-void gfx_animated_sprite_physic_init(
-  GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic,
-  spriteInfo *si,
-  paletteInfo *pali,
-  short box_witdh,
-  short box_height,
-  short box_width_offset,
-  short box_height_offset
-);
-
-void gfx_animated_sprite_init(GFX_Animated_Sprite *gfx_animated_sprite ,spriteInfo *si, paletteInfo *pali);
-void gfx_animated_sprite_display(GFX_Animated_Sprite *gfx_animated_sprite, short x, short y, WORD anim);
-
-#define gfx_animated_sprite_move(gfx_animated_sprite, x_offset, y_offset) aSpriteMove(gfx_animated_sprite.as, x_offset, y_offset)
-#define gfx_animated_sprite_set_position(gfx_animated_sprite, x, y) aSpriteSetPos(gfx_animated_sprite.as, x, y)
-
-void gfx_animated_sprite_hide(GFX_Animated_Sprite *gfx_animated_sprite);
 
 void gfx_animated_sprite_show(GFX_Animated_Sprite *gfx_animated_sprite);
 
+#define gfx_animated_sprite_set_position(gfx_animated_sprite, x, y) aSpriteSetPos(gfx_animated_sprite.as, x, y)
 #define gfx_animated_sprite_physic_set_animation(gfx_animated_sprite_physic, anim) gfx_animated_sprite_set_animation(gfx_animated_sprite_physic.gfx_animated_sprite, anim)
-
 #define gfx_animated_sprite_animate(gfx_animated_sprite) aSpriteAnimate(gfx_animated_sprite.as)
-
-void gfx_animated_sprite_destroy(GFX_Animated_Sprite *gfx_animated_sprite);
 
   /*------------------------------*/
  /* -gfx_animated_sprite_physic  */
 /*------------------------------*/
-void gfx_animated_sprite_physic_display(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short x, short y, WORD anim);
-
-void gfx_animated_sprite_physic_set_position(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short x, short y);
-
-void gfx_animated_sprite_physic_move(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short x_offset, short y_offset);
 
 void gfx_animated_sprite_physic_shrunk(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, WORD shrunk_value); // todo (minor)
-
-void gfx_animated_sprite_physic_hide(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic);
-
-void gfx_animated_sprite_physic_show(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic);
-
 void gfx_animated_sprite_physic_destroy(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic);
 
+  //--------------------------------------------------------------------------//
+ //                                  -G                                      //
+//--------------------------------------------------------------------------//
+
 void inline gpu_init();
+WORD get_shrunk_proportional_table(WORD index);
+char get_sin(WORD index);
+WORD get_max_free_sprite_index();
+WORD get_max_sprite_index_used();
+WORD get_max_free_palette_index();
+WORD get_max_palette_index_used();
 
-WORD        get_shrunk_proportional_table(WORD index);
-
-char        get_sin(WORD index);
-
-WORD        get_max_free_sprite_index();
-
-WORD        get_max_sprite_index_used();
-
-WORD      get_max_free_palette_index();
-
-WORD     get_max_palette_index_used();
-
-
-
-#define get_gfx_image_pictureInfo(gfx_image) gfx_image.pi
-
-#define get_gfx_image_paletteInfo(gfx_image) gfx_image.pali
-
-#define get_gfx_image_baseSprite(gfx_image) gfx_image.pic.baseSprite
-
-#define get_gfx_image_tileWidth(gfx_image) gfx_image.pic.info->tileWidth
-
-#define get_gfx_image_position_x(gfx_image) gfx_image.pic.posX
-
-#define get_gfx_image_position_y(gfx_image) gfx_image.pic.posY
-
-  /*---------------*/
- /* -gfx_scroller */
-/*---------------*/
-
-
-  //--------------------------------------------------------------------------//
- //                                  -I                                      //
-//--------------------------------------------------------------------------//
-
-  //--------------------------------------------------------------------------//
- //                                  -J                                      //
-//--------------------------------------------------------------------------//
   /*----------*/
- /* -joypad  */
+ /* JOYPAD   */
 /*----------*/
+
 void        joypad_update();
 void        joypad_update_edge();
 BOOL        joypad_is_up();
@@ -456,11 +371,8 @@ BOOL        joypad_is_c();
 BOOL        joypad_is_d();
 void inline joypad_debug();
 
-  //--------------------------------------------------------------------------//
- //                                  -L                                       //
-//--------------------------------------------------------------------------//
   /*----------*/
- /* -logger  */
+ /* LOGGER   */
 /*----------*/
 void        logger_init();
 void        logger_set_position(WORD _x, WORD _y);
@@ -479,10 +391,6 @@ void inline logger_pictureInfo(char *label, pictureInfo *pi);
   //--------------------------------------------------------------------------//
  //                                  -P                                      //
 //--------------------------------------------------------------------------//
-/**
- * \brief palette destroy
- * @param paletteInfo*
- */
 void palette_destroy(paletteInfo* pi);
 
   //--------------------------------------------------------------------------//
@@ -495,45 +403,10 @@ void mask_update(short x, short y, Vec2short vec[], Vec2short offset[], BYTE vec
   //--------------------------------------------------------------------------//
  //                                  -V                                      //
 //--------------------------------------------------------------------------//
-/**
- * \brief init a Vec2int structure
- * @param Vect2int* Pointer
- * @param x
- * @param y
- */
 void vec2int_init(Vec2int *vec, int x, int y);
-
-/**
- * \brief init a Vec2short structure
- * @param Vect2short* Pointer
- * @param x
- * @param y
- */
 void vec2short_init(Vec2short *vec, short x, short y);
-
-/**
- * \brief init a Vec2byte structure
- * @param Vect2byte* Pointer
- * @param x
- * @param y
- */
 void vec2byte_init(Vec2byte *vec, BYTE x, BYTE y);
-
-/**
- * @param Box* Pointer
- * @param Vec2short[] List
- * @param max Quantity list
- */
 BOOL vectors_collide(Box *box, Vec2short vec[], BYTE vector_max);
-
-/**
- * @param x Coord 1
- * @param y Coord 1
- * @param x Coord 2
- * @param y Coord 2
- * @param x Coord 3
- * @param y Coord 3
- */
 BOOL vector_is_left(short x, short y, short v1x, short v1y, short v2x, short v2y);
 
   //--------------------------------------------------------------------------//
@@ -543,15 +416,10 @@ BOOL vector_is_left(short x, short y, short v1x, short v1y, short v2x, short v2y
  /* -shrunk   */
 /*-----------*/
 int         shrunk_centroid_get_translated_x(short centerPosX, WORD tileWidth, BYTE shrunkX);
-
 int         shrunk_centroid_get_translated_y(short centerPosY, WORD tileHeight, BYTE shrunkY);
-
 void        shrunk(WORD base_sprite, WORD max_width, WORD value);
-
 WORD        shrunk_forge(BYTE xc, BYTE yc);
-
 void inline shrunk_addr(WORD addr, WORD shrunk_value);
-
 WORD        shrunk_range(WORD addr_start, WORD addr_end, WORD shrunk_value);
 
   //--------------------------------------------------------------------------//
