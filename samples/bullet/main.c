@@ -14,7 +14,7 @@ static void display();
 static void update();
 
 static void init() {
-  gpu_init();
+  init_gpu();
   player_init();
   asteroid_init();
 }

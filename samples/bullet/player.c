@@ -20,19 +20,19 @@ void player_display(short x, short y) {
 }
 
 void player_update() {
-  animate_gasp(&player_sprite);
+  update_anim_gasp(&player_sprite);
   update_joypad();
   if (joypad_is_up() && get_y_gasp(player_sprite) > get_player_min_y()) {
     move_gasp(&player_sprite, 0, -get_player_speed());
-    set_animation_gasp(&player_sprite, PLAYER_IMG_ANIM_UP);
+    set_anim_gasp(&player_sprite, PLAYER_IMG_ANIM_UP);
   }
   if (joypad_is_down() && get_y_gasp(player_sprite) < get_player_max_y()) {
     move_gasp(&player_sprite, 0, get_player_speed());
-    set_animation_gasp(&player_sprite, PLAYER_IMG_ANIM_DOWN);
+    set_anim_gasp(&player_sprite, PLAYER_IMG_ANIM_DOWN);
   }
   if (joypad_is_left() && get_x_gasp(player_sprite) > get_player_min_x()) move_gasp(&player_sprite, -get_player_speed(), 0);
   if (joypad_is_right() && get_x_gasp(player_sprite) < get_player_max_x()) move_gasp(&player_sprite, get_player_speed(), 0);
 
-  if (!joypad_is_down() && !joypad_is_up()) set_animation_gasp(&player_sprite, PLAYER_IMG_ANIM_IDLE);
+  if (!joypad_is_down() && !joypad_is_up()) set_anim_gasp(&player_sprite, PLAYER_IMG_ANIM_IDLE);
   bullet_player_update(joypad_is_a(), get_x_gasp(player_sprite), get_y_gasp(player_sprite));
 }

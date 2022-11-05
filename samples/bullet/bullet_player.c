@@ -74,7 +74,7 @@ static void update_move() {
   for (i = 0; i < get_bullet_max(); i++) {
     if (sprites_state[i]) {
       move_gasp(&sprites[i], get_bullet_max(), 0);
-      animate_gasp(&sprites[i]);
+      update_anim_gasp(&sprites[i]);
       if (sprites[i].gfx_animated_sprite.as.posX > 320) {
         free_sprite(i);
       }

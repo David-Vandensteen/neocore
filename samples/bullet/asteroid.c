@@ -2,16 +2,16 @@
 #include "externs.h"
 #include "asteroid.h"
 
-static GFX_Image_Physic asteroid;
+static GFX_Picture_Physic asteroid;
 static BYTE hit;
 
 void asteroid_init() {
   hit = 0;
-  init_gip(&asteroid, &asteroid_sprite, &asteroid_sprite_Palettes, 8, 8, 0, 0, AUTOBOX);
+  init_gpp(&asteroid, &asteroid_sprite, &asteroid_sprite_Palettes, 8, 8, 0, 0, AUTOBOX);
 }
 
 void asteroid_display() {
-  display_gip(&asteroid, 200, 100);
+  display_gpp(&asteroid, 200, 100);
 }
 
 void asteroid_update() {
