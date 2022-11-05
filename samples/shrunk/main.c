@@ -4,25 +4,25 @@
 NEOCORE_INIT
 
 int main(void) {
-  GFX_Image logo1, logo2, logo3;
+  GFX_Picture logo1, logo2, logo3;
   BYTE logo1_shrunk_x = 0;
   BYTE logo2_shrunk_y = 0;
-  gpu_init();
-  gfx_image_init(&logo1, &logo_sprite, &logo_sprite_Palettes);
-  gfx_image_init(&logo2, &logo_sprite, &logo_sprite_Palettes);
-  gfx_image_init(&logo3, &logo_sprite, &logo_sprite_Palettes);
-  logger_init();
+  init_gpu();
+  init_gp(&logo1, &logo_sprite, &logo_sprite_Palettes);
+  init_gp(&logo2, &logo_sprite, &logo_sprite_Palettes);
+  init_gp(&logo3, &logo_sprite, &logo_sprite_Palettes);
+  init_logger();
   logger_info("HORIZONTAL SHRUNK");
-  gfx_image_init(&logo1, &logo_sprite, &logo_sprite_Palettes);
-  gfx_image_init(&logo2, &logo_sprite, &logo_sprite_Palettes);
-  gfx_image_init(&logo3, &logo_sprite, &logo_sprite_Palettes);
-  gfx_image_display(&logo1, 10, 20);
+  init_gp(&logo1, &logo_sprite, &logo_sprite_Palettes);
+  init_gp(&logo2, &logo_sprite, &logo_sprite_Palettes);
+  init_gp(&logo3, &logo_sprite, &logo_sprite_Palettes);
+  display_gp(&logo1, 10, 20);
   logger_set_position(1, 10);
   logger_info("VERTICAL SHRUNK");
-  gfx_image_display(&logo2, 10, 80);
+  display_gp(&logo2, 10, 80);
   logger_set_position(1, 19);
   logger_info("PROPORTIONAL SHRUNK");
-  gfx_image_display(&logo3, 10, 150);
+  display_gp(&logo3, 10, 150);
 
   while(1) {
     wait_vbl();
@@ -35,8 +35,8 @@ int main(void) {
 
 
     /* neocore provide a precalculated table for keep "aspect ratio" */
-    SCClose();
+    close_vbl();
   };
-  SCClose();
+  close_vbl();
   return 0;
 }
