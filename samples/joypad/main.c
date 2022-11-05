@@ -9,12 +9,12 @@
 NEOCORE_INIT
 
 int main(void) {
-  gpu_init();
+  init_gpu();
   while(1) {
     wait_vbl();
-    logger_init();
+    init_logger();
     logger_info("INTERACT WITH JOYPAD ...");
-    joypad_update_edge();
+    update_joypad_edge();
     joypad_debug(); /* display which control is actived */
 
     if (joypad_is_up()) logger_info("ITS UP !");
@@ -26,8 +26,8 @@ int main(void) {
     if (joypad_is_c()) logger_info("ITS C !");
     if (joypad_is_d()) logger_info("ITS D !");
 
-    SCClose();
+    close_vbl();
   };
-  SCClose();
+  close_vbl();
   return 0;
 }
