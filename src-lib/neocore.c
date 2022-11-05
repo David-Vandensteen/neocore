@@ -630,17 +630,10 @@ WORD get_max_palette_index_used() {
   return max;
 }
 
-
   //--------------------------------------------------------------------------//
- //                                  -I                                      //
+ //                             JOYPAD                                       //
 //--------------------------------------------------------------------------//
 
-  //--------------------------------------------------------------------------//
- //                                  -J                                      //
-//--------------------------------------------------------------------------//
-  /*----------*/
- /* -joypad  */
-/*----------*/
 void inline joypad_debug() {
   JOYPAD_READ
   if (joypad_is_start()) {  fix_print_neocore(10, 11,  "JOYPAD START"); }
@@ -654,11 +647,11 @@ void inline joypad_debug() {
   if (joypad_is_d())     {  fix_print_neocore(10, 11,  "JOYPAD D    "); }
 }
 
-void joypad_update() {
+void joypad_update() { // TODO : macro
   JOYPAD_READ
 }
 
-void joypad_update_edge() {
+void joypad_update_edge() { // TODO : macro
   JOYPAD_READ_EDGE
 }
 
@@ -673,11 +666,9 @@ BOOL joypad_is_c()      { return (JOYPAD_IS_C)      ? (true) : (false); }
 BOOL joypad_is_d()      { return (JOYPAD_IS_D)      ? (true) : (false); }
 
   //--------------------------------------------------------------------------//
- //                                  -L                                       //
+ //                            LOGGER                                        //
 //--------------------------------------------------------------------------//
-  /*----------*/
- /* -logger  */
-/*----------*/
+
 void logger_init() {
   #ifdef LOGGER_ON
   x = LOGGER_X_INIT;

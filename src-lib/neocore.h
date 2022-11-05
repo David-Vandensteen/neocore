@@ -6,6 +6,11 @@
 // TODO : rename loggers (ex logger_animate_sprite to log_gas)
 // TODO : parametric macro for CDDA play
 
+
+  //--------------------------------------------------------------------------//
+ //                             DEFINE                                       //
+//--------------------------------------------------------------------------//
+
 #ifndef NEOCORE_H
 #define NEOCORE_H
 #include <DATlib.h>
@@ -90,30 +95,15 @@
 
 enum direction { NONE, UP, DOWN, LEFT, RIGHT };
 
-  /*-----------------*/
- /* STRUCTURE       */
-/*-----------------*/
+  //--------------------------------------------------------------------------//
+ //                          STRUCTURE                                       //
+//--------------------------------------------------------------------------//
 
-typedef struct Vec2int Vec2int;
-struct Vec2int {
-  int x;
-  int y;
-};
+typedef struct Vec2int { int x; int y; } Vec2int;
+typedef struct Vec2short { short x; short y; } Vec2short;
+typedef struct Vec2byte { BYTE x; BYTE y; } Vec2byte;
 
-typedef struct Vec2short Vec2short;
-struct Vec2short {
-  short x;
-  short y;
-};
-
-typedef struct Vec2byte Vec2byte;
-struct Vec2byte {
-  BYTE x;
-  BYTE y;
-};
-
-typedef struct Box Box;
-struct Box {
+typedef struct Box {
   Vec2short p0;       /*!< coordinate 0 of the box (x, y) */
   Vec2short p1;       /*!< coordinate 1 of the box (x, y) */
   Vec2short p2;       /*!< coordinate 2 of the box (x, y) */
@@ -123,49 +113,43 @@ struct Box {
   short height;       /*!< height of the box */
   short widthOffset;  /*!< width box reducing */
   short heightOffset; /*!< height box reducing */
-};
+} Box;
 
-typedef struct GFX_Animated_Sprite GFX_Animated_Sprite;
-struct GFX_Animated_Sprite {
+typedef struct GFX_Animated_Sprite {
   aSprite as;         /*!< - as is aSprite DATLib definition */
   spriteInfo *si;     /*!< - si is a pointer to DATLib spriteInfo structure */
   paletteInfo *pali;  /*!< - pali is a pointer to DATLib paletteInfo structure */
-};
+} GFX_Animated_Sprite;
 
-typedef struct GFX_Picture GFX_Picture;
-struct GFX_Picture {
+typedef struct GFX_Picture {
   picture pic;        /*!< - pic is picture DATLib definition */
   pictureInfo *pi;    /*!< - pi is a pointer to DATLib pictureInfo structure */
   paletteInfo *pali;  /*!< - pali is a pointer to DATLib paletteInfo structure */
-};
+} GFX_Picture;
 
-typedef struct GFX_Animated_Sprite_Physic GFX_Animated_Sprite_Physic;
-struct GFX_Animated_Sprite_Physic {
+typedef struct GFX_Animated_Sprite_Physic {
   GFX_Animated_Sprite gfx_animated_sprite;  /*!< - GFX_Animated_Sprite */
   Box box;                          /*!< - Box */
   BOOL physic_enabled;              /*!< - enable physic (for collide detection capalities) */
-};
+} GFX_Animated_Sprite_Physic;
 
-typedef struct GFX_Picture_Physic GFX_Picture_Physic;
-struct GFX_Picture_Physic {
+typedef struct GFX_Picture_Physic {
   GFX_Picture gfx_picture;  /*!< - GFX_Picture */
   Box box;              /*!< - Box */
   BOOL autobox_enabled; /*!< - enable autobox */
   BOOL physic_enabled;  /*!< - enable physic (for collide detection capabilities) */
-};
+} GFX_Picture_Physic;
 
-typedef struct GFX_Scroller GFX_Scroller;
-struct GFX_Scroller {
+typedef struct GFX_Scroller {
   scroller s;          /*!< - s is a pointer to DATLib scroller struture */
   scrollerInfo *si;    /*!< - si is a pointer to DATLib scrollerInfo structure */
   paletteInfo *pali;   /*!< - pali is a pointer to DATLib paletteInfo structure */
-};
+} GFX_Scroller;
 
   //--------------------------------------------------------------------------//
  //                                   GFX                                    //
 //--------------------------------------------------------------------------//
 
-void gfx_picture_is_visible(GFX_Picture *gfx_picture);
 void gfx_image_shrunk_centroid(GFX_Picture *gfx_picture, short center_x, short center_y, WORD shrunk_value);
 
   /*------------------*/
@@ -227,7 +211,7 @@ void show_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic);
  /*  GFX POSITION    */
 /*------------------*/
 
-/* GETTER */
+/* GFX POSITION GETTER */
 
 #define get_x_gas(gfx_animated_sprite) gfx_animated_sprite.as.posX
 #define get_y_gas(gfx_animated_sprite) gfx_animated_sprite.as.posY
@@ -244,11 +228,10 @@ void show_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic);
 #define get_x_gs(gfx_scroller) gfx_scroller.s.scrlPosX
 #define get_y_gs(gfx_scroller) gfx_scroller.s.scrlPosY
 
-/* SETTER */
+/* GFX POSITION SETTER */
 
 void set_pos_gpp(GFX_Picture_Physic *gfx_picture_physic, short x, short y);
 void set_pos_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short x, short y);
-
 
 #define set_x_gasp(gfx_animated_sprite_physic_pointer, x) set_pos_gasp(gfx_animated_sprite_physic_pointer, x, gfx_animated_sprite_physic.gfx_animated_sprite.as.posY)
 #define set_y_gasp(gfx_animated_sprite_physic_pointer, y) set_pos_gasp(gfx_animated_sprite_physic_pointer, gfx_animated_sprite_physic.gfx_animated_sprite.as.posX, y)
@@ -258,7 +241,6 @@ void set_pos_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short 
 
 #define set_pos_gs(gfx_scroller_pointer, x, y) scrollerSetPos(gfx_scroller_pointer.s, x, y)
 #define set_pos_gas(gfx_animated_sprite_pointer, x, y) aSpriteSetPos(gfx_animated_sprite_pointer.as, x, y)
-
 #define set_pos_gp(gfx_picture_pointer, x, y) pictureSetPos(gfx_picture_pointer.pic, x, y)
 
   /*-------------------*/
@@ -283,20 +265,71 @@ void move_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short x_o
  /*  GFX DESTROY      */
 /*-------------------*/
 
-void gfx_scroller_destroy(GFX_Scroller *s);
+void gfx_scroller_destroy(GFX_Scroller *s); // TODO
 void destroy_gp(GFX_Picture *gfx_picture);
 void destroy_gas(GFX_Animated_Sprite *gfx_animated_sprite);
 
 #define destroy_gpp(gfx_picture_physic_pointer) destroy_gp(gfx_picture_physic_pointer.gfx_picture)
 
   //--------------------------------------------------------------------------//
- //                                  -B                                      //
+ //                                   GPU                                    //
 //--------------------------------------------------------------------------//
+
+void inline gpu_init(); // TODO : change to init_gpu
+void inline clear_vram();
+char get_sin(WORD index);
+
+  /*------------------------------*/
+ /* GPU VBL                      */
+/*------------------------------*/
+
+DWORD inline wait_vbl_max(WORD nb);
+#define wait_vbl(); waitVBlank();
+
+  /*------------------------------*/
+ /* GPU SPRITE INDEX MANAGEMENT  */
+/*------------------------------*/
+
+void clear_sprite_index_table();
+WORD get_max_free_sprite_index();
+WORD get_max_sprite_index_used();
+
+  /*---------------*/
+ /* GPU PALETTE   */
+/*---------------*/
+
+void palette_destroy(paletteInfo* pi); // TODO : change to destroy_palette
+void clear_palette_index_table();
+WORD get_max_free_palette_index();
+WORD get_max_palette_index_used();
+
+  /*--------------*/
+ /* GPU shrunk   */
+/*--------------*/
+
+WORD get_shrunk_proportional_table(WORD index);
+int shrunk_centroid_get_translated_x(short centerPosX, WORD tileWidth, BYTE shrunkX);
+int shrunk_centroid_get_translated_y(short centerPosY, WORD tileHeight, BYTE shrunkY);
+void shrunk(WORD base_sprite, WORD max_width, WORD value);
+WORD shrunk_forge(BYTE xc, BYTE yc);
+void inline shrunk_addr(WORD addr, WORD shrunk_value);
+WORD shrunk_range(WORD addr_start, WORD addr_end, WORD shrunk_value);
+
+  //--------------------------------------------------------------------------//
+ //                                PHYSIC                                    //
+//--------------------------------------------------------------------------//
+
+void gfx_picture_physic_shrunk(GFX_Picture_Physic *gfx_image_physic, WORD shrunk_value); // todo (minor) - shrunk box
 
 BYTE boxes_collide(Box *b, Box *boxes[], BYTE box_max);
 BOOL box_collide(Box *b1, Box *b2);
 void box_init(Box *b, short width, short height, short widthOffset, short heightOffset);
 void box_update(Box *b, short x, short y);
+
+//void mask_display(picture pic[], Vec2short vec[], BYTE vector_max); // todo (minor) - rename ? (vectorsDisplay)
+void mask_update(short x, short y, Vec2short vec[], Vec2short offset[], BYTE vector_max); // todo (minor) - rename ? (vectorsDebug)
+// todo (minor) - hardcode point\dot asset
+
 
 // todo (minor)
 void box_shrunk(Box *b, Box *bOrigin, WORD shrunkValue);
@@ -304,13 +337,10 @@ void box_shrunk(Box *b, Box *bOrigin, WORD shrunkValue);
 void box_resize(Box *Box, short edge); // todo (minor) - deprecated ?
 
   //--------------------------------------------------------------------------//
- //                                  -C                                      //
+ //                                SOUND                                     //
 //--------------------------------------------------------------------------//
 
-void inline clear_vram();
-void clear_sprite_index_table();
-void clear_palette_index_table();
-void cdda_play(BYTE track);
+void cdda_play(BYTE track); // TODO : change to play_cdda
 
   //--------------------------------------------------------------------------//
  //                                  -F                                      //
@@ -318,12 +348,6 @@ void cdda_play(BYTE track);
 void inline fix_print_neocore(int x, int y, char *label);
 
 WORD free_ram_info();
-
-  /*----------------------*/
- /*  -gfx_image_physic   */
-/*----------------------*/
-
-void gfx_picture_physic_shrunk(GFX_Picture_Physic *gfx_image_physic, WORD shrunk_value); // todo (minor) - shrunk box
 
   /*----------------------*/
  /* -gfx_animated_sprite */
@@ -342,17 +366,6 @@ void gfx_animated_sprite_show(GFX_Animated_Sprite *gfx_animated_sprite);
 void gfx_animated_sprite_physic_shrunk(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, WORD shrunk_value); // todo (minor)
 void gfx_animated_sprite_physic_destroy(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic);
 
-  //--------------------------------------------------------------------------//
- //                                  -G                                      //
-//--------------------------------------------------------------------------//
-
-void inline gpu_init();
-WORD get_shrunk_proportional_table(WORD index);
-char get_sin(WORD index);
-WORD get_max_free_sprite_index();
-WORD get_max_sprite_index_used();
-WORD get_max_free_palette_index();
-WORD get_max_palette_index_used();
 
   /*----------*/
  /* JOYPAD   */
@@ -371,12 +384,13 @@ BOOL        joypad_is_c();
 BOOL        joypad_is_d();
 void inline joypad_debug();
 
-  /*----------*/
- /* LOGGER   */
-/*----------*/
-void        logger_init();
-void        logger_set_position(WORD _x, WORD _y);
-WORD inline logger_info(char *txt);
+  //--------------------------------------------------------------------------//
+ //                               LOGGER                                     //
+//--------------------------------------------------------------------------//
+
+void logger_init(); // TODO : change to init_logger
+void logger_set_position(WORD _x, WORD _y);
+WORD inline logger_info(char *txt); // TODO : change to log_info
 void inline logger_word(char *label, WORD value);
 void inline logger_int(char *label, int value);
 void inline logger_dword(char *label, DWORD value);
@@ -389,18 +403,6 @@ void inline logger_box(char *label, Box *b);
 void inline logger_pictureInfo(char *label, pictureInfo *pi);
 
   //--------------------------------------------------------------------------//
- //                                  -P                                      //
-//--------------------------------------------------------------------------//
-void palette_destroy(paletteInfo* pi);
-
-  //--------------------------------------------------------------------------//
- //                                  -M                                      //
-//--------------------------------------------------------------------------//
-//void mask_display(picture pic[], Vec2short vec[], BYTE vector_max); // todo (minor) - rename ? (vectorsDisplay)
-void mask_update(short x, short y, Vec2short vec[], Vec2short offset[], BYTE vector_max); // todo (minor) - rename ? (vectorsDebug)
-// todo (minor) - hardcode point\dot asset
-
-  //--------------------------------------------------------------------------//
  //                                  -V                                      //
 //--------------------------------------------------------------------------//
 void vec2int_init(Vec2int *vec, int x, int y);
@@ -409,23 +411,5 @@ void vec2byte_init(Vec2byte *vec, BYTE x, BYTE y);
 BOOL vectors_collide(Box *box, Vec2short vec[], BYTE vector_max);
 BOOL vector_is_left(short x, short y, short v1x, short v1y, short v2x, short v2y);
 
-  //--------------------------------------------------------------------------//
- //                                  -S                                      //
-//--------------------------------------------------------------------------//
-  /*-----------*/
- /* -shrunk   */
-/*-----------*/
-int         shrunk_centroid_get_translated_x(short centerPosX, WORD tileWidth, BYTE shrunkX);
-int         shrunk_centroid_get_translated_y(short centerPosY, WORD tileHeight, BYTE shrunkY);
-void        shrunk(WORD base_sprite, WORD max_width, WORD value);
-WORD        shrunk_forge(BYTE xc, BYTE yc);
-void inline shrunk_addr(WORD addr, WORD shrunk_value);
-WORD        shrunk_range(WORD addr_start, WORD addr_end, WORD shrunk_value);
-
-  //--------------------------------------------------------------------------//
- //                                  -W                                      //
-//--------------------------------------------------------------------------//
-DWORD inline wait_vbl_max(WORD nb);
-#define wait_vbl(); waitVBlank();
 
 #endif
