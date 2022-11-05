@@ -361,12 +361,6 @@ void inline fix_print_neocore(int x, int y, char *label){
   fixPrint(x, y, 0, 0, label);
 }
 
-void flash_init(Flash *flash, BOOL enabled, short frequency, short lengh) {
-  flash->enabled = enabled;
-  flash->frequency = frequency;
-  flash->lengh = lengh;
-}
-
 WORD free_ram_info() {
   // $000000  $0FFFFF    Vector Table, 68k program (.PRG files), 68k RAM
   // $100000  $00F2FF    WORKRAM_USER  User RAM/Work RAM
@@ -410,31 +404,30 @@ void gfx_picture_physic_display(GFX_Picture_Physic *gfx_picture_physic, short x,
 }
 
 void gfx_picture_physic_move(GFX_Picture_Physic *gfx_picture_physic, short x_offset, short y_offset) {
-  move_gp(&gfx_picture_physic->gfx_picture, x_offset, y_offset);
+  // move_gp(&gfx_picture_physic->gfx_picture, x_offset, y_offset); // TODO : call DAT function
+  pictureMove(&gfx_picture_physic->gfx_picture.pic, x_offset, y_offset);
   if (gfx_picture_physic->autobox_enabled) {
     box_update(&gfx_picture_physic->box, gfx_picture_physic->gfx_picture.pic.posX, gfx_picture_physic->gfx_picture.pic.posY);
   }
 }
 
 void gfx_picture_physic_set_position(GFX_Picture_Physic *gfx_picture_physic, short x, short y) {
-  gfx_picture_set_position(&gfx_picture_physic->gfx_picture, x, y);
+  pictureSetPos(&gfx_picture_physic->gfx_picture.pic, x, y);
   if (gfx_picture_physic->autobox_enabled) {
     box_update(&gfx_picture_physic->box, x, y);
   }
 }
 
+/* TODO : remove useless
 void gfx_picture_physic_hide(GFX_Picture_Physic *gfx_picture_physic) {
   gfx_picture_hide(&gfx_picture_physic->gfx_picture);
   gfx_picture_physic->physic_enabled = false;
 }
+*/
 
 void gfx_picture_physic_show(GFX_Picture_Physic *gfx_picture_physic) {
   gfx_picture_show(&gfx_picture_physic->gfx_picture);
   gfx_picture_physic->physic_enabled = true;
-}
-
-void gfx_picture_physic_flash(GFX_Picture_Physic *gfx_picture_physic) {
-  gfx_picture_physic->physic_enabled = gfx_picture_flash(&gfx_picture_physic->gfx_picture);
 }
 
 void gfx_picture_physic_shrunk(GFX_Picture_Physic *gfx_picture_physic, WORD shrunk_value) {
@@ -443,24 +436,23 @@ void gfx_picture_physic_shrunk(GFX_Picture_Physic *gfx_picture_physic, WORD shru
 }
 
 void gfx_picture_physic_destroy(GFX_Picture_Physic *gfx_picture_physic) {
-  gfx_picture_physic_hide(gfx_picture_physic);
+  pictureHide(&gfx_picture_physic->gfx_picture.pic);
   gfx_picture_destroy(&gfx_picture_physic->gfx_picture);
 }
 
 void gfx_picture_shrunk_centroid(GFX_Picture *gfx_picture, short center_x, short center_y, WORD shrunk_value) {
   shrunk(gfx_picture->pic.baseSprite, gfx_picture->pic.info->tileWidth, shrunk_value);
-  gfx_picture_set_position(
-    gfx_picture,
+  pictureSetPos(
+    &gfx_picture->pic,
     shrunk_centroid_get_translated_x(center_x, gfx_picture->pi->tileWidth, SHRUNK_EXTRACT_X(shrunk_value)),
     shrunk_centroid_get_translated_y(center_y, gfx_picture->pi->tileHeight, SHRUNK_EXTRACT_Y(shrunk_value))
   );
 }
 
   /*----------------------*/
- /*      -gfx_image      */
+ /*      -gfx_picture    */
 /*----------------------*/
 void gfx_picture_init(GFX_Picture *gfx_picture, pictureInfo *pi, paletteInfo *pali) {
-  flash_init(&gfx_picture->flash, false, 0, 0);
   gfx_picture->pali = pali;
   gfx_picture->pi = pi;
 }
@@ -483,40 +475,21 @@ void gfx_picture_display(GFX_Picture *gfx_picture, short x, short y) {
   );
 }
 
-void gfx_picture_set_position(GFX_Picture *gfx_picture, short x, short y) {
-  pictureSetPos(&gfx_picture->pic, x, y); // TODO : change to macro
-}
-
+/* TODO : remove useless
 void gfx_picture_hide(GFX_Picture *gfx_picture) {
   pictureHide(&gfx_picture->pic);
   gfx_picture->flash.visible = false;
 }
+*/
 
 void gfx_picture_show(GFX_Picture *gfx_picture) {
-  pictureShow(&gfx_picture->pic);
-  gfx_picture->flash.visible = true;
-}
-
-BOOL gfx_picture_flash(GFX_Picture *gfx_picture) {
-  BOOL rt = true;
-  if (gfx_picture->flash.frequency != 0 && gfx_picture->flash.lengh != 0) {
-    if (DAT_frameCounter % gfx_picture->flash.frequency == 0) {
-      if (is_visible(&gfx_picture->flash)) {
-        gfx_picture_hide(gfx_picture);
-        rt = false;
-      } else {
-        gfx_picture_show(gfx_picture);
-        rt = true;
-      }
-      gfx_picture->flash.lengh--;
-      if (gfx_picture->flash.lengh == 0) gfx_picture_show(gfx_picture);
-    }
-  }
-  return rt;
+  pictureShow(&gfx_picture->pic); // TODO : macro
 }
 
 void gfx_picture_destroy(GFX_Picture *gfx_picture) {
-  gfx_picture_hide(gfx_picture);
+  // gfx_picture_hide(gfx_picture);
+  pictureHide(&gfx_picture->pic);
+
   sprite_index_manager_set_free(gfx_picture->pic.baseSprite, gfx_picture->pi->tileWidth);
   clearSprites(gfx_picture->pic.baseSprite, gfx_picture->pi->tileWidth);
 }
@@ -525,7 +498,6 @@ void gfx_picture_destroy(GFX_Picture *gfx_picture) {
  /* -gfx_animated_sprite */
 /*----------------------*/
 void gfx_animated_sprite_init(GFX_Animated_Sprite *animated_sprite ,spriteInfo *si, paletteInfo *pali) {
-  flash_init(&animated_sprite->flash, false, 0, 0);
   animated_sprite->si = si;
   animated_sprite->pali = pali;
 };
@@ -550,29 +522,13 @@ void gfx_animated_sprite_display(GFX_Animated_Sprite *animated_sprite, short x, 
   aSpriteSetAnim(&animated_sprite->as, anim);
 }
 
-BOOL gfx_animated_sprite_flash(GFX_Animated_Sprite *animated_sprite) {
-  if (animated_sprite->flash.enabled) {
-    if (DAT_frameCounter % animated_sprite->flash.frequency == 0) {
-      (is_visible(&animated_sprite->flash)) ? gfx_animated_sprite_hide(animated_sprite) : gfx_animated_sprite_show(animated_sprite);
-      animated_sprite->flash.lengh--;
-      if (animated_sprite->flash.lengh <= 0) {
-        gfx_animated_sprite_show(animated_sprite);
-        animated_sprite->flash.enabled = false;
-      }
-    }
-  }
-  return animated_sprite->flash.enabled;
-}
-
 void gfx_animated_sprite_hide(GFX_Animated_Sprite *animated_sprite) {
-  animated_sprite->flash.visible = false;
   aSpriteHide(&animated_sprite->as);
   clearSprites(animated_sprite->as.baseSprite, animated_sprite->as.tileWidth);
 }
 
 void gfx_animated_sprite_show(GFX_Animated_Sprite *animated_sprite) {
-  animated_sprite->flash.visible = true;
-  aSpriteShow(&animated_sprite->as);
+  aSpriteShow(&animated_sprite->as); // TODO : macro
 }
 
 void gfx_animated_sprite_destroy(GFX_Animated_Sprite *animated_sprite) {
@@ -702,9 +658,6 @@ WORD get_max_palette_index_used() {
   //--------------------------------------------------------------------------//
  //                                  -I                                      //
 //--------------------------------------------------------------------------//
-BOOL is_visible(Flash *flash) {
-  return flash->visible;
-}
 
   //--------------------------------------------------------------------------//
  //                                  -J                                      //

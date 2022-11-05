@@ -9,7 +9,6 @@
   // int    ->  4 bytes
   // byte   ->  1 byte
 
-
 #ifndef NEOCORE_H
 #define NEOCORE_H
 #include <DATlib.h>
@@ -127,10 +126,10 @@
 #define get_y_gasp(gfx_animated_sprite_physic) gfx_animated_sprite_physic.gfx_animated_sprite.as.posY
 
 #define get_x_gp(gfx_picture) gfx_picture.pic.posX
-#define get_y_gp(gfx_image) gfx_picture.pic.posY
+#define get_y_gp(gfx_picture) gfx_picture.pic.posY
 
-#define get_x_gpp(gfx_picture_physic) gfx_picture_physic.gfx_image.pic.posX // TODO : test
-#define get_y_gpp(gfx_picture_physic) gfx_picture_physic.gfx_image.pic.posY // TODO : test
+#define get_x_gpp(gfx_picture_physic) gfx_picture_physic.gfx_picture.pic.posX // TODO : test
+#define get_y_gpp(gfx_picture_physic) gfx_picture_physic.gfx_picture.pic.posY // TODO : test
 
 #define get_x_gs(gfx_scroller) gfx_scroller.s.scrlPosX
 #define get_y_gs(gfx_scroller) gfx_scroller.s.scrlPosY
@@ -148,7 +147,8 @@
 #define set_pos_gs(gfx_scroller_pointer, x, y) scrollerSetPos(gfx_scroller_pointer.s, x, y) // TODO : test
 #define set_pos_gasp(gfx_animated_sprite_physic_pointer, x, y) gfx_animated_sprite_physic_set_position(gfx_animated_sprite_physic_pointer, x, y)
 
-#define set_pos_gp // TODO
+#define set_pos_gp(gfx_picture_pointer, x, y) pictureSetPos(gfx_picture_pointer->pic, x, y)
+
 
 #define set_pos_gpp(gfx_picture_physic_pointer, x, y) gfx_picture_physic_set_position(gfx_picture_physic_pointer, x, y);
 // end set pos gfx
@@ -159,8 +159,8 @@
 // end set animation gfx
 
 // move gfx
-#define move_gp(gfx_picture, x, y) pictureMove(gfx_picture.pic, x, y)
-#define move_gpp // TODO
+#define move_gp(gfx_picture_pointer, x, y) pictureMove(gfx_picture_pointer.pic, x, y)
+#define move_gpp(gfx_picture_physic_pointer, x, y) gfx_picture_physic_move(gfx_picture_physic_pointer, x, y)
 #define move_gas(gfx_animated_sprite, x, y) gfx_animated_sprite_move(gfx_animated_sprite, x, y)
 #define move_gasp(gfx_animated_sprite_physic, x, y) gfx_animated_sprite_physic_move(gfx_animated_sprite_physic, x, y)
 #define move_gs(gfx_scroller, x, y) gfx_scroller_move(gfx_scroller, x, y)
@@ -171,16 +171,11 @@
 #define update_anim_gasp(gfx_animated_sprite_physic_pointer) aSpriteAnimate(gfx_animated_sprite_physic_pointer.gfx_animated_sprite.as)
 // end animate gfx
 
-// flash
-#define init_flash_gasp(gfx_animated_sprite_physic_pointer, enabled, frequency, lengh) flash_init(gfx_animated_sprite_physic_pointer.gfx_animated_sprite.flash, enabled, frequency, lengh)
-#define init_flash_gas(gfx_animated_sprite_pointer, enabled, frequency, lengh) flash_init(gfx_animated_sprite_pointer.flash, enabled, frequency, lengh)
-
-#define update_flash_gas(gfx_animated_sprite_pointer) gfx_animated_sprite_flash(gfx_animated_sprite_pointer)
-#define update_flash_gasp(gfx_animated_sprite_physic_pointer) gfx_animated_sprite_flash(gfx_animated_sprite_physic_pointer.gfx_animated_sprite)
-// end flash
-
 // hide
 #define hide_gasp(gfx_animated_sprite_physic_pointer) gfx_animated_sprite_physic_hide(gfx_animated_sprite_physic_pointer)
+#define hide_gp(gfx_picture_pointer) pictureHide(&gfx_picture_pointer.pic)
+#define hide_gpp(gfx_picture_physic_pointer) pictureHide(gfx_picture_physic_pointer.gfx_picture.pic)
+
 //end hide
 
 // show
@@ -197,7 +192,8 @@
 
 #define get_frame_counter() DAT_frameCounter
 
-
+#define disable_physic
+#define enable_physic
 
 enum direction { NONE, UP, DOWN, LEFT, RIGHT };
 
@@ -253,22 +249,6 @@ struct Box {
 };
 
 /**
- * \struct Flash
- * \brief
- * - frequency
- * - lengh
- * - visible
- * - enabled
- */
-typedef struct Flash Flash;
-struct Flash {
-  WORD frequency;
-  short lengh;
-  BOOL visible;
-  BOOL enabled;
-};
-
-/**
  * \struct GFX_Animated_Sprite
  * \brief DATLib aSprite structure encapsulation
  */
@@ -277,7 +257,6 @@ struct GFX_Animated_Sprite {
   aSprite as;         /*!< - as is aSprite DATLib definition */
   spriteInfo *si;     /*!< - si is a pointer to DATLib spriteInfo structure */
   paletteInfo *pali;  /*!< - pali is a pointer to DATLib paletteInfo structure */
-  Flash flash;        /*!< - Flash */
 };
 
 /**
@@ -289,7 +268,6 @@ struct GFX_Picture {
   picture pic;        /*!< - pic is picture DATLib definition */
   pictureInfo *pi;    /*!< - pi is a pointer to DATLib pictureInfo structure */
   paletteInfo *pali;  /*!< - pali is a pointer to DATLib paletteInfo structure */
-  Flash flash;        /*!< - Flash */
 };
 
 /**
@@ -413,14 +391,6 @@ void cdda_play(BYTE track);
 void inline fix_print_neocore(int x, int y, char *label);
 
 /**
- * @param Flash* Flash pointer
- * @param enabled
- * @param frequency
- * @param lengh
- */
-void flash_init(Flash *flash, BOOL enabled, short frequency, short lengh);
-
-/**
  * \brief return estimated free RAM
  */
 WORD free_ram_info();
@@ -448,13 +418,6 @@ void gfx_picture_init(GFX_Picture *gfx_picture, pictureInfo *pi, paletteInfo *pa
 void gfx_picture_display(GFX_Picture *gfx_picture, short x, short y);
 
 /**
- * @param GFX_Picture* GFX_Picture pointer
- * @param x
- * @param y
- */
-void gfx_picture_set_position(GFX_Picture *gfx_picture, short x, short y);
-
-/**
  * \brief hide GFX_Picture
  * @param GFX_Picture* GFX_Picture pointer
  */
@@ -471,11 +434,6 @@ void gfx_picture_show(GFX_Picture *gfx_picture);
  * \return BOOL true if GFX_Picture is visible or false
  */
 void gfx_picture_is_visible(GFX_Picture *gfx_picture);
-
-/**
- * @param GFX_Picture* GFX_Picture pointer
- */
-BOOL gfx_picture_flash(GFX_Picture *gfx_picture);
 
 /**
  * @param GFX_Picture* GFX_Picture pointer
@@ -535,22 +493,15 @@ void gfx_picture_physic_move(GFX_Picture_Physic *gfx_picture_physic, short x_off
  */
 void gfx_picture_physic_set_position(GFX_Picture_Physic *gfx_picture_physic, short x, short y);
 
-/**
- * \brief Hide GFX_Picture_Physic & disable physic
- * @param GFX_Picture_Physic* Pointer
- */
-void gfx_picture_physic_hide(GFX_Picture_Physic *gfx_picture_physic);
+// TODO : remove useless
+// void gfx_picture_physic_hide(GFX_Picture_Physic *gfx_picture_physic);
+
 
 /**
  * \brief Show GFX_Picture_Physic & enable physic
  * @param GFX_Picture_Physic Pointer
  */
 void gfx_picture_physic_show(GFX_Picture_Physic *gfx_picture_physic);
-
-/**
- * @param GFX_Picture_Physic* Pointer
- */
-void gfx_picture_physic_flash(GFX_Picture_Physic *gfx_picture_physic);
 
 /**
  * @param GFX_Picture_Physic* pointer
@@ -635,20 +586,6 @@ void gfx_animated_sprite_show(GFX_Animated_Sprite *gfx_animated_sprite);
  * @param GFX_Animated_Sprite* GFX_Animated_Sprite pointer
  */
 #define gfx_animated_sprite_animate(gfx_animated_sprite) aSpriteAnimate(gfx_animated_sprite.as)
-
-/**
- * \brief refresh flash
- * @param GFX_Animated_Sprite* GFX_Animated_Sprite pointer
- * \return BOOL
- */
-BOOL gfx_animated_sprite_flash(GFX_Animated_Sprite *gfx_animated_sprite);
-
-/**
- * \brief refresh flash
- * @param GFX_Animated_Sprite_Physic* GFX_Animated_Sprite_Physic pointer
- * \return BOOL
- */
-#define gfx_animated_sprite_physic_flash(gfx_animated_sprite_physic) gfx_animated_sprite_flash(gfx_animated_sprite_physic.gfx_animated_sprite)
 
 /**
  * \brief destroy animated sprite
@@ -824,11 +761,6 @@ void       gfx_scroller_destroy(GFX_Scroller *s);
   //--------------------------------------------------------------------------//
  //                                  -I                                      //
 //--------------------------------------------------------------------------//
-/**
- * @param Flash* Flash pointer
- * \return BOOL
- */
-BOOL is_visible(Flash *flash);
 
   //--------------------------------------------------------------------------//
  //                                  -J                                      //
