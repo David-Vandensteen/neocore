@@ -1,18 +1,15 @@
 #include <neocore.h>
-#include <math.h>
-
-NEOCORE_INIT
 
 int main(void) {
   FIXED val1 = FIX(10.5);
   FIXED val2 = FIX(10.5);
-  gpu_init();
-  logger_init();
+  init_gpu();
+  init_logger();
   logger_int("10.5 ADD 10.5 : ", fixtoi(fadd(val1, val2)));
   while(1) {
     wait_vbl();
-    SCClose();
+    close_vbl();
   };
-  SCClose();
+  close_vbl();
   return 0;
 }
