@@ -8,7 +8,7 @@ static void update();
 
 static BOOL k7_direction = false;
 
-static GFX_Image k7;
+static GFX_Picture k7;
 static GFX_Scroller spectrum02;
 static BYTE track_num = 2;
 
@@ -16,12 +16,12 @@ static void init() {
   cdda_play(track_num);
   init_gpu();
   init_gs(&spectrum02, &spectrum02_sprite, &spectrum02_sprite_Palettes);
-  init_gi(&k7, &k7_sprite, &k7_sprite_Palettes);
+  init_gp(&k7, &k7_sprite, &k7_sprite_Palettes);
 }
 
 static void display() {
   display_gs(&spectrum02, 0, 0);
-  display_gi(&k7, 30, 30);
+  display_gp(&k7, 30, 30);
 }
 
 static void update() {
@@ -29,14 +29,14 @@ static void update() {
   update_joypad_edge();
   logger_byte("AUDIO TRACK : ", track_num - 1);
   if (DAT_frameCounter % 2 == 0) {
-    move_gs(&spectrum02, 1, 0);
+    move_gs(spectrum02, 1, 0);
     if (get_x_gs(spectrum02) > 960) set_x_gs(&spectrum02, 0);
   }
   if (DAT_frameCounter % 5 == 0) {
     if (k7_direction) {
-      move_gi(&k7, 1, 0);
+      move_gp(&k7, 1, 0);
     } else {
-      move_gi(&k7, -1, 0);
+      move_gp(&k7, -1, 0);
     }
   }
   if (k7.pic.posX > 50) k7_direction = false;
