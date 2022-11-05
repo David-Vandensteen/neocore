@@ -9,6 +9,8 @@
   // int    ->  4 bytes
   // byte   ->  1 byte
 
+// TODO : rename loggers (ex logger_animate_sprite to log_gas)
+
 #ifndef NEOCORE_H
 #define NEOCORE_H
 #include <DATlib.h>
@@ -143,6 +145,7 @@
 
 // set pos gfx
 #define set_pos_gs(gfx_scroller_pointer, x, y) scrollerSetPos(gfx_scroller_pointer.s, x, y) // TODO : test
+#define set_pos_gas(gfx_animated_sprite_pointer, x, y) aSpriteSetPos(gfx_animated_sprite_pointer.as, x, y)
 #define set_pos_gasp(gfx_animated_sprite_physic_pointer, x, y) gfx_animated_sprite_physic_set_position(gfx_animated_sprite_physic_pointer, x, y)
 
 #define set_pos_gp(gfx_picture_pointer, x, y) pictureSetPos(gfx_picture_pointer.pic, x, y)
@@ -169,6 +172,7 @@
 // end animate gfx
 
 // hide
+#define hide_gas(gfx_animated_sprite_pointer) gfx_animated_sprite_hide(gfx_animated_sprite_pointer)
 #define hide_gasp(gfx_animated_sprite_physic_pointer) gfx_animated_sprite_physic_hide(gfx_animated_sprite_physic_pointer)
 #define hide_gp(gfx_picture_pointer) pictureHide(gfx_picture_pointer.pic)
 #define hide_gpp(gfx_picture_physic_pointer) pictureHide(gfx_picture_physic_pointer.gfx_picture.pic)
@@ -176,14 +180,17 @@
 //end hide
 
 // show
+#define show_gas(gfx_animated_sprite_pointer) aSpriteShow(gfx_animated_sprite_pointer.as)
 #define show_gasp(gfx_animated_sprite_physic) gfx_animated_sprite_physic_show(gfx_animated_sprite_physic)
 #define show_gp(gfx_picture_pointer) pictureShow(gfx_picture_pointer.pic)
 #define show_gpp(gfx_picture_physic_pointer) pictureShow(gfx_picture_physic_pointer.gfx_picture.pic);
 // end show
 
 // destroy
+#define destroy_gas(gfx_animated_sprite_pointer) gfx_animated_sprite_destroy(gfx_animated_sprite_pointer)
 #define destroy_gp(gfx_picture_pointer) gfx_picture_destroy(gfx_picture_pointer)
 #define destroy_gpp(gfx_picture_physic_pointer) gfx_picture_destroy(gfx_picture_physic_pointer.gfx_picture)
+#define destroy_gs
 // end destroy
 
 // enable / disable physic TODO
