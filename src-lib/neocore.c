@@ -875,10 +875,6 @@ void gfx_scroller_display(GFX_Scroller *s, short x, short y) {
   );
 }
 
-void gfx_scroller_move(GFX_Scroller *s, short x, short y) {
-  scrollerSetPos(&s->s, s->s.scrlPosX + x, s->s.scrlPosY + y);
-}
-
 void gfx_scroller_init(GFX_Scroller *s, scrollerInfo *si, paletteInfo *pali) {
   s->si = si;
   s->pali = pali;

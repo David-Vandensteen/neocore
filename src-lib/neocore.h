@@ -160,7 +160,7 @@
 #define move_gpp(gfx_picture_physic_pointer, x, y) gfx_picture_physic_move(gfx_picture_physic_pointer, x, y)
 #define move_gas(gfx_animated_sprite, x, y) gfx_animated_sprite_move(gfx_animated_sprite, x, y)
 #define move_gasp(gfx_animated_sprite_physic, x, y) gfx_animated_sprite_physic_move(gfx_animated_sprite_physic, x, y)
-#define move_gs(gfx_scroller, x, y) gfx_scroller_move(gfx_scroller, x, y)
+#define move_gs(gfx_scroller, x, y) scrollerSetPos(&gfx_scroller.s, gfx_scroller.s.scrlPosX + x, gfx_scroller.s.scrlPosY + y)
 // end move gfx
 
 // animate gfx
@@ -736,13 +736,6 @@ void        gfx_scroller_init(GFX_Scroller *s, scrollerInfo *si, paletteInfo *pa
  * @param y
  */
 void        gfx_scroller_display(GFX_Scroller *s, short x, short y);
-
-/**
- * @param GFX_Scroller* Pointer
- * @param x offset
- * @param y offset
- */
-void        gfx_scroller_move(GFX_Scroller *s, short x, short y);
 
 /**
  * \brief GFX_Scroller destroy
