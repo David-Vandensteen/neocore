@@ -8,7 +8,7 @@
 static Vec2short peak_mask[PEAK_MASK_VECTOR_MAX];
 static GFX_Animated_Sprite_Physic player;
 
-static GFX_Image peak;
+static GFX_Picture peak;
 static short peak_position[2] = { 100, 80 };
 
 static void init_mask();
@@ -29,21 +29,21 @@ static void init() {
     0,
     0
   );
-  init_gi(&peak, &peak_sprite, &peak_sprite_Palettes);
+  init_gp(&peak, &peak_sprite, &peak_sprite_Palettes);
 }
 
 static void display() {
-  display_gi(&peak, peak_position[X], peak_position[Y]);
+  display_gp(&peak, peak_position[X], peak_position[Y]);
   display_gasp(&player, 10, 10, PLAYER_SPRITE_ANIM_IDLE);
   display_mask_debug();
 }
 
 static void display_mask_debug() {
   BYTE i = 0;
-  GFX_Image p;
+  GFX_Picture p;
   for (i = 0; i < PEAK_MASK_VECTOR_MAX; i++) {
-    init_gi(&p, &dot_sprite, &dot_sprite_Palettes);
-    display_gi(&p, peak_mask[i].x, peak_mask[i].y);
+    init_gp(&p, &dot_sprite, &dot_sprite_Palettes);
+    display_gp(&p, peak_mask[i].x, peak_mask[i].y);
   }
 }
 
@@ -69,20 +69,21 @@ static void init_mask() {
 
 static void update_player() {
   update_joypad();
-  if (joypad_is_left() && player.gfx_animated_sprite.as.posX > 0) { gfx_animated_sprite_physic_move(&player, -1, 0); }
-  if (joypad_is_right() && player.gfx_animated_sprite.as.posX < 280) { gfx_animated_sprite_physic_move(&player, 1, 0); }
+  if (joypad_is_left() && player.gfx_animated_sprite.as.posX > 0) { move_gasp(&player, -1, 0); }
+  if (joypad_is_right() && player.gfx_animated_sprite.as.posX < 280) { move_gasp(&player, 1, 0); }
   if (joypad_is_up() && player.gfx_animated_sprite.as.posY > 0) {
-    gfx_animated_sprite_physic_move(&player, 0, -1);
-    set_animation_gasp(&player, PLAYER_SPRITE_ANIM_UP);
+    move_gasp(&player, 0, -1);
+    set_anim_gasp(&player, PLAYER_SPRITE_ANIM_UP);
   }
   if (joypad_is_down() && player.gfx_animated_sprite.as.posY < 200) {
-    gfx_animated_sprite_physic_move(&player, 0, 1);
-    set_animation_gasp(&player, PLAYER_SPRITE_ANIM_DOWN);
+    move_gasp(&player, 0, 1);
+    set_anim_gasp(&player, PLAYER_SPRITE_ANIM_DOWN);
   }
-  if (!joypad_is_down() && !joypad_is_up()) { set_animation_gasp(&player, PLAYER_SPRITE_ANIM_IDLE); }
-  if (vectors_collide(&player.box, peak_mask, PEAK_MASK_VECTOR_MAX)) flash_init(&player.gfx_animated_sprite.flash, true, 10, 10);
-  update_flash_gasp(&player);
-  animate_gasp(&player);
+  if (!joypad_is_down() && !joypad_is_up()) { set_anim_gasp(&player, PLAYER_SPRITE_ANIM_IDLE); }
+  if (vectors_collide(&player.box, peak_mask, PEAK_MASK_VECTOR_MAX)) {
+      if (get_frame_counter() % 20) { hide_gasp(&player); } else { show_gasp(&player); }
+  } else { show_gasp(&player); }
+  update_anim_gasp(&player);
 }
 
 static void update() {
