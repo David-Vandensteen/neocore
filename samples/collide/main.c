@@ -2,7 +2,7 @@
 #include "externs.h"
 
 static GFX_Animated_Sprite_Physic player;
-static GFX_Image_Physic asteroid;
+static GFX_Picture_Physic asteroid;
 
 int main(void) {
   init_gpu();
@@ -15,7 +15,7 @@ int main(void) {
     0,
     0
   );
-  init_gip(
+  init_gpp(
     &asteroid,
     &asteroid_sprite,
     &asteroid_sprite_Palettes,
@@ -26,7 +26,7 @@ int main(void) {
     AUTOBOX
   );
   display_gasp(&player, 10, 10, PLAYER_SPRITE_ANIM_IDLE);
-  display_gip(&asteroid, 100, 100);
+  display_gpp(&asteroid, 100, 100);
 
   while(1) {
     wait_vbl();
@@ -36,18 +36,19 @@ int main(void) {
 
     if (joypad_is_up() && get_y_gasp(player) > 0) {
       move_gasp(&player, 0, -1);
-      set_animation_gasp(&player, PLAYER_SPRITE_ANIM_UP);
+      set_anim_gasp(&player, PLAYER_SPRITE_ANIM_UP);
     }
     if (joypad_is_down() && get_y_gasp(player) < 200) {
       move_gasp(&player, 0, 1);
-      set_animation_gasp(&player, PLAYER_SPRITE_ANIM_DOWN);
+      set_anim_gasp(&player, PLAYER_SPRITE_ANIM_DOWN);
     }
-    if (!joypad_is_down() && !joypad_is_up()) { set_animation_gasp(&player, PLAYER_SPRITE_ANIM_IDLE); }
+    if (!joypad_is_down() && !joypad_is_up()) { set_anim_gasp(&player, PLAYER_SPRITE_ANIM_IDLE); }
 
-    if (box_collide(&player.box, &asteroid.box)) init_flash_gasp(&player, true, 10, 10);
+    if (box_collide(&player.box, &asteroid.box)) {
+      if (get_frame_counter() % 20) { hide_gasp(&player); } else { show_gasp(&player); }
+    } else { show_gasp(&player);}
 
-    update_flash_gasp(&player);
-    animate_gasp(&player);
+    update_anim_gasp(&player);
 
     close_vbl();
   };
