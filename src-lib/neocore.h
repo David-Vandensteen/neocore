@@ -323,12 +323,8 @@ void box_update(Box *b, short x, short y);
 
 //void mask_display(picture pic[], Vec2short vec[], BYTE vector_max); // todo (minor) - rename ? (vectorsDisplay)
 void mask_update(short x, short y, Vec2short vec[], Vec2short offset[], BYTE vector_max); // todo (minor) - rename ? (vectorsDebug)
-// todo (minor) - hardcode point\dot asset
 
-
-// todo (minor)
 void box_shrunk(Box *b, Box *bOrigin, WORD shrunkValue);
-// todo (minor) - deprecated ?
 void box_resize(Box *Box, short edge); // todo (minor) - deprecated ?
 
   //--------------------------------------------------------------------------//
