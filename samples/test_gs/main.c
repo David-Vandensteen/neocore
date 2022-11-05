@@ -10,7 +10,8 @@ int main(void) {
   display_gs(&background, 0, 0);
   while(1) {
     wait_vbl();
-    move_gs(&background, 1, 0);
+    // move_gs(&background, 1, 0);
+    move_gs(background, 1, 0);
     if (get_x_gs(background) > 512) set_pos_gs(&background, 0, 0);
     close_vbl();
   };
