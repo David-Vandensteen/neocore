@@ -379,7 +379,6 @@ WORD free_ram_info() {
  //                                   GFX                                    //
 //--------------------------------------------------------------------------//
 
-
   /*------------------*/
  /*  GFX VISIBILITY  */
 /*------------------*/
@@ -617,7 +616,7 @@ void move_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short x_o
   box_update(&gfx_animated_sprite_physic->box, gfx_animated_sprite_physic->gfx_animated_sprite.as.posX, gfx_animated_sprite_physic->gfx_animated_sprite.as.posY);
 }
 
-void inline gpu_init() {
+void inline init_gpu() {
   backgroundColor(0x7000); // todo (minor) - macro with some colors ...
   clearFixLayer();
   initGfx();
@@ -684,11 +683,11 @@ void inline joypad_debug() {
   if (joypad_is_d())     {  fix_print_neocore(10, 11,  "JOYPAD D    "); }
 }
 
-void joypad_update() { // TODO : macro
+void update_joypad() { // TODO : macro
   JOYPAD_READ
 }
 
-void joypad_update_edge() { // TODO : macro
+void update_joypad_edge() { // TODO : macro
   JOYPAD_READ_EDGE
 }
 
@@ -706,7 +705,7 @@ BOOL joypad_is_d()      { return (JOYPAD_IS_D)      ? (true) : (false); }
  //                            LOGGER                                        //
 //--------------------------------------------------------------------------//
 
-void logger_init() {
+void init_logger() {
   #ifdef LOGGER_ON
   x = LOGGER_X_INIT;
   y = LOGGER_Y_INIT;

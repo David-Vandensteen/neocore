@@ -83,13 +83,8 @@
 /*----------------*/
 
 // utils
-#define init_logger() logger_init()
-#define update_joypad_edge() joypad_update_edge()
-#define update_joypad() joypad_update()
 
 #define close_vbl() SCClose()
-#define init_gpu() gpu_init()
-
 #define get_frame_counter() DAT_frameCounter
 
 enum direction { NONE, UP, DOWN, LEFT, RIGHT };
@@ -273,7 +268,7 @@ void destroy_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic);
  //                                   GPU                                    //
 //--------------------------------------------------------------------------//
 
-void inline gpu_init(); // TODO : change to init_gpu
+void inline init_gpu();
 void inline clear_vram();
 char get_sin(WORD index);
 
@@ -345,8 +340,8 @@ WORD free_ram_info();
  /* JOYPAD   */
 /*----------*/
 
-void        joypad_update();
-void        joypad_update_edge();
+void        update_joypad();
+void        update_joypad_edge();
 BOOL        joypad_is_up();
 BOOL        joypad_is_down();
 BOOL        joypad_is_left();
@@ -362,7 +357,7 @@ void inline joypad_debug();
  //                               LOGGER                                     //
 //--------------------------------------------------------------------------//
 
-void logger_init(); // TODO : change to init_logger
+void init_logger(); // TODO : change to init_logger
 void logger_set_position(WORD _x, WORD _y);
 WORD inline logger_info(char *txt); // TODO : change to log_info
 void inline logger_word(char *label, WORD value);
