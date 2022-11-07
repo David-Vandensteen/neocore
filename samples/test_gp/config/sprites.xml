@@ -3,8 +3,7 @@
   <setup>
     <starting_tile>256</starting_tile>
   </setup>
-  <pict id="planet04_sprite">
-    <file>assets\gfx\planet04.png</file>
-    <flips>xyz</flips>
+  <pict id="asteroid_asset">
+    <file>assets\gfx\asteroid.png</file>
   </pict>
 </chardata>

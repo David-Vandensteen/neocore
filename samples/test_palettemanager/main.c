@@ -2,39 +2,35 @@
 #include <math.h>
 #include "externs.h"
 
-
-NEOCORE_INIT
-
 static void init();
 static void display();
 static void update();
 
-static GFX_Image planet01, planet02, planet03;
+static GFX_Picture planet01, planet02, planet03;
 
 static void init() {
-  gpu_init();
-  gfx_image_init(&planet01, &planet04_sprite, &planet04_sprite_Palettes);
-  gfx_image_init(&planet02, &planet04_sprite, &planet04_sprite_Palettes);
-  gfx_image_init(&planet03, &planet04_sprite, &player_sprite_Palettes);
-  //image_init(&planet03, &planet04_sprite, &planet04_sprite_Palettes);
+  init_gpu();
+  init_gp(&planet01, &planet04_sprite, &planet04_sprite_Palettes);
+  init_gp(&planet02, &planet04_sprite, &planet04_sprite_Palettes);
+  init_gp(&planet03, &planet04_sprite, &player_sprite_Palettes);
 }
 
 static void display() {
-  gfx_image_display(&planet01, 10, 10);
-  gfx_image_display(&planet02, 100, 100);
-  gfx_image_display(&planet03, 200, 100);
+  display_gp(&planet01, 10, 10);
+  display_gp(&planet02, 100, 100);
+  display_gp(&planet03, 200, 100);
 }
 
 static void update() {
-  logger_init();
-  logger_word("P1 INDEX : ", planet01.pic.basePalette);
-  logger_info("MUST BE : 17");
-  logger_word("P2 INDEX : ", planet02.pic.basePalette);
-  logger_info("MUST BE : 18");
-  logger_word("P3 INDEX : ", planet03.pic.basePalette);
-  logger_info("MUST BE : 17");
-  if (DAT_frameCounter == 500) {
-    logger_info("P1 REALLOCATE");
+  init_log();
+  log_word("P1 INDEX : ", planet01.pictureDAT.basePalette);
+  log_info("MUST BE : 17");
+  log_word("P2 INDEX : ", planet02.pictureDAT.basePalette);
+  log_info("MUST BE : 18");
+  log_word("P3 INDEX : ", planet03.pictureDAT.basePalette);
+  log_info("MUST BE : 17");
+  if (get_frame_counter() == 500) {
+    log_info("P1 REALLOCATE");
   }
 }
 
@@ -44,8 +40,8 @@ int main(void) {
   while(1) {
     wait_vbl();
     update();
-    SCClose();
+    close_vbl();
   };
-  SCClose();
+  close_vbl();
   return 0;
 }
