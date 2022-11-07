@@ -71,15 +71,6 @@
 #define MANUALBOX 0
 #define AUTOBOX 1
 
-  /*----------------*/
- /* REFACTOR       */
-/*----------------*/
-
-// utils
-
-#define close_vbl() SCClose()
-#define get_frame_counter() DAT_frameCounter
-
 enum direction { NONE, UP, DOWN, LEFT, RIGHT };
 
   //--------------------------------------------------------------------------//
@@ -91,46 +82,46 @@ typedef struct Vec2short { short x; short y; } Vec2short;
 typedef struct Vec2byte { BYTE x; BYTE y; } Vec2byte;
 
 typedef struct Box {
-  Vec2short p0;       /*!< coordinate 0 of the box (x, y) */
-  Vec2short p1;       /*!< coordinate 1 of the box (x, y) */
-  Vec2short p2;       /*!< coordinate 2 of the box (x, y) */
-  Vec2short p3;       /*!< coordinate 3 of the box (x, y) */
-  Vec2short p4;       /*!< coordinate 4 of the box (x, y) */
-  short width;        /*!< width of the box */
-  short height;       /*!< height of the box */
-  short widthOffset;  /*!< width box reducing */
-  short heightOffset; /*!< height box reducing */
+  Vec2short p0;
+  Vec2short p1;
+  Vec2short p2;
+  Vec2short p3;
+  Vec2short p4;
+  short width;
+  short height;
+  short widthOffset;
+  short heightOffset;
 } Box;
 
 typedef struct GFX_Animated_Sprite {
-  aSprite as;         /*!< - as is aSprite DATLib definition */
-  spriteInfo *si;     /*!< - si is a pointer to DATLib spriteInfo structure */
-  paletteInfo *pali;  /*!< - pali is a pointer to DATLib paletteInfo structure */
+  aSprite as;
+  spriteInfo *si;
+  paletteInfo *pali;
 } GFX_Animated_Sprite;
 
 typedef struct GFX_Picture {
-  picture pic;        /*!< - pic is picture DATLib definition */
-  pictureInfo *pi;    /*!< - pi is a pointer to DATLib pictureInfo structure */
-  paletteInfo *pali;  /*!< - pali is a pointer to DATLib paletteInfo structure */
+  picture pic;
+  pictureInfo *pi;
+  paletteInfo *pali;
 } GFX_Picture;
 
 typedef struct GFX_Animated_Sprite_Physic {
-  GFX_Animated_Sprite gfx_animated_sprite;  /*!< - GFX_Animated_Sprite */
-  Box box;                          /*!< - Box */
-  BOOL physic_enabled;              /*!< - enable physic (for collide detection capalities) */
+  GFX_Animated_Sprite gfx_animated_sprite;
+  Box box;
+  BOOL physic_enabled;
 } GFX_Animated_Sprite_Physic;
 
 typedef struct GFX_Picture_Physic {
-  GFX_Picture gfx_picture;  /*!< - GFX_Picture */
-  Box box;              /*!< - Box */
-  BOOL autobox_enabled; /*!< - enable autobox */
-  BOOL physic_enabled;  /*!< - enable physic (for collide detection capabilities) */
+  GFX_Picture gfx_picture;
+  Box box;
+  BOOL autobox_enabled;
+  BOOL physic_enabled;
 } GFX_Picture_Physic;
 
 typedef struct GFX_Scroller {
-  scroller s;          /*!< - s is a pointer to DATLib scroller struture */
-  scrollerInfo *si;    /*!< - si is a pointer to DATLib scrollerInfo structure */
-  paletteInfo *pali;   /*!< - pali is a pointer to DATLib paletteInfo structure */
+  scroller s;
+  scrollerInfo *si;
+  paletteInfo *pali;
 } GFX_Scroller;
 
   //--------------------------------------------------------------------------//
@@ -236,7 +227,7 @@ void move_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short x_o
 
 void move_gas(GFX_Animated_Sprite *gfx_animated_sprite, short x_offset, short y_offset);
 void move_gp(GFX_Picture *gfx_picture, short x, short y);
-void move_gs(GFX_Scroller gfx_scroller, short x, short y);
+void move_gs(GFX_Scroller *gfx_scroller, short x, short y);
 
   /*-------------------*/
  /*  GFX ANIMATION    */
@@ -342,13 +333,14 @@ BOOL        joypad_is_c();
 BOOL        joypad_is_d();
 void inline joypad_debug();
 
-
   //----------------------------------------------------------------------------//
  //                                  UTIL                                      //
 //----------------------------------------------------------------------------//
 
 void inline fix_print_neocore(int x, int y, char *label);
 WORD free_ram_info();
+#define close_vbl() SCClose()
+#define get_frame_counter() DAT_frameCounter
 
   /*---------------*/
  /* UTIL LOGGER   */

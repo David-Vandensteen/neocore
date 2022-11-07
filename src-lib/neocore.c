@@ -441,7 +441,7 @@ void move_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short x_o
 
 void move_gas(GFX_Animated_Sprite *gfx_animated_sprite, short x_offset, short y_offset) { aSpriteMove(&gfx_animated_sprite->as, x_offset, y_offset); }
 void move_gp(GFX_Picture *gfx_picture, short x, short y) { pictureMove(&gfx_picture->pic, x, y); }
-void move_gs(GFX_Scroller gfx_scroller, short x, short y) { scrollerSetPos(&gfx_scroller.s, gfx_scroller.s.scrlPosX + x, gfx_scroller.s.scrlPosY + y); }
+void move_gs(GFX_Scroller *gfx_scroller, short x, short y) { scrollerSetPos(&gfx_scroller->s, gfx_scroller->s.scrlPosX + x, gfx_scroller->s.scrlPosY + y); }
 
   /*-------------------*/
  /*  GFX ANIMATION    */
