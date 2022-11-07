@@ -16,20 +16,20 @@ int main(void) {
   while(1) {
     wait_vbl();
     update_joypad();
-    if (joypad_is_left() && player.as.posX > 0) { move_gas(&player, -1, 0); }
-    if (joypad_is_right() && player.as.posX < 280) { move_gas(&player, 1, 0); }
-    if (joypad_is_up() && player.as.posY > 0) {
+    if (joypad_is_left() && get_x_gas(player) > 0) { move_gas(&player, -1, 0); }
+    if (joypad_is_right() && get_x_gas(player) < 280) { move_gas(&player, 1, 0); }
+    if (joypad_is_up() && get_y_gas(player) > 0) {
       move_gas(&player, 0, -1);
       set_anim_gas(&player, PLAYER_SPRITE_ANIM_UP);
     }
-    if (joypad_is_down() && player.as.posY < 200) {
+    if (joypad_is_down() && get_y_gas(player) < 200) {
       move_gas(&player, 0, 1);
       set_anim_gas(&player, PLAYER_SPRITE_ANIM_DOWN);
     }
     if (!joypad_is_down() && !joypad_is_up()) { set_anim_gas(&player, PLAYER_SPRITE_ANIM_IDLE); }
 
-    move_gs(background, 1, 0);
-    if (background.s.scrlPosX > 512) set_pos_gs(&background.s, 0, background.s.scrlPosY);
+    move_gs(&background, 1, 0);
+    if (get_x_gs(background) > 512) move_gs(&background, 1, 0);
     update_anim_gas(&player);
     close_vbl();
   };

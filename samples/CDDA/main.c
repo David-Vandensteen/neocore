@@ -28,8 +28,8 @@ static void update() {
   init_log();
   update_joypad_edge();
   log_byte("AUDIO TRACK : ", track_num - 1);
-  if (DAT_frameCounter % 2 == 0) {
-    move_gs(spectrum02, 1, 0);
+  if (get_frame_counter() % 2 == 0) {
+    move_gs(&spectrum02, 1, 0);
     if (get_x_gs(spectrum02) > 960) set_x_gs(&spectrum02, 0);
   }
   if (DAT_frameCounter % 5 == 0) {
@@ -39,8 +39,8 @@ static void update() {
       move_gp(&k7, -1, 0);
     }
   }
-  if (k7.pic.posX > 50) k7_direction = false;
-  if (k7.pic.posX < 40) k7_direction = true;
+  if (get_x_gp(k7) > 50) k7_direction = false;
+  if (get_x_gp(k7) < 40) k7_direction = true;
   if (joypad_is_left() && track_num > 2) cdda_play(--track_num);
   if (joypad_is_right() && track_num < 4) cdda_play(++track_num);
 }

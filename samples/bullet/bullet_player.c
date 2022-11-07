@@ -75,7 +75,7 @@ static void update_move() {
     if (sprites_state[i]) {
       move_gasp(&sprites[i], get_bullet_max(), 0);
       update_anim_gasp(&sprites[i]);
-      if (sprites[i].gfx_animated_sprite.as.posX > 320) {
+      if (get_x_gasp(sprites[i]) > 320) {
         free_sprite(i);
       }
     }
@@ -104,7 +104,7 @@ void bullet_player_update(BOOL pstate, short x, short y) {
   state = pstate;
   update_move();
   collide();
-  if (DAT_frameCounter % get_bullet_rate() == 0 && state) update_states(x, y);
+  if (get_frame_counter() % get_bullet_rate() == 0 && state) update_states(x, y);
 }
 
 void bullet_player_destroy() {

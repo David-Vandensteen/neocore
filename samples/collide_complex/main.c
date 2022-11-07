@@ -69,9 +69,9 @@ static void init_mask() {
 
 static void update_player() {
   update_joypad();
-  if (joypad_is_left() && player.gfx_animated_sprite.as.posX > 0) { move_gasp(&player, -1, 0); }
-  if (joypad_is_right() && player.gfx_animated_sprite.as.posX < 280) { move_gasp(&player, 1, 0); }
-  if (joypad_is_up() && player.gfx_animated_sprite.as.posY > 0) {
+  if (joypad_is_left() && get_x_gasp(player) > 0) { move_gasp(&player, -1, 0); }
+  if (joypad_is_right() && get_x_gasp(player) < 280) { move_gasp(&player, 1, 0); }
+  if (joypad_is_up() && get_y_gasp(player) > 0) {
     move_gasp(&player, 0, -1);
     set_anim_gasp(&player, PLAYER_SPRITE_ANIM_UP);
   }
