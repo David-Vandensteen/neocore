@@ -25,9 +25,9 @@ static void display() {
 }
 
 static void update() {
-  init_logger();
+  init_log();
   update_joypad_edge();
-  logger_byte("AUDIO TRACK : ", track_num - 1);
+  log_byte("AUDIO TRACK : ", track_num - 1);
   if (DAT_frameCounter % 2 == 0) {
     move_gs(spectrum02, 1, 0);
     if (get_x_gs(spectrum02) > 960) set_x_gs(&spectrum02, 0);

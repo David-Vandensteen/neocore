@@ -48,15 +48,15 @@ static void free_sprite(BYTE index) {
 
 static void debug() {
   BYTE i = 0;
-  init_logger();
+  init_log();
   for (i = 0; i < get_bullet_max(); i++) {
-    logger_bool("STATE ", sprites_state[i]);
+    log_bool("STATE ", sprites_state[i]);
   }
-  logger_byte("PAL I :", sprites[0].gfx_animated_sprite.as.basePalette);
+  log_byte("PAL I :", sprites[0].gfx_animated_sprite.as.basePalette);
   if (joypad_is_a()) {
-    logger_info("JOYPAD A 1");
+    log_info("JOYPAD A 1");
   } else {
-    logger_info("JOYPAD A 0");
+    log_info("JOYPAD A 0");
   }
 }
 

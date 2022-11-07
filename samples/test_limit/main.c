@@ -37,16 +37,16 @@ static void update() {
   DWORD x;
   DWORD result;
   WORD i = 0;
-  init_logger();
-  logger_dword("F : ", DAT_frameCounter);
-  logger_word("FD : ", DAT_droppedFrames);
+  init_log();
+  log_dword("F : ", DAT_frameCounter);
+  log_word("FD : ", DAT_droppedFrames);
   // BURN
   /*
   for (i = 1; i < 0xFFFF; i++ ) {
     x = rand();
     result = x / i;
   }
-  logger_dword("R : ", result);
+  log_dword("R : ", result);
   for (i = 0; i < PLANETS_MAX; i++) image_move(&planets[i], 1, 0);
   */
 }

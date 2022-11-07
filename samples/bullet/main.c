@@ -7,8 +7,6 @@
 #include "player.h"
 #include "asteroid.h"
 
-NEOCORE_INIT
-
 static void init();
 static void display();
 static void update();

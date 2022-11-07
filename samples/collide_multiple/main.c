@@ -3,8 +3,6 @@
 
 #define ASTEROID_MAX  10
 
-NEOCORE_INIT
-
 static GFX_Animated_Sprite_Physic player;
 static GFX_Picture_Physic asteroids[ASTEROID_MAX];
 static Box *asteroids_box[ASTEROID_MAX];

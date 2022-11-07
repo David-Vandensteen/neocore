@@ -1,8 +1,6 @@
 #include <neocore.h>
 #include "externs.h"
 
-NEOCORE_INIT
-
 int main(void) {
   GFX_Picture logo1, logo2, logo3;
   BYTE logo1_shrunk_x = 0;
@@ -11,17 +9,17 @@ int main(void) {
   init_gp(&logo1, &logo_sprite, &logo_sprite_Palettes);
   init_gp(&logo2, &logo_sprite, &logo_sprite_Palettes);
   init_gp(&logo3, &logo_sprite, &logo_sprite_Palettes);
-  init_logger();
-  logger_info("HORIZONTAL SHRUNK");
+  init_log();
+  log_info("HORIZONTAL SHRUNK");
   init_gp(&logo1, &logo_sprite, &logo_sprite_Palettes);
   init_gp(&logo2, &logo_sprite, &logo_sprite_Palettes);
   init_gp(&logo3, &logo_sprite, &logo_sprite_Palettes);
   display_gp(&logo1, 10, 20);
-  logger_set_position(1, 10);
-  logger_info("VERTICAL SHRUNK");
+  set_pos_log(1, 10);
+  log_info("VERTICAL SHRUNK");
   display_gp(&logo2, 10, 80);
-  logger_set_position(1, 19);
-  logger_info("PROPORTIONAL SHRUNK");
+  set_pos_log(1, 19);
+  log_info("PROPORTIONAL SHRUNK");
   display_gp(&logo3, 10, 150);
 
   while(1) {

@@ -1,8 +1,6 @@
 #include <neocore.h>
 #include "externs.h"
 
-NEOCORE_INIT
-
 #define LOGO1_POSITION_CENTER_X_INIT 160
 #define LOGO3_POSITION_CENTER_Y_INIT 100
 
@@ -26,7 +24,7 @@ static void update_logo2();
 static void update_logo3();
 
 static void init() {
-  init_logger();
+  init_log();
   vec2short_init(&logo1_position_center, LOGO1_POSITION_CENTER_X_INIT, 30);
   vec2short_init(&logo2_position_center, 160, 180);
   vec2short_init(&logo3_position_center, 160, LOGO3_POSITION_CENTER_Y_INIT);
@@ -39,11 +37,11 @@ static void display() {
   display_gp(&logo1, logo1_position_center.x, logo1_position_center.y);
   display_gp(&logo2, logo2_position_center.x, logo2_position_center.y);
   display_gp(&logo3, logo3_position_center.x, logo3_position_center.y);
-  logger_info("HORIZONTAL SHRUNK");
-  logger_set_position(1, 11);
-  logger_info("VERTICAL SHRUNK");
-  logger_set_position(1, 20);
-  logger_info("PROPORTIONAL SHRUNK");
+  log_info("HORIZONTAL SHRUNK");
+  set_pos_log(1, 11);
+  log_info("VERTICAL SHRUNK");
+  set_pos_log(1, 20);
+  log_info("PROPORTIONAL SHRUNK");
 }
 
 static void update() {

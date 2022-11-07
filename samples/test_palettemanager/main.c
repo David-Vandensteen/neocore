@@ -22,15 +22,15 @@ static void display() {
 }
 
 static void update() {
-  init_logger();
-  logger_word("P1 INDEX : ", planet01.pic.basePalette);
-  logger_info("MUST BE : 17");
-  logger_word("P2 INDEX : ", planet02.pic.basePalette);
-  logger_info("MUST BE : 18");
-  logger_word("P3 INDEX : ", planet03.pic.basePalette);
-  logger_info("MUST BE : 17");
+  init_log();
+  log_word("P1 INDEX : ", planet01.pic.basePalette);
+  log_info("MUST BE : 17");
+  log_word("P2 INDEX : ", planet02.pic.basePalette);
+  log_info("MUST BE : 18");
+  log_word("P3 INDEX : ", planet03.pic.basePalette);
+  log_info("MUST BE : 17");
   if (get_frame_counter() == 500) {
-    logger_info("P1 REALLOCATE");
+    log_info("P1 REALLOCATE");
   }
 }
 

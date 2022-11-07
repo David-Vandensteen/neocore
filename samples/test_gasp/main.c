@@ -12,15 +12,15 @@ int main(void) {
     const DWORD accumulator = 200;
     DWORD frame_seq = accumulator;
     wait_vbl();
-    init_logger();
+    init_log();
     update_anim_gasp(&player);
     if (get_frame_counter() < frame_seq) {
-      logger_info("INIT GASP");
-      logger_info("DISPLAY GASP AT 100 100");
+      log_info("INIT GASP");
+      log_info("DISPLAY GASP AT 100 100");
     }
     frame_seq += accumulator;
     if (get_frame_counter() >= (frame_seq - accumulator) && get_frame_counter() < frame_seq) {
-      logger_info("SET POS 150 150");
+      log_info("SET POS 150 150");
       set_pos_gasp(&player, 150, 150);
     }
     frame_seq += accumulator;
@@ -29,36 +29,36 @@ int main(void) {
         set_pos_gasp(&player, 150, 150);
       } else {
         set_anim_gasp(&player, PLAYER_SPRITE_ANIM_UP);
-        logger_info("MOVE -1 -1");
+        log_info("MOVE -1 -1");
         move_gasp(&player, -1, -1);
       }
     }
     frame_seq += accumulator;
     if (get_frame_counter() >= (frame_seq - accumulator) && get_frame_counter() < frame_seq) {
-      logger_info("GET X AND Y");
+      log_info("GET X AND Y");
       set_pos_gasp(&player, 181, 57);
       set_anim_gasp(&player, PLAYER_SPRITE_ANIM_IDLE);
-      logger_short("X", get_x_gasp(player));
-      logger_short("Y", get_y_gasp(player));
+      log_short("X", get_x_gasp(player));
+      log_short("Y", get_y_gasp(player));
     }
     frame_seq += accumulator;
     if (get_frame_counter() >= (frame_seq - accumulator) && get_frame_counter() < frame_seq) {
-      logger_info("HIDE");
+      log_info("HIDE");
       hide_gas(&player);
     }
     frame_seq += accumulator;
     if (get_frame_counter() >= (frame_seq - accumulator) && get_frame_counter() < frame_seq) {
-      logger_info("SHOW");
+      log_info("SHOW");
       show_gasp(&player);
     }
     frame_seq += accumulator;
     if (get_frame_counter() >= (frame_seq - accumulator) && get_frame_counter() < frame_seq) {
-      logger_info("DESTROY");
+      log_info("DESTROY");
       destroy_gasp(&player);
     }
     frame_seq += accumulator;
     if (get_frame_counter() >= (frame_seq - accumulator)) {
-      logger_info("TEST END");
+      log_info("TEST END");
     }
     close_vbl();
   };
