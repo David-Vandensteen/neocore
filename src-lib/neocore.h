@@ -15,6 +15,7 @@
 #include <DATlib.h>
 #include <math.h>
 
+// TODO : static macro
 #define NEOCORE_INIT \
   typedef struct bkp_ram_info { \
     WORD debug_dips; \
@@ -144,7 +145,8 @@ typedef struct GFX_Scroller {
  //                                   GFX                                    //
 //--------------------------------------------------------------------------//
 
-void gfx_image_shrunk_centroid(GFX_Picture *gfx_picture, short center_x, short center_y, WORD shrunk_value);
+// TODO : remove
+// void gfx_image_shrunk_centroid(GFX_Picture *gfx_picture, short center_x, short center_y, WORD shrunk_value);
 
   /*------------------*/
  /*  GFX INIT        */
@@ -235,9 +237,7 @@ void set_pos_gs(GFX_Scroller *gfx_scroller, short x, short y);
 void set_pos_gas(GFX_Animated_Sprite *gfx_animated_sprite, short x,  short y);
 void set_pos_gp(GFX_Picture *gfx_picture, short x, short y);
 
-  /*-------------------*/
- /*  GFX ANIMATION    */
-/*-------------------*/
+/* GFX POSITION MOVE*/
 
 void move_gpp(GFX_Picture_Physic *gfx_picture_physic, short x_offset, short y_offset);
 void move_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short x_offset, short y_offset);
@@ -245,6 +245,10 @@ void move_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short x_o
 void move_gas(GFX_Animated_Sprite *gfx_animated_sprite, short x_offset, short y_offset);
 void move_gp(GFX_Picture *gfx_picture, short x, short y);
 void move_gs(GFX_Scroller gfx_scroller, short x, short y);
+
+  /*-------------------*/
+ /*  GFX ANIMATION    */
+/*-------------------*/
 
 void set_anim_gas(GFX_Animated_Sprite *gfx_animated_sprite, WORD anim);
 void set_anim_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, WORD anim);
@@ -329,16 +333,9 @@ void box_resize(Box *Box, short edge); // todo (minor) - deprecated ?
 
 void cdda_play(BYTE track); // TODO : change to play_cdda
 
-  //--------------------------------------------------------------------------//
- //                                  -F                                      //
-//--------------------------------------------------------------------------//
-void inline fix_print_neocore(int x, int y, char *label);
-
-WORD free_ram_info();
-
-  /*----------*/
- /* JOYPAD   */
-/*----------*/
+  //----------------------------------------------------------------------------//
+ //                                  JOYPAD                                    //
+//----------------------------------------------------------------------------//
 
 void        update_joypad();
 void        update_joypad_edge();
@@ -353,9 +350,17 @@ BOOL        joypad_is_c();
 BOOL        joypad_is_d();
 void inline joypad_debug();
 
-  //--------------------------------------------------------------------------//
- //                               LOGGER                                     //
-//--------------------------------------------------------------------------//
+
+  //----------------------------------------------------------------------------//
+ //                                  UTIL                                      //
+//----------------------------------------------------------------------------//
+
+void inline fix_print_neocore(int x, int y, char *label);
+WORD free_ram_info();
+
+  /*---------------*/
+ /* UTIL LOGGER   */
+/*---------------*/
 
 void init_logger(); // TODO : change to init_logger
 void logger_set_position(WORD _x, WORD _y);
@@ -371,9 +376,10 @@ void inline logger_spriteInfo(char *label, spriteInfo *si);
 void inline logger_box(char *label, Box *b);
 void inline logger_pictureInfo(char *label, pictureInfo *pi);
 
-  //--------------------------------------------------------------------------//
- //                                  -V                                      //
-//--------------------------------------------------------------------------//
+  /*---------------*/
+ /* UTIL VECTOR   */
+/*---------------*/
+
 void vec2int_init(Vec2int *vec, int x, int y);
 void vec2short_init(Vec2short *vec, short x, short y);
 void vec2byte_init(Vec2byte *vec, BYTE x, BYTE y);
