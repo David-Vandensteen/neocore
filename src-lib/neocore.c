@@ -219,9 +219,9 @@ void gfx_picture_shrunk_centroid(GFX_Picture *gfx_picture, short center_x, short
   );
 }
 
-void gfx_scroller_destroy(GFX_Scroller *s) {
-  sprite_index_manager_set_free(s->scrollerDAT.baseSprite, 21);
-  clearSprites(s->scrollerDAT.baseSprite, 21);
+void destroy_gs(GFX_Scroller *gfx_scroller) {
+  sprite_index_manager_set_free(gfx_scroller->scrollerDAT.baseSprite, 21);
+  clearSprites(gfx_scroller->scrollerDAT.baseSprite, 21);
 }
 
   /*------------------*/
@@ -245,20 +245,20 @@ void init_gpp(
   }
 }
 
-void init_gp(GFX_Picture *gfx_picture, pictureInfo *pi, paletteInfo *pali) {
-  gfx_picture->paletteInfoDAT = pali;
-  gfx_picture->pictureInfoDAT = pi;
+void init_gp(GFX_Picture *gfx_picture, pictureInfo *pictureInfo, paletteInfo *paletteInfo) {
+  gfx_picture->paletteInfoDAT = paletteInfo;
+  gfx_picture->pictureInfoDAT = pictureInfo;
 }
 
-void init_gas(GFX_Animated_Sprite *animated_sprite ,spriteInfo *si, paletteInfo *pali) {
-  animated_sprite->spriteInfoDAT = si;
-  animated_sprite->paletteInfoDAT = pali;
+void init_gas(GFX_Animated_Sprite *gfx_animated_sprite ,spriteInfo *spriteInfo, paletteInfo *paletteInfo) {
+  gfx_animated_sprite->spriteInfoDAT = spriteInfo;
+  gfx_animated_sprite->paletteInfoDAT = paletteInfo;
 };
 
 void init_gasp(
     GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic,
-    spriteInfo *si,
-    paletteInfo *pali,
+    spriteInfo *spriteInfo,
+    paletteInfo *paletteInfo,
     short box_witdh,
     short box_height,
     short box_width_offset,
@@ -274,14 +274,14 @@ void init_gasp(
   gfx_animated_sprite_physic->physic_enabled = true;
   init_gas(
     &gfx_animated_sprite_physic->gfx_animated_sprite,
-    si,
-    pali
+    spriteInfo,
+    paletteInfo
   );
 }
 
-void init_gs(GFX_Scroller *s, scrollerInfo *si, paletteInfo *pali) {
-  s->scrollerInfoDAT = si;
-  s->paletteInfoDAT = pali;
+void init_gs(GFX_Scroller *gfx_scroller, scrollerInfo *scrollerInfo, paletteInfo *paletteInfo) {
+  gfx_scroller->scrollerInfoDAT = scrollerInfo;
+  gfx_scroller->paletteInfoDAT = paletteInfo;
 }
 
   /*------------------*/
@@ -343,11 +343,11 @@ void display_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short 
   box_update(&gfx_animated_sprite_physic->box, x, y);
 }
 
-void display_gs(GFX_Scroller *s, short x, short y) {
-  WORD palette_index = palette_index_manager_use(s->paletteInfoDAT);
+void display_gs(GFX_Scroller *gfx_scroller, short x, short y) {
+  WORD palette_index = palette_index_manager_use(gfx_scroller->paletteInfoDAT);
   scrollerInit(
-    &s->scrollerDAT,
-    s->scrollerInfoDAT,
+    &gfx_scroller->scrollerDAT,
+    gfx_scroller->scrollerInfoDAT,
     sprite_index_manager_use(21),
     palette_index,
     x,
@@ -355,8 +355,8 @@ void display_gs(GFX_Scroller *s, short x, short y) {
   );
   palJobPut(
     palette_index,
-    s->paletteInfoDAT->palCount,
-    s->paletteInfoDAT->data
+    gfx_scroller->paletteInfoDAT->palCount,
+    gfx_scroller->paletteInfoDAT->data
   );
 }
 
@@ -538,7 +538,7 @@ WORD get_max_sprite_index_used() {
 /*---------------*/
 
 void clear_palette_index_table() { palette_index_manager_init(); }
-void palette_destroy(paletteInfo* pi) { palette_index_manager_set_free(pi); } // TODO : macro
+void destroy_palette(paletteInfo* paletteInfo) { palette_index_manager_set_free(paletteInfo); }
 
 WORD get_max_free_palette_index() {
   WORD i, max = 0;
@@ -561,10 +561,7 @@ WORD get_max_palette_index_used() {
 /*--------------*/
 
 WORD get_shrunk_proportional_table(WORD index) { return shrunk_table_prop[index]; } // todo (minor) - rename shrunk_proportional_table
-
-void inline shrunk_addr(WORD addr, WORD shrunk_value) {
-  SC234Put(addr, shrunk_value); // TODO : macro
-}
+void inline shrunk_addr(WORD addr, WORD shrunk_value) { SC234Put(addr, shrunk_value); }
 
 WORD shrunk_forge(BYTE xc, BYTE yc) { // todo (minor) - xcF, ycFF
   //F FF - x (hor) , y (vert)
@@ -721,7 +718,7 @@ void mask_update(short x, short y, Vec2short vec[], Vec2short offset[], BYTE vec
  //                                SOUND                                     //
 //--------------------------------------------------------------------------//
 
-void cdda_play(BYTE track) {
+void play_cdda(BYTE track) {
   disableIRQ();
   switch (track) {
   case 2:
@@ -767,8 +764,8 @@ void inline joypad_debug() {
   if (joypad_is_d())     {  fix_print_neocore(10, 11,  "JOYPAD D    "); }
 }
 
-void update_joypad() { JOYPAD_READ; } // TODO : macro
-void update_joypad_edge() { JOYPAD_READ_EDGE; } // TODO: macro
+void update_joypad() { JOYPAD_READ; }
+void update_joypad_edge() { JOYPAD_READ_EDGE; }
 
 BOOL joypad_is_up()     { return (JOYPAD_IS_UP)     ? (true) : (false); }
 BOOL joypad_is_down()   { return (JOYPAD_IS_DOWN)   ? (true) : (false); }

@@ -3,8 +3,6 @@
   2018
 */
 
-// TODO : parametric macro for CDDA play
-
   //--------------------------------------------------------------------------//
  //                             DEFINE                                       //
 //--------------------------------------------------------------------------//
@@ -39,18 +37,18 @@
 
 #define SHRUNK_TABLE_PROP_SIZE    0x2fe
 
-#define JOYPAD            BYTE p1, ps;
-#define JOYPAD_READ       p1 = volMEMBYTE(P1_CURRENT); ps = volMEMBYTE(PS_CURRENT);
-#define JOYPAD_READ_EDGE  p1 = volMEMBYTE(P1_EDGE); ps = volMEMBYTE(PS_EDGE);
-#define JOYPAD_IS_UP      p1&JOY_UP
-#define JOYPAD_IS_DOWN    p1&JOY_DOWN
-#define JOYPAD_IS_LEFT    p1&JOY_LEFT
-#define JOYPAD_IS_RIGHT   p1&JOY_RIGHT
-#define JOYPAD_IS_START   ps&P1_START
-#define JOYPAD_IS_A       p1&JOY_A
-#define JOYPAD_IS_B       p1&JOY_B
-#define JOYPAD_IS_C       p1&JOY_C
-#define JOYPAD_IS_D       p1&JOY_D
+#define JOYPAD            BYTE neocore_joypad_p1, neocore_joypad_ps;
+#define JOYPAD_READ       neocore_joypad_p1 = volMEMBYTE(P1_CURRENT); neocore_joypad_ps = volMEMBYTE(PS_CURRENT);
+#define JOYPAD_READ_EDGE  neocore_joypad_p1 = volMEMBYTE(P1_EDGE); neocore_joypad_ps = volMEMBYTE(PS_EDGE);
+#define JOYPAD_IS_UP      neocore_joypad_p1&JOY_UP
+#define JOYPAD_IS_DOWN    neocore_joypad_p1&JOY_DOWN
+#define JOYPAD_IS_LEFT    neocore_joypad_p1&JOY_LEFT
+#define JOYPAD_IS_RIGHT   neocore_joypad_p1&JOY_RIGHT
+#define JOYPAD_IS_START   neocore_joypad_ps&P1_START
+#define JOYPAD_IS_A       neocore_joypad_p1&JOY_A
+#define JOYPAD_IS_B       neocore_joypad_p1&JOY_B
+#define JOYPAD_IS_C       neocore_joypad_p1&JOY_C
+#define JOYPAD_IS_D       neocore_joypad_p1&JOY_D
 
 #define LOGGER_ON
 #define LOGGER_X_INIT   1
@@ -133,8 +131,8 @@ void gfx_picture_shrunk_centroid(GFX_Picture *gfx_picture, short center_x, short
  /*  GFX INIT        */
 /*------------------*/
 
-void init_gs(GFX_Scroller *s, scrollerInfo *si, paletteInfo *pali);
-void init_gp(GFX_Picture *gfx_picture, pictureInfo *pi, paletteInfo *pali);
+void init_gs(GFX_Scroller *gfx_scroller, scrollerInfo *scrollerInfo, paletteInfo *paletteInfo);
+void init_gp(GFX_Picture *gfx_picture, pictureInfo *pictureInfo, paletteInfo *paletteInfo);
 void init_gpp(
   GFX_Picture_Physic *gfx_picture_physic,
   pictureInfo *pi,
@@ -146,11 +144,11 @@ void init_gpp(
   BOOL autobox_enabled
 );
 
-void init_gas(GFX_Animated_Sprite *gfx_animated_sprite ,spriteInfo *si, paletteInfo *pali);
+void init_gas(GFX_Animated_Sprite *gfx_animated_sprite ,spriteInfo *spriteInfo, paletteInfo *paletteInfo);
 void init_gasp(
   GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic,
-  spriteInfo *si,
-  paletteInfo *pali,
+  spriteInfo *spriteInfo,
+  paletteInfo *paletteInfo,
   short box_witdh,
   short box_height,
   short box_width_offset,
@@ -161,7 +159,7 @@ void init_gasp(
  /*  GFX DISPLAY     */
 /*------------------*/
 
-void display_gs(GFX_Scroller *s, short x, short y);
+void display_gs(GFX_Scroller *gfx_scroller, short x, short y);
 void display_gp(GFX_Picture *gfx_picture, short x, short y);
 void display_gpp(GFX_Picture_Physic *gfx_picture_physic, short x, short y);
 void display_gas(GFX_Animated_Sprite *gfx_animated_sprite, short x, short y, WORD anim);
@@ -242,7 +240,7 @@ void update_anim_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic);
  /*  GFX DESTROY      */
 /*-------------------*/
 
-void gfx_scroller_destroy(GFX_Scroller *s); // TODO
+void destroy_gs(GFX_Scroller *gfx_scroller);
 void destroy_gp(GFX_Picture *gfx_picture);
 void destroy_gas(GFX_Animated_Sprite *gfx_animated_sprite);
 
@@ -276,7 +274,7 @@ WORD get_max_sprite_index_used();
  /* GPU PALETTE   */
 /*---------------*/
 
-void palette_destroy(paletteInfo* pi); // TODO : change to destroy_palette
+void destroy_palette(paletteInfo* paletteInfo);
 void clear_palette_index_table();
 WORD get_max_free_palette_index();
 WORD get_max_palette_index_used();
@@ -312,14 +310,15 @@ void box_resize(Box *Box, short edge); // todo (minor) - deprecated ?
  //                                SOUND                                     //
 //--------------------------------------------------------------------------//
 
-void cdda_play(BYTE track); // TODO : change to play_cdda
+void play_cdda(BYTE track);
 
   //----------------------------------------------------------------------------//
  //                                  JOYPAD                                    //
 //----------------------------------------------------------------------------//
 
-void        update_joypad();
-void        update_joypad_edge();
+void update_joypad();
+void update_joypad_edge();
+
 BOOL        joypad_is_up();
 BOOL        joypad_is_down();
 BOOL        joypad_is_left();
@@ -346,7 +345,7 @@ WORD free_ram_info();
 
 void init_log();
 void set_pos_log(WORD _x, WORD _y);
-WORD inline log_info(char *txt); // TODO : change to log_info
+WORD inline log_info(char *txt);
 void inline log_word(char *label, WORD value);
 void inline log_int(char *label, int value);
 void inline log_dword(char *label, DWORD value);
