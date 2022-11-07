@@ -15,14 +15,6 @@
 #include <DATlib.h>
 #include <math.h>
 
-// TODO : static macro
-#define NEOCORE_INIT \
-  typedef struct bkp_ram_info { \
-    WORD debug_dips; \
-    BYTE stuff[254]; \
-  } bkp_ram_info; \
-  bkp_ram_info bkp_data;
-
 #define __ALIGN1__      __attribute__ ((aligned (1)))
 #define __ALIGN2__      __attribute__ ((aligned (2)))
 #define __ALIGN4__      __attribute__ ((aligned (4)))
@@ -362,19 +354,19 @@ WORD free_ram_info();
  /* UTIL LOGGER   */
 /*---------------*/
 
-void init_logger(); // TODO : change to init_logger
-void logger_set_position(WORD _x, WORD _y);
-WORD inline logger_info(char *txt); // TODO : change to log_info
-void inline logger_word(char *label, WORD value);
-void inline logger_int(char *label, int value);
-void inline logger_dword(char *label, DWORD value);
-void inline logger_short(char *label, short value);
-void inline logger_byte(char *label, BYTE value);
-void inline logger_bool(char *label, BOOL value);
-void inline logger_animated_sprite(char *label, GFX_Animated_Sprite *gfx_animated_sprite);
-void inline logger_spriteInfo(char *label, spriteInfo *si);
-void inline logger_box(char *label, Box *b);
-void inline logger_pictureInfo(char *label, pictureInfo *pi);
+void init_log();
+void set_pos_log(WORD _x, WORD _y);
+WORD inline log_info(char *txt); // TODO : change to log_info
+void inline log_word(char *label, WORD value);
+void inline log_int(char *label, int value);
+void inline log_dword(char *label, DWORD value);
+void inline log_short(char *label, short value);
+void inline log_byte(char *label, BYTE value);
+void inline log_bool(char *label, BOOL value);
+void inline log_gas(char *label, GFX_Animated_Sprite *gfx_animated_sprite);
+void inline log_spriteInfo(char *label, spriteInfo *si);
+void inline log_box(char *label, Box *b);
+void inline log_pictureInfo(char *label, pictureInfo *pi);
 
   /*---------------*/
  /* UTIL VECTOR   */

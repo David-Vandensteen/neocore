@@ -13,6 +13,13 @@
  //                             DEFINE                                       //
 //--------------------------------------------------------------------------//
 
+#define NEOCORE_INIT \
+  typedef struct bkp_ram_info { \
+    WORD debug_dips; \
+    BYTE stuff[254]; \
+  } bkp_ram_info; \
+  bkp_ram_info bkp_data;
+
 #define CDDA_PLAY_TRACK_02 \
   asm("loop_track_02:"); \
   asm(" move.w #0x0002,%d0"); \
@@ -801,7 +808,7 @@ char get_sin(WORD index) {
  /* UTIL LOGGER   */
 /*---------------*/
 
-void init_logger() {
+void init_log() {
   #ifdef LOGGER_ON // TODO : find better way to desactivate logger
   x = LOGGER_X_INIT;
   y = LOGGER_Y_INIT;
@@ -811,14 +818,14 @@ void init_logger() {
   #endif
 }
 
-void logger_set_position(WORD _x, WORD _y){
+void set_pos_log(WORD _x, WORD _y){
   x = _x;
   y = _y;
   x_default = x;
   y_default = y;
 }
 
-WORD inline logger_info(char *label){
+WORD inline log_info(char *label){
   #ifdef LOGGER_ON
   fixPrintf(x, y , 0, 0 , label);
   autoInc();
@@ -826,120 +833,120 @@ WORD inline logger_info(char *label){
   #endif
 }
 
-void inline logger_word(char *label, WORD value){
+void inline log_word(char *label, WORD value){
   #ifdef LOGGER_ON
   WORD yc = y;
-  x = x_default + logger_info(label) + 2;
+  x = x_default + log_info(label) + 2;
   fixPrintf(x , yc, 0, 0, "%04d", value);
   x = x_default;
   #endif
 }
 
-void inline logger_int(char *label, int value){
+void inline log_int(char *label, int value){
   #ifdef LOGGER_ON
   WORD yc = y;
-  x = x_default + logger_info(label) + 2;
+  x = x_default + log_info(label) + 2;
   fixPrintf(x , yc, 0, 0, "%08d", value);
   x = x_default;
   #endif
 }
 
-void inline logger_dword(char *label, DWORD value){
+void inline log_dword(char *label, DWORD value){
   #ifdef LOGGER_ON
   WORD yc = y;
-  x = x_default + logger_info(label) + 2;
+  x = x_default + log_info(label) + 2;
   fixPrintf(x , yc, 0, 0, "%08d", value);
   x = x_default;
   #endif
 }
 
-void inline logger_short(char *label, short value) {
+void inline log_short(char *label, short value) {
   #ifdef LOGGER_ON
   WORD yc = y;
-  x = x_default + logger_info(label) + 2;
+  x = x_default + log_info(label) + 2;
   fixPrintf(x , yc, 0, 0, "%02d", value);
   x = x_default;
   #endif
 }
 
-void inline logger_byte(char *label, BYTE value) {
+void inline log_byte(char *label, BYTE value) {
   #ifdef LOGGER_ON
   WORD yc = y;
-  x = x_default + logger_info(label) + 2;
+  x = x_default + log_info(label) + 2;
   fixPrintf(x , yc, 0, 0, "%02d", value);
   x = x_default;
   #endif
 }
 
-void inline logger_bool(char *label, BOOL value) {
+void inline log_bool(char *label, BOOL value) {
   #ifdef LOGGER_ON
   WORD yc = y;
-  x = x_default + logger_info(label) + 2;
+  x = x_default + log_info(label) + 2;
   fixPrintf(x , yc, 0, 0, "%01d", value);
   x = x_default;
   #endif
 }
 
-void inline logger_animated_sprite(char *label, GFX_Animated_Sprite *gfx_animated_sprite) {
+void inline log_gas(char *label, GFX_Animated_Sprite *gfx_animated_sprite) {
   #ifdef LOGGER_ON
-  logger_info(label);
-  logger_word("BASESPRITE : " , gfx_animated_sprite->as.baseSprite);
-  logger_word("BASEPALETTE : ", gfx_animated_sprite->as.basePalette);
-  logger_short("POSX : ", gfx_animated_sprite->as.posX);
-  logger_short("POSY : ", gfx_animated_sprite->as.posY);
-  logger_short("CURRENTSTEPNUM : ", gfx_animated_sprite->as.currentStepNum);
-  logger_short("MAXSTEP : ", gfx_animated_sprite->as.maxStep);
-  logger_dword("COUNTER : ", gfx_animated_sprite->as.counter);
-  logger_word("REPEATS : ", gfx_animated_sprite->as.repeats);
-  logger_word("CURRENTFLIP : ", gfx_animated_sprite->as.currentFlip);
-  logger_word("TILEWIDTH : ", gfx_animated_sprite->as.tileWidth);
-  logger_word("ANIMID : ", gfx_animated_sprite->as.animID);
-  logger_word("FLAGS", gfx_animated_sprite->as.flags);
+  log_info(label);
+  log_word("BASESPRITE : " , gfx_animated_sprite->as.baseSprite);
+  log_word("BASEPALETTE : ", gfx_animated_sprite->as.basePalette);
+  log_short("POSX : ", gfx_animated_sprite->as.posX);
+  log_short("POSY : ", gfx_animated_sprite->as.posY);
+  log_short("CURRENTSTEPNUM : ", gfx_animated_sprite->as.currentStepNum);
+  log_short("MAXSTEP : ", gfx_animated_sprite->as.maxStep);
+  log_dword("COUNTER : ", gfx_animated_sprite->as.counter);
+  log_word("REPEATS : ", gfx_animated_sprite->as.repeats);
+  log_word("CURRENTFLIP : ", gfx_animated_sprite->as.currentFlip);
+  log_word("TILEWIDTH : ", gfx_animated_sprite->as.tileWidth);
+  log_word("ANIMID : ", gfx_animated_sprite->as.animID);
+  log_word("FLAGS", gfx_animated_sprite->as.flags);
   #endif
 }
 
-void inline logger_spriteInfo(char *label, spriteInfo *si) {
+void inline log_spriteInfo(char *label, spriteInfo *si) {
   #ifdef LOGGER_ON
-  logger_info(label);
-  logger_word("PALCOUNT : ", si->palCount);
-  logger_word("FRAMECOUNT : ", si->frameCount);
-  logger_word("MAXWIDTH : ", si->maxWidth);
+  log_info(label);
+  log_word("PALCOUNT : ", si->palCount);
+  log_word("FRAMECOUNT : ", si->frameCount);
+  log_word("MAXWIDTH : ", si->maxWidth);
   #endif
 }
 
-void inline logger_box(char *label, Box *b) {
+void inline log_box(char *label, Box *b) {
   #ifdef LOGGER_ON
-  logger_info(label);
-  logger_short("P0X", (short)b->p0.x);
-  logger_short("P0Y", (short)b->p0.y);
-  logger_info("");
-  logger_short("P1X", (short)b->p1.x);
-  logger_short("P1Y", (short)b->p1.y);
-  logger_info("");
-  logger_short("P2X", (short)b->p2.x);
-  logger_short("P2Y", (short)b->p2.y);
-  logger_info("");
-  logger_short("P3X", (short)b->p3.x);
-  logger_short("P3Y", (short)b->p3.y);
-  logger_info("");
-  logger_short("P4X", (short)b->p4.x);
-  logger_short("P4Y", (short)b->p4.y);
-  logger_info("");
-  logger_short("WIDTH ", b->width);
-  logger_short("HEIGHT ", b->height);
-  logger_info("");
-  logger_short("WIDTH OFFSET ", b->widthOffset);
-  logger_short("HEIGHT OFFSET ", b->heightOffset);
+  log_info(label);
+  log_short("P0X", (short)b->p0.x);
+  log_short("P0Y", (short)b->p0.y);
+  log_info("");
+  log_short("P1X", (short)b->p1.x);
+  log_short("P1Y", (short)b->p1.y);
+  log_info("");
+  log_short("P2X", (short)b->p2.x);
+  log_short("P2Y", (short)b->p2.y);
+  log_info("");
+  log_short("P3X", (short)b->p3.x);
+  log_short("P3Y", (short)b->p3.y);
+  log_info("");
+  log_short("P4X", (short)b->p4.x);
+  log_short("P4Y", (short)b->p4.y);
+  log_info("");
+  log_short("WIDTH ", b->width);
+  log_short("HEIGHT ", b->height);
+  log_info("");
+  log_short("WIDTH OFFSET ", b->widthOffset);
+  log_short("HEIGHT OFFSET ", b->heightOffset);
   #endif
 }
 
-void inline logger_pictureInfo(char *label, pictureInfo *pi) {
+void inline log_pictureInfo(char *label, pictureInfo *pi) {
   #ifdef LOGGER_ON
-  logger_info(label);
-  logger_word("COLSIZE : ", (WORD)pi->colSize);
-  logger_word("UNUSED HEIGHT : ", (WORD)pi->unused__height);
-  logger_word("TILEWIDTH : ", (WORD)pi->tileWidth);
-  logger_word("TILEHEIGHT : ", (WORD)pi->tileHeight);
+  log_info(label);
+  log_word("COLSIZE : ", (WORD)pi->colSize);
+  log_word("UNUSED HEIGHT : ", (WORD)pi->unused__height);
+  log_word("TILEWIDTH : ", (WORD)pi->tileWidth);
+  log_word("TILEHEIGHT : ", (WORD)pi->tileHeight);
   #endif
 }
 
