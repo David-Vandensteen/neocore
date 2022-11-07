@@ -3,7 +3,6 @@
   2018
 */
 
-// TODO : rename loggers (ex logger_animate_sprite to log_gas)
 // TODO : parametric macro for CDDA play
 
   //--------------------------------------------------------------------------//
@@ -94,15 +93,15 @@ typedef struct Box {
 } Box;
 
 typedef struct GFX_Animated_Sprite {
-  aSprite as;
-  spriteInfo *si;
-  paletteInfo *pali;
+  aSprite aSpriteDAT;
+  spriteInfo *spriteInfoDAT;
+  paletteInfo *paletteInfoDAT;
 } GFX_Animated_Sprite;
 
 typedef struct GFX_Picture {
-  picture pic;
-  pictureInfo *pi;
-  paletteInfo *pali;
+  picture pictureDAT;
+  pictureInfo *pictureInfoDAT;
+  paletteInfo *paletteInfoDAT;
 } GFX_Picture;
 
 typedef struct GFX_Animated_Sprite_Physic {
@@ -119,17 +118,16 @@ typedef struct GFX_Picture_Physic {
 } GFX_Picture_Physic;
 
 typedef struct GFX_Scroller {
-  scroller s;
-  scrollerInfo *si;
-  paletteInfo *pali;
+  scroller scrollerDAT;
+  scrollerInfo *scrollerInfoDAT;
+  paletteInfo *paletteInfoDAT;
 } GFX_Scroller;
 
   //--------------------------------------------------------------------------//
  //                                   GFX                                    //
 //--------------------------------------------------------------------------//
 
-// TODO : remove
-// void gfx_image_shrunk_centroid(GFX_Picture *gfx_picture, short center_x, short center_y, WORD shrunk_value);
+void gfx_picture_shrunk_centroid(GFX_Picture *gfx_picture, short center_x, short center_y, WORD shrunk_value);
 
   /*------------------*/
  /*  GFX INIT        */
