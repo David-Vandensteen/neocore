@@ -6,30 +6,28 @@
 #include <math.h>
 #include "externs.h"
 
-NEOCORE_INIT
-
 int main(void) {
-  static GFX_Image logo;
+  static GFX_Picture logo;
   static paletteInfo logo_swap_palette;
   BYTE i = 0;
-  gpu_init();
-  gfx_image_init(&logo, &logo_sprite, &logo_sprite_Palettes);
-  gfx_image_display(&logo, 50, 100);
-  logo_swap_palette.palCount = logo.pali->palCount;
+  init_gpu();
+  init_gp(&logo, &logo_sprite, &logo_sprite_Palettes);
+  display_gp(&logo, 50, 100);
+  logo_swap_palette.palCount = logo.paletteInfoDAT->palCount;
 
-  for (i = 0; i < (logo.pali->palCount MULT16); i++) { logo_swap_palette.data[i] = RAND(0xFFFF); }
+  for (i = 0; i < (logo.paletteInfoDAT->palCount MULT16); i++) { logo_swap_palette.data[i] = RAND(0xFFFF); }
   logo_swap_palette.data[1] = 0x0000;
 
   while(1) {
     wait_vbl();
-    logger_init();
-    if (DAT_frameCounter % 8 == 0) {
-      for (i = 0; i < (logo.pali->palCount MULT16); i++) { logo_swap_palette.data[i] = RAND(0xFFFF); }
+    init_log();
+    if (get_frame_counter() % 8 == 0) {
+      for (i = 0; i < (logo.paletteInfoDAT->palCount MULT16); i++) { logo_swap_palette.data[i] = RAND(0xFFFF); }
       logo_swap_palette.data[1] = 0x0000;
-      palJobPut(logo.pic.basePalette, logo_swap_palette.palCount, logo_swap_palette.data);
+      palJobPut(logo.pictureDAT.basePalette, logo_swap_palette.palCount, logo_swap_palette.data);
     }
-    SCClose();
+    close_vbl();
   };
-  SCClose();
+  close_vbl();
   return 0;
 }

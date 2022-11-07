@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
-  <name>test_scroller</name>
+  <name>test_gp</name>
   <version>1.0.0</version>
   <makefile>..\Makefile</makefile>
   <toolchainPath>..\..\toolchain</toolchainPath>
