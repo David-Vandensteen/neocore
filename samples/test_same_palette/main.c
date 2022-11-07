@@ -19,13 +19,13 @@ int main(void) {
   while(1) {
     wait_vbl();
     init_log();
-    log_byte("PALI PLAYER ", player.as.basePalette);
-    log_byte("PALI PLANET ", planet.pic.basePalette);
-    log_byte("PALI BACK   ", backgroung.s.basePalette);
+    log_byte("PALI PLAYER ", player.aSpriteDAT.basePalette);
+    log_byte("PALI PLANET ", planet.pictureDAT.basePalette);
+    log_byte("PALI BACK   ", backgroung.scrollerDAT.basePalette);
     log_info(" ");
-    log_word("PAL PLAYER ", (int)player.pali);
-    log_word("PAL PLANET ", (int)planet.pali);
-    log_word("PAL BACK   ", (int)backgroung.pali);
+    log_word("PAL PLAYER ", (int)player.paletteInfoDAT);
+    log_word("PAL PLANET ", (int)planet.paletteInfoDAT);
+    log_word("PAL BACK   ", (int)backgroung.paletteInfoDAT);
     update_anim_gas(&player);
     close_vbl();
   };

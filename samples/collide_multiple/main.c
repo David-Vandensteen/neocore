@@ -25,19 +25,18 @@ int main(void) {
     if (joypad_is_right() && get_x_gasp(player) < 280) { move_gasp(&player, 1, 0); }
     if (joypad_is_up() && get_y_gasp(player) > 0) {
       move_gasp(&player, 0, -1);
-      set_anim_gasp(&player.gfx_animated_sprite, PLAYER_SPRITE_ANIM_UP);
+      set_anim_gasp(&player, PLAYER_SPRITE_ANIM_UP);
     }
-    if (joypad_is_down() && player.gfx_animated_sprite.as.posY < 200) {
+    if (joypad_is_down() && get_y_gasp(player) < 200) {
       move_gasp(&player, 0, 1);
-      set_anim_gasp(&player.gfx_animated_sprite, PLAYER_SPRITE_ANIM_DOWN);
+      set_anim_gasp(&player, PLAYER_SPRITE_ANIM_DOWN);
     }
-    if (!joypad_is_down() && !joypad_is_up()) { set_anim_gasp(&player.gfx_animated_sprite, PLAYER_SPRITE_ANIM_IDLE); }
+    if (!joypad_is_down() && !joypad_is_up()) { set_anim_gasp(&player, PLAYER_SPRITE_ANIM_IDLE); }
 
-    // if (boxes_collide(&player.box, asteroids_box, ASTEROID_MAX)) { flash_init(&player.gfx_animated_sprite.flash, true, 10, 10); }
      if (boxes_collide(&player.box, asteroids_box, ASTEROID_MAX)) {
       if (get_frame_counter() % 20) { hide_gasp(&player); } else { show_gasp(&player); }
      } else { show_gasp(&player); }
-    update_anim_gasp(&player.gfx_animated_sprite);
+    update_anim_gasp(&player);
     close_vbl();
   };
   close_vbl();

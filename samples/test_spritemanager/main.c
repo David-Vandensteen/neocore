@@ -24,18 +24,18 @@ static void display() {
 
 static void update() {
   init_log();
-  log_word("P1 INDEX : ", planet01.pic.baseSprite);
+  log_word("P1 INDEX : ", planet01.pictureDAT.baseSprite);
   log_info("MUST BE : 1");
-  log_word("P2 INDEX : ", planet02.pic.baseSprite);
+  log_word("P2 INDEX : ", planet02.pictureDAT.baseSprite);
   log_info("MUST BE : 9");
-  log_word("P3 INDEX : ", planet03.pic.baseSprite);
+  log_word("P3 INDEX : ", planet03.pictureDAT.baseSprite);
   log_info("MUST BE : 17");
   if (get_frame_counter() == 500) {
     destroy_gp(&planet01);
     display_gp(&planet04, 100, 10);
   }
   if (get_frame_counter() > 500) {
-    log_word("P4 INDEX : ", planet04.pic.baseSprite);
+    log_word("P4 INDEX : ", planet04.pictureDAT.baseSprite);
     log_info("MUST BE : 1");
   }
 }

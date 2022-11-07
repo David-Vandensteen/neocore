@@ -75,7 +75,7 @@ static void update_player() {
     move_gasp(&player, 0, -1);
     set_anim_gasp(&player, PLAYER_SPRITE_ANIM_UP);
   }
-  if (joypad_is_down() && player.gfx_animated_sprite.as.posY < 200) {
+  if (joypad_is_down() && get_y_gasp(player) < 200) {
     move_gasp(&player, 0, 1);
     set_anim_gasp(&player, PLAYER_SPRITE_ANIM_DOWN);
   }

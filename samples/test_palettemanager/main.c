@@ -23,11 +23,11 @@ static void display() {
 
 static void update() {
   init_log();
-  log_word("P1 INDEX : ", planet01.pic.basePalette);
+  log_word("P1 INDEX : ", planet01.pictureDAT.basePalette);
   log_info("MUST BE : 17");
-  log_word("P2 INDEX : ", planet02.pic.basePalette);
+  log_word("P2 INDEX : ", planet02.pictureDAT.basePalette);
   log_info("MUST BE : 18");
-  log_word("P3 INDEX : ", planet03.pic.basePalette);
+  log_word("P3 INDEX : ", planet03.pictureDAT.basePalette);
   log_info("MUST BE : 17");
   if (get_frame_counter() == 500) {
     log_info("P1 REALLOCATE");
