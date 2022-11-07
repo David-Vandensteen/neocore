@@ -29,7 +29,7 @@ int main(void) {
     if (!joypad_is_down() && !joypad_is_up()) { set_anim_gas(&player, PLAYER_SPRITE_ANIM_IDLE); }
 
     move_gs(&background, 1, 0);
-    if (get_x_gs(background) > 512) move_gs(&background, 1, 0);
+    if (get_x_gs(background) > 512) set_x_gs(&background, 0);
     update_anim_gas(&player);
     close_vbl();
   };
