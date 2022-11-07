@@ -45,7 +45,7 @@ static void display() {
 }
 
 static void update() {
-  if (DAT_frameCounter % 5 == 0) update_logo1();
+  if (get_frame_counter() % 5 == 0) update_logo1();
   update_logo2();
   update_logo3();
 }

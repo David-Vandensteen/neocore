@@ -24,13 +24,12 @@ int main(void) {
 
   while(1) {
     wait_vbl();
-    if (DAT_frameCounter % 5 == 0) logo1_shrunk_x++;
+    if (get_frame_counter() % 5 == 0) logo1_shrunk_x++;
     logo2_shrunk_y +=3;
 
     shrunk(logo1.pic.baseSprite, logo1.pic.info->tileWidth, shrunk_forge(logo1_shrunk_x, 0xFF));
     shrunk(logo2.pic.baseSprite, logo2.pic.info->tileWidth, shrunk_forge(0xF, logo2_shrunk_y));
-    shrunk(logo3.pic.baseSprite, logo3.pic.info->tileWidth, get_shrunk_proportional_table(DAT_frameCounter & SHRUNK_TABLE_PROP_SIZE)); // todo (minor) - rename SHRUNK_PROPORTIONAL_TABLE_SIZE
-
+    shrunk(logo3.pic.baseSprite, logo3.pic.info->tileWidth, get_shrunk_proportional_table(get_frame_counter() & SHRUNK_TABLE_PROP_SIZE)); // todo (minor) - rename SHRUNK_PROPORTIONAL_TABLE_SIZE
 
     /* neocore provide a precalculated table for keep "aspect ratio" */
     close_vbl();

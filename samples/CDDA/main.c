@@ -32,7 +32,7 @@ static void update() {
     move_gs(&spectrum02, 1, 0);
     if (get_x_gs(spectrum02) > 960) set_x_gs(&spectrum02, 0);
   }
-  if (DAT_frameCounter % 5 == 0) {
+  if (get_frame_counter() % 5 == 0) {
     if (k7_direction) {
       move_gp(&k7, 1, 0);
     } else {

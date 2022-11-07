@@ -38,7 +38,7 @@ static void update() {
   DWORD result;
   WORD i = 0;
   init_log();
-  log_dword("F : ", DAT_frameCounter);
+  log_dword("F : ", get_frame_counter());
   log_word("FD : ", DAT_droppedFrames);
   // BURN
   /*

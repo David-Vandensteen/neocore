@@ -21,7 +21,7 @@ int main(void) {
   while(1) {
     wait_vbl();
     init_log();
-    if (DAT_frameCounter % 8 == 0) {
+    if (get_frame_counter() % 8 == 0) {
       for (i = 0; i < (logo.pali->palCount MULT16); i++) { logo_swap_palette.data[i] = RAND(0xFFFF); }
       logo_swap_palette.data[1] = 0x0000;
       palJobPut(logo.pic.basePalette, logo_swap_palette.palCount, logo_swap_palette.data);
