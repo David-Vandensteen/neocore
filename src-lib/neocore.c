@@ -20,6 +20,19 @@
   } bkp_ram_info; \
   bkp_ram_info bkp_data;
 
+#define JOYPAD_INIT_P1       BYTE neocore_joypad_p1, neocore_joypad_ps;
+#define JOYPAD_READ_P1       neocore_joypad_p1 = volMEMBYTE(P1_CURRENT); neocore_joypad_ps = volMEMBYTE(PS_CURRENT);
+#define JOYPAD_READ_EDGE_P1  neocore_joypad_p1 = volMEMBYTE(P1_EDGE); neocore_joypad_ps = volMEMBYTE(PS_EDGE);
+#define JOYPAD_IS_UP_P1      neocore_joypad_p1&JOY_UP
+#define JOYPAD_IS_DOWN_P1    neocore_joypad_p1&JOY_DOWN
+#define JOYPAD_IS_LEFT_P1    neocore_joypad_p1&JOY_LEFT
+#define JOYPAD_IS_RIGHT_P1   neocore_joypad_p1&JOY_RIGHT
+#define JOYPAD_IS_START_P1   neocore_joypad_ps&P1_START
+#define JOYPAD_IS_A_P1       neocore_joypad_p1&JOY_A
+#define JOYPAD_IS_B_P1       neocore_joypad_p1&JOY_B
+#define JOYPAD_IS_C_P1       neocore_joypad_p1&JOY_C
+#define JOYPAD_IS_D_P1       neocore_joypad_p1&JOY_D
+
 #define CDDA_PLAY_TRACK_02 \
   asm("loop_track_02:"); \
   asm(" move.w #0x0002,%d0"); \
@@ -97,15 +110,10 @@ void inline static setPosDefault();
 WORD inline static countChar(char *txt);
 void inline static autoInc(); // todo (minor) - logger_auto ... ?
 
-void inline static setX(WORD _x){
-  x = _x;
-}
+void inline static setX(WORD _x) { x = _x; }
+void inline static setY(WORD _y) { y = _y; }
 
-void inline static setY(WORD _y){
-  y = _y;
-}
-
-void inline static setPosDefault(){
+void inline static setPosDefault() {
   x = LOGGER_X_INIT;
   y = LOGGER_Y_INIT;
 }
@@ -191,7 +199,7 @@ static WORD palette_index_manager_use(paletteInfo *pi) {
   return 0; // TODO : no zero return
 }
 
-WORD inline static countChar(char *txt){
+WORD inline static countChar(char *txt) {
   WORD i = 0;
     while (txt[i] != '\0') {
     i++;
@@ -199,9 +207,7 @@ WORD inline static countChar(char *txt){
   return i;
 }
 
-void inline static autoInc(){
-  y++;
-}
+void inline static autoInc() { y++; }
 
 NEOCORE_INIT
 JOYPAD_INIT_P1
@@ -575,9 +581,7 @@ WORD shrunk_range(WORD addr_start, WORD addr_end, WORD shrunk_value) {
   return addr_end;
 }
 
-void shrunk(WORD base_sprite, WORD max_width, WORD value) {
-  shrunk_range(0x8000 + base_sprite, 0x8000 + base_sprite + max_width, value); // TODO : macro
-}
+void shrunk(WORD base_sprite, WORD max_width, WORD value) { shrunk_range(0x8000 + base_sprite, 0x8000 + base_sprite + max_width, value); }
 
 int shrunk_centroid_get_translated_x(short centerPosX, WORD tileWidth, BYTE shrunkX) {
   FIXED newX = FIX(centerPosX);
@@ -775,9 +779,7 @@ BOOL joypad_p1_is_d()      { return (JOYPAD_IS_D_P1)      ? (true) : (false); }
  //                                  UTIL                                      //
 //----------------------------------------------------------------------------//
 
-void inline fix_print_neocore(int x, int y, char *label){
-  fixPrint(x, y, 0, 0, label); // TODO : macro
-}
+void inline fix_print_neocore(int x, int y, char *label) { fixPrint(x, y, 0, 0, label); }
 
 WORD free_ram_info() {
   // $000000  $0FFFFF    Vector Table, 68k program (.PRG files), 68k RAM
@@ -790,9 +792,7 @@ WORD free_ram_info() {
   return addr_end - used;
 }
 
-char get_sin(WORD index) {
-  return sinTable[index]; // TODO : macro
-}
+char get_sin(WORD index) { return sinTable[index]; }
 
   /*---------------*/
  /* UTIL LOGGER   */

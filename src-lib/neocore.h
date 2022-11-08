@@ -37,19 +37,6 @@
 
 #define SHRUNK_TABLE_PROP_SIZE    0x2fe
 
-#define JOYPAD_INIT_P1       BYTE neocore_joypad_p1, neocore_joypad_ps;
-#define JOYPAD_READ_P1       neocore_joypad_p1 = volMEMBYTE(P1_CURRENT); neocore_joypad_ps = volMEMBYTE(PS_CURRENT);
-#define JOYPAD_READ_EDGE_P1  neocore_joypad_p1 = volMEMBYTE(P1_EDGE); neocore_joypad_ps = volMEMBYTE(PS_EDGE);
-#define JOYPAD_IS_UP_P1      neocore_joypad_p1&JOY_UP
-#define JOYPAD_IS_DOWN_P1    neocore_joypad_p1&JOY_DOWN
-#define JOYPAD_IS_LEFT_P1    neocore_joypad_p1&JOY_LEFT
-#define JOYPAD_IS_RIGHT_P1   neocore_joypad_p1&JOY_RIGHT
-#define JOYPAD_IS_START_P1   neocore_joypad_ps&P1_START
-#define JOYPAD_IS_A_P1       neocore_joypad_p1&JOY_A
-#define JOYPAD_IS_B_P1       neocore_joypad_p1&JOY_B
-#define JOYPAD_IS_C_P1       neocore_joypad_p1&JOY_C
-#define JOYPAD_IS_D_P1       neocore_joypad_p1&JOY_D
-
 #define LOGGER_ON
 #define LOGGER_X_INIT   1
 #define LOGGER_Y_INIT   2
