@@ -250,7 +250,7 @@ char get_sin(WORD index);
 /*------------------------------*/
 
 DWORD inline wait_vbl_max(WORD nb);
-#define wait_vbl(); waitVBlank();
+#define wait_vbl() waitVBlank()
 
   /*------------------------------*/
  /* GPU SPRITE INDEX MANAGEMENT  */
