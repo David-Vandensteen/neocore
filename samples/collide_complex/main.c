@@ -2,6 +2,8 @@
 #include "externs.h"
 
 #define PEAK_MASK_VECTOR_MAX 6
+#define X 0
+#define Y 1
 
 // todo (minor) - improve neocore collision detection (bug on top of peak)
 
