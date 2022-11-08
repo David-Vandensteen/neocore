@@ -241,7 +241,7 @@ void init_gpp(
   init_gp(&gfx_picture_physic->gfx_picture, pi, pali);
   gfx_picture_physic->autobox_enabled = autobox_enabled;
   if (gfx_picture_physic->autobox_enabled) {
-    box_init(&gfx_picture_physic->box, box_witdh, box_height, box_width_offset, box_height_offset);
+    init_box(&gfx_picture_physic->box, box_witdh, box_height, box_width_offset, box_height_offset);
   }
 }
 
@@ -264,7 +264,7 @@ void init_gasp(
     short box_width_offset,
     short box_height_offset
   ) {
-  box_init(
+  init_box(
     &gfx_animated_sprite_physic->box,
     box_witdh,
     box_height,
@@ -291,7 +291,7 @@ void init_gs(GFX_Scroller *gfx_scroller, scrollerInfo *scrollerInfo, paletteInfo
 void display_gpp(GFX_Picture_Physic *gfx_picture_physic, short x, short y) {
   display_gp(&gfx_picture_physic->gfx_picture, x, y);
   if (gfx_picture_physic->autobox_enabled) {
-    box_update(&gfx_picture_physic->box, x, y);
+    update_box(&gfx_picture_physic->box, x, y);
   }
 }
 
@@ -340,7 +340,7 @@ void display_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short 
     y,
     anim
   );
-  box_update(&gfx_animated_sprite_physic->box, x, y);
+  update_box(&gfx_animated_sprite_physic->box, x, y);
 }
 
 void display_gs(GFX_Scroller *gfx_scroller, short x, short y) {
@@ -382,7 +382,6 @@ void show_gpp(GFX_Picture_Physic *gfx_picture_physic) { pictureShow(&gfx_picture
  /*  GFX POSITION    */
 /*------------------*/
 
-
 /* GFX POSITION GETTER */
 
 short get_x_gas(GFX_Animated_Sprite gfx_animated_sprite) { return gfx_animated_sprite.aSpriteDAT.posX; }
@@ -400,7 +399,6 @@ short get_y_gpp(GFX_Picture_Physic gfx_picture_physic) { return gfx_picture_phys
 short get_x_gs(GFX_Scroller gfx_scroller) { return gfx_scroller.scrollerDAT.scrlPosX; }
 short get_y_gs(GFX_Scroller gfx_scroller) { return gfx_scroller.scrollerDAT.scrlPosY; }
 
-
 /* GFX POSITION SETTER */
 
 void set_x_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short x) { set_pos_gasp(gfx_animated_sprite_physic, x, gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT.posY); }
@@ -415,28 +413,24 @@ void set_pos_gp(GFX_Picture *gfx_picture, short x, short y) { pictureSetPos(&gfx
 
 void set_pos_gpp(GFX_Picture_Physic *gfx_picture_physic, short x, short y) {
   pictureSetPos(&gfx_picture_physic->gfx_picture.pictureDAT, x, y);
-  if (gfx_picture_physic->autobox_enabled) {
-    box_update(&gfx_picture_physic->box, x, y);
-  }
+  if (gfx_picture_physic->autobox_enabled) update_box(&gfx_picture_physic->box, x, y);
 }
 
 void set_pos_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short x, short y) {
   aSpriteSetPos(&gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT, x, y);
-  box_update(&gfx_animated_sprite_physic->box, x, y);
+  update_box(&gfx_animated_sprite_physic->box, x, y);
 }
 
 /* GFX POSITION MOVE*/
 
 void move_gpp(GFX_Picture_Physic *gfx_picture_physic, short x_offset, short y_offset) {
   pictureMove(&gfx_picture_physic->gfx_picture.pictureDAT, x_offset, y_offset);
-  if (gfx_picture_physic->autobox_enabled) {
-    box_update(&gfx_picture_physic->box, gfx_picture_physic->gfx_picture.pictureDAT.posX, gfx_picture_physic->gfx_picture.pictureDAT.posY);
-  }
+  if (gfx_picture_physic->autobox_enabled) update_box(&gfx_picture_physic->box, gfx_picture_physic->gfx_picture.pictureDAT.posX, gfx_picture_physic->gfx_picture.pictureDAT.posY);
 }
 
 void move_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short x_offset, short y_offset) {
   move_gas(&gfx_animated_sprite_physic->gfx_animated_sprite, x_offset, y_offset);
-  box_update(&gfx_animated_sprite_physic->box, gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT.posX, gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT.posY);
+  update_box(&gfx_animated_sprite_physic->box, gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT.posX, gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT.posY);
 }
 
 void move_gas(GFX_Animated_Sprite *gfx_animated_sprite, short x_offset, short y_offset) { aSpriteMove(&gfx_animated_sprite->aSpriteDAT, x_offset, y_offset); }
@@ -509,7 +503,6 @@ DWORD inline wait_vbl_max(WORD nb) {
   for (i = 0; i <= nb; i++) waitVBlank();
   return DAT_frameCounter;
 }
-
 
   /*------------------------------*/
  /* GPU SPRITE INDEX MANAGEMENT  */
@@ -602,62 +595,62 @@ int shrunk_centroid_get_translated_y(short centerPosY, WORD tileHeight, BYTE shr
  //                                PHYSIC                                    //
 //--------------------------------------------------------------------------//
 
-BYTE boxes_collide(Box *b, Box *boxes[], BYTE box_max) {
+BYTE collide_boxes(Box *box, Box *boxes[], BYTE box_max) {
   BYTE rt = false;
   BYTE i = 0;
   for (i = 0; i < box_max; i++) {
   if(
-      b->p1.x >= boxes[i]->p0.x
+      box->p1.x >= boxes[i]->p0.x
           &&
-      b->p0.x <= boxes[i]->p1.x
+      box->p0.x <= boxes[i]->p1.x
           &&
-      b->p3.y >= boxes[i]->p0.y
+      box->p3.y >= boxes[i]->p0.y
           &&
-      b->p0.y <= boxes[i]->p3.y
+      box->p0.y <= boxes[i]->p3.y
     ) { rt = i + 1; }
   }
   return rt;
 }
 
-BOOL box_collide(Box *b1, Box *b2) { // todo - return a frixion vector
+BOOL collide_box(Box *box1, Box *box2) { // todo - return a frixion vector
   if(
-      b1->p1.x >= b2->p0.x
+      box1->p1.x >= box2->p0.x
           &&
-      b1->p0.x <= b2->p1.x
+      box1->p0.x <= box2->p1.x
           &&
-      b1->p3.y >= b2->p0.y
+      box1->p3.y >= box2->p0.y
           &&
-      b1->p0.y <= b2->p3.y
+      box1->p0.y <= box2->p3.y
     ) {
       return true;
     } else { return false; }
 }
 
-void box_init(Box *b, short width, short height, short widthOffset, short heightOffset) {
-  b->width = width;
-  b->height = height;
-  b->widthOffset = widthOffset;
-  b->heightOffset = heightOffset;
+void init_box(Box *box, short width, short height, short widthOffset, short heightOffset) {
+  box->width = width;
+  box->height = height;
+  box->widthOffset = widthOffset;
+  box->heightOffset = heightOffset;
 }
 
-void box_update(Box *b, short x, short y) {
-  b->p0.x = x + b->widthOffset;
-  b->p0.y = y + b->heightOffset;
+void update_box(Box *box, short x, short y) {
+  box->p0.x = x + box->widthOffset;
+  box->p0.y = y + box->heightOffset;
 
-  b->p1.x = b->p0.x + b->width;
-  b->p1.y = b->p0.y;
+  box->p1.x = box->p0.x + box->width;
+  box->p1.y = box->p0.y;
 
-  b->p2.x = b->p1.x;
-  b->p2.y = b->p1.y + b->height;
+  box->p2.x = box->p1.x;
+  box->p2.y = box->p1.y + box->height;
 
-  b->p3.x = b->p0.x;
-  b->p3.y = b->p2.y;
+  box->p3.x = box->p0.x;
+  box->p3.y = box->p2.y;
 
-  b->p4.x = b->p0.x + ((b->p1.x - b->p0.x) DIV2);
-  b->p4.y = b->p0.y + ((b->p3.y - b->p0.y) DIV2);
+  box->p4.x = box->p0.x + ((box->p1.x - box->p0.x) DIV2);
+  box->p4.y = box->p0.y + ((box->p3.y - box->p0.y) DIV2);
 }
 
-void box_shrunk(Box *b, Box *bOrigin, WORD shrunkValue) {
+void shrunk_box(Box *box, Box *bOrigin, WORD shrunkValue) {
   // todo (minor) - optim.
   // if i can read the shrunk VRAM value, i can compute the origin box...
   // todo (minor) - improve precision
@@ -675,24 +668,24 @@ void box_shrunk(Box *b, Box *bOrigin, WORD shrunkValue) {
   trim_y =  (trim_y DIV2);
   trim_y += 1;
 
-  b->p0.x = bOrigin->p0.x + trim_x - (bOrigin->width DIV2);
-  b->p0.y = bOrigin->p0.y + trim_y - (bOrigin->height DIV2);
+  box->p0.x = bOrigin->p0.x + trim_x - (bOrigin->width DIV2);
+  box->p0.y = bOrigin->p0.y + trim_y - (bOrigin->height DIV2);
 
-  b->p1.x = bOrigin->p1.x - trim_x - (bOrigin->width DIV2);
-  b->p1.y = bOrigin->p1.y + trim_y - (bOrigin->height DIV2);
+  box->p1.x = bOrigin->p1.x - trim_x - (bOrigin->width DIV2);
+  box->p1.y = bOrigin->p1.y + trim_y - (bOrigin->height DIV2);
 
-  b->p2.x = bOrigin->p2.x - trim_x - (bOrigin->width DIV2);
-  b->p2.y = bOrigin->p2.y - trim_y - (bOrigin->height DIV2);
+  box->p2.x = bOrigin->p2.x - trim_x - (bOrigin->width DIV2);
+  box->p2.y = bOrigin->p2.y - trim_y - (bOrigin->height DIV2);
 
-  b->p3.x = bOrigin->p3.x + trim_x - (bOrigin->width DIV2);
-  b->p3.y = bOrigin->p3.y - trim_y - (bOrigin->height DIV2);
+  box->p3.x = bOrigin->p3.x + trim_x - (bOrigin->width DIV2);
+  box->p3.y = bOrigin->p3.y - trim_y - (bOrigin->height DIV2);
 
-  b->p4.x = b->p0.x + ((b->p1.x - b->p0.x) DIV2);
-  b->p4.y = b->p0.y + ((b->p3.y - b->p0.y) DIV2);
+  box->p4.x = box->p0.x + ((box->p1.x - box->p0.x) DIV2);
+  box->p4.y = box->p0.y + ((box->p3.y - box->p0.y) DIV2);
 }
 
 // todo (minor) - deprecated ?
-void box_resize(Box *box, short edge) {
+void resize_box(Box *box, short edge) {
   box->p0.x -= edge;
   box->p0.y -= edge;
 
@@ -706,7 +699,7 @@ void box_resize(Box *box, short edge) {
   box->p3.y += edge;
 }
 
-void mask_update(short x, short y, Vec2short vec[], Vec2short offset[], BYTE vector_max) {
+void update_mask(short x, short y, Vec2short vec[], Vec2short offset[], BYTE vector_max) {
   BYTE i = 0;
   for (i = 0; i < vector_max; i++) {
     vec[i].x = x + offset[i].x;

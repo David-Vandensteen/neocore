@@ -298,16 +298,16 @@ WORD shrunk_range(WORD addr_start, WORD addr_end, WORD shrunk_value);
  //                                PHYSIC                                    //
 //--------------------------------------------------------------------------//
 
-BYTE boxes_collide(Box *b, Box *boxes[], BYTE box_max);
-BOOL box_collide(Box *b1, Box *b2);
-void box_init(Box *b, short width, short height, short widthOffset, short heightOffset);
-void box_update(Box *b, short x, short y);
+BYTE collide_boxes(Box *box, Box *boxes[], BYTE box_max);
+BOOL collide_box(Box *box1, Box *box2);
+void init_box(Box *box, short width, short height, short widthOffset, short heightOffset);
+void update_box(Box *box, short x, short y);
 
 //void mask_display(picture pic[], Vec2short vec[], BYTE vector_max); // todo (minor) - rename ? (vectorsDisplay)
-void mask_update(short x, short y, Vec2short vec[], Vec2short offset[], BYTE vector_max); // todo (minor) - rename ? (vectorsDebug)
+void update_mask(short x, short y, Vec2short vec[], Vec2short offset[], BYTE vector_max); // todo (minor) - rename ? (vectorsDebug)
 
-void box_shrunk(Box *b, Box *bOrigin, WORD shrunkValue);
-void box_resize(Box *Box, short edge); // todo (minor) - deprecated ?
+void shrunk_box(Box *box, Box *bOrigin, WORD shrunkValue);
+void resize_box(Box *Box, short edge); // todo (minor) - deprecated ?
 
   //--------------------------------------------------------------------------//
  //                                SOUND                                     //
