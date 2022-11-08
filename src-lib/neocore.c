@@ -210,7 +210,7 @@ JOYPAD
  //                                   GFX                                    //
 //--------------------------------------------------------------------------//
 
-void gfx_picture_shrunk_centroid(GFX_Picture *gfx_picture, short center_x, short center_y, WORD shrunk_value) {
+void shrunk_centroid_gp(GFX_Picture *gfx_picture, short center_x, short center_y, WORD shrunk_value) {
   shrunk(gfx_picture->pictureDAT.baseSprite, gfx_picture->pictureDAT.info->tileWidth, shrunk_value);
   pictureSetPos(
     &gfx_picture->pictureDAT,

@@ -125,8 +125,6 @@ typedef struct GFX_Scroller {
  //                                   GFX                                    //
 //--------------------------------------------------------------------------//
 
-void gfx_picture_shrunk_centroid(GFX_Picture *gfx_picture, short center_x, short center_y, WORD shrunk_value);
-
   /*------------------*/
  /*  GFX INIT        */
 /*------------------*/
@@ -226,6 +224,12 @@ void move_gp(GFX_Picture *gfx_picture, short x, short y);
 void move_gs(GFX_Scroller *gfx_scroller, short x, short y);
 
   /*-------------------*/
+ /*  GFX SHRUNK       */
+/*-------------------*/
+
+void shrunk_centroid_gp(GFX_Picture *gfx_picture, short center_x, short center_y, WORD shrunk_value);
+
+  /*-------------------*/
  /*  GFX ANIMATION    */
 /*-------------------*/
 
@@ -234,7 +238,6 @@ void set_anim_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, WORD 
 
 void update_anim_gas(GFX_Animated_Sprite *gfx_animated_sprite);
 void update_anim_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic);
-
 
   /*-------------------*/
  /*  GFX DESTROY      */
