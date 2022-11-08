@@ -37,18 +37,18 @@
 
 #define SHRUNK_TABLE_PROP_SIZE    0x2fe
 
-#define JOYPAD            BYTE neocore_joypad_p1, neocore_joypad_ps;
-#define JOYPAD_READ       neocore_joypad_p1 = volMEMBYTE(P1_CURRENT); neocore_joypad_ps = volMEMBYTE(PS_CURRENT);
-#define JOYPAD_READ_EDGE  neocore_joypad_p1 = volMEMBYTE(P1_EDGE); neocore_joypad_ps = volMEMBYTE(PS_EDGE);
-#define JOYPAD_IS_UP      neocore_joypad_p1&JOY_UP
-#define JOYPAD_IS_DOWN    neocore_joypad_p1&JOY_DOWN
-#define JOYPAD_IS_LEFT    neocore_joypad_p1&JOY_LEFT
-#define JOYPAD_IS_RIGHT   neocore_joypad_p1&JOY_RIGHT
-#define JOYPAD_IS_START   neocore_joypad_ps&P1_START
-#define JOYPAD_IS_A       neocore_joypad_p1&JOY_A
-#define JOYPAD_IS_B       neocore_joypad_p1&JOY_B
-#define JOYPAD_IS_C       neocore_joypad_p1&JOY_C
-#define JOYPAD_IS_D       neocore_joypad_p1&JOY_D
+#define JOYPAD_INIT_P1       BYTE neocore_joypad_p1, neocore_joypad_ps;
+#define JOYPAD_READ_P1       neocore_joypad_p1 = volMEMBYTE(P1_CURRENT); neocore_joypad_ps = volMEMBYTE(PS_CURRENT);
+#define JOYPAD_READ_EDGE_P1  neocore_joypad_p1 = volMEMBYTE(P1_EDGE); neocore_joypad_ps = volMEMBYTE(PS_EDGE);
+#define JOYPAD_IS_UP_P1      neocore_joypad_p1&JOY_UP
+#define JOYPAD_IS_DOWN_P1    neocore_joypad_p1&JOY_DOWN
+#define JOYPAD_IS_LEFT_P1    neocore_joypad_p1&JOY_LEFT
+#define JOYPAD_IS_RIGHT_P1   neocore_joypad_p1&JOY_RIGHT
+#define JOYPAD_IS_START_P1   neocore_joypad_ps&P1_START
+#define JOYPAD_IS_A_P1       neocore_joypad_p1&JOY_A
+#define JOYPAD_IS_B_P1       neocore_joypad_p1&JOY_B
+#define JOYPAD_IS_C_P1       neocore_joypad_p1&JOY_C
+#define JOYPAD_IS_D_P1       neocore_joypad_p1&JOY_D
 
 #define LOGGER_ON
 #define LOGGER_X_INIT   1
@@ -319,19 +319,19 @@ void play_cdda(BYTE track);
  //                                  JOYPAD                                    //
 //----------------------------------------------------------------------------//
 
-void update_joypad();
-void update_joypad_edge();
+void update_joypad_p1();
+void update_joypad_edge_p1();
 
-BOOL        joypad_is_up();
-BOOL        joypad_is_down();
-BOOL        joypad_is_left();
-BOOL        joypad_is_right();
-BOOL        joypad_is_start();
-BOOL        joypad_is_a();
-BOOL        joypad_is_b();
-BOOL        joypad_is_c();
-BOOL        joypad_is_d();
-void inline joypad_debug();
+BOOL        joypad_p1_is_up();
+BOOL        joypad_p1_is_down();
+BOOL        joypad_p1_is_left();
+BOOL        joypad_p1_is_right();
+BOOL        joypad_p1_is_start();
+BOOL        joypad_p1_is_a();
+BOOL        joypad_p1_is_b();
+BOOL        joypad_p1_is_c();
+BOOL        joypad_p1_is_d();
+void inline debug_joypad_p1();
 
   //----------------------------------------------------------------------------//
  //                                  UTIL                                      //
