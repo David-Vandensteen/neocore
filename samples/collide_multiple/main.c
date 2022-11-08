@@ -31,9 +31,9 @@ int main(void) {
       move_gasp(&player, 0, 1);
       set_anim_gasp(&player, PLAYER_SPRITE_ANIM_DOWN);
     }
-    if (!joypad_is_down() && !joypad_is_up()) { set_anim_gasp(&player, PLAYER_SPRITE_ANIM_IDLE); }
+    if (!joypad_is_down() && !joypad_is_up()) set_anim_gasp(&player, PLAYER_SPRITE_ANIM_IDLE);
 
-     if (boxes_collide(&player.box, asteroids_box, ASTEROID_MAX)) {
+     if (collide_boxes(&player.box, asteroids_box, ASTEROID_MAX)) {
       if (get_frame_counter() % 20) { hide_gasp(&player); } else { show_gasp(&player); }
      } else { show_gasp(&player); }
     update_anim_gasp(&player);
