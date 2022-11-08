@@ -68,18 +68,18 @@ static void init_mask() {
 }
 
 static void update_player() {
-  update_joypad();
-  if (joypad_is_left() && get_x_gasp(player) > 0) { move_gasp(&player, -1, 0); }
-  if (joypad_is_right() && get_x_gasp(player) < 280) { move_gasp(&player, 1, 0); }
-  if (joypad_is_up() && get_y_gasp(player) > 0) {
+  update_joypad_p1();
+  if (joypad_p1_is_left() && get_x_gasp(player) > 0) { move_gasp(&player, -1, 0); }
+  if (joypad_p1_is_right() && get_x_gasp(player) < 280) { move_gasp(&player, 1, 0); }
+  if (joypad_p1_is_up() && get_y_gasp(player) > 0) {
     move_gasp(&player, 0, -1);
     set_anim_gasp(&player, PLAYER_SPRITE_ANIM_UP);
   }
-  if (joypad_is_down() && get_y_gasp(player) < 200) {
+  if (joypad_p1_is_down() && get_y_gasp(player) < 200) {
     move_gasp(&player, 0, 1);
     set_anim_gasp(&player, PLAYER_SPRITE_ANIM_DOWN);
   }
-  if (!joypad_is_down() && !joypad_is_up()) { set_anim_gasp(&player, PLAYER_SPRITE_ANIM_IDLE); }
+  if (!joypad_p1_is_down() && !joypad_p1_is_up()) { set_anim_gasp(&player, PLAYER_SPRITE_ANIM_IDLE); }
   if (vectors_collide(&player.box, peak_mask, PEAK_MASK_VECTOR_MAX)) {
       if (get_frame_counter() % 20) { hide_gasp(&player); } else { show_gasp(&player); }
   } else { show_gasp(&player); }
