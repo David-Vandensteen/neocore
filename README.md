@@ -133,7 +133,7 @@ notepad $project\src\config\project.xml
 ```
 With cmd
 ```cmd
-set project=c:\my-git\my-game
+set project="c:\my-git\my-game"
 ```
 * Replace `c:\my-git\my-game` with your real path. 
 
