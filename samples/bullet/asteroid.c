@@ -21,7 +21,7 @@ void asteroid_update() {
 
 BOOL asteroid_collide(Box *b) {
   BOOL r = false;
-  if (box_collide(&asteroid.box, b)) {
+  if (collide_box(&asteroid.box, b)) {
     hit += 1;
     r = true;
   }

@@ -44,7 +44,7 @@ int main(void) {
     }
     if (!joypad_is_down() && !joypad_is_up()) { set_anim_gasp(&player, PLAYER_SPRITE_ANIM_IDLE); }
 
-    if (box_collide(&player.box, &asteroid.box)) {
+    if (collide_box(&player.box, &asteroid.box)) {
       if (get_frame_counter() % 20) { hide_gasp(&player); } else { show_gasp(&player); }
     } else { show_gasp(&player);}
 
