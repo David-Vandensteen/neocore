@@ -204,7 +204,7 @@ void inline static autoInc(){
 }
 
 NEOCORE_INIT
-JOYPAD
+JOYPAD_INIT_P1
 
   //--------------------------------------------------------------------------//
  //                                   GFX                                    //
@@ -744,31 +744,31 @@ void play_cdda(BYTE track) {
  //                                  JOYPAD                                    //
 //----------------------------------------------------------------------------//
 
-void inline joypad_debug() {
-  JOYPAD_READ
-  if (joypad_is_start())  {  fix_print_neocore(10, 11,  "JOYPAD START"); }
-  if (joypad_is_up())     {  fix_print_neocore(10, 11,  "JOYPAD UP   "); }
-  if (joypad_is_down())   {  fix_print_neocore(10, 11,  "JOYPAD DOWN "); }
-  if (joypad_is_left())   {  fix_print_neocore(10, 11,  "JOYPAD LEFT "); }
-  if (joypad_is_right())  {  fix_print_neocore(10, 11,  "JOYPAD RIGHT"); }
-  if (joypad_is_a())     {  fix_print_neocore(10, 11,  "JOYPAD A    "); }
-  if (joypad_is_b())     {  fix_print_neocore(10, 11,  "JOYPAD B    "); }
-  if (joypad_is_c())     {  fix_print_neocore(10, 11,  "JOYPAD C    "); }
-  if (joypad_is_d())     {  fix_print_neocore(10, 11,  "JOYPAD D    "); }
+void inline debug_joypad_p1() {
+  JOYPAD_READ_P1
+  if (joypad_p1_is_start())  {  fix_print_neocore(10, 11,  "JOYPAD START"); }
+  if (joypad_p1_is_up())     {  fix_print_neocore(10, 11,  "JOYPAD UP   "); }
+  if (joypad_p1_is_down())   {  fix_print_neocore(10, 11,  "JOYPAD DOWN "); }
+  if (joypad_p1_is_left())   {  fix_print_neocore(10, 11,  "JOYPAD LEFT "); }
+  if (joypad_p1_is_right())  {  fix_print_neocore(10, 11,  "JOYPAD RIGHT"); }
+  if (joypad_p1_is_a())      {  fix_print_neocore(10, 11,  "JOYPAD A    "); }
+  if (joypad_p1_is_b())      {  fix_print_neocore(10, 11,  "JOYPAD B    "); }
+  if (joypad_p1_is_c())      {  fix_print_neocore(10, 11,  "JOYPAD C    "); }
+  if (joypad_p1_is_d())      {  fix_print_neocore(10, 11,  "JOYPAD D    "); }
 }
 
-void update_joypad() { JOYPAD_READ; }
-void update_joypad_edge() { JOYPAD_READ_EDGE; }
+void update_joypad_p1() { JOYPAD_READ_P1; }
+void update_joypad_edge_p1() { JOYPAD_READ_EDGE_P1; }
 
-BOOL joypad_is_up()     { return (JOYPAD_IS_UP)     ? (true) : (false); }
-BOOL joypad_is_down()   { return (JOYPAD_IS_DOWN)   ? (true) : (false); }
-BOOL joypad_is_left()   { return (JOYPAD_IS_LEFT)   ? (true) : (false); }
-BOOL joypad_is_right()  { return (JOYPAD_IS_RIGHT)  ? (true) : (false); }
-BOOL joypad_is_start()  { return (JOYPAD_IS_START)  ? (true) : (false); }
-BOOL joypad_is_a()      { return (JOYPAD_IS_A)      ? (true) : (false); }
-BOOL joypad_is_b()      { return (JOYPAD_IS_B)      ? (true) : (false); }
-BOOL joypad_is_c()      { return (JOYPAD_IS_C)      ? (true) : (false); }
-BOOL joypad_is_d()      { return (JOYPAD_IS_D)      ? (true) : (false); }
+BOOL joypad_p1_is_up()     { return (JOYPAD_IS_UP_P1)     ? (true) : (false); }
+BOOL joypad_p1_is_down()   { return (JOYPAD_IS_DOWN_P1)   ? (true) : (false); }
+BOOL joypad_p1_is_left()   { return (JOYPAD_IS_LEFT_P1)   ? (true) : (false); }
+BOOL joypad_p1_is_right()  { return (JOYPAD_IS_RIGHT_P1)  ? (true) : (false); }
+BOOL joypad_p1_is_start()  { return (JOYPAD_IS_START_P1)  ? (true) : (false); }
+BOOL joypad_p1_is_a()      { return (JOYPAD_IS_A_P1)      ? (true) : (false); }
+BOOL joypad_p1_is_b()      { return (JOYPAD_IS_B_P1)      ? (true) : (false); }
+BOOL joypad_p1_is_c()      { return (JOYPAD_IS_C_P1)      ? (true) : (false); }
+BOOL joypad_p1_is_d()      { return (JOYPAD_IS_D_P1)      ? (true) : (false); }
 
 
   //----------------------------------------------------------------------------//

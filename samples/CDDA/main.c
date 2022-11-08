@@ -26,7 +26,7 @@ static void display() {
 
 static void update() {
   init_log();
-  update_joypad_edge();
+  update_joypad_edge_p1();
   log_byte("AUDIO TRACK : ", track_num - 1);
   if (get_frame_counter() % 2 == 0) {
     move_gs(&spectrum02, 1, 0);
@@ -41,8 +41,8 @@ static void update() {
   }
   if (get_x_gp(k7) > 50) k7_direction = false;
   if (get_x_gp(k7) < 40) k7_direction = true;
-  if (joypad_is_left() && track_num > 2) play_cdda(--track_num);
-  if (joypad_is_right() && track_num < 4) play_cdda(++track_num);
+  if (joypad_p1_is_left() && track_num > 2) play_cdda(--track_num);
+  if (joypad_p1_is_right() && track_num < 4) play_cdda(++track_num);
 }
 
 int main(void) {
