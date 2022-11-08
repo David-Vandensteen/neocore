@@ -31,15 +31,7 @@
 #define DIV32              >> 5
 #define DIV64              >> 6
 
-#define Y_OFFSCREEN 240
-#define X 0
-#define Y 1
-
 #define SHRUNK_TABLE_PROP_SIZE    0x2fe
-
-#define LOGGER_ON
-#define LOGGER_X_INIT   1
-#define LOGGER_Y_INIT   2
 
 #define BOXCOPY(bFrom, bTo)   memcpy(bTo, bFrom, sizeof(Box))
 
@@ -49,13 +41,8 @@
 #define SHRUNK_EXTRACT_X(value) value >> 8
 #define SHRUNK_EXTRACT_Y(value) (BYTE)value
 
-#define SPRITE_INDEX_MANAGER_MAX  384
-#define PALETTE_INDEX_MANAGER_MAX 256
-
 #define MANUALBOX 0
 #define AUTOBOX 1
-
-enum direction { NONE, UP, DOWN, LEFT, RIGHT };
 
   //--------------------------------------------------------------------------//
  //                          STRUCTURE                                       //

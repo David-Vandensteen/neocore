@@ -33,6 +33,17 @@
 #define JOYPAD_IS_C_P1       neocore_joypad_p1&JOY_C
 #define JOYPAD_IS_D_P1       neocore_joypad_p1&JOY_D
 
+#define X 0
+#define Y 1
+
+#define LOGGER_ON
+#define LOGGER_X_INIT   1
+#define LOGGER_Y_INIT   2
+
+#define SPRITE_INDEX_MANAGER_MAX  384
+#define PALETTE_INDEX_MANAGER_MAX 256
+
+
 #define CDDA_PLAY_TRACK_02 \
   asm("loop_track_02:"); \
   asm(" move.w #0x0002,%d0"); \
