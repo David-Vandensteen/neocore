@@ -29,7 +29,7 @@ static void display() {
     x = 100 + ( i * 10);
     y = 100;
     display_gp(&planets[i], 0, 0 + i);
-    gfx_picture_shrunk_centroid(&planets[i], x, y, get_shrunk_proportional_table(50));
+    shrunk_centroid_gp(&planets[i], x, y, get_shrunk_proportional_table(50));
   }
 }
 
