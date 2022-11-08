@@ -110,7 +110,5 @@ void bullet_player_update(BOOL pstate, short x, short y) {
 void bullet_player_destroy() {
   BYTE i;
   bullet_player_init();
-  for (i = 0; i < get_bullet_max(); i++) {
-    hide_gasp(&sprites[i]);
-  }
+  for (i = 0; i < get_bullet_max(); i++) hide_gasp(&sprites[i]);
 }
