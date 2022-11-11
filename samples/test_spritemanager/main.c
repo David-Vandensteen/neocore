@@ -2,43 +2,41 @@
 #include <math.h>
 #include "externs.h"
 
-NEOCORE_INIT
-
 static void init();
 static void display();
 static void update();
 
-static Image planet01, planet02, planet03, planet04;
+static GFX_Picture planet01, planet02, planet03, planet04;
 
 static void init() {
-  gpu_init();
-  image_init(&planet01, &planet04_sprite, &planet04_sprite_Palettes);
-  image_init(&planet02, &planet04_sprite, &planet04_sprite_Palettes);
-  image_init(&planet03, &planet04_sprite, &planet04_sprite_Palettes);
-  image_init(&planet04, &planet04_sprite, &planet04_sprite_Palettes);
+  init_gpu();
+  init_gp(&planet01, &planet04_sprite, &planet04_sprite_Palettes);
+  init_gp(&planet02, &planet04_sprite, &planet04_sprite_Palettes);
+  init_gp(&planet03, &planet04_sprite, &planet04_sprite_Palettes);
+  init_gp(&planet04, &planet04_sprite, &planet04_sprite_Palettes);
 }
 
 static void display() {
-  image_display(&planet01, 10, 10);
-  image_display(&planet02, 100, 100);
-  image_display(&planet03, 200, 100);
+  display_gp(&planet01, 10, 10);
+  display_gp(&planet02, 100, 100);
+  display_gp(&planet03, 200, 100);
 }
 
 static void update() {
-  logger_init();
-  logger_word("P1 INDEX : ", planet01.pic.baseSprite);
-  logger_info("MUST BE : 1");
-  logger_word("P2 INDEX : ", planet02.pic.baseSprite);
-  logger_info("MUST BE : 9");
-  logger_word("P3 INDEX : ", planet03.pic.baseSprite);
-  logger_info("MUST BE : 17");
-  if (DAT_frameCounter == 500) {
-    image_destroy(&planet01);
-    image_display(&planet04, 100, 10);
+  init_log();
+  log_word("P1 INDEX : ", planet01.pictureDAT.baseSprite);
+  log_info("MUST BE : 1");
+  log_word("P2 INDEX : ", planet02.pictureDAT.baseSprite);
+  log_info("MUST BE : 9");
+  log_word("P3 INDEX : ", planet03.pictureDAT.baseSprite);
+  log_info("MUST BE : 17");
+  if (get_frame_counter() == 500) {
+    destroy_gp(&planet01);
+    display_gp(&planet04, 100, 10);
   }
-  if (DAT_frameCounter > 500) {
-    logger_word("P4 INDEX : ", planet04.pic.baseSprite);
-    logger_info("MUST BE : 1");
+  if (get_frame_counter() > 500) {
+    log_word("P4 INDEX : ", planet04.pictureDAT.baseSprite);
+    log_info("MUST BE : 1");
   }
 }
 
@@ -48,8 +46,8 @@ int main(void) {
   while(1) {
     wait_vbl();
     update();
-    SCClose();
+    close_vbl();
   };
-  SCClose();
+  close_vbl();
   return 0;
 }

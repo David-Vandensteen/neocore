@@ -9,6 +9,11 @@ function BuildProject {
     [Parameter(Mandatory=$true)][String] $Rule,
     [string] $KillTime = 0
   )
+  Write-Host "build $path" -ForegroundColor Yellow
+  if ((Test-Path -Path $Path) -eq $false) {
+    Write-Host "error: $path no found" -ForegroundColor Red
+    exit 1
+  }
   pushd $Path
   if ($Path -eq "..\samples\CDDA") { .\download-assets.bat }
   .\mak.ps1 $Rule
@@ -38,14 +43,14 @@ function Main {
   BuildProject -Path "..\samples\shrunk" -Rule $Rule -KillTime $KillTime
   BuildProject -Path "..\samples\shrunk_centroid" -Rule $Rule -KillTime $KillTime
   BuildProject -Path "..\samples\sprite" -Rule $Rule -KillTime $KillTime
-  BuildProject -Path "..\samples\test_animated_sprite" -Rule $Rule -KillTime $KillTime
-  BuildProject -Path "..\samples\test_animated_sprite_physic" -Rule $Rule -KillTime $KillTime
-  BuildProject -Path "..\samples\test_image" -Rule $Rule -KillTime $KillTime
-  BuildProject -Path "..\samples\test_image_physic" -Rule $Rule -KillTime $KillTime
+  BuildProject -Path "..\samples\test_gas" -Rule $Rule -KillTime $KillTime
+  BuildProject -Path "..\samples\test_gasp" -Rule $Rule -KillTime $KillTime
+  BuildProject -Path "..\samples\test_gp" -Rule $Rule -KillTime $KillTime
+  BuildProject -Path "..\samples\test_gpp" -Rule $Rule -KillTime $KillTime
+  BuildProject -Path "..\samples\test_gs" -Rule $Rule -KillTime $KillTime
   BuildProject -Path "..\samples\test_limit" -Rule $Rule -KillTime $KillTime
   BuildProject -Path "..\samples\test_palettemanager" -Rule $Rule -KillTime $KillTime
   BuildProject -Path "..\samples\test_same_palette" -Rule $Rule -KillTime $KillTime
-  BuildProject -Path "..\samples\test_scroller" -Rule $Rule -KillTime $KillTime
   BuildProject -Path "..\samples\test_spritemanager" -Rule $Rule -KillTime $KillTime
 }
 

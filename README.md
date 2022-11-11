@@ -8,7 +8,7 @@ Neocore is a library &amp; toolchain for developing on Neo Geo CD.
 Neocore provide high level functions over Neo Dev Kit (**Fabrice Martinez, Jeff Kurtz, al**) & DATlib 0.2 (**HPMAN**)  
   
 I share my tools and my code, these could possibly help your projects on this platform.  
-(**Doxygen doc**) http://azertyvortex.free.fr/neocore-doxy/r1  
+(**Doxygen doc**) http://azertyvortex.free.fr/neocore-doxy/r3/neocore_8h.html  
   
 ***Lot of thing is under development and unoptimized ...***
 ***I'm not responsible for any software damage***  
@@ -16,7 +16,7 @@ I share my tools and my code, these could possibly help your projects on this pl
 *Tested on Windows 10 x64 (2022-10-08)* (commit: 4558f94e6eea4cbb4fe28dcab5190995e3fe3a02)  
 *Tested on Windows 11 (2022-09-13)* (commit: bf49e7935ab66b7abefc4fda89d9865b533c6469)
   
-Compatibility problems : the lib is mainly tested on Raine & Mame emulators.    
+Compatibility : the lib is mainly tested on Raine & Mame emulators.    
 
 License: MIT  
 (c) 2019 [David Vandensteen <dvandensteen@gmail.com>]  
@@ -25,7 +25,7 @@ Some graphics by **Grass**
 ## Build and run (with Mame) a included example
 ```cmd
 cd samples\hello
-.\mak run
+.\mak.bat run
 ```
   
 ## Mak rules
@@ -33,66 +33,67 @@ ___***Warn : mak script override path environment variable during the compiling,
 
 - Clean the builded resources
 ```cmd
-.\mak clean
+.\mak.bat clean
 ```
 - Build sprites
 ```cmd
-.\mak sprite
+.\mak.bat sprite
 ```
 - Build the program
 ```cmd
-.\mak
+.\mak.bat
 ```
 - Build the ISO file
 ```cmd
-.\mak iso
+.\mak.bat iso
 ```
 - **Run with Raine**
 ```cmd
-.\mak run:raine
+.\mak.bat run:raine
 ```
 - **Run with Mame**
 ```cmd
-.\mak run:mame
+.\mak.bat run:mame
 ```
 or
 ```cmd
-.\mak run
+.\mak.bat run
 ```
 - Delivery ISO and Mame
 ```cmd
-.\mak dist
+.\mak.bat dist
 ```
 ## Create your first experimentation
 ```cmd
-xcopy /E /I templates\sample samples\awesome-project
+xcopy /E /I templates\sample samples\awesome_project
 ```
 
 Edit project.xml and set the project name  
 ```cmd
-notepad samples\awesome-project\config\project.xml
+notepad samples\awesome_project\config\project.xml
 ```
 
 ```xml
 <project>
-  <name>awesome-project</name>
+  <name>awesome_project</name>
+...
 ```
 
 Compile and run it  
 
 ```cmd
-cd samples\awesome-project
-.\mak run
+cd samples\awesome_project
+.\mak.bat run
 ```
 
-See `.\samples\awesome-project\config\project.xml`  
-and `.\samples\awesome-project\config\sprites.xml`  
+See `.\samples\awesome_project\config\project.xml`  
+and `.\samples\awesome_project\config\sprites.xml`  
 for settings.
 
 ## "Hot reload"
 ```cmd
 cd samples\hello
-.\mak serve
+.\mak.bat serve
 ```
   
 Wait the running of the emulator and edit projects\hello\main.c  
@@ -109,7 +110,7 @@ Some problems currently:
 ``` cmd
 cd samples\CDDA
 .\download-assets
-.\mak run
+.\mak.bat run
 ```
   
 In the emulator, use joypad right and left to change audio track.  
@@ -118,9 +119,9 @@ See `.\samples\CDDA\config\project.xml` for understanding how to set the audio f
 ## Create a "standalone" project
 With powershell
 ```cmd
-$project = "c:\my-git\my-game"
+$project = "c:\my-git\myGame"
 ```
-* Replace `c:\my-git\my-game` with your real path. 
+* Replace `c:\my-git\myGame` with your real path. 
 
 ```cmd
 xcopy /E /I src-lib $project\neocore\src-lib
@@ -133,9 +134,9 @@ notepad $project\src\config\project.xml
 ```
 With cmd
 ```cmd
-set project=c:\my-git\my-game
+set project=c:\my-git\myGame
 ```
-* Replace `c:\my-git\my-game` with your real path. 
+* Replace `c:\my-git\myGame` with your real path. 
 
 ```cmd
 xcopy /E /I src-lib %project%\neocore\src-lib

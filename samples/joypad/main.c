@@ -6,28 +6,26 @@
 
 #include <neocore.h>
 
-NEOCORE_INIT
-
 int main(void) {
-  gpu_init();
+  init_gpu();
   while(1) {
     wait_vbl();
-    logger_init();
-    logger_info("INTERACT WITH JOYPAD ...");
-    joypad_update_edge();
-    joypad_debug(); /* display which control is actived */
+    init_log();
+    log_info("INTERACT WITH JOYPAD ...");
+    update_joypad_edge_p1();
+    debug_joypad_p1(); /* display which control is actived */
 
-    if (joypad_is_up()) logger_info("ITS UP !");
-    if (joypad_is_down()) logger_info("ITS DOWN !");
-    if (joypad_is_left()) logger_info("ITS LEFT !");
-    if (joypad_is_right()) logger_info("ITS RIGHT !");
-    if (joypad_is_a()) logger_info("ITS A !");
-    if (joypad_is_b()) logger_info("ITS B !");
-    if (joypad_is_c()) logger_info("ITS C !");
-    if (joypad_is_d()) logger_info("ITS D !");
+    if (joypad_p1_is_up()) log_info("ITS UP !");
+    if (joypad_p1_is_down()) log_info("ITS DOWN !");
+    if (joypad_p1_is_left()) log_info("ITS LEFT !");
+    if (joypad_p1_is_right()) log_info("ITS RIGHT !");
+    if (joypad_p1_is_a()) log_info("ITS A !");
+    if (joypad_p1_is_b()) log_info("ITS B !");
+    if (joypad_p1_is_c()) log_info("ITS C !");
+    if (joypad_p1_is_d()) log_info("ITS D !");
 
-    SCClose();
+    close_vbl();
   };
-  SCClose();
+  close_vbl();
   return 0;
 }
