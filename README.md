@@ -65,28 +65,29 @@ or
 ```
 ## Create your first experimentation
 ```cmd
-xcopy /E /I templates\sample samples\awesome-project
+xcopy /E /I templates\sample samples\awesome_project
 ```
 
 Edit project.xml and set the project name  
 ```cmd
-notepad samples\awesome-project\config\project.xml
+notepad samples\awesome_project\config\project.xml
 ```
 
 ```xml
 <project>
-  <name>awesome-project</name>
+  <name>awesome_project</name>
+...
 ```
 
 Compile and run it  
 
 ```cmd
-cd samples\awesome-project
+cd samples\awesome_project
 .\mak.bat run
 ```
 
-See `.\samples\awesome-project\config\project.xml`  
-and `.\samples\awesome-project\config\sprites.xml`  
+See `.\samples\awesome_project\config\project.xml`  
+and `.\samples\awesome_project\config\sprites.xml`  
 for settings.
 
 ## "Hot reload"
