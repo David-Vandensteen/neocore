@@ -119,9 +119,9 @@ See `.\samples\CDDA\config\project.xml` for understanding how to set the audio f
 ## Create a "standalone" project
 With powershell
 ```cmd
-$project = "c:\my-git\my-game"
+$project = "c:\my-git\myGame"
 ```
-* Replace `c:\my-git\my-game` with your real path. 
+* Replace `c:\my-git\myGame` with your real path. 
 
 ```cmd
 xcopy /E /I src-lib $project\neocore\src-lib
@@ -134,9 +134,9 @@ notepad $project\src\config\project.xml
 ```
 With cmd
 ```cmd
-set project=c:\my-git\my-game
+set project=c:\my-git\myGame
 ```
-* Replace `c:\my-git\my-game` with your real path. 
+* Replace `c:\my-git\myGame` with your real path. 
 
 ```cmd
 xcopy /E /I src-lib %project%\neocore\src-lib
