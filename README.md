@@ -25,7 +25,7 @@ Some graphics by **Grass**
 ## Build and run (with Mame) a included example
 ```cmd
 cd samples\hello
-.\mak run
+.\mak.bat run
 ```
   
 ## Mak rules
@@ -33,35 +33,35 @@ ___***Warn : mak script override path environment variable during the compiling,
 
 - Clean the builded resources
 ```cmd
-.\mak clean
+.\mak.bat clean
 ```
 - Build sprites
 ```cmd
-.\mak sprite
+.\mak.bat sprite
 ```
 - Build the program
 ```cmd
-.\mak
+.\mak.bat
 ```
 - Build the ISO file
 ```cmd
-.\mak iso
+.\mak.bat iso
 ```
 - **Run with Raine**
 ```cmd
-.\mak run:raine
+.\mak.bat run:raine
 ```
 - **Run with Mame**
 ```cmd
-.\mak run:mame
+.\mak.bat run:mame
 ```
 or
 ```cmd
-.\mak run
+.\mak.bat run
 ```
 - Delivery ISO and Mame
 ```cmd
-.\mak dist
+.\mak.bat dist
 ```
 ## Create your first experimentation
 ```cmd
@@ -82,7 +82,7 @@ Compile and run it
 
 ```cmd
 cd samples\awesome-project
-.\mak run
+.\mak.bat run
 ```
 
 See `.\samples\awesome-project\config\project.xml`  
@@ -92,7 +92,7 @@ for settings.
 ## "Hot reload"
 ```cmd
 cd samples\hello
-.\mak serve
+.\mak.bat serve
 ```
   
 Wait the running of the emulator and edit projects\hello\main.c  
@@ -109,7 +109,7 @@ Some problems currently:
 ``` cmd
 cd samples\CDDA
 .\download-assets
-.\mak run
+.\mak.bat run
 ```
   
 In the emulator, use joypad right and left to change audio track.  
