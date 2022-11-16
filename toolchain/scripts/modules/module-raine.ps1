@@ -19,6 +19,6 @@ function Raine {
     Install-Component -URL "$($buildConfig.baseURL)/neobuild-raine.zip" -PathDownload $buildConfig.pathSpool -PathInstall $buildConfig.pathNeocore
     Update-Raine -Path $PathRaine
   }
-  Logger-Step -Message "lauching raine $File"
+  Logger-Step -Message "launching raine $File"
   & "$PathRaine\raine32.exe" $File
 }
