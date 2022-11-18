@@ -190,7 +190,7 @@ function Main {
   }
 
   function RunnerRaine {
-    Raine -File "$($buildConfig.pathBuild)\$($buildConfig.projectName).cue" -PathRaine $buildConfig.pathRaine
+    Raine -FileName "$($buildConfig.projectName).cue" -PathRaine $buildConfig.pathRaine -PathISO $buildConfig.pathBuild
   }
 
   if ($Rule -eq "clean") { exit 0 }
