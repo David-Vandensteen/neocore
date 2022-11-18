@@ -12,14 +12,18 @@ function Update-Raine {
 
 function Raine {
   param (
-    [Parameter(Mandatory=$true)][String] $File,
+    [Parameter(Mandatory=$true)][String] $FileName,
+    [Parameter(Mandatory=$true)][String] $PathISO,
     [Parameter(Mandatory=$true)][String] $PathRaine
   )
-  if ((Test-Path -Path $File) -eq $false) { Logger-Error -Message "$File not found" }
+  if ((Test-Path -Path "$PathISO\$FileName") -eq $false) { Logger-Error -Message "$FileName not found" }
   if ((Test-Path -Path $PathRaine) -eq $false) {
     Install-Component -URL "$($buildConfig.baseURL)/neobuild-raine.zip" -PathDownload $buildConfig.pathSpool -PathInstall $buildConfig.pathNeocore
     Update-Raine -Path $PathRaine
   }
-  Logger-Step -Message "launching raine $File"
-  & "$PathRaine\raine32.exe" $File
+  Logger-Step -Message "launching raine $FileName"
+  $pathRaineAbs = (Resolve-Path -Path $PathRaine).Path
+  Push-Location -Path $PathISO
+  & "$pathRaineAbs\raine32.exe" $FileName
+  Pop-Location
 }
