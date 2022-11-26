@@ -160,7 +160,7 @@ function Main {
       -PRGFile $buildConfig.PRGFile `
       -SpriteFile "$($buildConfig.pathBuild)\$($buildConfig.projectName).cd" `
       -OutputFile "$($buildConfig.pathBuild)\$($buildConfig.projectName).iso" `
-      -PathISOBuildFolder "$($buildConfig.pathBuils)\iso" `
+      -PathISOBuildFolder "$($buildConfig.pathBuild)\iso" `
       -PathCDTemplate "$($buildConfig.pathNeocore)\cd_template"
 
     $configCDDA = $null
