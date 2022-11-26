@@ -70,7 +70,7 @@ xcopy /E /I templates\sample samples\awesome_project
 
 Edit project.xml and set the project name  
 ```cmd
-notepad samples\awesome_project\config\project.xml
+notepad samples\awesome_project\project.xml
 ```
 
 ```xml
