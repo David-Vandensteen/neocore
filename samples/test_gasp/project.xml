@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
-  <name>hello</name>
+  <name>test_gasp</name>
   <version>1.0.0</version>
   <makefile>..\Makefile</makefile>
   <toolchainPath>..\..\toolchain</toolchainPath>
   <buildPath>..\..\build</buildPath>
   <distPath>..\..\dist</distPath>
-  <XMLDATFile>config\sprites.xml</XMLDATFile>
+  <XMLDATFile>sprites.xml</XMLDATFile>
   <!-- for using cdda audio tracks, uncomment & set up your files
   Warning: track id 1 is reserved for the binary program
   <sound>

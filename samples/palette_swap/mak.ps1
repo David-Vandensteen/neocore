@@ -1,4 +1,4 @@
-$projectSetting = "config\project.xml"
+$projectSetting = "project.xml"
 [xml]$config = (Get-Content -Path $projectSetting)
 
 $toolchainPath = $config.project.toolchainPath
