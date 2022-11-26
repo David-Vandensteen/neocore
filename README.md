@@ -130,7 +130,7 @@ copy templates\.gitignore $project\.gitignore
 xcopy /E /I toolchain $project\neocore\toolchain
 xcopy /E /I templates\project $project\src
 echo Edit project.xml and set the project name
-notepad $project\src\config\project.xml
+notepad $project\src\project.xml
 ```
 With cmd
 ```cmd
