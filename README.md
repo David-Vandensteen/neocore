@@ -70,7 +70,7 @@ xcopy /E /I templates\sample samples\awesome_project
 
 Edit project.xml and set the project name  
 ```cmd
-notepad samples\awesome_project\config\project.xml
+notepad samples\awesome_project\project.xml
 ```
 
 ```xml
@@ -86,8 +86,8 @@ cd samples\awesome_project
 .\mak.bat run
 ```
 
-See `.\samples\awesome_project\config\project.xml`  
-and `.\samples\awesome_project\config\sprites.xml`  
+See `.\samples\awesome_project\project.xml`  
+and `.\samples\awesome_project\sprites.xml`  
 for settings.
 
 ## "Hot reload"
@@ -114,7 +114,7 @@ cd samples\CDDA
 ```
   
 In the emulator, use joypad right and left to change audio track.  
-See `.\samples\CDDA\config\project.xml` for understanding how to set the audio file.
+See `.\samples\CDDA\project.xml` for understanding how to set the audio file.
 
 ## Create a "standalone" project
 With powershell
@@ -130,7 +130,7 @@ copy templates\.gitignore $project\.gitignore
 xcopy /E /I toolchain $project\neocore\toolchain
 xcopy /E /I templates\project $project\src
 echo Edit project.xml and set the project name
-notepad $project\src\config\project.xml
+notepad $project\src\project.xml
 ```
 With cmd
 ```cmd
