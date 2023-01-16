@@ -18,9 +18,19 @@ I share my tools and my code, these could possibly help your projects on this pl
   
 Compatibility : the lib is mainly tested on Raine & Mame emulators.    
 
-License: MIT  
-(c) 2019 [David Vandensteen <dvandensteen@gmail.com>]  
-Some graphics by **Grass**  
+## Feature
+
+ - High-level functions for Neo Geo CD development
+ - Tools and code to assist with projects
+ - Tested on Raine and MAME emulators
+ - Compatible with Windows 10 and Windows 11
+
+## License
+
+Neocore is licensed under the MIT license.  
+Copyright 2019 by David Vandensteen.  
+Some graphics by **Grass**.    
+
     
 ## Build and run (with Mame) a included example
 ```cmd
