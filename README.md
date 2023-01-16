@@ -10,16 +10,16 @@ The library is mainly tested on Raine and MAME emulators and is compatible with 
   
 I share my tools and my code, these could possibly help your projects on this platform.  
 (**Doxygen doc**) http://azertyvortex.free.fr/neocore-doxy/r3/neocore_8h.html  
-  
-***Lot of thing is under development and unoptimized ...***
-***I'm not responsible for any software damage***  
-  
+    
 ## Feature
 
  - High-level functions for Neo Geo CD development
  - Tools and code to assist with projects
  - Tested on Raine and MAME emulators
  - Compatible with Windows 10 and Windows 11
+
+## Note
+Please note that the library is under development and unoptimized, and the author is not responsible for any software damage.
 
 ## License
 
