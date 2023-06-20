@@ -43,7 +43,7 @@
 #define SPRITE_INDEX_MANAGER_MAX  384
 #define PALETTE_INDEX_MANAGER_MAX 256
 
-
+/* TODO
 #define CDDA_PLAY_TRACK_02 \
   asm("loop_track_02:"); \
   asm(" move.w #0x0002,%d0"); \
@@ -71,7 +71,7 @@
   asm(" tst.b  0x10F6D9"); \
   asm(" beq.s  loop_track_05"); \
   asm(" jsr  0xC0056A"); \
-
+*/
 
   //--------------------------------------------------------------------------//
  //                             STATIC                                       //
@@ -725,8 +725,23 @@ void update_mask(short x, short y, Vec2short vec[], Vec2short offset[], BYTE vec
   //--------------------------------------------------------------------------//
  //                                SOUND                                     //
 //--------------------------------------------------------------------------//
+void play_cdda(unsigned char track) {
+  disableIRQ();
+  asm(
+    "loop_track_%=:              \n\t"
+    "move.b  %0,%%d0             \n\t"
+    "tst.b   0x10F6D9            \n\t"
+    "beq.s   loop_track_%=       \n\t"
+    "jsr     0xC0056A"
+    :
+    : "d"(track)
+    : "d0"
+  );
+  enableIRQ();
+}
 
-void play_cdda(BYTE track) {
+/*
+void play_cdda(BYTE track) { // TODO
   disableIRQ();
   switch (track) {
   case 2:
@@ -754,6 +769,7 @@ void play_cdda(BYTE track) {
     break;
   }
 }
+*/
 
   //----------------------------------------------------------------------------//
  //                                  JOYPAD                                    //
