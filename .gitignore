@@ -1,3 +1,4 @@
+*.png_reject.png
 dist/
 build/
 *.wav

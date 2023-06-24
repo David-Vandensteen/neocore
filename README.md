@@ -3,24 +3,30 @@
   
 ![](https://media.giphy.com/media/TLfbmyW3523z24WONz/giphy.gif) ![](https://media.giphy.com/media/iFUh5AEPD4XfvpsvJh/giphy.gif) ![](https://media.giphy.com/media/iJObJsdx6ud4zI7cS1/giphy.gif)
 
-Neocore is a library &amp; toolchain for developing on Neo Geo CD.  
 
-Neocore provide high level functions over Neo Dev Kit (**Fabrice Martinez, Jeff Kurtz, al**) & DATlib 0.2 (**HPMAN**)  
+Neocore is a library and toolchain for developing on Neo Geo CD.  
+It provides high-level functions over Neo Dev Kit and DATlib 0.2, and includes tools and code that can help with projects on this platform.  
+The library is mainly tested on Raine and MAME emulators and is compatible with Windows 10 and Windows 11 for building.
   
 I share my tools and my code, these could possibly help your projects on this platform.  
 (**Doxygen doc**) http://azertyvortex.free.fr/neocore-doxy/r3/neocore_8h.html  
-  
-***Lot of thing is under development and unoptimized ...***
-***I'm not responsible for any software damage***  
-  
-*Tested on Windows 10 x64 (2022-10-08)* (commit: 4558f94e6eea4cbb4fe28dcab5190995e3fe3a02)  
-*Tested on Windows 11 (2022-09-13)* (commit: bf49e7935ab66b7abefc4fda89d9865b533c6469)
-  
-Compatibility : the lib is mainly tested on Raine & Mame emulators.    
+    
+## Feature
 
-License: MIT  
-(c) 2019 [David Vandensteen <dvandensteen@gmail.com>]  
-Some graphics by **Grass**  
+ - High-level functions for Neo Geo CD development
+ - Tools and code to assist with projects
+ - Tested on Raine and MAME emulators
+ - Compatible with Windows 10 and Windows 11
+
+## Note
+Please note that the library is under development and unoptimized, and the author is not responsible for any software damage.
+
+## License
+
+Neocore is licensed under the MIT license.  
+Copyright 2019 by David Vandensteen.  
+Some graphics by **Grass**.    
+
     
 ## Build and run (with Mame) a included example
 ```cmd
