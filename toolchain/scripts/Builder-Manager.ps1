@@ -11,8 +11,55 @@ param (
   [String] $Rule = "default"
 )
 
+function Compare-FileHash {
+  param (
+      [Parameter(Mandatory = $true)]
+      [ValidateScript({Test-Path $_})]
+      [string]$SrcFile,
+
+      [Parameter(Mandatory = $true)]
+      [ValidateScript({Test-Path $_})]
+      [string]$DestFile
+  )
+
+  $hasher = [System.Security.Cryptography.SHA256]::Create()
+
+  $file1Bytes = [System.IO.File]::ReadAllBytes($SrcFile)
+  $file2Bytes = [System.IO.File]::ReadAllBytes($DestFile)
+
+  $file1Hash = $hasher.ComputeHash($file1Bytes)
+  $file2Hash = $hasher.ComputeHash($file2Bytes)
+
+  $file1HashString = [System.BitConverter]::ToString($file1Hash) -replace "-", ""
+  $file2HashString = [System.BitConverter]::ToString($file2Hash) -replace "-", ""
+
+  if ($file1HashString -eq $file2HashString) {
+    return $true
+  }
+  else {
+    return $false
+  }
+}
+
+
 function Check {
   param ([Parameter(Mandatory=$true)][xml] $Config)
+  function Check-Manifest {
+    param (
+      [Parameter(Mandatory = $true)]
+      [ValidateScript({Test-Path $_})]
+      [string]$ManifestSource,
+
+      [Parameter(Mandatory = $true)]
+      [ValidateScript({Test-Path $_})]
+      [string]$ManifestCache
+  )
+    Write-Host "check manifest" -ForegroundColor Yellow
+    if ((Compare-FileHash -SrcFile $ManifestSource -DestFile $ManifestCache) -eq $false) {
+      return $false
+    }
+    return $true
+  }
   function Check-XMLError {
     param ([Parameter(Mandatory=$true)][String] $Entry)
     Write-Host "error : xml $Entry not found" -ForegroundColor Red
@@ -41,6 +88,21 @@ function Check {
   Write-Host "check config" -ForegroundColor Yellow
   Check-XML
   Check-Path
+  if ((Test-Path -Path "$($Config.project.buildPath)\manifest.xml") -eq $false) {
+    if (Test-Path -Path $Config.project.buildPath) {
+      Write-Host "manifest not found : remove build cache" -ForegroundColor Blue
+      Remove-Item $Config.project.buildPath -Recurse
+    }
+  }
+
+  if (Test-Path -Path "$($Config.project.buildPath)\manifest.xml") {
+    $checkManifest = Check-Manifest -ManifestSource ..\..\manifest.xml -ManifestCache "$($Config.project.buildPath)\manifest.xml"
+    if ($checkManifest -eq $false) {
+      Write-Host "manifest has changed : remove build cache" -ForegroundColor Blue
+      Remove-Item $Config.project.buildPath -Recurse
+    }
+  }
+
   if ($Config.project.name -like "*-*") { Write-Host "error : char - is not allowed in project name" -ForegroundColor Red; exit 1 }
   if ($Config.project.name -like "*\*") { Write-Host "error : char \ is not allowed in project name" -ForegroundColor Red; exit 1 }
   if ($Config.project.name -like "*/*") { Write-Host "error : char / is not allowed in project name" -ForegroundColor Red; exit 1 }

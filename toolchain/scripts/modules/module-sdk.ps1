@@ -1,7 +1,6 @@
 Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-install-component.ps1"
 
 function Install-Neocore {
- #pushd $PATH_TOOLCHAIN\..\src-lib
  pushd "$($buildConfig.pathToolchain)\..\src-lib"
  .\build-neocore.bat
  if ($LASTEXITCODE -ne 0) {
@@ -17,4 +16,5 @@ function Install-SDK {
   Install-Component -URL "$($buildConfig.baseURL)/DATimage.zip" -PathDownload $buildConfig.pathSpool -PathInstall "$($buildConfig.pathNeocore)\bin"
   Install-Component -URL "$($buildConfig.baseURL)/neodev-sdk.zip" -PathDownload $buildConfig.pathSpool -PathInstall $buildConfig.pathNeocore
   Install-Neocore
+  Copy-Item -Path ..\..\manifest.xml $buildConfig.pathNeocore -Force
 }
