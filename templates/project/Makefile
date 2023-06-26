@@ -40,12 +40,12 @@ PADBYTE = 0xFF
 ##############################
 # Object Files and Libraries #
 ##############################
-SRC_C= $(wildcard *.c)
+SRC_C := $(wildcard *.c) $(wildcard */*.c)
 
 OBJS = $(NEOBUILDTEMP)/crt0_$(OUTPUT).o
 OBJS := $(OBJS) $(NEOBUILDTEMP)/palettes.o
 OBJS := $(OBJS) $(NEOBUILDTEMP)/maps.o
-OBJS += $(patsubst %.c,$(NEOBUILDTEMP)/%.o,$(wildcard *.c))
+OBJS += $(patsubst %.c,$(NEOBUILDTEMP)/%.o,$(SRC_C))
 
 LIBS = -lneocore -lDATlib -lmath -lprocess -lc -lgcc
 
@@ -68,14 +68,17 @@ FIXFILES = $(BASEDIR)/src/shared/fix_font.bmp
 # Make rules #
 ##############
 all: $(FILEPRG)
-$(FILEPRG) : $(NEOBUILDTEMP)/$(PROJECTNAME).o
+
+$(FILEPRG): $(NEOBUILDTEMP)/$(PROJECTNAME).o
 	$(OBJC) -O binary $< $@
 
-$(NEOBUILDTEMP)/$(PROJECTNAME).o : $(OBJS)
-
+$(NEOBUILDTEMP)/$(PROJECTNAME).o: $(OBJS)
 	$(LD) -L$(LIBDIR) $(CCFLAGS) $(LDFLAGS) $(OBJS) $(LIBS) -o $@
 
 $(NEOBUILDTEMP)/%.o: %.c
+	$(CC) -I$(INCDIR) $(CCFLAGS) -c $< -o $@
+
+$(NEOBUILDTEMP)/%.o: */%.c
 	$(CC) -I$(INCDIR) $(CCFLAGS) -c $< -o $@
 
 $(NEOBUILDTEMP)/%.o: %.s

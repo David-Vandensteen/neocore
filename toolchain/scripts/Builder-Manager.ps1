@@ -208,6 +208,7 @@ function Main {
 
   function BuilderProgram {
     Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-program.ps1"
+    robocopy .\ $buildConfig.pathBuild /e /xf * | Out-Null
     Write-Program -ProjectName $buildConfig.projectName -PathNeoDev $buildConfig.pathNeodev -MakeFile $buildConfig.makefile -PRGFile $buildConfig.PRGFile
   }
 
