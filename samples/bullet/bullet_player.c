@@ -53,7 +53,7 @@ static void debug() {
     log_bool("STATE ", sprites_state[i]);
   }
   log_byte("PAL I :", sprites[0].gfx_animated_sprite.aSpriteDAT.basePalette);
-  if (joypad_is_a()) {
+  if (joypad_is_a(0)) {
     log_info("JOYPAD A 1");
   } else {
     log_info("JOYPAD A 0");

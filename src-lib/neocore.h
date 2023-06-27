@@ -292,19 +292,90 @@ void play_cdda(BYTE track);
   //----------------------------------------------------------------------------//
  //                                  JOYPAD                                    //
 //----------------------------------------------------------------------------//
-
+/**
+ * @deprecated since 1.0.5
+ * @see use update_joypad(id) instead
+ */
 void update_joypad_p1();
+
+/**
+ * @deprecated since 1.0.5
+ * @see use update_joypad_edge(id) instead
+ */
 void update_joypad_edge_p1();
 
+/**
+ * @deprecated since 1.0.5
+ * @see use joypad_is_up(id) instead
+ */
 BOOL        joypad_p1_is_up();
+
+/**
+ * @deprecated since 1.0.5
+ * @see use joypad_is_down(id) instead
+ */
 BOOL        joypad_p1_is_down();
+
+/**
+ * @deprecated since 1.0.5
+ * @see use joypad_is_left(id) instead
+ */
 BOOL        joypad_p1_is_left();
+
+/**
+ * @deprecated since 1.0.5
+ * @see use joypad_is_right(id) instead
+ */
 BOOL        joypad_p1_is_right();
+
+/**
+ * @deprecated since 1.0.5
+ * @see use joypad_is_start(id) instead
+ */
 BOOL        joypad_p1_is_start();
+
+/**
+ * @deprecated since 1.0.5
+ * @see use joypad_is_a(id) instead
+ */
 BOOL        joypad_p1_is_a();
+
+/**
+ * @deprecated since 1.0.5
+ * @see use joypad_is_b(id) instead
+ */
 BOOL        joypad_p1_is_b();
+
+/**
+ * @deprecated since 1.0.5
+ * @see use joypad_is_c(id) instead
+ */
 BOOL        joypad_p1_is_c();
+
+/**
+ * @deprecated since 1.0.5
+ * @see use joypad_is_d(id) instead
+ */
 BOOL        joypad_p1_is_d();
+
+/**
+ * @deprecated since 1.0.5
+ * @see debug_joypad(id) instead
+ */
+
+BOOL joypad_is_up(BYTE id);
+BOOL joypad_is_down(BYTE id);
+BOOL joypad_is_left(BYTE id);
+BOOL joypad_is_right(BYTE id);
+BOOL joypad_is_start(BYTE id);
+BOOL joypad_is_a(BYTE id);
+BOOL joypad_is_b(BYTE id);
+BOOL joypad_is_c(BYTE id);
+BOOL joypad_is_d(BYTE id);
+
+
+
+// TODO : refactor
 void inline debug_joypad_p1();
 
   //----------------------------------------------------------------------------//

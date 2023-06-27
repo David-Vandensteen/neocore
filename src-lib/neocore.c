@@ -730,6 +730,16 @@ void inline debug_joypad_p1() {
 void update_joypad_p1() { JOYPAD_READ_P1; }
 void update_joypad_edge_p1() { JOYPAD_READ_EDGE_P1; }
 
+void update_joypad(BYTE id) {
+  if (id == 0) { JOYPAD_READ_P1 };
+  // if (id = 1) JOYPAD_READ_P2; TODO
+}
+
+void update_joypad_edge(BYTE id) {
+  if (id == 0) JOYPAD_READ_EDGE_P1;
+}
+
+// TODO : remove deprecated code to v2.0.0
 BOOL joypad_p1_is_up()     { return (JOYPAD_IS_UP_P1)     ? (true) : (false); }
 BOOL joypad_p1_is_down()   { return (JOYPAD_IS_DOWN_P1)   ? (true) : (false); }
 BOOL joypad_p1_is_left()   { return (JOYPAD_IS_LEFT_P1)   ? (true) : (false); }
@@ -739,7 +749,17 @@ BOOL joypad_p1_is_a()      { return (JOYPAD_IS_A_P1)      ? (true) : (false); }
 BOOL joypad_p1_is_b()      { return (JOYPAD_IS_B_P1)      ? (true) : (false); }
 BOOL joypad_p1_is_c()      { return (JOYPAD_IS_C_P1)      ? (true) : (false); }
 BOOL joypad_p1_is_d()      { return (JOYPAD_IS_D_P1)      ? (true) : (false); }
+//
 
+BOOL joypad_is_up(BYTE id)     { return (JOYPAD_IS_UP_P1 && id == 0)     ? (true) : (false); }
+BOOL joypad_is_down(BYTE id)   { return (JOYPAD_IS_DOWN_P1 && id == 0)   ? (true) : (false); }
+BOOL joypad_is_left(BYTE id)   { return (JOYPAD_IS_LEFT_P1 && id == 0)   ? (true) : (false); }
+BOOL joypad_is_right(BYTE id)  { return (JOYPAD_IS_RIGHT_P1 && id == 0)  ? (true) : (false); }
+BOOL joypad_is_start(BYTE id)  { return (JOYPAD_IS_START_P1 && id == 0)  ? (true) : (false); }
+BOOL joypad_is_a(BYTE id)      { return (JOYPAD_IS_A_P1 && id == 0)      ? (true) : (false); }
+BOOL joypad_is_b(BYTE id)      { return (JOYPAD_IS_B_P1 && id == 0)      ? (true) : (false); }
+BOOL joypad_is_c(BYTE id)      { return (JOYPAD_IS_C_P1 && id == 0)      ? (true) : (false); }
+BOOL joypad_is_d(BYTE id)      { return (JOYPAD_IS_D_P1 && id == 0)      ? (true) : (false); }
 
   //----------------------------------------------------------------------------//
  //                                  UTIL                                      //
