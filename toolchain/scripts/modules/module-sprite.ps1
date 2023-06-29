@@ -1,6 +1,7 @@
 # TODO : patch buildChar with error level output
 
 function Watch-Error {
+  Write-Host "Enter Watch error"
   Get-Content -Path "$($buildConfig.pathBuild)\sprite.log" -Force
 
   if (Select-String -Path "$($buildConfig.pathBuild)\sprite.log" -Pattern "Invalid dimension") { Logger-Error -Message "Invalid dimension" }
@@ -46,11 +47,14 @@ function Write-Sprite {
   if (-not $process.HasExited) {
       $process.Kill()
       Logger-Error -Message "Timeout : compiling sprite exceed timeout ..."
+      Watch-Error
   } else {
       Write-Host "Compiled"
   }
 
   $timer.Stop()
+
+  Watch-Error
 
   & CharSplit.exe char.bin "-$Format" $OutputFile
   Remove-Item -Path char.bin -Force
