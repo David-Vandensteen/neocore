@@ -41,7 +41,6 @@ function Compare-FileHash {
   }
 }
 
-
 function Check {
   param ([Parameter(Mandatory=$true)][xml] $Config)
   function Check-Manifest {
@@ -55,6 +54,8 @@ function Check {
       [string]$ManifestCache
   )
     Write-Host "check manifest" -ForegroundColor Yellow
+    Write-Host "source : $ManifestSource"
+    Write-Host "cache : $ManifestCache"
     if ((Compare-FileHash -SrcFile $ManifestSource -DestFile $ManifestCache) -eq $false) {
       return $false
     }
@@ -83,7 +84,6 @@ function Check {
     if ((Test-Path -Path $Config.project.makefile) -eq $false) { Check-PathError -Path $Config.project.makefile }
     if ((Test-Path -Path $Config.project.toolchainPath) -eq $false) { Check-PathError -Path $Config.project.toolchainPath }
     if ((Test-Path -Path $Config.project.XMLDATFile) -eq $false) { Check-PathError -Path $Config.project.XMLDATFile }
-    if ((Test-Path -Path "$($Config.project.toolchainPath)\..\manifest.xml") -eq $false) { Check-PathError -Path "$($Config.project.toolchainPath)\..\manifest.xml" }
   }
   Write-Host "check config" -ForegroundColor Yellow
   Check-XML
@@ -96,7 +96,7 @@ function Check {
   }
 
   if (Test-Path -Path "$($Config.project.buildPath)\manifest.xml") {
-    $checkManifest = Check-Manifest -ManifestSource ..\..\manifest.xml -ManifestCache "$($Config.project.buildPath)\manifest.xml"
+    $checkManifest = Check-Manifest -ManifestSource "$($Config.project.toolchainPath)\..\manifest.xml" -ManifestCache "$($Config.project.buildPath)\manifest.xml"
     if ($checkManifest -eq $false) {
       Write-Host "manifest has changed : remove build cache" -ForegroundColor Blue
       Remove-Item $Config.project.buildPath -Recurse
@@ -318,8 +318,8 @@ function Main {
       -CUEFile "$($buildConfig.pathBuild)\$($buildConfig.projectName).cue" `
       -CHDFile "$($buildConfig.pathMame)\roms\neocdz\$($buildConfig.projectName).chd" `
       -HashFile "$($buildConfig.pathMame)\hash\neocd.xml"
-
   }
+
   if ($Rule -eq "only:sprite") { BuilderSprite }
   if ($Rule -eq "only:program") { BuilderProgram }
   if ($Rule -eq "only:iso") { BuilderISO }

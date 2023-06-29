@@ -16,5 +16,6 @@ function Install-SDK {
   Install-Component -URL "$($buildConfig.baseURL)/DATimage.zip" -PathDownload $buildConfig.pathSpool -PathInstall "$($buildConfig.pathNeocore)\bin"
   Install-Component -URL "$($buildConfig.baseURL)/neodev-sdk.zip" -PathDownload $buildConfig.pathSpool -PathInstall $buildConfig.pathNeocore
   Install-Neocore
-  Copy-Item -Path ..\..\manifest.xml $buildConfig.pathNeocore -Force
+  # Copy-Item -Path ..\..\manifest.xml $buildConfig.pathNeocore -Force -ErrorAction Stop
+  Copy-Item -Path "$($buildConfig.pathToolchain)\..\manifest.xml" $buildConfig.pathNeocore -Force -ErrorAction Stop
 }
