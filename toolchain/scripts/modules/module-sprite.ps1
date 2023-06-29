@@ -1,7 +1,6 @@
 # TODO : patch buildChar with error level output
 
 function Watch-Error {
-  Write-Host "Enter Watch error"
   Get-Content -Path "$($buildConfig.pathBuild)\sprite.log" -Force
 
   if (Select-String -Path "$($buildConfig.pathBuild)\sprite.log" -Pattern "Invalid dimension") { Logger-Error -Message "Invalid dimension" }
