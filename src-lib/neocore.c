@@ -235,6 +235,8 @@ void init_gpp(
 void init_gp(GFX_Picture *gfx_picture, pictureInfo *pictureInfo, paletteInfo *paletteInfo) {
   gfx_picture->paletteInfoDAT = paletteInfo;
   gfx_picture->pictureInfoDAT = pictureInfo;
+  gfx_picture->pixel_height = pictureInfo->tileHeight * 32;
+  gfx_picture->pixel_width = pictureInfo->tileWidth * 32;
 }
 
 void init_gas(GFX_Animated_Sprite *gfx_animated_sprite ,spriteInfo *spriteInfo, paletteInfo *paletteInfo) {
@@ -764,6 +766,10 @@ BOOL joypad_is_d(BYTE id)      { return (JOYPAD_IS_D_P1 && id == 0)      ? (true
   //----------------------------------------------------------------------------//
  //                                  UTIL                                      //
 //----------------------------------------------------------------------------//
+
+int get_random(int range) {
+  return RAND(range);
+}
 
 void inline fix_print_neocore(int x, int y, char *label) { fixPrint(x, y, 0, 0, label); }
 

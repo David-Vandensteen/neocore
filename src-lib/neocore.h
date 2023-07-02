@@ -74,6 +74,8 @@ typedef struct GFX_Picture {
   picture pictureDAT;
   pictureInfo *pictureInfoDAT;
   paletteInfo *paletteInfoDAT;
+  WORD pixel_height;
+  WORD pixel_width;
 } GFX_Picture;
 
 typedef struct GFX_Animated_Sprite_Physic {
@@ -358,11 +360,8 @@ BOOL        joypad_p1_is_c();
  */
 BOOL        joypad_p1_is_d();
 
-/**
- * @deprecated since 1.0.5
- * @see debug_joypad(id) instead
- */
 
+void joypad_update(BYTE id);
 BOOL joypad_is_up(BYTE id);
 BOOL joypad_is_down(BYTE id);
 BOOL joypad_is_left(BYTE id);
@@ -373,15 +372,17 @@ BOOL joypad_is_b(BYTE id);
 BOOL joypad_is_c(BYTE id);
 BOOL joypad_is_d(BYTE id);
 
-
-
-// TODO : refactor
+/**
+ * @deprecated since 1.0.5
+ * @see debug_joypad(id) instead
+ */
 void inline debug_joypad_p1();
 
   //----------------------------------------------------------------------------//
  //                                  UTIL                                      //
 //----------------------------------------------------------------------------//
 
+int get_random(int range);
 void inline fix_print_neocore(int x, int y, char *label);
 WORD free_ram_info();
 #define close_vbl() SCClose()
