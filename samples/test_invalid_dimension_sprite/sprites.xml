@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<chardata>
+  <setup>
+    <starting_tile>256</starting_tile>
+  </setup>
+  <pict id="racquet_asset">
+    <file>assets\gfx\racquet.png</file>
+  </pict>
+</chardata>

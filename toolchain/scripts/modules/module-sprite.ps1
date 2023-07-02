@@ -46,11 +46,14 @@ function Write-Sprite {
   if (-not $process.HasExited) {
       $process.Kill()
       Logger-Error -Message "Timeout : compiling sprite exceed timeout ..."
+      Watch-Error
   } else {
       Write-Host "Compiled"
   }
 
   $timer.Stop()
+
+  Watch-Error
 
   & CharSplit.exe char.bin "-$Format" $OutputFile
   Remove-Item -Path char.bin -Force
