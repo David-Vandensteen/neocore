@@ -360,6 +360,7 @@ BOOL        joypad_p1_is_c();
  */
 BOOL        joypad_p1_is_d();
 
+void update_joypad(BYTE id);
 
 void joypad_update(BYTE id);
 BOOL joypad_is_up(BYTE id);
