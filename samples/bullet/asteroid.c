@@ -7,11 +7,11 @@ static BYTE hit;
 
 void asteroid_init() {
   hit = 0;
-  init_gpp(&asteroid, &asteroid_sprite, &asteroid_sprite_Palettes, 8, 8, 0, 0, AUTOBOX);
+  init_gfx_picture_physic(&asteroid, &asteroid_sprite, &asteroid_sprite_Palettes, 8, 8, 0, 0, AUTOBOX);
 }
 
 void asteroid_display() {
-  display_gpp(&asteroid, 200, 100);
+  display_gfx_picture_physic(&asteroid, 200, 100);
 }
 
 void asteroid_update() {
