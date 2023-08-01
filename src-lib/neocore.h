@@ -44,6 +44,8 @@
 #define MANUALBOX 0
 #define AUTOBOX 1
 
+enum direction { NONE, UP, DOWN, LEFT, RIGHT };
+
   //--------------------------------------------------------------------------//
  //                          STRUCTURE                                       //
 //--------------------------------------------------------------------------//
@@ -300,6 +302,12 @@ short get_y_gfx_picture_physic(GFX_Picture_Physic gfx_picture_physic);
 
 short get_x_gfx_scroller(GFX_Scroller gfx_scroller);
 short get_y_gfx_scroller(GFX_Scroller gfx_scroller);
+
+Vec2short get_position_gfx_animated_sprite(GFX_Animated_Sprite gfx_animated_sprite);
+Vec2short get_position_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic gfx_animated_sprite_physic);
+Vec2short get_position_gfx_picture(GFX_Picture gfx_picture);
+Vec2short get_position_gfx_picture_physic(GFX_Picture_Physic gfx_picture_physic);
+Vec2short get_position_gfx_scroller(GFX_Scroller gfx_scroller);
 
 /**
  * @deprecated since 1.0.5
@@ -704,6 +712,12 @@ void inline debug_joypad_p1();
  //                                  UTIL                                      //
 //----------------------------------------------------------------------------//
 
+Vec2short get_relative_position(Box box, Vec2short world_coord);
+void pause();
+void sleep(DWORD frame);
+BOOL each_frame(DWORD frame);
+short get_positive(short num);
+short get_inverse(int num); // TODO TEST
 int get_random(int range);
 void inline fix_print_neocore(int x, int y, char *label);
 WORD free_ram_info();
@@ -724,8 +738,8 @@ void inline log_short(char *label, short value);
 void inline log_byte(char *label, BYTE value);
 void inline log_bool(char *label, BOOL value);
 void inline log_gas(char *label, GFX_Animated_Sprite *gfx_animated_sprite);
-void inline log_spriteInfo(char *label, spriteInfo *si);
-void inline log_box(char *label, Box *b);
+  void inline log_spriteInfo(char *label, spriteInfo *si);
+  void inline log_box(char *label, Box *b);
 void inline log_pictureInfo(char *label, pictureInfo *pi);
 
   /*---------------*/

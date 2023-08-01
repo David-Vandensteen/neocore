@@ -553,6 +553,46 @@ short get_y_gfx_picture_physic(GFX_Picture_Physic gfx_picture_physic) { return g
 short get_x_gfx_scroller(GFX_Scroller gfx_scroller) { return gfx_scroller.scrollerDAT.scrlPosX; }
 short get_y_gfx_scroller(GFX_Scroller gfx_scroller) { return gfx_scroller.scrollerDAT.scrlPosY; }
 
+Vec2short get_position_gfx_animated_sprite(GFX_Animated_Sprite gfx_animated_sprite) {
+  Vec2short position = {
+    get_x_gfx_animated_sprite(gfx_animated_sprite),
+    get_y_gfx_animated_sprite(gfx_animated_sprite)
+  };
+  return position;
+}
+
+Vec2short get_position_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic gfx_animated_sprite_physic) {
+  Vec2short position = {
+    get_x_gfx_animated_sprite_physic(gfx_animated_sprite_physic),
+    get_y_gfx_animated_sprite_physic(gfx_animated_sprite_physic)
+  };
+  return position;
+}
+
+Vec2short get_position_gfx_picture(GFX_Picture gfx_picture) {
+  Vec2short position = {
+    get_x_gfx_picture(gfx_picture),
+    get_y_gfx_picture(gfx_picture)
+  };
+  return position;
+}
+
+Vec2short get_position_gfx_picture_physic(GFX_Picture_Physic gfx_picture_physic) {
+  Vec2short position = {
+    get_x_gfx_picture_physic(gfx_picture_physic),
+    get_y_gfx_picture_physic(gfx_picture_physic)
+  };
+  return position;
+}
+
+Vec2short get_position_gfx_scroller(GFX_Scroller gfx_scroller) {
+  Vec2short position = {
+    get_x_gfx_scroller(gfx_scroller),
+    get_y_gfx_scroller(gfx_scroller)
+  };
+  return position;
+}
+
 // deprecated
 
 short get_x_gas(GFX_Animated_Sprite gfx_animated_sprite) { return gfx_animated_sprite.aSpriteDAT.posX; }
@@ -1011,6 +1051,40 @@ BOOL joypad_is_d(BYTE id)      { return (JOYPAD_IS_D_P1 && id == 0)      ? (true
   //----------------------------------------------------------------------------//
  //                                  UTIL                                      //
 //----------------------------------------------------------------------------//
+
+Vec2short get_relative_position(Box box, Vec2short world_coord) {
+  Vec2short coord = {
+    world_coord.x - box.p0.x,
+    get_inverse(world_coord.y - box.p3.y)
+  };
+  return coord;
+}
+
+void pause() {
+  update_joypad(0);
+  while( !joypad_is_a(0)) {
+    update_joypad(0);
+    wait_vbl();
+  }
+}
+
+void sleep(DWORD frame) {
+  wait_vbl_max(frame);
+}
+
+BOOL each_frame(DWORD frame) {
+  return (get_frame_counter() % frame == 0) ? true : false;
+}
+
+// TODO get_negative
+short get_positive(short num) {
+  if (num < 0) num = ~num + 1;
+  return num;
+}
+
+short get_inverse(int num) { // TODO TEST
+  return -num;
+}
 
 int get_random(int range) {
   return RAND(range);
