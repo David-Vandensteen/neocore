@@ -282,7 +282,25 @@ function Main {
     BuilderMame
     RunnerMame
   }
-  if ($Rule -eq "serve") {
+  if ($Rule -eq "serve:raine") {
+    Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-sprite.ps1"
+    Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-program.ps1"
+    Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-iso.ps1"
+    Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-raine.ps1"
+    Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-watcher.ps1"
+    While ($true) {
+      BuilderSprite
+      BuilderProgram
+      BuilderISO
+      RunnerRaine
+      Watch-Folder -Path "."
+      Stop-Emulators
+    }
+  }
+  if ($Rule -eq "serve:mame" -or $Rule -eq "serve") {
+    Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-sprite.ps1"
+    Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-program.ps1"
+    Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-iso.ps1"
     Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-mame.ps1"
     Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-watcher.ps1"
     While ($true) {
