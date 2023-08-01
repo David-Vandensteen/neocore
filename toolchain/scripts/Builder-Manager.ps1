@@ -267,22 +267,14 @@ function Main {
     BuilderProgram
     BuilderISO
   }
-  if ($Rule -eq "run") {
-    Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-mame.ps1"
-    BuilderSprite
-    BuilderProgram
-    BuilderISO
-    BuilderMame
-    RunnerMame
-  }
-  if ($Rule -eq "run:raine") {
+  if ($Rule -eq "run:raine" -or $Rule -eq "raine") {
     Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-raine.ps1"
     BuilderSprite
     BuilderProgram
     BuilderISO
     RunnerRaine
   }
-  if ($Rule -eq "run:mame") {
+  if ($Rule -eq "run:mame" -or $Rule -eq "mame" -or $Rule -eq "run") {
     Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-mame.ps1"
     BuilderSprite
     BuilderProgram
