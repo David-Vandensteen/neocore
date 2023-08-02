@@ -1005,7 +1005,7 @@ void debug_joypad(BYTE id) {
   if (id == 0) {
     JOYPAD_READ_P1
   } else {
-    JOYPAD_READ_P2
+    // JOYPAD_READ_P2 // TODO
   }
   if (joypad_is_start(id))  {  fix_print_neocore(10, 11,  "JOYPAD START"); }
   if (joypad_is_up(id))     {  fix_print_neocore(10, 11,  "JOYPAD UP   "); }
@@ -1135,6 +1135,15 @@ void init_log() {
   clearFixLayer();
   #endif
 }
+
+void set_position_log(WORD _x, WORD _y) {
+  x = _x;
+  y = _y;
+  x_default = x;
+  y_default = y;
+}
+
+// deprecated
 
 void set_pos_log(WORD _x, WORD _y){
   x = _x;
