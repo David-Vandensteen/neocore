@@ -12,8 +12,11 @@ int main(void) {
     wait_vbl();
     init_log();
     log_info("INTERACT WITH JOYPAD ...");
-    update_joypad_edge_p1();
-    debug_joypad_p1(); /* display which control is actived */
+    update_joypad_edge(0);
+    // update_joypad_edge_p1();
+
+    // debug_joypad_p1(); /* display which control is actived */
+    debug_joypad(0);
 
     if (joypad_p1_is_up()) log_info("ITS UP !");
     if (joypad_p1_is_down()) log_info("ITS DOWN !");

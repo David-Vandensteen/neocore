@@ -690,6 +690,7 @@ BOOL        joypad_p1_is_c();
 BOOL        joypad_p1_is_d();
 
 void update_joypad(BYTE id);
+void update_joypad_edge(BYTE id);
 
 void joypad_update(BYTE id);
 BOOL joypad_is_up(BYTE id);
@@ -701,6 +702,8 @@ BOOL joypad_is_a(BYTE id);
 BOOL joypad_is_b(BYTE id);
 BOOL joypad_is_c(BYTE id);
 BOOL joypad_is_d(BYTE id);
+
+void debug_joypad(BYTE id);
 
 /**
  * @deprecated since 1.0.5

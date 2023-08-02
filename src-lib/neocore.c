@@ -1001,6 +1001,23 @@ void play_cdda(unsigned char track) {
  //                                  JOYPAD                                    //
 //----------------------------------------------------------------------------//
 
+void debug_joypad(BYTE id) {
+  if (id == 0) {
+    JOYPAD_READ_P1
+  } else {
+    JOYPAD_READ_P2
+  }
+  if (joypad_is_start(id))  {  fix_print_neocore(10, 11,  "JOYPAD START"); }
+  if (joypad_is_up(id))     {  fix_print_neocore(10, 11,  "JOYPAD UP   "); }
+  if (joypad_is_down(id))   {  fix_print_neocore(10, 11,  "JOYPAD DOWN "); }
+  if (joypad_is_left(id))   {  fix_print_neocore(10, 11,  "JOYPAD LEFT "); }
+  if (joypad_is_right(id))  {  fix_print_neocore(10, 11,  "JOYPAD RIGHT"); }
+  if (joypad_is_a(id))      {  fix_print_neocore(10, 11,  "JOYPAD A    "); }
+  if (joypad_is_b(id))      {  fix_print_neocore(10, 11,  "JOYPAD B    "); }
+  if (joypad_is_c(id))      {  fix_print_neocore(10, 11,  "JOYPAD C    "); }
+  if (joypad_is_d(id))      {  fix_print_neocore(10, 11,  "JOYPAD D    "); }
+}
+
 void inline debug_joypad_p1() {
   JOYPAD_READ_P1
   if (joypad_p1_is_start())  {  fix_print_neocore(10, 11,  "JOYPAD START"); }
