@@ -8,18 +8,8 @@ function Write-ISO {
     [Parameter(Mandatory=$true)][String] $PathISOBuildFolder,
     [Parameter(Mandatory=$true)][String] $PathCDTemplate
   )
-  if ((Test-Path -Path $PathCDTemplate) -eq $false) {
-    Install-Component -URL "$($buildConfig.baseURL)/neobuild-cd_template.zip" -PathDownload $buildConfig.pathSpool -PathInstall $buildConfig.pathNeocore
-  }
+
   Logger-Step -Message "compiling ISO"
-  if (Test-Path -Path $PathISOBuildFolder) { Remove-Item $PathISOBuildFolder -Recurse -Force }
-  if (-Not(Test-Path -Path $PathISOBuildFolder)) { mkdir -Path $PathISOBuildFolder | Out-Null }
-  if (-Not(Test-Path -Path $PathCDTemplate)) { Logger-Error -Message "$PathCDTemplate not found" }
-  if (-Not(Test-Path -Path $PRGFile)) { Logger-Error -Message "$PRGFile not found" }
-  if (-Not(Test-Path -Path $SpriteFile)) { Logger-Error -Message "$SpriteFile not found" }
-  Copy-Item -Path "$PathCDTemplate\*" -Destination $PathISOBuildFolder -Recurse -Force
-  Copy-Item -Path $PRGFile -Destination "$PathISOBuildFolder\DEMO.PRG" -Force
-  Copy-Item -Path $SpriteFile -Destination "$PathISOBuildFolder\DEMO.SPR" -Force
 
   & mkisofs.exe -o $OutputFile -pad $PathISOBuildFolder
 
@@ -27,6 +17,47 @@ function Write-ISO {
     Logger-Success -Message "builded ISO is available to $OutputFile"
     Write-Host ""
   } else { Logger-Error -Message "$OutputFile was not generated" }
+}
+
+function Write-Cache {
+  param (
+    [Parameter(Mandatory=$true)][String] $PathCDTemplate,
+    [Parameter(Mandatory=$true)][String] $PRGFile,
+    [Parameter(Mandatory=$true)][String] $SpriteFile,
+    [Parameter(Mandatory=$true)][String] $PathISOBuildFolder
+  )
+
+  if ((Test-Path -Path $PathCDTemplate) -eq $false) {
+    Install-Component -URL "$($buildConfig.baseURL)/neobuild-cd_template.zip" -PathDownload $buildConfig.pathSpool -PathInstall $buildConfig.pathNeocore
+  }
+
+  if (Test-Path -Path $PathISOBuildFolder) { Remove-Item $PathISOBuildFolder -Recurse -Force }
+  if (-Not(Test-Path -Path $PathISOBuildFolder)) { mkdir -Path $PathISOBuildFolder | Out-Null }
+  if (-Not(Test-Path -Path $PathCDTemplate)) { Logger-Error -Message "$PathCDTemplate not found" }
+  if (-Not(Test-Path -Path $PRGFile)) { Logger-Error -Message "$PRGFile not found" }
+  if (-Not(Test-Path -Path $SpriteFile)) { Logger-Error -Message "$SpriteFile not found" }
+
+  Copy-Item -Path "$PathCDTemplate\*" -Destination $PathISOBuildFolder -Recurse -Force -ErrorAction Stop
+  Copy-Item -Path $PRGFile -Destination "$PathISOBuildFolder\DEMO.PRG" -Force -ErrorAction Stop
+  Copy-Item -Path $SpriteFile -Destination "$PathISOBuildFolder\DEMO.SPR" -Force -ErrorAction Stop
+}
+
+function Write-SFX {
+  param(
+    [Parameter(Mandatory=$true)][String] $PathISOBuildFolder,
+    [String] $PCMFile,
+    [String] $Z80File
+  )
+
+  Logger-Step -Message "soundFX"
+
+  if ($PCMFile) { Logger-Info -Message $PCMFile }
+  if ($Z80File) { Logger-Info -Message $Z80File }
+
+  Logger-Info -Message "Destination folder $PathISOBuildFolder"
+
+  if ($PCMFile) { Copy-Item -Path $PCMFile -Destination "$PathISOBuildFolder\DEMO.PCM" -Force -ErrorAction Stop }
+  if ($Z80File) { Copy-Item -Path $Z80File -Destination "$PathISOBuildFolder\DEMO.Z80" -Force -ErrorAction Stop }
 }
 
 function Write-CUE {

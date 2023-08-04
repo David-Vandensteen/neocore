@@ -215,20 +215,39 @@ function Main {
 
   function BuilderISO {
     Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-iso.ps1"
+
+    Write-Host "copy assets to $($buildConfig.pathBuild)\assets" -ForegroundColor Blue # TODO : remove hardcoded assets folder
+    Robocopy /MIR assets "$($buildConfig.pathBuild)\assets" | Out-Null
+    # TODO : check lastexitcode
+
+    Write-Cache `
+      -PRGFile $buildConfig.PRGFile `
+      -SpriteFile "$($buildConfig.pathBuild)\$($buildConfig.projectName).cd" `
+      -PathISOBuildFolder "$($buildConfig.pathBuild)\iso" `
+      -PathCDTemplate "$($buildConfig.pathNeocore)\cd_template" `
+
+    if ($config.project.sound.sfx.pcm) {
+      Write-SFX `
+      -PathISOBuildFolder "$($buildConfig.pathBuild)\iso" `
+      -PCMFile "$($buildConfig.pathBuild)\$($config.project.sound.sfx.pcm)"
+    }
+
+    if ($config.project.sound.sfx.z80) {
+      Write-SFX `
+        -PathISOBuildFolder "$($buildConfig.pathBuild)\iso" `
+        -Z80File "$($buildConfig.pathBuild)\$($config.project.sound.sfx.z80)"
+    }
+
     Write-ISO `
       -PRGFile $buildConfig.PRGFile `
       -SpriteFile "$($buildConfig.pathBuild)\$($buildConfig.projectName).cd" `
       -OutputFile "$($buildConfig.pathBuild)\$($buildConfig.projectName).iso" `
       -PathISOBuildFolder "$($buildConfig.pathBuild)\iso" `
-      -PathCDTemplate "$($buildConfig.pathNeocore)\cd_template"
+      -PathCDTemplate "$($buildConfig.pathNeocore)\cd_template" `
 
     $configCDDA = $null
 
     if ($Config.project.sound.cdda.tracks.track) { $configCDDA = $config.project.sound.cdda }
-
-    Write-Host "copy assets to $($buildConfig.pathBuild)\assets" -ForegroundColor Blue
-    Robocopy /MIR assets "$($buildConfig.pathBuild)\assets" | Out-Null
-    # TODO : check lastexitcode
 
     Write-CUE `
       -OutputFile "$($buildConfig.pathBuild)\$($buildConfig.projectName).cue" `
