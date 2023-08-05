@@ -121,16 +121,31 @@ function Remove-Project {
   if (Test-Path -Path $buildConfig.pathBuild) { Remove-Item $buildConfig.pathBuild -Force -ErrorAction SilentlyContinue }
 }
 
+# function Set-EnvPath {
+#   param (
+#     [Parameter(Mandatory=$true)][String] $PathNeoDevBin,
+#     [Parameter(Mandatory=$true)][String] $PathNeocoreBin
+#   )
+#   $env:path = "$PathNeoDevBin;$PathNeocoreBin;$env:windir\System32;$env:windir\System32\WindowsPowerShell\v1.0\"
+#   Write-Host "Env Path: $env:path"
+#   Write-Host "--------------------------------------------"
+#   Write-Host ""
+# }
+
 function Set-EnvPath {
   param (
     [Parameter(Mandatory=$true)][String] $PathNeoDevBin,
     [Parameter(Mandatory=$true)][String] $PathNeocoreBin
   )
-  $env:path = "$PathNeoDevBin;$PathNeocoreBin;$env:windir\System32;$env:windir\System32\WindowsPowerShell\v1.0\"
+
+  #$env:path = "c:\temp\gcc\sgdk\bin;c:\temp\gcc\neocore\bin;$env:windir\System32;$env:windir\System32\WindowsPowerShell\v1.0\"
+  $env:path = "c:\temp\gcc\MinGW-m68k-elf-13.1.0\bin;c:\temp\gcc\neocore\bin;$env:windir\System32;$env:windir\System32\WindowsPowerShell\v1.0\"
+
   Write-Host "Env Path: $env:path"
   Write-Host "--------------------------------------------"
   Write-Host ""
 }
+
 
 function Main {
   param (

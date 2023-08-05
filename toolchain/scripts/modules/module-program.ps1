@@ -9,7 +9,9 @@ function Write-Program {
   if ((Test-Path -Path $MakeFile) -eq $false) { Logger-Error -Message "$MakeFile not found" }
 
   $env:PROJECT = $ProjectName
-  $env:NEODEV = $PathNeoDev
+  #$env:NEODEV = $PathNeoDev
+  #$env:NEODEV = "c:\temp\gcc\neocore"
+  $env:NEODEV = "c:\temp\gcc"
   $env:FILEPRG = $PRGFile
   $env:PATHBUILD = $buildConfig.pathBuild
 

@@ -14,9 +14,9 @@ LD = $(BASEDIR)/MinGW-m68k-elf-13.1.0/bin/gcc
 CC = $(BASEDIR)/MinGW-m68k-elf-13.1.0/bin/gcc
 AR = $(BASEDIR)/MinGW-m68k-elf-13.1.0/bin/ar
 OBJC = $(BASEDIR)/MinGW-m68k-elf-13.1.0/bin/objcopy
-BIN2O = $(BASEDIR)/sgdk/bin/bin2elf
-GFXCC = $(BASEDIR)/sgdk/bin/gfxcc
-FIXCNV = $(BASEDIR)/sgdk/bin/fixcnv
+BIN2O = $(BASEDIR)/m68k/bin/bin2elf
+GFXCC = $(BASEDIR)/m68k/bin/gfxcc
+FIXCNV = $(BASEDIR)/m68k/bin/fixcnv
 
 #######################################
 # Path to libraries and include files #
@@ -40,22 +40,28 @@ PADBYTE = 0xFF
 ##############################
 # Object Files and Libraries #
 ##############################
-SRC_C := $(wildcard *.c) $(wildcard */*.c)
+SRC_C= $(wildcard *.c)
 
 OBJS = $(NEOBUILDTEMP)/crt0_$(OUTPUT).o
 OBJS := $(OBJS) $(NEOBUILDTEMP)/palettes.o
 OBJS := $(OBJS) $(NEOBUILDTEMP)/maps.o
-OBJS += $(patsubst %.c,$(NEOBUILDTEMP)/%.o,$(SRC_C))
+OBJS += $(patsubst %.c,$(NEOBUILDTEMP)/%.o,$(wildcard *.c))
 
-LIBS = -lneocore -lDATlib -lmath -lprocess -lc -lgcc
+#LIBS = -lneocore -lDATlib -lmath -lprocess -lc -lgccv
+#LIBS = -lneocore -lDATlib -lmath -lprocess -lc
+LIBS = -lneocore -lDATlib -lmath -lprocess -lc
 
 #####################
 # Compilation Flags #
 #####################
 
 ASFLAGS = -m68000 --register-prefix-optional
-LDFLAGS = -Wl,-T$(BASEDIR)/src/system/neo$(OUTPUT).x -Xlinker -Map=$(NEOBUILDTEMP)/output.map
-CCFLAGS = -m68000 -O3 -Wall -flto -fuse-linker-plugin -fomit-frame-pointer -ffast-math -fno-builtin -nostartfiles -nodefaultlibs -D__$(OUTPUT)__
+LDFLAGS = -Wl,-shared -Tneocd.x -Xlinker -Map=$(NEOBUILDTEMP)/output.map
+#LDFLAGS = -Wl,-Tneocd.x -Xlinker -shared
+
+#LDFLAGS = -Wl,-T$(BASEDIR)/src/system/neo$(OUTPUT).x -Xlinker -Map=$(NEOBUILDTEMP)/output.map
+#CCFLAGS = -m68000 -O3 -Wall -fno-lto -fomit-frame-pointer -ffast-math -fno-builtin -nostartfiles -nodefaultlibs -D__$(OUTPUT)__
+CCFLAGS = -m68000 -O3 -Wall -fno-lto -fno-use-linker-plugin -fomit-frame-pointer -ffast-math -fno-builtin -nostartfiles -nodefaultlibs -D__$(OUTPUT)__
 ARFLAGS = cr
 DEBUG = -g
 
@@ -67,25 +73,15 @@ FIXFILES = $(BASEDIR)/src/shared/fix_font.bmp
 ##############
 # Make rules #
 ##############
-# cmd_ : $(OBJ_LIB)
-# 	$(ECHO) "$(OBJ_LIB)" > cmd_
-
-# $(LIBDIR)/libneocore.a: cmd_
-# 	ar rs $(LIB)/libneocore.a $(LTO_PLUGIN) @cmd_
-# 	$(RM) cmd_
-
 all: $(FILEPRG)
-
-$(FILEPRG): $(NEOBUILDTEMP)/$(PROJECTNAME).o
+$(FILEPRG) : $(NEOBUILDTEMP)/$(PROJECTNAME).o
 	$(OBJC) -O binary $< $@
 
-$(NEOBUILDTEMP)/$(PROJECTNAME).o: $(OBJS)
+$(NEOBUILDTEMP)/$(PROJECTNAME).o : $(OBJS)
+
 	$(LD) -L$(LIBDIR) $(CCFLAGS) $(LDFLAGS) $(OBJS) $(LIBS) -o $@
 
 $(NEOBUILDTEMP)/%.o: %.c
-	$(CC) -I$(INCDIR) $(CCFLAGS) -c $< -o $@
-
-$(NEOBUILDTEMP)/%.o: */%.c
 	$(CC) -I$(INCDIR) $(CCFLAGS) -c $< -o $@
 
 $(NEOBUILDTEMP)/%.o: %.s

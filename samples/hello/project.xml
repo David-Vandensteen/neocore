@@ -2,7 +2,7 @@
 <project>
   <name>hello</name>
   <version>1.0.0</version>
-  <makefile>..\Makefile</makefile>
+  <makefile>Makefile</makefile>
   <toolchainPath>..\..\toolchain</toolchainPath>
   <buildPath>..\..\build</buildPath>
   <distPath>..\..\dist</distPath>
