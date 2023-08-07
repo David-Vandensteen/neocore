@@ -9,63 +9,6 @@
 
 #define SAMPLE_LENGTH 3
 
-// TODO : refactor & patch neocore
-// TODO : once, loop on triger ....
-
-enum sound_state { IDLE, PLAYING };
-
-typedef struct Adpcm_player {
-  enum sound_state state;
-  DWORD remaining_frame;
-} Adpcm_player;
-
-Adpcm_player adpcm_player;
-
-void log(char *message) {
-  log_info(message);
-}
-
-void init_adpcm_player() {
-  adpcm_player.state = IDLE;
-  adpcm_player.remaining_frame = 0;
-}
-
-void add_remaining_frame_adpcm_player(DWORD frame) {
-  adpcm_player.remaining_frame += frame;
-  adpcm_player.state = PLAYING;
-}
-
-Adpcm_player *get_adpcm_player() {
-  return &adpcm_player;
-}
-
-void update_adpcm_player() {
-  if (adpcm_player.remaining_frame != 0) {
-    adpcm_player.state = PLAYING;
-    adpcm_player.remaining_frame -= 1;
-  }
-
-  if (adpcm_player.remaining_frame > 0 && adpcm_player.state != IDLE) {
-    adpcm_player.state = PLAYING;
-    adpcm_player.remaining_frame -= 1;
-  }
-
-  if (adpcm_player.remaining_frame == 0) adpcm_player.state = IDLE;
-}
-
-void wait_vbl_patched() {
-  update_adpcm_player();
-  wait_vbl();
-}
-
-DWORD get_frame_to_second(DWORD frame) {
-  return frame / 60;
-}
-
-DWORD get_second_to_frame(DWORD second) {
-  return second * 60;
-}
-
 void log_and_sound(char *message) {
   if (get_adpcm_player()->state == IDLE) {
     send_sound_command(ADPCM_STOP);
@@ -81,16 +24,14 @@ void debug_adpcm_player() {
   log(""); log("");
   log_dword("REMAINING", get_adpcm_player()->remaining_frame);
 }
-//
 
 int main(void) {
-  init_adpcm_player(); // TODO : inside neocore
-  init_gpu();
+  init_all_system();
   init_log();
   log_and_sound("");
 
   while(1) {
-    wait_vbl_patched();
+    wait_vbl();
     init_log();
     log("INTERACT WITH JOYPAD ...");
 
