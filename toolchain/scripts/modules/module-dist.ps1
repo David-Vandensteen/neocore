@@ -49,7 +49,7 @@ function Write-Dist {
       $content = $content.Replace($_.file, $fileName)
     }
     Write-Host "make a cue file"
-    $content | Out-File -FilePath "$PathDestination\iso\$ProjectName.cue" -Encoding utf8 -Force
+    $content | Out-File -FilePath "$PathDestination\iso\$ProjectName.cue" -Encoding ascii -Force
   }
   Write-Host ""
   if ($ISOFile) {
