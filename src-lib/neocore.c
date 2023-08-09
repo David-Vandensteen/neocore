@@ -47,6 +47,13 @@
  //                             STATIC                                       //
 //--------------------------------------------------------------------------//
 
+static Adpcm_player adpcm_player;
+
+static void init_adpcm_player() {
+  adpcm_player.state = IDLE;
+  adpcm_player.remaining_frame = 0;
+}
+
 static BOOL sprite_index_manager_status[SPRITE_INDEX_MANAGER_MAX];
 static paletteInfo *palette_index_manager_status[PALETTE_INDEX_MANAGER_MAX];
 
@@ -192,6 +199,7 @@ void inline static autoInc() { y++; }
 
 NEOCORE_INIT
 JOYPAD_INIT_P1
+
 
   //--------------------------------------------------------------------------//
  //                                   GFX                                    //
@@ -1069,6 +1077,19 @@ BOOL joypad_is_d(BYTE id)      { return (JOYPAD_IS_D_P1 && id == 0)      ? (true
  //                                  UTIL                                      //
 //----------------------------------------------------------------------------//
 
+DWORD get_frame_to_second(DWORD frame) {
+  return frame / 60;
+}
+
+DWORD get_second_to_frame(DWORD second) {
+  return second * 60;
+}
+
+void init_all_system() {
+  init_adpcm();
+  init_gpu();
+}
+
 Vec2short get_relative_position(Box box, Vec2short world_coord) {
   Vec2short coord = {
     world_coord.x - box.p0.x,
@@ -1158,6 +1179,10 @@ WORD inline log_info(char *label){
   autoInc();
   return countChar(label);
   #endif
+}
+
+void log(char *message) {
+  log_info(message);
 }
 
 void inline log_word(char *label, WORD value){
@@ -1276,6 +1301,38 @@ void inline log_pictureInfo(char *label, pictureInfo *pi) {
   log_word("TILEHEIGHT : ", (WORD)pi->tileHeight);
   #endif
 }
+
+  /*---------------*/
+ /* SOUND         */
+/*---------------*/
+
+void init_adpcm() {
+  init_adpcm_player();
+}
+
+Adpcm_player *get_adpcm_player() {
+  return &adpcm_player;
+}
+
+void add_remaining_frame_adpcm_player(DWORD frame) {
+  adpcm_player.remaining_frame += frame;
+  adpcm_player.state = PLAYING;
+}
+
+void update_adpcm_player() {
+  if (adpcm_player.remaining_frame != 0) {
+    adpcm_player.state = PLAYING;
+    adpcm_player.remaining_frame -= 1;
+  }
+
+  if (adpcm_player.remaining_frame > 0 && adpcm_player.state != IDLE) {
+    adpcm_player.state = PLAYING;
+    adpcm_player.remaining_frame -= 1;
+  }
+
+  if (adpcm_player.remaining_frame == 0) adpcm_player.state = IDLE;
+}
+
 
   /*---------------*/
  /* UTIL VECTOR   */

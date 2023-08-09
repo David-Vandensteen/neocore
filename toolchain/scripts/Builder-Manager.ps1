@@ -265,6 +265,7 @@ function Main {
     if ($Config.project.sound.cdda.tracks.track) { $configCDDA = $config.project.sound.cdda }
 
     Write-CUE `
+      -Rule $buildConfig.rule `
       -OutputFile "$($buildConfig.pathBuild)\$($buildConfig.projectName).cue" `
       -ISOName "$($buildConfig.projectName).iso" `
       -Config $configCDDA
@@ -343,7 +344,7 @@ function Main {
       Stop-Emulators
     }
   }
-  if ($Rule -eq "dist:iso") {
+  if ($Rule -eq "dist:iso" -or $Rule -eq "dist:raine") {
     Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-dist.ps1"
     if ((Test-Path -Path $buildConfig.pathDist) -eq $false) { New-Item -Path $buildConfig.pathDist -ItemType Directory -Force }
     BuilderSprite
@@ -355,7 +356,7 @@ function Main {
       -ISOFile "$($buildConfig.pathBuild)\$($buildConfig.projectName).iso" `
       -CUEFile "$($buildConfig.pathBuild)\$($buildConfig.projectName).cue" `
   }
-  if ($Rule -eq "dist:mame") {
+  if ($Rule -eq "dist:mame" -or $Rule -eq "dist:chd") {
     Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-mame.ps1"
     Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-dist.ps1"
     if ((Test-Path -Path $buildConfig.pathDist) -eq $false) { New-Item -Path $buildConfig.pathDist -ItemType Directory -Force }
