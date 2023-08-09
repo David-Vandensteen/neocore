@@ -7,6 +7,6 @@ function Download {
   Import-Module BitsTransfer
 
   $start_time = Get-Date
-  Start-BitsTransfer -Source $URL -Destination $Path
+  #Start-BitsTransfer -Source $URL -Destination $Path
   Write-Host "Time taken - $((Get-Date).Subtract($start_time).Seconds) second(s)"
 }

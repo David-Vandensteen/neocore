@@ -47,9 +47,9 @@ OBJS := $(OBJS) $(NEOBUILDTEMP)/palettes.o
 OBJS := $(OBJS) $(NEOBUILDTEMP)/maps.o
 OBJS += $(patsubst %.c,$(NEOBUILDTEMP)/%.o,$(wildcard *.c))
 
-#LIBS = -lneocore -lDATlib -lmath -lprocess -lc -lgccv
+LIBS = -lneocore -lDATlib -lmath -lprocess -lc -lgccv
 #LIBS = -lneocore -lDATlib -lmath -lprocess -lc
-LIBS = -lneocore -lDATlib -lmath -lprocess -lc
+#LIBS = -lneocore -lDATlib -lmath -lprocess -lc
 
 #####################
 # Compilation Flags #

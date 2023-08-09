@@ -12,11 +12,27 @@ set backupPath=%path%
 @REM if not exist %NEODEV% echo building a program will install the needed SDK and dependencies
 @REM if not exist %NEODEV% exit 1
 
-rem path=%NEODEV%\m68k\bin;build\bin;%windir%\System32;%windir%\System32\WindowsPowerShell\v1.0\
 
-set NEODEV=c:\temp\gcc\neocore
-rem path=c:\temp\gcc\sgdk\bin;%windir%;%windir%\System32;%windir%\System32\WindowsPowerShell\v1.0\
-path=C:\temp\gcc\MinGW-m68k-elf-13.1.0\bin;%windir%;%windir%\System32;%windir%\System32\WindowsPowerShell\v1.0\
+set GCC_PATH=C:\temp\gcc\neocore\gcc\gcc-2.95.2
+set INCLUDE_PATH=C:\temp\gcc\neocore\include
+set LIBRARY_PATH=C:\temp\gcc\neocore\lib
+
+if not exist %GCC_PATH% (
+  echo %GCC_PATH% not found
+  exit 1
+)
+
+if not exist %INCLUDE_PATH% (
+  echo %INCLUDE_PATH% not found
+  exit 1
+)
+
+if not exist %LIBRARY_PATH% (
+  echo %LIBRARY_PATH% not found
+  exit 1
+)
+
+path=%GCC_PATH%;%windir%;%windir%\System32;%windir%\System32\WindowsPowerShell\v1.0\
 
 set error=0
 @echo on

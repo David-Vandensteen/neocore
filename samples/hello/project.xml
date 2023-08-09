@@ -2,11 +2,21 @@
 <project>
   <name>hello</name>
   <version>1.0.0</version>
-  <makefile>Makefile</makefile>
+  <makefile>..\Makefile</makefile>
   <toolchainPath>..\..\toolchain</toolchainPath>
   <buildPath>..\..\build</buildPath>
   <distPath>..\..\dist</distPath>
   <XMLDATFile>sprites.xml</XMLDATFile>
+  <compiler>
+    <lib>
+      <name>gcc</name>
+      <version>13.1.0</version>
+    </lib>
+    <program>
+      <name>gcc</name>
+      <version>2.95.2</version>
+    </program>
+  </compiler>
   <!-- for using cdda audio tracks, uncomment & set up your files
   Warning: track id 1 is reserved for the binary program
   <sound>

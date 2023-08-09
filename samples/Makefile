@@ -4,26 +4,31 @@
 PROJECTNAME = $(PROJECT)
 NEOBUILDTEMP = $(PATHBUILD)
 
+#INCLUDE_PATH = $(INCLUDE_PATH)
+#LIBRARY_PATH = $(LIBRARY_PATH)
+
 #######################################
 # Base dir of your m68k gcc toolchain #
 #######################################
 
 BASEDIR = $(NEODEV)
-AS = $(BASEDIR)/MinGW-m68k-elf-13.1.0/bin/as
-LD = $(BASEDIR)/MinGW-m68k-elf-13.1.0/bin/gcc
-CC = $(BASEDIR)/MinGW-m68k-elf-13.1.0/bin/gcc
-AR = $(BASEDIR)/MinGW-m68k-elf-13.1.0/bin/ar
-OBJC = $(BASEDIR)/MinGW-m68k-elf-13.1.0/bin/objcopy
-BIN2O = $(BASEDIR)/sgdk/bin/bin2elf
-GFXCC = $(BASEDIR)/sgdk/bin/gfxcc
-FIXCNV = $(BASEDIR)/sgdk/bin/fixcnv
+
+AS = $(BASEDIR)/as
+LD = $(BASEDIR)/gcc
+CC = $(BASEDIR)/gcc
+AR = $(BASEDIR)/ar
+OBJC = $(BASEDIR)/objcopy
+BIN2O = $(BASEDIR)/bin2elf
+GFXCC = $(BASEDIR)/gfxcc
+FIXCNV = $(BASEDIR)/m68k/bin/fixcnv
 
 #######################################
 # Path to libraries and include files #
 #######################################
 
-INCDIR = $(BASEDIR)/neocore/include
-LIBDIR = $(BASEDIR)/neocore/lib
+#INCDIR = $(BASEDIR)/m68k/include
+#LIBDIR = $(BASEDIR)/m68k/lib
+
 TMPDIR = $(TEMP)
 
 ###################################
@@ -54,8 +59,8 @@ LIBS = -lneocore -lDATlib -lmath -lprocess -lc -lgcc
 #####################
 
 ASFLAGS = -m68000 --register-prefix-optional
-LDFLAGS = -Wl,-T$(BASEDIR)/src/system/neo$(OUTPUT).x -Xlinker -Map=$(NEOBUILDTEMP)/output.map
-CCFLAGS = -m68000 -O3 -Wall -flto -fuse-linker-plugin -fomit-frame-pointer -ffast-math -fno-builtin -nostartfiles -nodefaultlibs -D__$(OUTPUT)__
+LDFLAGS = -Wl,-T$(NEO_GEO_SYSTEM) -Xlinker -Map=$(NEOBUILDTEMP)/output.map
+CCFLAGS = -m68000 -O3 -Wall -fomit-frame-pointer -ffast-math -fno-builtin -nostartfiles -nodefaultlibs -D__$(OUTPUT)__
 ARFLAGS = cr
 DEBUG = -g
 
@@ -67,26 +72,19 @@ FIXFILES = $(BASEDIR)/src/shared/fix_font.bmp
 ##############
 # Make rules #
 ##############
-# cmd_ : $(OBJ_LIB)
-# 	$(ECHO) "$(OBJ_LIB)" > cmd_
-
-# $(LIBDIR)/libneocore.a: cmd_
-# 	ar rs $(LIB)/libneocore.a $(LTO_PLUGIN) @cmd_
-# 	$(RM) cmd_
-
 all: $(FILEPRG)
 
 $(FILEPRG): $(NEOBUILDTEMP)/$(PROJECTNAME).o
 	$(OBJC) -O binary $< $@
 
 $(NEOBUILDTEMP)/$(PROJECTNAME).o: $(OBJS)
-	$(LD) -L$(LIBDIR) $(CCFLAGS) $(LDFLAGS) $(OBJS) $(LIBS) -o $@
+	$(LD) -L$(LIBRARY_PATH) $(CCFLAGS) $(LDFLAGS) $(OBJS) $(LIBS) -o $@
 
 $(NEOBUILDTEMP)/%.o: %.c
-	$(CC) -I$(INCDIR) $(CCFLAGS) -c $< -o $@
+	$(CC) -I$(INCLUDE_PATH) $(CCFLAGS) -c $< -o $@
 
 $(NEOBUILDTEMP)/%.o: */%.c
-	$(CC) -I$(INCDIR) $(CCFLAGS) -c $< -o $@
+	$(CC) -I$(INCLUDE_PATH) $(CCFLAGS) -c $< -o $@
 
 $(NEOBUILDTEMP)/%.o: %.s
 	$(AS) $(ASFLAGS) $< -o $@

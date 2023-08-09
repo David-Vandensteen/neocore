@@ -134,12 +134,15 @@ function Remove-Project {
 
 function Set-EnvPath {
   param (
+    [Parameter(Mandatory=$true)][String] $GCCPath,
     [Parameter(Mandatory=$true)][String] $PathNeoDevBin,
     [Parameter(Mandatory=$true)][String] $PathNeocoreBin
   )
 
   #$env:path = "c:\temp\gcc\sgdk\bin;c:\temp\gcc\neocore\bin;$env:windir\System32;$env:windir\System32\WindowsPowerShell\v1.0\"
-  $env:path = "c:\temp\gcc\MinGW-m68k-elf-13.1.0\bin;c:\temp\gcc\neocore\bin;$env:windir\System32;$env:windir\System32\WindowsPowerShell\v1.0\"
+
+  #$env:path = "c:\temp\gcc\MinGW-m68k-elf-13.1.0\bin;c:\temp\gcc\neocore\bin;$env:windir\System32;$env:windir\System32\WindowsPowerShell\v1.0\"
+  $env:path = "$GCCPath;c:\temp\gcc\neocore\bin;$env:windir\System32;$env:windir\System32\WindowsPowerShell\v1.0\"
 
   Write-Host "Env Path: $env:path"
   Write-Host "--------------------------------------------"
@@ -195,6 +198,7 @@ function Main {
   Write-Host "toolchain : $($buildConfig.pathToolchain)"
   Write-Host "--------------------------------------------"
   Write-Host ""
+  pause
 
   Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-logger.ps1"
   Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-sdk.ps1"
@@ -204,7 +208,13 @@ function Main {
 
   if ((Test-Path -Path $buildConfig.pathSpool) -eq $false) { New-Item -Path $buildConfig.pathSpool -ItemType Directory -Force }
 
-  Set-EnvPath -PathNeoDevBin $buildConfig.pathNeodevBin -PathNeocoreBin $buildConfig.pathNeocoreBin
+  Write-Host $Config.project.compiler.program.version
+  if ($Config.project.compiler.program.version -eq "2.95.2") { # TODO : default gcc 2.95.2
+    $gccPath = "$($buildConfig.pathNeoDev)\m68k\bin"
+  }
+
+  Set-EnvPath -GCCPath $gccPath -PathNeoDevBin $buildConfig.pathNeodevBin -PathNeocoreBin $buildConfig.pathNeocoreBin
+  pause
   $env:NEODEV = $buildConfig.pathNeodev
 
   if ((Test-Path -Path $buildConfig.pathNeoDevBin) -eq $false) { Install-SDK }
@@ -220,7 +230,10 @@ function Main {
   function BuilderProgram {
     Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-program.ps1"
     robocopy .\ $buildConfig.pathBuild /e /xf * | Out-Null
-    Write-Program -ProjectName $buildConfig.projectName -PathNeoDev $buildConfig.pathNeodev -MakeFile $buildConfig.makefile -PRGFile $buildConfig.PRGFile
+    if ($Config.project.compiler.program.version -eq "2.95.2") {
+      $gccPath = "$($buildConfig.pathNeoDev)\m68k\bin"
+    }
+    Write-Program -ProjectName $buildConfig.projectName -GCCPath $gccPath -PathNeoDev $buildConfig.pathNeodev -MakeFile $buildConfig.makefile -PRGFile $buildConfig.PRGFile
   }
 
   function BuilderSprite {
