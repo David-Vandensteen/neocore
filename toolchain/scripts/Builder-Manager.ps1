@@ -250,6 +250,7 @@ function Main {
     if ($Config.project.sound.cdda.tracks.track) { $configCDDA = $config.project.sound.cdda }
 
     Write-CUE `
+      -Rule $buildConfig.rule `
       -OutputFile "$($buildConfig.pathBuild)\$($buildConfig.projectName).cue" `
       -ISOName "$($buildConfig.projectName).iso" `
       -Config $configCDDA
