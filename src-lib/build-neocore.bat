@@ -18,7 +18,12 @@ rem TODO
 @REM set INCLUDE_PATH=C:\temp\gcc\neocore\include
 @REM set LIBRARY_PATH=C:\temp\gcc\neocore\lib
 
-set GCC_PATH=..\build\gcc\gcc-2.95.2
+rem TODO if gcc version ...
+
+rem set GCC_PATH=..\build\gcc\gcc-2.95.2
+set GCC_PATH=C:\temp\gcc\MinGW-m68k-elf-13.1.0\bin
+
+
 set INCLUDE_PATH=..\build\include
 set LIBRARY_PATH=..\build\lib
 
