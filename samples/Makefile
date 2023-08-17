@@ -11,16 +11,16 @@ NEOBUILDTEMP = $(PATHBUILD)
 # Base dir of your m68k gcc toolchain #
 #######################################
 
-BASEDIR = $(NEODEV)
+#BASEDIR = $(NEODEV)
 
-AS = $(BASEDIR)/as
-LD = $(BASEDIR)/gcc
-CC = $(BASEDIR)/gcc
-AR = $(BASEDIR)/ar
-OBJC = $(BASEDIR)/objcopy
-BIN2O = $(BASEDIR)/bin2elf
-GFXCC = $(BASEDIR)/gfxcc
-FIXCNV = $(BASEDIR)/m68k/bin/fixcnv
+AS = $(GCC_PATH)/as
+LD = $(GCC_PATH)/gcc
+CC = $(GCC_PATH)/gcc
+AR = $(GCC_PATH)/ar
+OBJC = $(GCC_PATH)/objcopy
+BIN2O = $(GCC_PATH)/bin2elf
+GFXCC = $(GCC_PATH)/gfxcc
+FIXCNV = $(GCC_PATH)/m68k/bin/fixcnv
 
 #######################################
 # Path to libraries and include files #

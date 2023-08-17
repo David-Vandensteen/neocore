@@ -13,9 +13,14 @@ set backupPath=%path%
 @REM if not exist %NEODEV% exit 1
 
 
-set GCC_PATH=C:\temp\gcc\neocore\gcc\gcc-2.95.2
-set INCLUDE_PATH=C:\temp\gcc\neocore\include
-set LIBRARY_PATH=C:\temp\gcc\neocore\lib
+rem TODO
+@REM set GCC_PATH=C:\temp\gcc\neocore\gcc\gcc-2.95.2
+@REM set INCLUDE_PATH=C:\temp\gcc\neocore\include
+@REM set LIBRARY_PATH=C:\temp\gcc\neocore\lib
+
+set GCC_PATH=..\build\gcc\gcc-2.95.2
+set INCLUDE_PATH=..\build\include
+set LIBRARY_PATH=..\build\lib
 
 if not exist %GCC_PATH% (
   echo %GCC_PATH% not found

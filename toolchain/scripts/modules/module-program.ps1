@@ -4,28 +4,27 @@ function Write-Program {
     [Parameter(Mandatory=$true)][String] $GCCPath,
     [Parameter(Mandatory=$true)][String] $PRGFile,
     [Parameter(Mandatory=$true)][String] $PathNeoDev,
-    [Parameter(Mandatory=$true)][String] $ProjectName
+    [Parameter(Mandatory=$true)][String] $ProjectName,
+    [Parameter(Mandatory=$true)][String] $BinPath
   )
   Logger-Step -Message "compiling program"
   if ((Test-Path -Path $MakeFile) -eq $false) { Logger-Error -Message "$MakeFile not found" }
 
   $env:PROJECT = $ProjectName
-  #$env:NEODEV = $PathNeoDev
-  #$env:NEODEV = "c:\temp\gcc\neocore"
-  #$env:NEODEV = "c:\temp\gcc"
+  $env:GCC_PATH = $GCCPath
 
-  $env:NEODEV = $GCCPath
   $env:FILEPRG = $PRGFile
   $env:PATHBUILD = $buildConfig.pathBuild
 
-  $env:INCLUDE_PATH = "C:\temp\gcc\neocore\include"
-  $env:LIBRARY_PATH = "C:\temp\gcc\neocore\lib"
-  $env:NEO_GEO_SYSTEM = "C:\temp\gcc\neocore\system\neocd.x"
+  $Config.project.compiler
 
-  $env:path = "$GCCPath;c:\temp\gcc\neocore\bin;$env:windir\System32;$env:windir\System32\WindowsPowerShell\v1.0\"
+  $env:INCLUDE_PATH = $(Resolve-Path -Path $Config.project.compiler.includePath)
+  $env:LIBRARY_PATH = $(Resolve-Path -Path $Config.project.compiler.libraryPath)
+  $env:NEO_GEO_SYSTEM = $(Resolve-Path -Path $Config.project.compiler.systemFile)
+
+  $env:path = "$GCCPath;$BinPath;$env:windir\System32;$env:windir\System32\WindowsPowerShell\v1.0\"
 
   Write-Host $env:path
-  pause
 
   & make -f $MakeFile
   if ((Test-Path -Path $PRGFile) -eq $true) {
