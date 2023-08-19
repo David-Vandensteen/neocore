@@ -59,8 +59,11 @@ LIBS = -lneocore -lDATlib -lmath -lprocess -lc -lgcc
 #####################
 
 ASFLAGS = -m68000 --register-prefix-optional
-LDFLAGS = -Wl,-T$(NEO_GEO_SYSTEM) -Xlinker -Map=$(NEOBUILDTEMP)/output.map
-CCFLAGS = -m68000 -O3 -Wall -fomit-frame-pointer -ffast-math -fno-builtin -nostartfiles -nodefaultlibs -D__$(OUTPUT)__
+LDFLAGS = -Wl,-shared -T$(NEO_GEO_SYSTEM) -Xlinker -Map=$(NEOBUILDTEMP)/output.map
+
+#CCFLAGS = -m68000 -O3 -Wall -fomit-frame-pointer -ffast-math -fno-builtin -nostartfiles -nodefaultlibs -D__$(OUTPUT)__
+CCFLAGS = -m68000 -O3 -Wall -fno-lto -fno-use-linker-plugin -fomit-frame-pointer -ffast-math -fno-builtin -nostartfiles -nodefaultlibs -D__$(OUTPUT)__
+
 ARFLAGS = cr
 DEBUG = -g
 

@@ -12,7 +12,29 @@ if not exist %NEODEV% echo SDK is needed
 if not exist %NEODEV% echo building a program will install the needed SDK and dependencies
 if not exist %NEODEV% exit 1
 
-path=%NEODEV%\m68k\bin;build\bin;%windir%\System32;%windir%\System32\WindowsPowerShell\v1.0\
+
+set GCC_PATH=..\build\gcc\gcc-2.95.2
+rem set GCC_PATH=..\build\gcc\MinGW-m68k-elf-13.1.0\bin
+
+set INCLUDE_PATH=..\build\include
+set LIBRARY_PATH=..\build\lib
+
+if not exist %GCC_PATH% (
+  echo %GCC_PATH% not found
+  exit 1
+)
+
+if not exist %INCLUDE_PATH% (
+  echo %INCLUDE_PATH% not found
+  exit 1
+)
+
+if not exist %LIBRARY_PATH% (
+  echo %LIBRARY_PATH% not found
+  exit 1
+)
+
+path=%GCC_PATH%;%windir%;%windir%\System32;%windir%\System32\WindowsPowerShell\v1.0\
 
 set error=0
 @echo on

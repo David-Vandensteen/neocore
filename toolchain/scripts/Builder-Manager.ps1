@@ -123,14 +123,20 @@ function Remove-Project {
 
 function Set-EnvPath {
   param (
-    [Parameter(Mandatory=$true)][String] $PathNeoDevBin,
-    [Parameter(Mandatory=$true)][String] $PathNeocoreBin
+    [Parameter(Mandatory=$true)][String] $GCCPath,
+    [Parameter(Mandatory=$true)][String] $Bin
+
+    #[Parameter(Mandatory=$true)][String] $PathNeoDevBin,
+    #[Parameter(Mandatory=$true)][String] $PathNeocoreBin
   )
-  $env:path = "$PathNeoDevBin;$PathNeocoreBin;$env:windir\System32;$env:windir\System32\WindowsPowerShell\v1.0\"
+
+  $env:path = "$GCCPath;$Bin;$env:windir\System32;$env:windir\System32\WindowsPowerShell\v1.0\"
+
   Write-Host "Env Path: $env:path"
   Write-Host "--------------------------------------------"
   Write-Host ""
 }
+
 
 function Main {
   param (
@@ -189,15 +195,30 @@ function Main {
 
   if ((Test-Path -Path $buildConfig.pathSpool) -eq $false) { New-Item -Path $buildConfig.pathSpool -ItemType Directory -Force }
 
-  Set-EnvPath -PathNeoDevBin $buildConfig.pathNeodevBin -PathNeocoreBin $buildConfig.pathNeocoreBin
+  #if ($Config.project.compiler.version -eq "2.95.2") { # TODO : default gcc 2.95.2
+    #$gccPath = "$($buildConfig.pathNeoDev)\m68k\bin"
+    #$gccPath = $Config.project.compiler.path
+  #}
+
+  $gccPath = "..\..\build\gcc\gcc-2.95.2"
+  Write-Host $gccPath
+
+  if ($Config.project.compiler.path) {
+    $gccPath = $Config.project.compiler.path
+  }
+
+  #Set-EnvPath -GCCPath $gccPath -PathNeoDevBin $buildConfig.pathNeodevBin -PathNeocoreBin $buildConfig.pathNeocoreBin
+  #Set-EnvPath -GCCPath $gccPath -PathNeoDevBin $buildConfig.pathNeodevBin -PathNeocoreBin $buildConfig.pathNeocoreBin
+
+  Set-EnvPath -GCCPath $gccPath -Bin "$($Config.project.buildPath)\bin"
   $env:NEODEV = $buildConfig.pathNeodev
 
   if ((Test-Path -Path $buildConfig.pathNeoDevBin) -eq $false) { Install-SDK }
   if ((Test-Path -Path $buildConfig.pathNeocoreBin) -eq $false) { Install-SDK }
   if ((Test-Path -Path $buildConfig.pathNeodev) -eq $false) { Install-SDK }
 
-  if ((Test-Path -Path "$($buildConfig.pathNeodev)\m68k\include\neocore.h") -eq $false) { Install-SDK }
-  if ((Test-Path -Path "$($buildConfig.pathNeodev)\m68k\lib\libneocore.a") -eq $false) { Install-SDK }
+  # TODO : if ((Test-Path -Path "$($buildConfig.pathNeodev)\m68k\include\neocore.h") -eq $false) { Install-SDK }
+  # TODO : if ((Test-Path -Path "$($buildConfig.pathNeodev)\m68k\lib\libneocore.a") -eq $false) { Install-SDK }
 
   if ($Rule -notmatch "^only:") { Remove-Project }
   if ((Test-Path -Path $buildConfig.pathBuild) -eq $false) { New-Item -Path $buildConfig.pathBuild -ItemType Directory -Force }
@@ -205,7 +226,17 @@ function Main {
   function BuilderProgram {
     Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-program.ps1"
     robocopy .\ $buildConfig.pathBuild /e /xf * | Out-Null
-    Write-Program -ProjectName $buildConfig.projectName -PathNeoDev $buildConfig.pathNeodev -MakeFile $buildConfig.makefile -PRGFile $buildConfig.PRGFile
+    if ($Config.project.compiler.program.version -eq "2.95.2") {
+      # $gccPath = "$($buildConfig.pathNeoDev)\m68k\bin"
+      $gccPath = $Config.project.compiler.program.path
+    }
+
+    Write-Program `
+      -ProjectName $buildConfig.projectName `
+      -GCCPath $gccPath -PathNeoDev $buildConfig.pathNeodev `
+      -MakeFile $buildConfig.makefile `
+      -PRGFile $buildConfig.PRGFile `
+      -BinPath "$($Config.project.buildPath)\bin"
   }
 
   function BuilderSprite {
