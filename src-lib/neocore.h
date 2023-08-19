@@ -754,16 +754,16 @@ void set_position_log(WORD _x, WORD _y);
 WORD inline log_info(char *txt);
 void log(char *message);
 
-void inline log_word(char *label, WORD value);
-void inline log_int(char *label, int value);
-void inline log_dword(char *label, DWORD value);
-void inline log_short(char *label, short value);
-void inline log_byte(char *label, BYTE value);
-void inline log_bool(char *label, BOOL value);
-void inline log_gas(char *label, GFX_Animated_Sprite *gfx_animated_sprite);
-void inline log_spriteInfo(char *label, spriteInfo *si);
-void inline log_box(char *label, Box *b);
-void inline log_pictureInfo(char *label, pictureInfo *pi);
+void log_word(char *label, WORD value);
+void log_int(char *label, int value);
+void log_dword(char *label, DWORD value);
+void log_short(char *label, short value);
+void log_byte(char *label, BYTE value);
+void log_bool(char *label, BOOL value);
+void log_gas(char *label, GFX_Animated_Sprite *gfx_animated_sprite);
+void log_spriteInfo(char *label, spriteInfo *si);
+void log_box(char *label, Box *b);
+void log_pictureInfo(char *label, pictureInfo *pi);
 
   /*---------------*/
  /* SOUND         */

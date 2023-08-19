@@ -20,8 +20,8 @@ rem TODO
 
 rem TODO if gcc version ...
 
-rem set GCC_PATH=..\build\gcc\gcc-2.95.2
-set GCC_PATH=C:\temp\gcc\MinGW-m68k-elf-13.1.0\bin
+set GCC_PATH=..\build\gcc\gcc-2.95.2
+rem set GCC_PATH=C:\temp\gcc\MinGW-m68k-elf-13.1.0\bin
 
 
 set INCLUDE_PATH=..\build\include

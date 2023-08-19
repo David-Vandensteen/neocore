@@ -1173,7 +1173,7 @@ void set_pos_log(WORD _x, WORD _y){
   y_default = y;
 }
 
-WORD inline log_info(char *label){
+WORD log_info(char *label){
   #ifdef LOGGER_ON
   fixPrintf(x, y , 0, 0 , label);
   autoInc();
@@ -1185,7 +1185,7 @@ void log(char *message) {
   log_info(message);
 }
 
-void inline log_word(char *label, WORD value){
+void log_word(char *label, WORD value){
   #ifdef LOGGER_ON
   WORD yc = y;
   x = x_default + log_info(label) + 2;
@@ -1194,7 +1194,7 @@ void inline log_word(char *label, WORD value){
   #endif
 }
 
-void inline log_int(char *label, int value){
+void log_int(char *label, int value){
   #ifdef LOGGER_ON
   WORD yc = y;
   x = x_default + log_info(label) + 2;
@@ -1203,7 +1203,7 @@ void inline log_int(char *label, int value){
   #endif
 }
 
-void inline log_dword(char *label, DWORD value){
+void log_dword(char *label, DWORD value){
   #ifdef LOGGER_ON
   WORD yc = y;
   x = x_default + log_info(label) + 2;
@@ -1212,7 +1212,7 @@ void inline log_dword(char *label, DWORD value){
   #endif
 }
 
-void inline log_short(char *label, short value) {
+void log_short(char *label, short value) {
   #ifdef LOGGER_ON
   WORD yc = y;
   x = x_default + log_info(label) + 2;
@@ -1221,7 +1221,7 @@ void inline log_short(char *label, short value) {
   #endif
 }
 
-void inline log_byte(char *label, BYTE value) {
+void log_byte(char *label, BYTE value) {
   #ifdef LOGGER_ON
   WORD yc = y;
   x = x_default + log_info(label) + 2;
@@ -1230,7 +1230,7 @@ void inline log_byte(char *label, BYTE value) {
   #endif
 }
 
-void inline log_bool(char *label, BOOL value) {
+void log_bool(char *label, BOOL value) {
   #ifdef LOGGER_ON
   WORD yc = y;
   x = x_default + log_info(label) + 2;
@@ -1239,7 +1239,7 @@ void inline log_bool(char *label, BOOL value) {
   #endif
 }
 
-void inline log_gas(char *label, GFX_Animated_Sprite *gfx_animated_sprite) {
+void log_gas(char *label, GFX_Animated_Sprite *gfx_animated_sprite) {
   #ifdef LOGGER_ON
   log_info(label);
   log_word("BASESPRITE : " , gfx_animated_sprite->aSpriteDAT.baseSprite);
@@ -1257,7 +1257,7 @@ void inline log_gas(char *label, GFX_Animated_Sprite *gfx_animated_sprite) {
   #endif
 }
 
-void inline log_spriteInfo(char *label, spriteInfo *si) {
+void log_spriteInfo(char *label, spriteInfo *si) {
   #ifdef LOGGER_ON
   log_info(label);
   log_word("PALCOUNT : ", si->palCount);
@@ -1266,7 +1266,7 @@ void inline log_spriteInfo(char *label, spriteInfo *si) {
   #endif
 }
 
-void inline log_box(char *label, Box *b) {
+void log_box(char *label, Box *b) {
   #ifdef LOGGER_ON
   log_info(label);
   log_short("P0X", (short)b->p0.x);
@@ -1292,7 +1292,7 @@ void inline log_box(char *label, Box *b) {
   #endif
 }
 
-void inline log_pictureInfo(char *label, pictureInfo *pi) {
+void log_pictureInfo(char *label, pictureInfo *pi) {
   #ifdef LOGGER_ON
   log_info(label);
   log_word("COLSIZE : ", (WORD)pi->colSize);
