@@ -9,7 +9,7 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.2, and includes t
 The library is mainly tested on Raine and MAME emulators and is compatible with Windows 10 and Windows 11 for building.
   
 I share my tools and my code, these could possibly help your projects on this platform.  
-(**Doxygen doc**) http://azertyvortex.free.fr/neocore-doxy/r3/neocore_8h.html  
+(**Doxygen doc**) http://azertyvortex.free.fr/neocore-doxy/r4/neocore_8h.html  
     
 ## Feature
 
@@ -55,11 +55,11 @@ ___***Warn : mak script override path environment variable during the compiling,
 ```
 - **Run with Raine**
 ```cmd
-.\mak.bat run:raine
+.\mak.bat raine
 ```
 - **Run with Mame**
 ```cmd
-.\mak.bat run:mame
+.\mak.bat mame
 ```
 or
 ```cmd
