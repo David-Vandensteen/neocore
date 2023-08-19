@@ -11,7 +11,7 @@
 #define NEOCORE_H
 
 #include <DATlib.h>
-// #include <math.h>
+#include <math.h>
 
 #define __ALIGN1__      __attribute__ ((aligned (1)))
 #define __ALIGN2__      __attribute__ ((aligned (2)))
