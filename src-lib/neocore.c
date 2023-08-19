@@ -92,16 +92,16 @@ static int y = LOGGER_Y_INIT;
 static int x_default = LOGGER_X_INIT;
 static int y_default = LOGGER_Y_INIT;
 
-void inline static setX(WORD _x);
-void inline static setY(WORD _y);
-void inline static setPosDefault();
-WORD inline static countChar(char *txt);
-void inline static autoInc(); // todo (minor) - logger_auto ... ?
+void static setX(WORD _x);
+void static setY(WORD _y);
+void static setPosDefault();
+WORD static countChar(char *txt);
+void static autoInc(); // todo (minor) - logger_auto ... ?
 
-void inline static setX(WORD _x) { x = _x; }
-void inline static setY(WORD _y) { y = _y; }
+void static setX(WORD _x) { x = _x; }
+void static setY(WORD _y) { y = _y; }
 
-void inline static setPosDefault() {
+void static setPosDefault() {
   x = LOGGER_X_INIT;
   y = LOGGER_Y_INIT;
 }
@@ -187,7 +187,7 @@ static WORD palette_index_manager_use(paletteInfo *pi) {
   return 0; // TODO : no zero return
 }
 
-WORD inline static countChar(char *txt) {
+WORD static countChar(char *txt) {
   WORD i = 0;
     while (txt[i] != '\0') {
     i++;
@@ -195,7 +195,7 @@ WORD inline static countChar(char *txt) {
   return i;
 }
 
-void inline static autoInc() { y++; }
+void static autoInc() { y++; }
 
 NEOCORE_INIT
 JOYPAD_INIT_P1
@@ -752,7 +752,7 @@ void destroy_gas(GFX_Animated_Sprite *animated_sprite) {
  //                                   GPU                                    //
 //--------------------------------------------------------------------------//
 
-void inline init_gpu() {
+void init_gpu() {
   backgroundColor(0x7000); // todo (minor) - macro with some colors ...
   clearFixLayer();
   initGfx();
@@ -762,7 +762,7 @@ void inline init_gpu() {
   palette_index_manager_init();
 }
 
-void inline clear_vram() {
+void clear_vram() {
   WORD addr = 0x0000;
   WORD addr_end = 0x8FFF;
   disableIRQ();
@@ -780,7 +780,7 @@ void inline clear_vram() {
  /* GPU VBL                      */
 /*------------------------------*/
 
-DWORD inline wait_vbl_max(WORD nb) {
+DWORD wait_vbl_max(WORD nb) {
   WORD i = 0;
   for (i = 0; i <= nb; i++) waitVBlank();
   return DAT_frameCounter;
@@ -836,7 +836,7 @@ WORD get_max_palette_index_used() {
 /*--------------*/
 
 WORD get_shrunk_proportional_table(WORD index) { return shrunk_table_prop[index]; } // todo (minor) - rename shrunk_proportional_table
-void inline shrunk_addr(WORD addr, WORD shrunk_value) { SC234Put(addr, shrunk_value); }
+void shrunk_addr(WORD addr, WORD shrunk_value) { SC234Put(addr, shrunk_value); }
 
 WORD shrunk_forge(BYTE xc, BYTE yc) { // todo (minor) - xcF, ycFF
   //F FF - x (hor) , y (vert)
@@ -1026,7 +1026,7 @@ void debug_joypad(BYTE id) {
   if (joypad_is_d(id))      {  fix_print_neocore(10, 11,  "JOYPAD D    "); }
 }
 
-void inline debug_joypad_p1() {
+void debug_joypad_p1() {
   JOYPAD_READ_P1
   if (joypad_p1_is_start())  {  fix_print_neocore(10, 11,  "JOYPAD START"); }
   if (joypad_p1_is_up())     {  fix_print_neocore(10, 11,  "JOYPAD UP   "); }
@@ -1128,7 +1128,7 @@ int get_random(int range) {
   return RAND(range);
 }
 
-void inline fix_print_neocore(int x, int y, char *label) { fixPrint(x, y, 0, 0, label); }
+void fix_print_neocore(int x, int y, char *label) { fixPrint(x, y, 0, 0, label); }
 
 WORD free_ram_info() {
   // $000000  $0FFFFF    Vector Table, 68k program (.PRG files), 68k RAM

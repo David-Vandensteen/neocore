@@ -566,15 +566,15 @@ void destroy_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic);
  //                                   GPU                                    //
 //--------------------------------------------------------------------------//
 
-void inline init_gpu();
-void inline clear_vram();
+void init_gpu();
+void clear_vram();
 char get_sin(WORD index);
 
   /*------------------------------*/
  /* GPU VBL                      */
 /*------------------------------*/
 
-DWORD inline wait_vbl_max(WORD nb);
+DWORD wait_vbl_max(WORD nb);
 #define wait_vbl() update_adpcm_player(); waitVBlank()
 
   /*------------------------------*/
@@ -603,7 +603,7 @@ int shrunk_centroid_get_translated_x(short centerPosX, WORD tileWidth, BYTE shru
 int shrunk_centroid_get_translated_y(short centerPosY, WORD tileHeight, BYTE shrunkY);
 void shrunk(WORD base_sprite, WORD max_width, WORD value);
 WORD shrunk_forge(BYTE xc, BYTE yc);
-void inline shrunk_addr(WORD addr, WORD shrunk_value);
+void shrunk_addr(WORD addr, WORD shrunk_value);
 WORD shrunk_range(WORD addr_start, WORD addr_end, WORD shrunk_value);
 
   //--------------------------------------------------------------------------//
@@ -716,7 +716,7 @@ void debug_joypad(BYTE id);
  * @deprecated since 1.0.5
  * @see debug_joypad(id) instead
  */
-void inline debug_joypad_p1();
+void debug_joypad_p1();
 
   //----------------------------------------------------------------------------//
  //                                  UTIL                                      //
@@ -732,7 +732,7 @@ BOOL each_frame(DWORD frame);
 short get_positive(short num);
 short get_inverse(int num); // TODO TEST
 int get_random(int range);
-void inline fix_print_neocore(int x, int y, char *label);
+void fix_print_neocore(int x, int y, char *label);
 WORD free_ram_info();
 #define close_vbl() SCClose()
 #define get_frame_counter() DAT_frameCounter
@@ -751,7 +751,7 @@ void set_pos_log(WORD _x, WORD _y);
 
 void set_position_log(WORD _x, WORD _y);
 
-WORD inline log_info(char *txt);
+WORD log_info(char *txt);
 void log(char *message);
 
 void log_word(char *label, WORD value);
