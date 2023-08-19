@@ -1,20 +1,20 @@
 @echo off
 set backupPath=%path%
-@REM set NEODEV=build\neodev-sdk
+set NEODEV=build\neodev-sdk
 
-@REM if exist ..\..\build set NEODEV=..\..\build\neodev-sdk
-@REM if exist ..\build set NEODEV=..\build\neodev-sdk
-@REM if exist build set NEODEV=build\neodev-sdk
+if exist ..\..\build set NEODEV=..\..\build\neodev-sdk
+if exist ..\build set NEODEV=..\build\neodev-sdk
+if exist build set NEODEV=build\neodev-sdk
 
-@REM if not exist %NEODEV% echo SDK not found
-@REM if not exist %NEODEV% echo build a program before compiling neocore lib
-@REM if not exist %NEODEV% echo SDK is needed
-@REM if not exist %NEODEV% echo building a program will install the needed SDK and dependencies
-@REM if not exist %NEODEV% exit 1
+if not exist %NEODEV% echo SDK not found
+if not exist %NEODEV% echo build a program before compiling neocore lib
+if not exist %NEODEV% echo SDK is needed
+if not exist %NEODEV% echo building a program will install the needed SDK and dependencies
+if not exist %NEODEV% exit 1
 
 
-rem set GCC_PATH=..\build\gcc\gcc-2.95.2
-set GCC_PATH=..\build\gcc\MinGW-m68k-elf-13.1.0\bin
+set GCC_PATH=..\build\gcc\gcc-2.95.2
+rem set GCC_PATH=..\build\gcc\MinGW-m68k-elf-13.1.0\bin
 
 set INCLUDE_PATH=..\build\include
 set LIBRARY_PATH=..\build\lib

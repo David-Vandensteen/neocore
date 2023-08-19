@@ -18,9 +18,13 @@ function Write-Program {
 
   $Config.project.compiler
 
-  $env:INCLUDE_PATH = $(Resolve-Path -Path $Config.project.compiler.includePath)
-  $env:LIBRARY_PATH = $(Resolve-Path -Path $Config.project.compiler.libraryPath)
-  $env:NEO_GEO_SYSTEM = $(Resolve-Path -Path $Config.project.compiler.systemFile)
+  $env:INCLUDE_PATH = "..\..\build\include"
+  $env:LIBRARY_PATH = "..\..\build\lib"
+  $env:NEO_GEO_SYSTEM = "..\..\build\system\neocd.x"
+
+  if ($Config.project.compiler.includePath) { $env:INCLUDE_PATH = $(Resolve-Path -Path $Config.project.compiler.includePath) }
+  if ($Config.project.compiler.libraryPath) { $env:LIBRARY_PATH = $(Resolve-Path -Path $Config.project.compiler.libraryPath) }
+  if ($Config.project.compiler.systemFile) { $env:NEO_GEO_SYSTEM = $(Resolve-Path -Path $Config.project.compiler.systemFile) }
 
   $env:path = "$GCCPath;$BinPath;$env:windir\System32;$env:windir\System32\WindowsPowerShell\v1.0\"
 
