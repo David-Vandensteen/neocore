@@ -1,14 +1,3 @@
-#INC = $(NEODEV)\include
-#LIB = $(NEODEV)\lib
-
-# TODO : parametric NEOBUILDATA
-NEOBUILDDATA = ..\build
-
-RM = $(NEOBUILDDATA)\bin\rm.exe
-MKDIR = $(NEOBUILDDATA)\bin\mkdir.exe
-
-ASFLAGS = -m68000 --register-prefix-optional
-
 install: neocore
 
 neocore:
@@ -16,14 +5,7 @@ neocore:
 #	cp neocore.h $(INCLUDE_PATH)
 #	gcc -I$(INC) -m68000 -O3 -Wall -fno-lto -fno-use-linker-plugin -fomit-frame-pointer -ffast-math -fno-builtin -nostartfiles -nodefaultlibs -D__cd__ -c neocore.c -o $(LIB)\libneocore.a
 	gcc -I$(INCLUDE_PATH) -m68000 -O3 -Wall -fomit-frame-pointer -ffast-math -fno-builtin -nostartfiles -nodefaultlibs -D__cd__ -c neocore.c -o $(LIBRARY_PATH)\libneocore.a
-# TODO : fix clean & uninstall
 
-clean:
-	$(RM) -f $(LIBRARY_PATH)\libneocore.a
-	$(RM) -f $(INCLUDE_PATH)\neocore.h
-
-uninstall:
-	$(RM) -rf --no-preserve-root $(NEOBUILDDATA)
 
 debug:
 	@echo DEBUG

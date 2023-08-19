@@ -13,16 +13,8 @@ set backupPath=%path%
 @REM if not exist %NEODEV% exit 1
 
 
-rem TODO
-@REM set GCC_PATH=C:\temp\gcc\neocore\gcc\gcc-2.95.2
-@REM set INCLUDE_PATH=C:\temp\gcc\neocore\include
-@REM set LIBRARY_PATH=C:\temp\gcc\neocore\lib
-
-rem TODO if gcc version ...
-
 rem set GCC_PATH=..\build\gcc\gcc-2.95.2
-set GCC_PATH=C:\temp\gcc\MinGW-m68k-elf-13.1.0\bin
-
+set GCC_PATH=..\build\gcc\MinGW-m68k-elf-13.1.0\bin
 
 set INCLUDE_PATH=..\build\include
 set LIBRARY_PATH=..\build\lib

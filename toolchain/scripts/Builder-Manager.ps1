@@ -195,10 +195,10 @@ function Main {
 
   if ((Test-Path -Path $buildConfig.pathSpool) -eq $false) { New-Item -Path $buildConfig.pathSpool -ItemType Directory -Force }
 
-  Write-Host $Config.project.compiler.program.version
-  if ($Config.project.compiler.program.version -eq "2.95.2") { # TODO : default gcc 2.95.2
+  Write-Host $Config.project.compiler.version
+  if ($Config.project.compiler.version -eq "2.95.2") { # TODO : default gcc 2.95.2
     #$gccPath = "$($buildConfig.pathNeoDev)\m68k\bin"
-    $gccPath = $Config.project.compiler.program.path
+    $gccPath = $Config.project.compiler.path
   }
 
   #Set-EnvPath -GCCPath $gccPath -PathNeoDevBin $buildConfig.pathNeodevBin -PathNeocoreBin $buildConfig.pathNeocoreBin
