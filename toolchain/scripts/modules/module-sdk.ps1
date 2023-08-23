@@ -52,6 +52,7 @@ function Install-SDK {
   #Install-Component -URL "$($buildConfig.baseURL)/MinGW-m68k-elf-13.1.0.zip" -PathDownload $downloadPath -PathInstall "$($installPath)\gcc"
 
   Install-Neocore
-  Copy-Item -Path ..\..\manifest.xml $installPath -Force -ErrorAction Stop
+  $manifestFile = "$($buildConfig.pathToolchain)\..\manifest.xml"
+  Copy-Item -Path $manifestFile $installPath -Force -ErrorAction Stop
   Copy-Item -Path "$($buildConfig.pathToolchain)\..\manifest.xml" $buildConfig.pathNeocore -Force -ErrorAction Stop
 }
