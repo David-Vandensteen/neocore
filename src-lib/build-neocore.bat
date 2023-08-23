@@ -2,39 +2,50 @@
 set backupPath=%path%
 set NEODEV=build\neodev-sdk
 
-if exist ..\..\build set NEODEV=..\..\build\neodev-sdk
-if exist ..\build set NEODEV=..\build\neodev-sdk
-if exist build set NEODEV=build\neodev-sdk
+set gccPath="..\build\gcc\gcc-2.95.2"
+set includePath="..\build\include"
+set libraryPath="..\build\lib"
 
-if not exist %NEODEV% echo SDK not found
-if not exist %NEODEV% echo build a program before compiling neocore lib
-if not exist %NEODEV% echo SDK is needed
-if not exist %NEODEV% echo building a program will install the needed SDK and dependencies
-if not exist %NEODEV% exit 1
+:initial
+if "%1"=="" goto done
+echo              %1
+set aux=%1
+if "%aux:~0,1%"=="-" (
+   set nome=%aux:~1,250%
+) else (
+   set "%nome%=%1"
+   set nome=
+)
+shift
+goto initial
+:done
 
+echo %gccPath%
+echo %includePath%
+echo %libraryPath%
 
-set GCC_PATH=..\build\gcc\gcc-2.95.2
-rem set GCC_PATH=..\build\gcc\MinGW-m68k-elf-13.1.0\bin
+rem gccPath=..\build\gcc\gcc-2.95.2
+rem gccPath=..\build\gcc\MinGW-m68k-elf-13.1.0\bin
 
-set INCLUDE_PATH=..\build\include
-set LIBRARY_PATH=..\build\lib
+set INCLUDE_PATH=%includePath%
+set LIBRARY_PATH=%libraryPath%
 
-if not exist %GCC_PATH% (
-  echo %GCC_PATH% not found
+if not exist %gccPath% (
+  echo %gccPath% not found
   exit 1
 )
 
-if not exist %INCLUDE_PATH% (
-  echo %INCLUDE_PATH% not found
+if not exist %includePath% (
+  echo %includePath% not found
   exit 1
 )
 
-if not exist %LIBRARY_PATH% (
-  echo %LIBRARY_PATH% not found
+if not exist %libraryPath% (
+  echo %libraryPath% not found
   exit 1
 )
 
-path=%GCC_PATH%;%windir%;%windir%\System32;%windir%\System32\WindowsPowerShell\v1.0\
+path=%gccPath%;%windir%;%windir%\System32;%windir%\System32\WindowsPowerShell\v1.0\
 
 set error=0
 @echo on
