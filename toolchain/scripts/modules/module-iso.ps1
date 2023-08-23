@@ -1,5 +1,8 @@
-Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-install-component.ps1"
-Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-mp3towav.ps1"
+Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-install-component.ps1"
+Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-mp3towav.ps1"
+
+#Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-install-component.ps1"
+#Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-mp3towav.ps1"
 
 function Write-ISO {
   param (

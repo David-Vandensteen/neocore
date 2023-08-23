@@ -1,8 +1,10 @@
-Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-install-component.ps1"
+Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-install-component.ps1"
+
+#Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-install-component.ps1"
 
 function Install-Neocore {
   $buildPath = $(Resolve-Path $buildConfig.pathNeocore)
- pushd "$($buildConfig.pathToolchain)\..\src-lib"
+ pushd "$($Config.project.neocorePath)\src-lib"
  .\build-neocore.bat `
   -gccPath $buildPath\gcc\gcc-2.95.2 `
   -includePath $buildPath\include `
@@ -52,7 +54,7 @@ function Install-SDK {
   #Install-Component -URL "$($buildConfig.baseURL)/MinGW-m68k-elf-13.1.0.zip" -PathDownload $downloadPath -PathInstall "$($installPath)\gcc"
 
   Install-Neocore
-  $manifestFile = "$($buildConfig.pathToolchain)\..\manifest.xml"
+  $manifestFile = "$($Config.project.neocorePath)\manifest.xml"
   Copy-Item -Path $manifestFile $installPath -Force -ErrorAction Stop
-  Copy-Item -Path "$($buildConfig.pathToolchain)\..\manifest.xml" $buildConfig.pathNeocore -Force -ErrorAction Stop
+  Copy-Item -Path "$($Config.project.neocorePath)\manifest.xml" $buildConfig.pathNeocore -Force -ErrorAction Stop
 }

@@ -49,6 +49,7 @@ path=%gccPath%;%windir%;%windir%\System32;%windir%\System32\WindowsPowerShell\v1
 
 set error=0
 @echo on
+copy /y neocore.h %includePath%
 make -f Makefile %1 %2 %3
 if %errorlevel% neq 0 (
   @echo off

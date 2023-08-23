@@ -71,30 +71,30 @@ function Check {
     if (-Not($Config.project.name)) { Check-XMLError -Entry "project.name" }
     if (-Not($Config.project.version)) { Check-XMLError -Entry "project.version" }
     if (-Not($Config.project.makefile)) { Check-XMLError -Entry "project.makefile" }
-    if (-Not($Config.project.toolchainPath)) { Check-XMLError -Entry "project.toolchainPath" }
+    if (-Not($Config.project.neocorePath)) { Check-XMLError -Entry "project.neocorePath" }
     if (-Not($Config.project.buildPath)) { Check-XMLError -Entry "project.buildPath" }
     if (-Not($Config.project.distPath)) { Check-XMLError -Entry "project.distPath" }
     if (-Not($Config.project.XMLDATFile)) { Check-XMLError -Entry "project.XMLDATFile" }
   }
   function Check-Path {
     if ((Test-Path -Path $Config.project.makefile) -eq $false) { Check-PathError -Path $Config.project.makefile }
-    if ((Test-Path -Path $Config.project.toolchainPath) -eq $false) { Check-PathError -Path $Config.project.toolchainPath }
+    if ((Test-Path -Path $Config.project.neocorePath) -eq $false) { Check-PathError -Path $Config.project.neocorePath }
     if ((Test-Path -Path $Config.project.XMLDATFile) -eq $false) { Check-PathError -Path $Config.project.XMLDATFile }
   }
   Write-Host "check config" -ForegroundColor Yellow
   Check-XML
   Check-Path
-  if ((Test-Path -Path "$($Config.project.buildPath)\manifest.xml") -eq $false) {
+  if ((Test-Path -Path "$($Config.project.neocorePath)\manifest.xml") -eq $false) {
     if (Test-Path -Path $Config.project.buildPath) {
       Write-Host "manifest not found : remove build cache" -ForegroundColor Blue
-      Write-Host "$($Config.project.buildPath) will be removed"
+      Write-Host "$($Config.project.buildPath) will be removed" # TODO abs path
       Pause
       Remove-Item $Config.project.buildPath -Recurse
     }
   }
 
-  if (Test-Path -Path "$($Config.project.buildPath)\manifest.xml") {
-    $checkManifest = Check-Manifest -ManifestSource "$($Config.project.toolchainPath)\..\manifest.xml" -ManifestCache "$($Config.project.buildPath)\manifest.xml"
+  if (Test-Path -Path "$($Config.project.neocorePath)\manifest.xml") {
+    $checkManifest = Check-Manifest -ManifestSource "$($Config.project.neocorePath)\manifest.xml" -ManifestCache "$($Config.project.neocorePath)\manifest.xml"
     if ($checkManifest -eq $false) {
       Write-Host "manifest has changed : remove build cache" -ForegroundColor Blue
       Write-Host "$($Config.project.buildPath) will be removed"
@@ -184,13 +184,12 @@ function Main {
   Write-Host "neocore folder : $($buildConfig.pathNeocore)"
   Write-Host "path build : $($buildConfig.pathBuild)"
   Write-Host "path dist : $($buildConfig.pathDist)"
-  Write-Host "toolchain : $($buildConfig.pathToolchain)"
   Write-Host "--------------------------------------------"
   Write-Host ""
 
-  Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-logger.ps1"
-  Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-sdk.ps1"
-  Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-emulators.ps1"
+  Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\module-logger.ps1"
+  Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\module-sdk.ps1"
+  Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\module-emulators.ps1"
 
   Stop-Emulators
 
@@ -220,7 +219,7 @@ function Main {
   if ((Test-Path -Path $buildConfig.pathBuild) -eq $false) { New-Item -Path $buildConfig.pathBuild -ItemType Directory -Force }
 
   function BuilderProgram {
-    Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-program.ps1"
+    Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-program.ps1"
     robocopy .\ $buildConfig.pathBuild /e /xf * | Out-Null
     if ($Config.project.compiler.program.version -eq "2.95.2") { $gccPath = $Config.project.compiler.program.path }
 
@@ -233,12 +232,12 @@ function Main {
   }
 
   function BuilderSprite {
-    Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-sprite.ps1"
+    Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-sprite.ps1"
     Write-Sprite -XMLFile $buildConfig.XMLDATFile -Format "cd" -OutputFile "$($buildConfig.pathBuild)\$($buildConfig.projectName)"
   }
 
   function BuilderISO {
-    Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-iso.ps1"
+    Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-iso.ps1"
 
     Write-Host "copy assets to $($buildConfig.pathBuild)\assets" -ForegroundColor Blue # TODO : remove hardcoded assets folder
     Robocopy /MIR assets "$($buildConfig.pathBuild)\assets" | Out-Null
@@ -308,14 +307,14 @@ function Main {
     BuilderISO
   }
   if ($Rule -eq "run:raine" -or $Rule -eq "raine") {
-    Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-raine.ps1"
+    Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-raine.ps1"
     BuilderSprite
     BuilderProgram
     BuilderISO
     RunnerRaine
   }
   if ($Rule -eq "run:mame" -or $Rule -eq "mame" -or $Rule -eq "run") {
-    Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-mame.ps1"
+    Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-mame.ps1"
     BuilderSprite
     BuilderProgram
     BuilderISO
@@ -323,11 +322,11 @@ function Main {
     RunnerMame
   }
   if ($Rule -eq "serve:raine") {
-    Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-sprite.ps1"
-    Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-program.ps1"
-    Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-iso.ps1"
-    Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-raine.ps1"
-    Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-watcher.ps1"
+    Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-sprite.ps1"
+    Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-program.ps1"
+    Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-iso.ps1"
+    Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-raine.ps1"
+    Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-watcher.ps1"
     While ($true) {
       BuilderSprite
       BuilderProgram
@@ -338,11 +337,11 @@ function Main {
     }
   }
   if ($Rule -eq "serve:mame" -or $Rule -eq "serve") {
-    Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-sprite.ps1"
-    Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-program.ps1"
-    Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-iso.ps1"
-    Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-mame.ps1"
-    Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-watcher.ps1"
+    Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-sprite.ps1"
+    Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-program.ps1"
+    Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-iso.ps1"
+    Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-mame.ps1"
+    Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-watcher.ps1"
     While ($true) {
       BuilderSprite
       BuilderProgram
@@ -354,7 +353,7 @@ function Main {
     }
   }
   if ($Rule -eq "dist:iso" -or $Rule -eq "dist:raine") {
-    Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-dist.ps1"
+    Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-dist.ps1"
     if ((Test-Path -Path $buildConfig.pathDist) -eq $false) { New-Item -Path $buildConfig.pathDist -ItemType Directory -Force }
     BuilderSprite
     BuilderProgram
@@ -366,8 +365,8 @@ function Main {
       -CUEFile "$($buildConfig.pathBuild)\$($buildConfig.projectName).cue" `
   }
   if ($Rule -eq "dist:mame" -or $Rule -eq "dist:chd") {
-    Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-mame.ps1"
-    Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-dist.ps1"
+    Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-mame.ps1"
+    Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-dist.ps1"
     if ((Test-Path -Path $buildConfig.pathDist) -eq $false) { New-Item -Path $buildConfig.pathDist -ItemType Directory -Force }
     BuilderSprite
     BuilderProgram
@@ -380,8 +379,8 @@ function Main {
       -HashFile "$($buildConfig.pathMame)\hash\neocd.xml"
   }
   if ($Rule -eq "dist") {
-    Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-mame.ps1"
-    Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-dist.ps1"
+    Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-mame.ps1"
+    Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-dist.ps1"
     if ((Test-Path -Path $buildConfig.pathDist) -eq $false) { New-Item -Path $buildConfig.pathDist -ItemType Directory -Force }
     BuilderSprite
     BuilderProgram
