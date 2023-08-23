@@ -2,9 +2,13 @@
 set backupPath=%path%
 set NEODEV=build\neodev-sdk
 
-set gccPath="..\build\gcc\gcc-2.95.2"
-set includePath="..\build\include"
-set libraryPath="..\build\lib"
+@REM set gccPath="..\build\gcc\gcc-2.95.2"
+@REM set includePath="..\build\include"
+@REM set libraryPath="..\build\lib"
+
+set gccPath="undefined"
+set includePath="undefined"
+set libraryPath="undefined"
 
 :initial
 if "%1"=="" goto done
@@ -23,6 +27,10 @@ goto initial
 echo %gccPath%
 echo %includePath%
 echo %libraryPath%
+
+if %gccPath%=="undefined" goto arguments_error
+if %includePath%=="undefined" goto arguments_error
+if %libraryPath%=="undefined" goto arguments_erro
 
 rem gccPath=..\build\gcc\gcc-2.95.2
 rem gccPath=..\build\gcc\MinGW-m68k-elf-13.1.0\bin
@@ -58,3 +66,7 @@ if %errorlevel% neq 0 (
 @echo off
 path=%backupPath%
 exit /b %error%
+
+:arguments_error
+echo missing arguments
+echo ex : build-neocore -gccPath ..\build\gcc\gcc-2.95.2 -includePath ..\build\include -libraryPath ..\build\include²
