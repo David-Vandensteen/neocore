@@ -244,8 +244,8 @@ function Main {
   function BuilderISO {
     Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-iso.ps1"
 
-    Write-Host "copy assets to $($buildConfig.pathBuild)\assets" -ForegroundColor Blue # TODO : remove hardcoded assets folder
-    Robocopy /MIR assets "$($buildConfig.pathBuild)\assets" | Out-Null
+    #Write-Host "copy assets to $($buildConfig.pathBuild)\assets" -ForegroundColor Blue # TODO : remove hardcoded assets folder
+    #Robocopy /MIR assets "$($buildConfig.pathBuild)\assets" | Out-Null
     # TODO : check lastexitcode
 
     Write-Cache `
@@ -293,7 +293,8 @@ function Main {
   }
 
   function RunnerMame {
-    $exeName = Split-Path $Config.project.emulator.mame.exeFile -Leaf -Resolve
+    #$exeName = Split-Path $Config.project.emulator.mame.exeFile -Leaf -Resolve
+    $exeName = [System.IO.Path]::GetFileName($Config.project.emulator.mame.exeFile)
     $mamePath = Split-Path $Config.project.emulator.mame.exeFile
 
     Mame `
@@ -304,7 +305,9 @@ function Main {
   }
 
   function RunnerRaine {
-    $exeName = Split-Path $Config.project.emulator.raine.exeFile -Leaf -Resolve
+    #$exeName = Split-Path $Config.project.emulator.raine.exeFile -Leaf -Resolve
+    $exeName = [System.IO.Path]::GetFileName($Config.project.emulator.raine.exeFile)
+
     $rainePath = Split-Path $Config.project.emulator.raine.exeFile
 
     Raine `

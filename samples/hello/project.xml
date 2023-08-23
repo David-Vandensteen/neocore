@@ -39,6 +39,10 @@
   <!-- for using cdda audio tracks, uncomment & set up your files
   Warning: track id 1 is reserved for the binary program
   <sound>
+    <sfx>
+      <pcm>assets\sounds\sfx\click.V1</pcm>
+      <z80>assets\sounds\sfx\click.M1</z80>
+    </sfx>
     <cdda>
       <tracks>
         <track>
