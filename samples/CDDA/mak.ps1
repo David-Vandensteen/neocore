@@ -1,7 +1,7 @@
 $projectSetting = "project.xml"
 [xml]$config = (Get-Content -Path $projectSetting)
 
-$toolchainPath = $config.project.toolchainPath
+$toolchainPath = "$($config.project.neocorePath)\toolchain"
 
 if ($args[0]) {
   powershell -ExecutionPolicy Bypass -File $toolchainPath\scripts\Builder-Manager.ps1 -ConfigFile $projectSetting -Rule $args[0]
