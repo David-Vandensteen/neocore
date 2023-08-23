@@ -125,9 +125,6 @@ function Set-EnvPath {
   param (
     [Parameter(Mandatory=$true)][String] $GCCPath,
     [Parameter(Mandatory=$true)][String] $Bin
-
-    #[Parameter(Mandatory=$true)][String] $PathNeoDevBin,
-    #[Parameter(Mandatory=$true)][String] $PathNeocoreBin
   )
 
   $env:path = "$GCCPath;$Bin;$env:windir\System32;$env:windir\System32\WindowsPowerShell\v1.0\"
@@ -195,7 +192,7 @@ function Main {
 
   if ((Test-Path -Path $buildConfig.pathSpool) -eq $false) { New-Item -Path $buildConfig.pathSpool -ItemType Directory -Force }
 
-  #if ($Config.project.compiler.version -eq "2.95.2") { # TODO : default gcc 2.95.2
+  #if ($Config.project.compiler.version -eq "2.95.2") {
     #$gccPath = "$($buildConfig.pathNeoDev)\m68k\bin"
     #$gccPath = $Config.project.compiler.path
   #}
@@ -203,12 +200,7 @@ function Main {
   $gccPath = "..\..\build\gcc\gcc-2.95.2"
   Write-Host $gccPath
 
-  if ($Config.project.compiler.path) {
-    $gccPath = $Config.project.compiler.path
-  }
-
-  #Set-EnvPath -GCCPath $gccPath -PathNeoDevBin $buildConfig.pathNeodevBin -PathNeocoreBin $buildConfig.pathNeocoreBin
-  #Set-EnvPath -GCCPath $gccPath -PathNeoDevBin $buildConfig.pathNeodevBin -PathNeocoreBin $buildConfig.pathNeocoreBin
+  if ($Config.project.compiler.path) { $gccPath = $Config.project.compiler.path }
 
   Set-EnvPath -GCCPath $gccPath -Bin "$($Config.project.buildPath)\bin"
   $env:NEODEV = $buildConfig.pathNeodev
@@ -226,10 +218,7 @@ function Main {
   function BuilderProgram {
     Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-program.ps1"
     robocopy .\ $buildConfig.pathBuild /e /xf * | Out-Null
-    if ($Config.project.compiler.program.version -eq "2.95.2") {
-      # $gccPath = "$($buildConfig.pathNeoDev)\m68k\bin"
-      $gccPath = $Config.project.compiler.program.path
-    }
+    if ($Config.project.compiler.program.version -eq "2.95.2") { $gccPath = $Config.project.compiler.program.path }
 
     Write-Program `
       -ProjectName $buildConfig.projectName `

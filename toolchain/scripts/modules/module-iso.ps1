@@ -109,7 +109,6 @@ function Write-CUE {
     }
   }
   (Get-Content -Path $OutputFile -Raw).Replace("`r`n","`n") | Set-Content -Path $OutputFile -Force -NoNewline
-  # (Get-Content -Path $OutputFile -Raw) | Out-File -Encoding ascii -FilePath $OutputFile -Force
 
   if ((Test-Path -Path $OutputFile) -eq $true) {
     Logger-Success -Message "builded CUE is available to $OutputFile"
