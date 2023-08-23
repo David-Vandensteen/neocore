@@ -1,8 +1,12 @@
 Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-install-component.ps1"
 
 function Install-Neocore {
+  $buildPath = $(Resolve-Path $buildConfig.pathNeocore)
  pushd "$($buildConfig.pathToolchain)\..\src-lib"
- .\build-neocore.bat
+ .\build-neocore.bat `
+  -gccPath $buildPath\gcc\gcc-2.95.2 `
+  -includePath $buildPath\include `
+  -libraryPath $buildPath\lib
  if ($LASTEXITCODE -ne 0) {
   popd
   Logger-Error -Message  "lib neocore was not builded"
