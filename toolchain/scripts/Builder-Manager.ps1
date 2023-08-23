@@ -254,16 +254,28 @@ function Main {
       -PathISOBuildFolder "$($buildConfig.pathBuild)\iso" `
       -PathCDTemplate "$($buildConfig.pathNeocore)\cd_template" `
 
+    # if ($config.project.sound.sfx.pcm) {
+    #   Write-SFX `
+    #   -PathISOBuildFolder "$($buildConfig.pathBuild)\iso" `
+    #   -PCMFile "$($buildConfig.pathBuild)\$($config.project.sound.sfx.pcm)"
+    # }
+
+    # if ($config.project.sound.sfx.z80) {
+    #   Write-SFX `
+    #     -PathISOBuildFolder "$($buildConfig.pathBuild)\iso" `
+    #     -Z80File "$($buildConfig.pathBuild)\$($config.project.sound.sfx.z80)"
+    # }
+
     if ($config.project.sound.sfx.pcm) {
       Write-SFX `
       -PathISOBuildFolder "$($buildConfig.pathBuild)\iso" `
-      -PCMFile "$($buildConfig.pathBuild)\$($config.project.sound.sfx.pcm)"
+      -PCMFile "$($config.project.sound.sfx.pcm)"
     }
 
     if ($config.project.sound.sfx.z80) {
       Write-SFX `
         -PathISOBuildFolder "$($buildConfig.pathBuild)\iso" `
-        -Z80File "$($buildConfig.pathBuild)\$($config.project.sound.sfx.z80)"
+        -Z80File "$($config.project.sound.sfx.z80)"
     }
 
     Write-ISO `
