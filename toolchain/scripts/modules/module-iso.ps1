@@ -91,7 +91,15 @@ function Write-CUE {
       if ((Test-Path -Path "$($buildConfig.pathNeocore)\bin\mpg123-1.31.3-static-x86-64") -eq $false) {
         Install-Component -URL "$($buildConfig.baseURL)/mpg123-1.31.3-static-x86-64.zip" -PathDownload $buildConfig.pathSpool -PathInstall "$($buildConfig.pathNeocore)\bin"
       }
-      Write-WAV -mpg123 "$($buildConfig.pathNeocore)\bin\mpg123-1.31.3-static-x86-64\mpg123.exe" -WAVFile "$($buildConfig.pathBuild)\$path\$baseName.wav" -MP3File "$($buildConfig.pathBuild)\$path\$baseName.mp3"
+      # Write-WAV `
+      #   -mpg123 "$($buildConfig.pathNeocore)\bin\mpg123-1.31.3-static-x86-64\mpg123.exe" `
+      #   -WAVFile "$($buildConfig.pathBuild)\$path\$baseName.wav" `
+      #   -MP3File "$($buildConfig.pathBuild)\$path\$baseName.mp3"
+      Write-WAV `
+        -mpg123 "$($buildConfig.pathNeocore)\bin\mpg123-1.31.3-static-x86-64\mpg123.exe" `
+        -WAVFile "$($buildConfig.pathBuild)\$path\$baseName.wav" `
+        -MP3File "$path\$baseName.mp3"
+      $File = "$path\$baseName.wav"
     }
 
     return (
