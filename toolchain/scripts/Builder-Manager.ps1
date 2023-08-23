@@ -87,6 +87,8 @@ function Check {
   if ((Test-Path -Path "$($Config.project.buildPath)\manifest.xml") -eq $false) {
     if (Test-Path -Path $Config.project.buildPath) {
       Write-Host "manifest not found : remove build cache" -ForegroundColor Blue
+      Write-Host "$($Config.project.buildPath) will be removed"
+      Pause
       Remove-Item $Config.project.buildPath -Recurse
     }
   }
@@ -95,6 +97,8 @@ function Check {
     $checkManifest = Check-Manifest -ManifestSource "$($Config.project.toolchainPath)\..\manifest.xml" -ManifestCache "$($Config.project.buildPath)\manifest.xml"
     if ($checkManifest -eq $false) {
       Write-Host "manifest has changed : remove build cache" -ForegroundColor Blue
+      Write-Host "$($Config.project.buildPath) will be removed"
+      Pause
       Remove-Item $Config.project.buildPath -Recurse
     }
   }
