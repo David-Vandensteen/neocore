@@ -1,7 +1,5 @@
 Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-install-component.ps1"
 
-#Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-install-component.ps1"
-
 function Update-Raine {
   param (
     [Parameter(Mandatory=$true)][String] $Path
@@ -16,7 +14,8 @@ function Raine {
   param (
     [Parameter(Mandatory=$true)][String] $FileName,
     [Parameter(Mandatory=$true)][String] $PathISO,
-    [Parameter(Mandatory=$true)][String] $PathRaine
+    [Parameter(Mandatory=$true)][String] $PathRaine,
+    [Parameter(Mandatory=$true)][String] $ExeName
   )
   if ((Test-Path -Path "$PathISO\$FileName") -eq $false) { Logger-Error -Message "$FileName not found" }
   if ((Test-Path -Path $PathRaine) -eq $false) {
@@ -26,6 +25,6 @@ function Raine {
   Logger-Step -Message "launching raine $FileName"
   $pathRaineAbs = (Resolve-Path -Path $PathRaine).Path
   Push-Location -Path $PathISO
-  & "$pathRaineAbs\raine32.exe" $FileName
+  & "$pathRaineAbs\$ExeName" $FileName
   Pop-Location
 }

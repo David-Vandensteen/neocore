@@ -10,10 +10,10 @@
   <XMLDATFile>sprites.xml</XMLDATFile>
   <emulator>
     <raine>
-      <path></path>
+      <exeFile>..\..\build\raine\raine32.exe</exeFile>
     </raine>
     <mame>
-      <path></path>
+      <exeFile>..\..\build\mame\mame64.exe</exeFile>
     </mame>
   </emulator>
   <compiler>

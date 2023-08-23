@@ -191,7 +191,10 @@ function Main {
   Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\module-sdk.ps1"
   Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\module-emulators.ps1"
 
-  Stop-Emulators
+  $raineProcessName = [System.IO.Path]::GetFileNameWithoutExtension($Config.project.emulator.raine.exeFile)
+  $mameProcessName = [System.IO.Path]::GetFileNameWithoutExtension($Config.project.emulator.mame.exeFile)
+
+  Stop-Emulators -RaineProcessName $raineProcessName -MameProcessName $mameProcessName
 
   if ((Test-Path -Path $buildConfig.pathSpool) -eq $false) { New-Item -Path $buildConfig.pathSpool -ItemType Directory -Force }
 
@@ -288,11 +291,25 @@ function Main {
   }
 
   function RunnerMame {
-    Mame -GameName $buildConfig.projectName -PathMame $buildConfig.pathMame -XMLArgsFile "$($buildConfig.pathNeocore)\mame-args.xml"
+    $exeName = Split-Path $Config.project.emulator.mame.exeFile -Leaf -Resolve
+    $mamePath = Split-Path $Config.project.emulator.mame.exeFile
+
+    Mame `
+      -ExeName $exeName `
+      -GameName $buildConfig.projectName `
+      -PathMame $mamePath `
+      -XMLArgsFile "$($buildConfig.pathNeocore)\mame-args.xml"
   }
 
   function RunnerRaine {
-    Raine -FileName "$($buildConfig.projectName).cue" -PathRaine $buildConfig.pathRaine -PathISO $buildConfig.pathBuild
+    $exeName = Split-Path $Config.project.emulator.raine.exeFile -Leaf -Resolve
+    $rainePath = Split-Path $Config.project.emulator.raine.exeFile
+
+    Raine `
+      -FileName "$($buildConfig.projectName).cue" `
+      -PathRaine $rainePath `
+      -PathISO $buildConfig.pathBuild `
+      -ExeName $exeName
   }
 
   if ($Rule -eq "clean") { exit 0 }
@@ -333,7 +350,7 @@ function Main {
       BuilderISO
       RunnerRaine
       Watch-Folder -Path "."
-      Stop-Emulators
+      Stop-Emulators -RaineProcessName $raineProcessName -MameProcessName $mameProcessName
     }
   }
   if ($Rule -eq "serve:mame" -or $Rule -eq "serve") {
@@ -349,7 +366,7 @@ function Main {
       BuilderMame
       RunnerMame
       Watch-Folder -Path "."
-      Stop-Emulators
+      Stop-Emulators -RaineProcessName $raineProcessName -MameProcessName $mameProcessName
     }
   }
   if ($Rule -eq "dist:iso" -or $Rule -eq "dist:raine") {

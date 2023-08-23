@@ -72,6 +72,7 @@ function Write-Mame {
 
 function Mame {
   param (
+    [Parameter(Mandatory=$true)][String] $ExeName,
     [Parameter(Mandatory=$true)][String] $GameName,
     [Parameter(Mandatory=$true)][String] $PathMame,
     [Parameter(Mandatory=$true)][String] $XMLArgsFile
@@ -82,8 +83,8 @@ function Mame {
   if (Test-Path -Path $XMLArgsFile) { $mameArgs = (Select-Xml -Path $XMLArgsFile -XPath '/mame/args').Node.InnerXML }
 
   if ((Test-Path -Path $PathMame) -eq $false) { Logger-Error -Message "$PathMame not found" }
-  if ((Test-Path -Path "$PathMame\mame64.exe") -eq $false) { Write-Host ("error - {0}\mame64.exe not found" -f $PathMame) -ForegroundColor Red; exit 1 }
+  if ((Test-Path -Path "$PathMame\$ExeName") -eq $false) { Write-Host ("error - {0}\ not found" -f $PathMame) -ForegroundColor Red; exit 1 }
   Logger-Step -Message "launching mame $GameName"
-  Write-Host "$PathMame\mame64.exe $mameArgs $defaultMameArgs"
-  Start-Process -NoNewWindow -FilePath "$PathMame\mame64.exe" -ArgumentList "$mameArgs $defaultMameArgs"
+  Write-Host "$PathMame\$ExeName $mameArgs $defaultMameArgs"
+  Start-Process -NoNewWindow -FilePath "$PathMame\$ExeName" -ArgumentList "$mameArgs $defaultMameArgs"
 }
