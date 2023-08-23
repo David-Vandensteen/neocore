@@ -724,6 +724,7 @@ void debug_joypad_p1();
 
 DWORD get_frame_to_second(DWORD frame);
 DWORD get_second_to_frame(DWORD second);
+void init_system();
 void init_all_system();
 Vec2short get_relative_position(Box box, Vec2short world_coord);
 void pause();

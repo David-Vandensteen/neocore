@@ -1085,9 +1085,13 @@ DWORD get_second_to_frame(DWORD second) {
   return second * 60;
 }
 
-void init_all_system() {
+void init_system() {
   init_adpcm();
   init_gpu();
+}
+
+void init_all_system() {
+  init_system();
 }
 
 Vec2short get_relative_position(Box box, Vec2short world_coord) {
