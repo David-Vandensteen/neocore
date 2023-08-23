@@ -4,10 +4,8 @@
   <version>1.0.0</version>
   <makefile>..\Makefile</makefile>
   <neocorePath>..\..\</neocorePath>
-  <!-- <toolchainPath>..\..\toolchain</toolchainPath> -->
   <buildPath>..\..\build</buildPath>
   <distPath>..\..\dist</distPath>
-  <!-- <XMLDATFile>sprites.xml</XMLDATFile> -->
   <gfx>
     <DAT>
       <chardata>
