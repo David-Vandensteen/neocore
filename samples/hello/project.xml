@@ -7,7 +7,19 @@
   <!-- <toolchainPath>..\..\toolchain</toolchainPath> -->
   <buildPath>..\..\build</buildPath>
   <distPath>..\..\dist</distPath>
-  <XMLDATFile>sprites.xml</XMLDATFile>
+  <!-- <XMLDATFile>sprites.xml</XMLDATFile> -->
+  <gfx>
+    <DAT>
+      <chardata>
+        <setup>
+          <starting_tile>256</starting_tile>
+        </setup>
+        <pict id="logo">
+          <file>assets\gfx\logo.png</file>
+        </pict>
+      </chardata>
+    </DAT>
+  </gfx>
   <emulator>
     <raine>
       <exeFile>..\..\build\raine\raine32.exe</exeFile>

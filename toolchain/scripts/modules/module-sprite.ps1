@@ -13,6 +13,25 @@ function Watch-Error {
   }
 }
 
+function Write-DATXML {
+  param(
+    [Parameter(Mandatory=$true)][String] $InputFile,
+    [Parameter(Mandatory=$true)][String] $OutputFile
+  )
+
+  $xmlDoc = New-Object System.Xml.XmlDocument
+  $xmlDoc.Load($InputFile)
+
+  $charDataNode = $xmlDoc.SelectSingleNode("//chardata")
+
+  $newXmlDoc = New-Object System.Xml.XmlDocument
+
+  $newNode = $newXmlDoc.ImportNode($charDataNode, $true)
+  $newXmlDoc.AppendChild($newNode)
+
+  $newXmlDoc.Save($OutputFile)
+}
+
 function Write-Sprite {
   param (
     [Parameter(Mandatory=$true)][String] $Format,

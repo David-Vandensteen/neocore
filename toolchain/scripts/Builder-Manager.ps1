@@ -74,12 +74,12 @@ function Check {
     if (-Not($Config.project.neocorePath)) { Check-XMLError -Entry "project.neocorePath" }
     if (-Not($Config.project.buildPath)) { Check-XMLError -Entry "project.buildPath" }
     if (-Not($Config.project.distPath)) { Check-XMLError -Entry "project.distPath" }
-    if (-Not($Config.project.XMLDATFile)) { Check-XMLError -Entry "project.XMLDATFile" }
+    #if (-Not($Config.project.XMLDATFile)) { Check-XMLError -Entry "project.XMLDATFile" }
   }
   function Check-Path {
     if ((Test-Path -Path $Config.project.makefile) -eq $false) { Check-PathError -Path $Config.project.makefile }
     if ((Test-Path -Path $Config.project.neocorePath) -eq $false) { Check-PathError -Path $Config.project.neocorePath }
-    if ((Test-Path -Path $Config.project.XMLDATFile) -eq $false) { Check-PathError -Path $Config.project.XMLDATFile }
+    #if ((Test-Path -Path $Config.project.XMLDATFile) -eq $false) { Check-PathError -Path $Config.project.XMLDATFile }
   }
   Write-Host "check config" -ForegroundColor Yellow
   Check-XML
@@ -236,7 +236,9 @@ function Main {
 
   function BuilderSprite {
     Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-sprite.ps1"
-    Write-Sprite -XMLFile $buildConfig.XMLDATFile -Format "cd" -OutputFile "$($buildConfig.pathBuild)\$($buildConfig.projectName)"
+    Write-DATXML -InputFile $ConfigFile -OutputFile "$($buildConfig.pathBuild)\chardata.xml"
+    #Write-Sprite -XMLFile $buildConfig.XMLDATFile -Format "cd" -OutputFile "$($buildConfig.pathBuild)\$($buildConfig.projectName)"
+    Write-Sprite -XMLFile "$($buildConfig.pathBuild)\chardata.xml" -Format "cd" -OutputFile "$($buildConfig.pathBuild)\$($buildConfig.projectName)"
   }
 
   function BuilderISO {
