@@ -506,6 +506,15 @@ void display_gs(GFX_Scroller *gfx_scroller, short x, short y) {
   );
 }
 
+void debug_paletteInfo(paletteInfo *palette, BOOL palCount, BOOL data) {
+  BYTE i = 0;
+  if (palCount) log_word("PALCOUNT", palette->palCount);
+  if (data) {
+    for(i = 0; i < (palette->palCount MULT16); i++) log_word("DATA", palette->data[i]);
+  }
+}
+
+
   /*------------------*/
  /*  GFX VISIBILITY  */
 /*------------------*/
@@ -1073,6 +1082,17 @@ BOOL joypad_is_b(BYTE id)      { return (JOYPAD_IS_B_P1 && id == 0)      ? (true
 BOOL joypad_is_c(BYTE id)      { return (JOYPAD_IS_C_P1 && id == 0)      ? (true) : (false); }
 BOOL joypad_is_d(BYTE id)      { return (JOYPAD_IS_D_P1 && id == 0)      ? (true) : (false); }
 
+BOOL joypad_0_is_a()      { return joypad_is_a(0); }
+BOOL joypad_0_is_b()      { return joypad_is_b(0); }
+BOOL joypad_0_is_c()      { return joypad_is_c(0); }
+BOOL joypad_0_is_d()      { return joypad_is_d(0); }
+BOOL joypad_0_is_left()   { return joypad_is_left(0); }
+BOOL joypad_0_is_right()  { return joypad_is_right(0); }
+BOOL joypad_0_is_up()     { return joypad_is_up(0); }
+BOOL joypad_0_is_down()   { return joypad_is_down(0); }
+BOOL joypad_0_is_select() { return joypad_0_is_select(0); }
+BOOL joypad_0_is_start()  { return joypad_is_start(0); }
+
   //----------------------------------------------------------------------------//
  //                                  UTIL                                      //
 //----------------------------------------------------------------------------//
@@ -1102,9 +1122,9 @@ Vec2short get_relative_position(Box box, Vec2short world_coord) {
   return coord;
 }
 
-void pause() {
+void pause(BOOL (*exitFunc)()) {
   update_joypad(0);
-  while( !joypad_is_a(0)) {
+  while(!exitFunc()) {
     update_joypad(0);
     wait_vbl();
   }

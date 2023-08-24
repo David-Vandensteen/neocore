@@ -226,6 +226,8 @@ void display_gas(GFX_Animated_Sprite *gfx_animated_sprite, short x, short y, WOR
  */
 void display_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short x, short y, WORD anim);
 
+void debug_paletteInfo(paletteInfo *palette, BOOL palCount, BOOL data);
+
   /*------------------*/
  /*  GFX VISIBILITY  */
 /*------------------*/
@@ -710,6 +712,17 @@ BOOL joypad_is_b(BYTE id);
 BOOL joypad_is_c(BYTE id);
 BOOL joypad_is_d(BYTE id);
 
+BOOL joypad_0_is_a();
+BOOL joypad_0_is_b();
+BOOL joypad_0_is_c();
+BOOL joypad_0_is_d();
+BOOL joypad_0_is_left();
+BOOL joypad_0_is_right();
+BOOL joypad_0_is_up();
+BOOL joypad_0_is_down();
+BOOL joypad_0_is_select();
+BOOL joypad_0_is_start();
+
 void debug_joypad(BYTE id);
 
 /**
@@ -727,7 +740,7 @@ DWORD get_second_to_frame(DWORD second);
 void init_system();
 void init_all_system();
 Vec2short get_relative_position(Box box, Vec2short world_coord);
-void pause();
+void pause(BOOL (*exitFunc)());
 void sleep(DWORD frame);
 BOOL each_frame(DWORD frame);
 short get_positive(short num);
