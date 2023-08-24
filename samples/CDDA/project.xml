@@ -1,12 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
-  <name>CDDA</name>
+  <name>cdda</name>
   <version>1.0.0</version>
   <makefile>..\Makefile</makefile>
-  <toolchainPath>..\..\toolchain</toolchainPath>
+  <neocorePath>..\..\</neocorePath>
   <buildPath>..\..\build</buildPath>
   <distPath>..\..\dist</distPath>
-  <XMLDATFile>sprites.xml</XMLDATFile>
+  <gfx>
+    <DAT>
+      <chardata>
+        <setup>
+          <starting_tile>256</starting_tile>
+        </setup>
+        <pict id="k7_sprite">
+          <file>assets\gfx\k7.png</file>
+        </pict>
+        <scrl id="spectrum02_sprite">
+          <file>assets\gfx\02-spectrum.png</file>
+        </scrl>
+      </chardata>
+    </DAT>
+  </gfx>
+  <emulator>
+    <raine>
+      <exeFile>..\..\build\raine\raine32.exe</exeFile>
+    </raine>
+    <mame>
+      <exeFile>..\..\build\mame\mame64.exe</exeFile>
+    </mame>
+  </emulator>
+  <compiler>
+    <name>gcc</name>
+    <version>2.95.2</version>
+    <path>..\..\build\gcc\gcc-2.95.2</path>
+    <includePath>..\..\build\include</includePath>
+    <libraryPath>..\..\build\lib</libraryPath>
+    <systemFile>..\..\build\system\neocd.x</systemFile>
+  </compiler>
   <sound>
     <cdda>
       <tracks>

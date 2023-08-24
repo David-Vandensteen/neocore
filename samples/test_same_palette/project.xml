@@ -3,13 +3,56 @@
   <name>test_same_palette</name>
   <version>1.0.0</version>
   <makefile>..\Makefile</makefile>
-  <toolchainPath>..\..\toolchain</toolchainPath>
+  <neocorePath>..\..\</neocorePath>
   <buildPath>..\..\build</buildPath>
   <distPath>..\..\dist</distPath>
-  <XMLDATFile>sprites.xml</XMLDATFile>
+  <gfx>
+    <DAT>
+      <chardata>
+        <setup>
+          <starting_tile>256</starting_tile>
+        </setup>
+        <pict id="planet04_sprite">
+          <file>assets\gfx\planet04.png</file>
+          <flips>xyz</flips>
+        </pict>
+        <scrl id="background_sprite">
+          <file>assets\gfx\background.png</file>
+        </scrl>
+        <sprt id="player_sprite">
+          <file>assets\gfx\player.png</file>
+          <frame>0,1:3,1</frame>
+          <frame>3,1:3,1</frame>
+          <frame>6,1:3,1</frame>
+          <frame>0,0:3,1</frame>
+          <frame>0,2:3,1</frame>
+        </sprt>
+      </chardata>
+    </DAT>
+  </gfx>
+  <emulator>
+    <raine>
+      <exeFile>..\..\build\raine\raine32.exe</exeFile>
+    </raine>
+    <mame>
+      <exeFile>..\..\build\mame\mame64.exe</exeFile>
+    </mame>
+  </emulator>
+  <compiler>
+    <name>gcc</name>
+    <version>2.95.2</version>
+    <path>..\..\build\gcc\gcc-2.95.2</path>
+    <includePath>..\..\build\include</includePath>
+    <libraryPath>..\..\build\lib</libraryPath>
+    <systemFile>..\..\build\system\neocd.x</systemFile>
+  </compiler>
   <!-- for using cdda audio tracks, uncomment & set up your files
   Warning: track id 1 is reserved for the binary program
   <sound>
+    <sfx>
+      <pcm>assets\sounds\sfx\click.V1</pcm>
+      <z80>assets\sounds\sfx\click.M1</z80>
+    </sfx>
     <cdda>
       <tracks>
         <track>
