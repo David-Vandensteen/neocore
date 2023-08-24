@@ -84,7 +84,7 @@ function Check {
   Write-Host "check config" -ForegroundColor Yellow
   Check-XML
   Check-Path
-  if ((Test-Path -Path "$($Config.project.neocorePath)\build\manifest.xml") -eq $false) {
+  if ((Test-Path -Path "$($Config.project.buildPath)\manifest.xml") -eq $false) {
     if (Test-Path -Path $Config.project.buildPath) {
       Write-Host "manifest not found : remove build cache" -ForegroundColor Blue
       Write-Host "Please, remove $(Resolve-Path -Path $Config.project.buildPath) to rebuild neocore"
@@ -92,10 +92,10 @@ function Check {
     }
   }
 
-  if (Test-Path -Path "$($Config.project.neocorePath)\build\manifest.xml") {
+  if (Test-Path -Path "$($Config.project.buildPath)\manifest.xml") {
     $checkManifest = Check-Manifest `
       -ManifestSource "$($Config.project.neocorePath)\manifest.xml" `
-      -ManifestCache "$($Config.project.neocorePath)\build\manifest.xml"
+      -ManifestCache "$($Config.project.buildPath)\manifest.xml"
 
     if ($checkManifest -eq $false) {
       Write-Host "manifest has changed : remove build cache" -ForegroundColor Blue
