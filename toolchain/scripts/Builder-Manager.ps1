@@ -84,22 +84,23 @@ function Check {
   Write-Host "check config" -ForegroundColor Yellow
   Check-XML
   Check-Path
-  if ((Test-Path -Path "$($Config.project.neocorePath)\manifest.xml") -eq $false) {
+  if ((Test-Path -Path "$($Config.project.neocorePath)\build\manifest.xml") -eq $false) {
     if (Test-Path -Path $Config.project.buildPath) {
       Write-Host "manifest not found : remove build cache" -ForegroundColor Blue
-      Write-Host "$($Config.project.buildPath) will be removed" # TODO abs path
-      Pause
-      Remove-Item $Config.project.buildPath -Recurse
+      Write-Host "Please, remove $(Resolve-Path -Path $Config.project.buildPath) to rebuild neocore"
+      exit 1
     }
   }
 
-  if (Test-Path -Path "$($Config.project.neocorePath)\manifest.xml") {
-    $checkManifest = Check-Manifest -ManifestSource "$($Config.project.neocorePath)\manifest.xml" -ManifestCache "$($Config.project.neocorePath)\manifest.xml"
+  if (Test-Path -Path "$($Config.project.neocorePath)\build\manifest.xml") {
+    $checkManifest = Check-Manifest `
+      -ManifestSource "$($Config.project.neocorePath)\manifest.xml" `
+      -ManifestCache "$($Config.project.neocorePath)\build\manifest.xml"
+
     if ($checkManifest -eq $false) {
       Write-Host "manifest has changed : remove build cache" -ForegroundColor Blue
-      Write-Host "$($Config.project.buildPath) will be removed"
-      Pause
-      Remove-Item $Config.project.buildPath -Recurse
+      Write-Host "Please, remove $(Resolve-Path -Path $Config.project.buildPath) to rebuild neocore"
+      exit 1
     }
   }
 
