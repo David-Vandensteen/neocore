@@ -79,7 +79,7 @@ or
 ```
 ## Create your first experimentation
 ```cmd
-xcopy /E /I templates\sample samples\awesome_project
+xcopy /E /I bootstrap\sample samples\awesome_project
 ```
 
 Edit project.xml and set the project name  
@@ -138,7 +138,7 @@ $project = "c:\my-git\myGame"
 * Replace `c:\my-git\myGame` with your real path. 
 
 ```cmd
-xcopy /E /I src-lib $project\neocore\src-lib; copy manifest.xml $project\neocore; copy templates\.gitignore $project\.gitignore; xcopy /E /I toolchain $project\neocore\toolchain; xcopy /E /I templates\project $project\src; notepad $project\src\project.xml
+xcopy /E /I src-lib $project\neocore\src-lib; copy manifest.xml $project\neocore; copy bootstrap\.gitignore $project\.gitignore; xcopy /E /I toolchain $project\neocore\toolchain; xcopy /E /I bootstrap\project $project\src; notepad $project\src\project.xml
 ```
 
 ## DATlib assets (in progress)
