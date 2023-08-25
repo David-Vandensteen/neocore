@@ -159,7 +159,7 @@ The Animator tool is available here:
 ## Compiling the lib (necessary if you develop Neocore lib)
 ```cmd
 cd src-lib
-.\build-neocore.bat -gccPath ..\build\gcc\gcc-2.95.2 -includePath ..\build\include -libraryPath ..\build\include 
+.\build-neocore.bat -gccPath ..\build\gcc\gcc-2.95.2 -includePath ..\build\include -libraryPath ..\build\lib
 ```
 This script override path environment variable during the compilation.  
 its avoid collisions with other bin, sdk, gcc...  
