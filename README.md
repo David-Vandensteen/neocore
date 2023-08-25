@@ -9,7 +9,11 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.2, and includes t
 The library is mainly tested on Raine and MAME emulators and is compatible with Windows 10 and Windows 11 for building.
   
 I share my tools and my code, these could possibly help your projects on this platform.  
-(**Doxygen doc**) http://azertyvortex.free.fr/neocore-doxy/r4/neocore_8h.html  
+
+## Doc
+
+  - Doxygen : http://azertyvortex.free.fr/neocore-doxy/r4/neocore_8h.html
+  - Snippet : https://github.com/David-Vandensteen/neocore/tree/develop/snippet
     
 ## Feature
 
@@ -151,7 +155,7 @@ The Animator tool is available here:
 ## Compiling the lib (necessary if you develop Neocore lib)
 ```cmd
 cd src-lib
-.\build-neocore.bat
+.\build-neocore.bat -gccPath ..\build\gcc\gcc-2.95.2 -includePath ..\build\include -libraryPath ..\build\include 
 ```
 This script override path environment variable during the compilation.  
 its avoid collisions with other bin, sdk, gcc...  
