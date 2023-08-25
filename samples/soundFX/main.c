@@ -13,7 +13,7 @@ void log_and_sound(char *message) {
   if (get_adpcm_player()->state == IDLE) {
     send_sound_command(ADPCM_STOP);
     send_sound_command(ADPCM_MIXKIT_GAME_CLICK_1114);
-    add_remaining_frame_adpcm_player(get_second_to_frame(1));
+    push_remaining_frame_adpcm_player(get_second_to_frame(1));
   }
 }
 

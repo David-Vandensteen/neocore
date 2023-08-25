@@ -43,6 +43,7 @@ function Main {
   BuildProject -Path "..\samples\recurse" -Rule $Rule -KillTime $KillTime
   BuildProject -Path "..\samples\shrunk" -Rule $Rule -KillTime $KillTime
   BuildProject -Path "..\samples\shrunk_centroid" -Rule $Rule -KillTime $KillTime
+  BuildProject -Path "..\samples\soundFX" -Rule $Rule -KillTime $KillTime
   BuildProject -Path "..\samples\sprite" -Rule $Rule -KillTime $KillTime
   BuildProject -Path "..\samples\test_gas" -Rule $Rule -KillTime $KillTime
   BuildProject -Path "..\samples\test_gasp" -Rule $Rule -KillTime $KillTime
