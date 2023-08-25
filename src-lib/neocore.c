@@ -1338,7 +1338,7 @@ Adpcm_player *get_adpcm_player() {
   return &adpcm_player;
 }
 
-void add_remaining_frame_adpcm_player(DWORD frame) {
+void push_remaining_frame_adpcm_player(DWORD frame) {
   adpcm_player.remaining_frame += frame;
   adpcm_player.state = PLAYING;
 }

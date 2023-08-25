@@ -785,7 +785,7 @@ void log_pictureInfo(char *label, pictureInfo *pi);
 
 void init_adpcm();
 void update_adpcm_player();
-void add_remaining_frame_adpcm_player(DWORD frame);
+void push_remaining_frame_adpcm_player(DWORD frame);
 Adpcm_player *get_adpcm_player();
 
   /*---------------*/
