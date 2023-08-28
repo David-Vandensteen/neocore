@@ -298,9 +298,11 @@ function Main {
   }
 
   function BuilderMame {
+    $mamePath = Split-Path $Config.project.emulator.mame.exeFile
+
     Write-Mame `
       -ProjectName $buildConfig.projectName `
-      -PathMame $buildConfig.pathMame `
+      -PathMame $mamePath `
       -CUEFile "$($buildConfig.pathBuild)\$($buildConfig.projectName).cue" `
       -OutputFile "$($buildConfig.pathMame)\roms\neocdz\$($buildConfig.projectName).chd"
   }

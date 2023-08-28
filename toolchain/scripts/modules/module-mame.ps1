@@ -1,7 +1,5 @@
 Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-install-component.ps1"
 
-#Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-install-component.ps1"
-
 function Write-MameHash {
   param (
     [Parameter(Mandatory=$true)][String] $ProjectName,
@@ -22,6 +20,7 @@ function Write-MameHash {
       [Parameter(Mandatory=$true)][String] $XMLFile,
       [Parameter(Mandatory=$true)][String] $SHA1
     )
+    if (Test-Path -Path $XMLFile) { Remove-Item -Path $XMLFile -Force }
     Set-Content -Path $XMLFile -Value '<?xml version="1.0"?>'
     Add-Content -Path $XMLFile -Value '<!-- THIS FILE IS GENERATED JUST IN TIME BY NEOCORE -->'
     Add-Content -Path $XMLFile -Value '<!DOCTYPE softwarelist SYSTEM "softwarelist.dtd">'
@@ -41,6 +40,7 @@ function Write-MameHash {
     Add-Content -Path $XMLFile -Value '</software>'
     Add-Content -Path $XMLFile -Value '</softwarelist>'
   }
+
   $SHA1 = Get-CHDSHA1 -File $CHDFile
   Write-MameHashFile -ProjectName $ProjectName -XMLFile $XMLFile -SHA1 $SHA1
 }
@@ -60,14 +60,15 @@ function Write-Mame {
   if ((Test-Path -Path "$PathMame\mame64.exe") -eq $false) { Write-Host "error - mame64.exe is not found in $PathMame" -ForegroundColor Red; exit 1 }
 
   Logger-Step -Message "compiling CHD"
-  & chdman.exe createcd -i $CUEFile -o $OutputFile --force
+  #& chdman.exe createcd -i $CUEFile -o $OutputFile --force
+  Start-Process -NoNewWindow -FilePath "chdman.exe" -ArgumentList "createcd -i $CUEFile -o $OutputFile --force" -Wait
   if ((Test-Path -Path $OutputFile) -eq $false) {
     Logger-Error -Message "$OutputFile was not generated"
   } else {
     Logger-Success -Message "builded CHD is available to $OutputFile"
     Write-Host ""
   }
-  Write-MameHash -ProjectName $ProjectName -CHDFile $OutputFile -XMLFile "$PathMame\hash\neocd.xml"
+  Write-MameHash -ProjectName $ProjectName -CHDFile $OutputFile -XMLFile (Resolve-Path -Path "$PathMame\hash\neocd.xml")
 }
 
 function Mame {
@@ -77,6 +78,7 @@ function Mame {
     [Parameter(Mandatory=$true)][String] $PathMame,
     [Parameter(Mandatory=$true)][String] $XMLArgsFile
   )
+  Write-Host "DEBUG : pathMame $PathMame"
   $defaultMameArgs = "-rompath `"$PathMame\roms`" -hashpath `"$PathMame\hash`" -cfg_directory $env:TEMP -nvram_directory $env:TEMP -skip_gameinfo neocdz $GameName"
 
   $mameArgs = "-window"
