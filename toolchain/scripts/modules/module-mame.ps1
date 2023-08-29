@@ -68,7 +68,7 @@ function Write-Mame {
     Logger-Success -Message "builded CHD is available to $OutputFile"
     Write-Host ""
   }
-  Write-MameHash -ProjectName $ProjectName -CHDFile $OutputFile -XMLFile (Resolve-Path -Path "$PathMame\hash\neocd.xml")
+  Write-MameHash -ProjectName $ProjectName -CHDFile $OutputFile -XMLFile "$(Resolve-Path -Path $PathMame)\hash\neocd.xml"
 }
 
 function Mame {
