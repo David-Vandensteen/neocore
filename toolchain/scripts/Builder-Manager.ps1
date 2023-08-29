@@ -299,12 +299,18 @@ function Main {
 
   function BuilderMame {
     $mamePath = Split-Path $Config.project.emulator.mame.exeFile
+    $name = $Config.project.name
 
+    # Write-Mame `
+    #   -ProjectName $buildConfig.projectName `
+    #   -PathMame $mamePath `
+    #   -CUEFile "$($buildConfig.pathBuild)\$($buildConfig.projectName).cue" `
+    #   -OutputFile "$($buildConfig.pathMame)\roms\neocdz\$($buildConfig.projectName).chd"
     Write-Mame `
-      -ProjectName $buildConfig.projectName `
+      -ProjectName $name `
       -PathMame $mamePath `
-      -CUEFile "$($buildConfig.pathBuild)\$($buildConfig.projectName).cue" `
-      -OutputFile "$($buildConfig.pathMame)\roms\neocdz\$($buildConfig.projectName).chd"
+      -CUEFile "$($buildConfig.pathBuild)\$name.cue" `
+      -OutputFile "$mamePath\roms\neocdz\$name.chd"
   }
 
   function RunnerMame {
@@ -391,6 +397,7 @@ function Main {
   }
   if ($Rule -eq "dist:iso" -or $Rule -eq "dist:raine") {
     Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-dist.ps1"
+
     #if ((Test-Path -Path $buildConfig.pathDist) -eq $false) { New-Item -Path $buildConfig.pathDist -ItemType Directory -Force }
     if ((Test-Path -Path $Config.project.distPath) -eq $false) { New-Item -Path $Config.project.distPath -ItemType Directory -Force }
     BuilderSprite
@@ -416,11 +423,6 @@ function Main {
     BuilderProgram
     BuilderISO
     BuilderMame
-    # Write-Dist `
-    #   -ProjectName $buildConfig.projectName `
-    #   -PathDestination "$($buildConfig.pathDist)\$($buildConfig.projectName)\$($buildConfig.version)" `
-    #   -CHDFile "$($buildConfig.pathMame)\roms\neocdz\$($buildConfig.projectName).chd" `
-    #   -HashFile "$($buildConfig.pathMame)\hash\neocd.xml"
     Write-Dist `
       -ProjectName $buildConfig.projectName `
       -PathDestination "$($Config.project.distPath)\$($buildConfig.projectName)\$($buildConfig.version)" `
@@ -435,13 +437,6 @@ function Main {
     BuilderProgram
     BuilderISO
     BuilderMame
-    # Write-Dist `
-    #   -ProjectName $buildConfig.projectName `
-    #   -PathDestination "$($buildConfig.pathDist)\$($buildConfig.projectName)\$($buildConfig.version)" `
-    #   -ISOFile "$($buildConfig.pathBuild)\$($buildConfig.projectName).iso" `
-    #   -CUEFile "$($buildConfig.pathBuild)\$($buildConfig.projectName).cue" `
-    #   -CHDFile "$($buildConfig.pathMame)\roms\neocdz\$($buildConfig.projectName).chd" `
-    #   -HashFile "$($buildConfig.pathMame)\hash\neocd.xml"
     Write-Dist `
       -ProjectName $buildConfig.projectName `
       -PathDestination "$($Config.project.distPath)\$($buildConfig.projectName)\$($buildConfig.version)" `

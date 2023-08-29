@@ -1,9 +1,6 @@
 Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-install-component.ps1"
 Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-mp3towav.ps1"
 
-#Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-install-component.ps1"
-#Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-mp3towav.ps1"
-
 function Write-ISO {
   param (
     [Parameter(Mandatory=$true)][String] $PRGFile,
@@ -71,6 +68,7 @@ function Write-CUE {
     [Parameter(Mandatory=$true)][String] $ISOName,
     [System.Xml.XmlElement] $Config
   )
+
   function Get-CUETrack {
     param (
       [Parameter(Mandatory=$true)][String] $Rule,
@@ -87,9 +85,7 @@ function Write-CUE {
     Write-Host $ext
     Write-Host $path
 
-    if ($Rule -like "*raine") {
-      Write-Host $File
-      Write-Host $buildConfig.pathBuild
+    if ($ext -eq ".wav") {
       Copy-Item -Path $File -Destination "$($buildConfig.pathBuild)\$path"
     }
 
@@ -122,10 +118,18 @@ function Write-CUE {
   if ($Config) {
     $tracks = $Config.tracks.track
     $tracks | ForEach-Object {
-      Get-CUETrack -Rule $Rule -File $_.file -Index $_.id -Pregap $_.pregap | Out-File -Encoding ascii -FilePath $OutputFile -Append -Force
+      Write-Host "DEBUG : $($_.file)"
+      Get-CUETrack `
+        -Rule $Rule `
+        -File $_.file `
+        -Index $_.id `
+        -Pregap $_.pregap | Out-File -Encoding ascii -FilePath $OutputFile -Append -Force
     }
   }
-  (Get-Content -Path $OutputFile -Raw).Replace("`r`n","`n") | Set-Content -Path $OutputFile -Force -NoNewline
+
+  (Get-Content -Path $OutputFile -Raw).replace("`r`n","`n") | Set-Content -Path "$OutputFile.spool" -Force -NoNewline
+  Copy-Item -Path "$OutputFile.spool" -Destination $OutputFile -Force
+  Remove-Item -Path "$OutputFile.spool" -Force
 
   if ((Test-Path -Path $OutputFile) -eq $true) {
     Logger-Success -Message "builded CUE is available to $OutputFile"
