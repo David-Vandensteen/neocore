@@ -85,11 +85,13 @@ function Write-CUE {
     Write-Host $ext
     Write-Host $path
 
-    if ($ext -eq ".wav") {
-      Copy-Item -Path $File -Destination "$($buildConfig.pathBuild)\$path"
-    }
+    Copy-Item -Path $File -Destination "$($buildConfig.pathBuild)\$path"
 
-    if ($ext -eq ".mp3" -and $Rule -like "*mame") {
+    # if ($ext -eq ".wav") {
+    #   Copy-Item -Path $File -Destination "$($buildConfig.pathBuild)\$path"
+    # }
+
+    if ($ext -eq ".mp3") {
       if ((Test-Path -Path "$($buildConfig.pathNeocore)\bin\mpg123-1.31.3-static-x86-64") -eq $false) {
         Install-Component -URL "$($buildConfig.baseURL)/mpg123-1.31.3-static-x86-64.zip" -PathDownload $buildConfig.pathSpool -PathInstall "$($buildConfig.pathNeocore)\bin"
       }
