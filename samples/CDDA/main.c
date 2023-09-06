@@ -42,7 +42,7 @@ static void update() {
   if (get_x_gfx_picture(k7) > 50) k7_direction = false;
   if (get_x_gfx_picture(k7) < 40) k7_direction = true;
   if (joypad_p1_is_left() && track_num > 2) play_cdda(--track_num);
-  if (joypad_p1_is_right() && track_num < 4) play_cdda(++track_num);
+  if (joypad_p1_is_right() && track_num < 5) play_cdda(++track_num);
 }
 
 int main(void) {
