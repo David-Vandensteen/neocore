@@ -8,6 +8,7 @@ function Write-Dist {
     [String] $HashFile
   )
   Logger-Step -Message "create dist"
+
   if ($ISOFile -and (Test-Path -Path $ISOFile) -eq $false) { Logger-Error -Message "$ISOFile not found" }
   if ($CUEFile -and (Test-Path -Path $CUEFile) -eq $false) { Logger-Error -Message "$CUEFile not found" }
   if ($CHDFile -and (Test-Path -Path $CHDFile) -eq $false) { Logger-Error -Message "$CHDFile not found" }
@@ -41,14 +42,33 @@ function Write-Dist {
     Write-Host ""
     Write-Host "copy sound tracks"
     Write-Host ""
+    Write-Host "CUE file : $CUEFile"
     $content = [System.IO.File]::ReadAllText($CUEFile)
     $Config.project.sound.cdda.tracks.track | ForEach-Object {
-      $fileName = Split-Path $_.file -leaf
-      Logger-Info -Message "copy $fileName to $PathDestination\iso"
-      Copy-Item -Path $_.file -Destination "$PathDestination\iso"
-      $content = $content.Replace($_.file, $fileName)
+      $file = $_.file
+
+      $fileName = Split-Path -Path $file -Leaf -Resolve
+      $filePath = Split-Path -Path $file
+      $fileNameWithoutExt = [System.IO.Path]::GetFileNameWithoutExtension($fileName)
+
+      $source = Join-Path `
+                  -Path $Config.project.buildPath `
+                  -ChildPath "$($Config.project.name)\$($filePath)\$($fileNameWithoutExt).wav"
+
+      $destination = Join-Path `
+                      -Path $Config.project.distPath `
+                      -ChildPath "$($Config.project.name)\$($Config.project.version)\iso"
+
+      Write-Host "file $file"
+      Write-Host "fileName $fileName"
+      Write-Host "fileNameWithoutExt $fileNameWithoutExt"
+      Write-Host "filePath $filePath"
+      Write-Host "destination $destination"
+      Copy-Item -Path $source -Destination $destination
+      $content = $content.Replace("$($filePath)\$($fileNameWithoutExt).wav", "$fileNameWithoutExt.wav")
     }
     Write-Host "make a cue file"
+    Write-Host $content
     $content | Out-File -FilePath "$PathDestination\iso\$ProjectName.cue" -Encoding ascii -Force
   }
   Write-Host ""
