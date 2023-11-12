@@ -87,18 +87,10 @@ function Write-CUE {
 
     Copy-Item -Path $File -Destination "$($buildConfig.pathBuild)\$path"
 
-    # if ($ext -eq ".wav") {
-    #   Copy-Item -Path $File -Destination "$($buildConfig.pathBuild)\$path"
-    # }
-
     if ($ext -eq ".mp3") {
       if ((Test-Path -Path "$($buildConfig.pathNeocore)\bin\mpg123-1.31.3-static-x86-64") -eq $false) {
         Install-Component -URL "$($buildConfig.baseURL)/mpg123-1.31.3-static-x86-64.zip" -PathDownload $buildConfig.pathSpool -PathInstall "$($buildConfig.pathNeocore)\bin"
       }
-      # Write-WAV `
-      #   -mpg123 "$($buildConfig.pathNeocore)\bin\mpg123-1.31.3-static-x86-64\mpg123.exe" `
-      #   -WAVFile "$($buildConfig.pathBuild)\$path\$baseName.wav" `
-      #   -MP3File "$($buildConfig.pathBuild)\$path\$baseName.mp3"
       Write-WAV `
         -mpg123 "$($buildConfig.pathNeocore)\bin\mpg123-1.31.3-static-x86-64\mpg123.exe" `
         -WAVFile "$($buildConfig.pathBuild)\$path\$baseName.wav" `
@@ -138,5 +130,3 @@ function Write-CUE {
     Write-Host ""
   } else { Logger-Error -Message "error - $OutputFile was not generated" }
 }
-
-

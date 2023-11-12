@@ -18,10 +18,6 @@ function Write-Program {
 
   $Config.project.compiler
 
-  # $env:INCLUDE_PATH = "..\..\build\include"
-  # $env:LIBRARY_PATH = "..\..\build\lib"
-  # $env:NEO_GEO_SYSTEM = "..\..\build\system\neocd.x"
-
   $env:INCLUDE_PATH = $(Resolve-Path -Path $Config.project.compiler.includePath)
   $env:LIBRARY_PATH = $(Resolve-Path -Path $Config.project.compiler.libraryPath)
   $env:NEO_GEO_SYSTEM = $(Resolve-Path -Path $Config.project.compiler.systemFile)

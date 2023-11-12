@@ -1,7 +1,5 @@
 Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-install-component.ps1"
 
-#Import-Module "$($buildConfig.pathToolchain)\scripts\modules\module-install-component.ps1"
-
 function Install-Neocore {
   $buildPath = $(Resolve-Path $buildConfig.pathNeocore)
  pushd "$($Config.project.neocorePath)\src-lib"
