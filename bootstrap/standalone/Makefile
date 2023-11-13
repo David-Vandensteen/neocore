@@ -2,6 +2,7 @@
 #	Project settings #
 ####################
 PROJECTNAME = $(PROJECT)
+PROJECT_PATH := $(PROJECT_PATH)
 NEOBUILDTEMP = $(PATHBUILD)
 
 #INCLUDE_PATH = $(INCLUDE_PATH)
@@ -82,10 +83,10 @@ $(NEOBUILDTEMP)/$(PROJECTNAME).o: $(OBJS)
 	$(LD) -L$(LIBRARY_PATH) $(CCFLAGS) $(LDFLAGS) $(OBJS) $(LIBS) -o $@
 
 $(NEOBUILDTEMP)/%.o: %.c
-	$(CC) -I$(INCLUDE_PATH) $(CCFLAGS) -c $< -o $@
+	$(CC) -I$(INCLUDE_PATH) -I$(PROJECT_PATH) $(CCFLAGS) -c $< -o $@
 
 $(NEOBUILDTEMP)/%.o: */%.c
-	$(CC) -I$(INCLUDE_PATH) $(CCFLAGS) -c $< -o $@
+	$(CC) -I$(INCLUDE_PATH) -I$(PROJECT_PATH) $(CCFLAGS) -c $< -o $@
 
 $(NEOBUILDTEMP)/%.o: %.s
 	$(AS) $(ASFLAGS) $< -o $@
