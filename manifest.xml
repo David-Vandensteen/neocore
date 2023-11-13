@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest>
   <name>Neocore</name>
-  <version>1.0.5-develop</version>
+  <version>1.0.5</version>
   <author>David Vandensteen</author>
   <projectLink>https://github.com/David-Vandensteen/neocore</projectLink>
 </manifest>
