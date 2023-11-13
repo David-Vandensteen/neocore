@@ -2,20 +2,62 @@
 set backupPath=%path%
 set NEODEV=build\neodev-sdk
 
-if exist ..\..\build set NEODEV=..\..\build\neodev-sdk
-if exist ..\build set NEODEV=..\build\neodev-sdk
-if exist build set NEODEV=build\neodev-sdk
+@REM set gccPath="..\build\gcc\gcc-2.95.2"
+@REM set includePath="..\build\include"
+@REM set libraryPath="..\build\lib"
 
-if not exist %NEODEV% echo SDK not found
-if not exist %NEODEV% echo build a program before compiling neocore lib
-if not exist %NEODEV% echo SDK is needed
-if not exist %NEODEV% echo building a program will install the needed SDK and dependencies
-if not exist %NEODEV% exit 1
+set gccPath="undefined"
+set includePath="undefined"
+set libraryPath="undefined"
 
-path=%NEODEV%\m68k\bin;build\bin;%windir%\System32;%windir%\System32\WindowsPowerShell\v1.0\
+:initial
+if "%1"=="" goto done
+echo              %1
+set aux=%1
+if "%aux:~0,1%"=="-" (
+   set nome=%aux:~1,250%
+) else (
+   set "%nome%=%1"
+   set nome=
+)
+shift
+goto initial
+:done
+
+echo %gccPath%
+echo %includePath%
+echo %libraryPath%
+
+if %gccPath%=="undefined" goto arguments_error
+if %includePath%=="undefined" goto arguments_error
+if %libraryPath%=="undefined" goto arguments_erro
+
+rem gccPath=..\build\gcc\gcc-2.95.2
+rem gccPath=..\build\gcc\MinGW-m68k-elf-13.1.0\bin
+
+set INCLUDE_PATH=%includePath%
+set LIBRARY_PATH=%libraryPath%
+
+if not exist %gccPath% (
+  echo %gccPath% not found
+  exit 1
+)
+
+if not exist %includePath% (
+  echo %includePath% not found
+  exit 1
+)
+
+if not exist %libraryPath% (
+  echo %libraryPath% not found
+  exit 1
+)
+
+path=%gccPath%;%windir%;%windir%\System32;%windir%\System32\WindowsPowerShell\v1.0\
 
 set error=0
 @echo on
+copy /y neocore.h %includePath%
 make -f Makefile %1 %2 %3
 if %errorlevel% neq 0 (
   @echo off
@@ -24,3 +66,7 @@ if %errorlevel% neq 0 (
 @echo off
 path=%backupPath%
 exit /b %error%
+
+:arguments_error
+echo missing arguments
+echo ex : build-neocore -gccPath ..\build\gcc\gcc-2.95.2 -includePath ..\build\include -libraryPath ..\build\include²

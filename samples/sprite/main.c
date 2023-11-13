@@ -13,6 +13,7 @@ int main(void) {
   display_gs(&background, 0, 0);
   display_gp(&planet, 20, 100);
   display_gas(&player, 10, 10, PLAYER_SPRITE_ANIM_IDLE);
+
   while(1) {
     wait_vbl();
     update_joypad_p1();

@@ -47,6 +47,13 @@
  //                             STATIC                                       //
 //--------------------------------------------------------------------------//
 
+static Adpcm_player adpcm_player;
+
+static void init_adpcm_player() {
+  adpcm_player.state = IDLE;
+  adpcm_player.remaining_frame = 0;
+}
+
 static BOOL sprite_index_manager_status[SPRITE_INDEX_MANAGER_MAX];
 static paletteInfo *palette_index_manager_status[PALETTE_INDEX_MANAGER_MAX];
 
@@ -85,16 +92,16 @@ static int y = LOGGER_Y_INIT;
 static int x_default = LOGGER_X_INIT;
 static int y_default = LOGGER_Y_INIT;
 
-void inline static setX(WORD _x);
-void inline static setY(WORD _y);
-void inline static setPosDefault();
-WORD inline static countChar(char *txt);
-void inline static autoInc(); // todo (minor) - logger_auto ... ?
+void static setX(WORD _x);
+void static setY(WORD _y);
+void static setPosDefault();
+WORD static countChar(char *txt);
+void static autoInc(); // todo (minor) - logger_auto ... ?
 
-void inline static setX(WORD _x) { x = _x; }
-void inline static setY(WORD _y) { y = _y; }
+void static setX(WORD _x) { x = _x; }
+void static setY(WORD _y) { y = _y; }
 
-void inline static setPosDefault() {
+void static setPosDefault() {
   x = LOGGER_X_INIT;
   y = LOGGER_Y_INIT;
 }
@@ -180,7 +187,7 @@ static WORD palette_index_manager_use(paletteInfo *pi) {
   return 0; // TODO : no zero return
 }
 
-WORD inline static countChar(char *txt) {
+WORD static countChar(char *txt) {
   WORD i = 0;
     while (txt[i] != '\0') {
     i++;
@@ -188,14 +195,31 @@ WORD inline static countChar(char *txt) {
   return i;
 }
 
-void inline static autoInc() { y++; }
+void static autoInc() { y++; }
 
 NEOCORE_INIT
 JOYPAD_INIT_P1
 
+
   //--------------------------------------------------------------------------//
  //                                   GFX                                    //
 //--------------------------------------------------------------------------//
+
+void shrunk_centroid_gfx_picture(GFX_Picture *gfx_picture, short center_x, short center_y, WORD shrunk_value) {
+  shrunk(gfx_picture->pictureDAT.baseSprite, gfx_picture->pictureDAT.info->tileWidth, shrunk_value);
+  pictureSetPos(
+    &gfx_picture->pictureDAT,
+    shrunk_centroid_get_translated_x(center_x, gfx_picture->pictureInfoDAT->tileWidth, SHRUNK_EXTRACT_X(shrunk_value)),
+    shrunk_centroid_get_translated_y(center_y, gfx_picture->pictureInfoDAT->tileHeight, SHRUNK_EXTRACT_Y(shrunk_value))
+  );
+}
+
+void destroy_gfx_scroller(GFX_Scroller *gfx_scroller) {
+  sprite_index_manager_set_free(gfx_scroller->scrollerDAT.baseSprite, 21);
+  clearSprites(gfx_scroller->scrollerDAT.baseSprite, 21);
+}
+
+// deprecated
 
 void shrunk_centroid_gp(GFX_Picture *gfx_picture, short center_x, short center_y, WORD shrunk_value) {
   shrunk(gfx_picture->pictureDAT.baseSprite, gfx_picture->pictureDAT.info->tileWidth, shrunk_value);
@@ -214,6 +238,65 @@ void destroy_gs(GFX_Scroller *gfx_scroller) {
   /*------------------*/
  /*  GFX INIT        */
 /*------------------*/
+void init_gfx_picture_physic(
+  GFX_Picture_Physic *gfx_picture_physic,
+  pictureInfo *pi,
+  paletteInfo *pali,
+  short box_witdh,
+  short box_height,
+  short box_width_offset,
+  short box_height_offset,
+  BOOL autobox_enabled
+) {
+  init_gfx_picture(&gfx_picture_physic->gfx_picture, pi, pali);
+  gfx_picture_physic->autobox_enabled = autobox_enabled;
+  if (gfx_picture_physic->autobox_enabled) {
+    init_box(&gfx_picture_physic->box, box_witdh, box_height, box_width_offset, box_height_offset);
+  }
+}
+
+void init_gfx_picture(GFX_Picture *gfx_picture, pictureInfo *pictureInfo, paletteInfo *paletteInfo) {
+  gfx_picture->paletteInfoDAT = paletteInfo;
+  gfx_picture->pictureInfoDAT = pictureInfo;
+  gfx_picture->pixel_height = pictureInfo->tileHeight * 32;
+  gfx_picture->pixel_width = pictureInfo->tileWidth * 32;
+}
+
+void init_gfx_animated_sprite(GFX_Animated_Sprite *gfx_animated_sprite ,spriteInfo *spriteInfo, paletteInfo *paletteInfo) {
+  gfx_animated_sprite->spriteInfoDAT = spriteInfo;
+  gfx_animated_sprite->paletteInfoDAT = paletteInfo;
+};
+
+void init_gfx_animated_sprite_physic(
+    GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic,
+    spriteInfo *spriteInfo,
+    paletteInfo *paletteInfo,
+    short box_witdh,
+    short box_height,
+    short box_width_offset,
+    short box_height_offset
+  ) {
+  init_box(
+    &gfx_animated_sprite_physic->box,
+    box_witdh,
+    box_height,
+    box_width_offset,
+    box_height_offset
+  );
+  gfx_animated_sprite_physic->physic_enabled = true;
+  init_gfx_animated_sprite(
+    &gfx_animated_sprite_physic->gfx_animated_sprite,
+    spriteInfo,
+    paletteInfo
+  );
+}
+
+void init_gfx_scroller(GFX_Scroller *gfx_scroller, scrollerInfo *scrollerInfo, paletteInfo *paletteInfo) {
+  gfx_scroller->scrollerInfoDAT = scrollerInfo;
+  gfx_scroller->paletteInfoDAT = paletteInfo;
+}
+
+// deprecated
 
 void init_gpp(
   GFX_Picture_Physic *gfx_picture_physic,
@@ -235,6 +318,8 @@ void init_gpp(
 void init_gp(GFX_Picture *gfx_picture, pictureInfo *pictureInfo, paletteInfo *paletteInfo) {
   gfx_picture->paletteInfoDAT = paletteInfo;
   gfx_picture->pictureInfoDAT = pictureInfo;
+  gfx_picture->pixel_height = pictureInfo->tileHeight * 32;
+  gfx_picture->pixel_width = pictureInfo->tileWidth * 32;
 }
 
 void init_gas(GFX_Animated_Sprite *gfx_animated_sprite ,spriteInfo *spriteInfo, paletteInfo *paletteInfo) {
@@ -274,6 +359,80 @@ void init_gs(GFX_Scroller *gfx_scroller, scrollerInfo *scrollerInfo, paletteInfo
   /*------------------*/
  /*  GFX DISPLAY     */
 /*------------------*/
+
+void display_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic, short x, short y) {
+  display_gfx_picture(&gfx_picture_physic->gfx_picture, x, y);
+  if (gfx_picture_physic->autobox_enabled) {
+    update_box(&gfx_picture_physic->box, x, y);
+  }
+}
+
+void display_gfx_picture(GFX_Picture *gfx_picture, short x, short y) {
+  WORD palette_index = palette_index_manager_use(gfx_picture->paletteInfoDAT);
+  pictureInit(
+    &gfx_picture->pictureDAT,
+    gfx_picture->pictureInfoDAT,
+    sprite_index_manager_use(gfx_picture->pictureInfoDAT->tileWidth),
+    palette_index,
+    x,
+    y,
+    FLIP_NONE
+  );
+  palJobPut(
+    palette_index,
+    gfx_picture->paletteInfoDAT->palCount,
+    gfx_picture->paletteInfoDAT->data
+  );
+}
+
+void display_gfx_animated_sprite(GFX_Animated_Sprite *animated_sprite, short x, short y, WORD anim) {
+  WORD palette_index = palette_index_manager_use(animated_sprite->paletteInfoDAT);
+  aSpriteInit(
+    &animated_sprite->aSpriteDAT,
+    animated_sprite->spriteInfoDAT,
+    sprite_index_manager_use(animated_sprite->spriteInfoDAT->maxWidth),
+    palette_index,
+    x,
+    y,
+    anim,
+    FLIP_NONE
+  );
+  palJobPut(
+    palette_index,
+    animated_sprite->paletteInfoDAT->palCount,
+    animated_sprite->paletteInfoDAT->data
+  );
+  aSpriteSetAnim(&animated_sprite->aSpriteDAT, anim);
+}
+
+void display_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short x, short y, WORD anim) {
+  display_gfx_animated_sprite(
+    &gfx_animated_sprite_physic->gfx_animated_sprite,
+    x,
+    y,
+    anim
+  );
+  update_box(&gfx_animated_sprite_physic->box, x, y);
+}
+
+void display_gfx_scroller(GFX_Scroller *gfx_scroller, short x, short y) {
+  WORD palette_index = palette_index_manager_use(gfx_scroller->paletteInfoDAT);
+  scrollerInit(
+    &gfx_scroller->scrollerDAT,
+    gfx_scroller->scrollerInfoDAT,
+    sprite_index_manager_use(21),
+    palette_index,
+    x,
+    y
+  );
+  palJobPut(
+    palette_index,
+    gfx_scroller->paletteInfoDAT->palCount,
+    gfx_scroller->paletteInfoDAT->data
+  );
+}
+
+// deprecated
 
 void display_gpp(GFX_Picture_Physic *gfx_picture_physic, short x, short y) {
   display_gp(&gfx_picture_physic->gfx_picture, x, y);
@@ -347,9 +506,34 @@ void display_gs(GFX_Scroller *gfx_scroller, short x, short y) {
   );
 }
 
+void debug_paletteInfo(paletteInfo *palette, BOOL palCount, BOOL data) {
+  BYTE i = 0;
+  if (palCount) log_word("PALCOUNT", palette->palCount);
+  if (data) {
+    for(i = 0; i < (palette->palCount MULT16); i++) log_word("DATA", palette->data[i]);
+  }
+}
+
+
   /*------------------*/
  /*  GFX VISIBILITY  */
 /*------------------*/
+
+void hide_gfx_picture(GFX_Picture *gfx_picture) { pictureHide(&gfx_picture->pictureDAT); }
+void hide_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic) { pictureHide(&gfx_picture_physic->gfx_picture.pictureDAT); }
+void hide_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic) { hide_gas(&gfx_animated_sprite_physic->gfx_animated_sprite); }
+
+void hide_gfx_animated_sprite(GFX_Animated_Sprite *animated_sprite) {
+  aSpriteHide(&animated_sprite->aSpriteDAT);
+  clearSprites(animated_sprite->aSpriteDAT.baseSprite, animated_sprite->aSpriteDAT.tileWidth);
+}
+
+void show_gfx_animated_sprite(GFX_Animated_Sprite *gfx_animated_sprite) { aSpriteShow(&gfx_animated_sprite->aSpriteDAT); }
+void show_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic) { aSpriteShow(&gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT); }
+void show_gfx_picture(GFX_Picture *gfx_picture) { pictureShow(&gfx_picture->pictureDAT); }
+void show_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic) { pictureShow(&gfx_picture_physic->gfx_picture.pictureDAT); }
+
+// deprecated
 
 void hide_gp(GFX_Picture *gfx_picture) { pictureHide(&gfx_picture->pictureDAT); }
 void hide_gpp(GFX_Picture_Physic *gfx_picture_physic) { pictureHide(&gfx_picture_physic->gfx_picture.pictureDAT); }
@@ -371,6 +555,63 @@ void show_gpp(GFX_Picture_Physic *gfx_picture_physic) { pictureShow(&gfx_picture
 
 /* GFX POSITION GETTER */
 
+short get_x_gfx_animated_sprite(GFX_Animated_Sprite gfx_animated_sprite) { return gfx_animated_sprite.aSpriteDAT.posX; }
+short get_y_gfx_animated_sprite(GFX_Animated_Sprite gfx_animated_sprite) { return gfx_animated_sprite.aSpriteDAT.posY; }
+
+short get_x_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic gfx_animated_sprite_physic) { return gfx_animated_sprite_physic.gfx_animated_sprite.aSpriteDAT.posX; }
+short get_y_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic gfx_animated_sprite_physic) { return gfx_animated_sprite_physic.gfx_animated_sprite.aSpriteDAT.posY; }
+
+short get_x_gfx_picture(GFX_Picture gfx_picture) { return gfx_picture.pictureDAT.posX; }
+short get_y_gfx_picture(GFX_Picture gfx_picture) { return gfx_picture.pictureDAT.posY; }
+
+short get_x_gfx_picture_physic(GFX_Picture_Physic gfx_picture_physic) { return gfx_picture_physic.gfx_picture.pictureDAT.posX; }
+short get_y_gfx_picture_physic(GFX_Picture_Physic gfx_picture_physic) { return gfx_picture_physic.gfx_picture.pictureDAT.posY; }
+
+short get_x_gfx_scroller(GFX_Scroller gfx_scroller) { return gfx_scroller.scrollerDAT.scrlPosX; }
+short get_y_gfx_scroller(GFX_Scroller gfx_scroller) { return gfx_scroller.scrollerDAT.scrlPosY; }
+
+Vec2short get_position_gfx_animated_sprite(GFX_Animated_Sprite gfx_animated_sprite) {
+  Vec2short position = {
+    get_x_gfx_animated_sprite(gfx_animated_sprite),
+    get_y_gfx_animated_sprite(gfx_animated_sprite)
+  };
+  return position;
+}
+
+Vec2short get_position_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic gfx_animated_sprite_physic) {
+  Vec2short position = {
+    get_x_gfx_animated_sprite_physic(gfx_animated_sprite_physic),
+    get_y_gfx_animated_sprite_physic(gfx_animated_sprite_physic)
+  };
+  return position;
+}
+
+Vec2short get_position_gfx_picture(GFX_Picture gfx_picture) {
+  Vec2short position = {
+    get_x_gfx_picture(gfx_picture),
+    get_y_gfx_picture(gfx_picture)
+  };
+  return position;
+}
+
+Vec2short get_position_gfx_picture_physic(GFX_Picture_Physic gfx_picture_physic) {
+  Vec2short position = {
+    get_x_gfx_picture_physic(gfx_picture_physic),
+    get_y_gfx_picture_physic(gfx_picture_physic)
+  };
+  return position;
+}
+
+Vec2short get_position_gfx_scroller(GFX_Scroller gfx_scroller) {
+  Vec2short position = {
+    get_x_gfx_scroller(gfx_scroller),
+    get_y_gfx_scroller(gfx_scroller)
+  };
+  return position;
+}
+
+// deprecated
+
 short get_x_gas(GFX_Animated_Sprite gfx_animated_sprite) { return gfx_animated_sprite.aSpriteDAT.posX; }
 short get_y_gas(GFX_Animated_Sprite gfx_animated_sprite) { return gfx_animated_sprite.aSpriteDAT.posY; }
 
@@ -387,6 +628,28 @@ short get_x_gs(GFX_Scroller gfx_scroller) { return gfx_scroller.scrollerDAT.scrl
 short get_y_gs(GFX_Scroller gfx_scroller) { return gfx_scroller.scrollerDAT.scrlPosY; }
 
 /* GFX POSITION SETTER */
+
+void set_x_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short x) { set_pos_gasp(gfx_animated_sprite_physic, x, gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT.posY); }
+void set_y_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short y) { set_pos_gasp(gfx_animated_sprite_physic, gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT.posX, y); }
+
+void set_x_gfx_scroller(GFX_Scroller *gfx_scroller, short x) { scrollerSetPos(&gfx_scroller->scrollerDAT, x, gfx_scroller->scrollerDAT.scrlPosY); }
+void set_y_gfx_scroller(GFX_Scroller *gfx_scroller, short x) { scrollerSetPos(&gfx_scroller->scrollerDAT, gfx_scroller->scrollerDAT.scrlPosX, y); }
+
+void set_position_gfx_scroller(GFX_Scroller *gfx_scroller, Vec2short position) { scrollerSetPos(&gfx_scroller->scrollerDAT, position.x, position.y); }
+void set_position_gfx_animated_sprite(GFX_Animated_Sprite *gfx_animated_sprite, Vec2short position) { aSpriteSetPos(&gfx_animated_sprite->aSpriteDAT, x, y); }
+void set_position_gfx_picture(GFX_Picture *gfx_picture, Vec2short position) { pictureSetPos(&gfx_picture->pictureDAT, position.x, position.y); }
+
+void set_position_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic, Vec2short position) {
+  pictureSetPos(&gfx_picture_physic->gfx_picture.pictureDAT, position.x, position.y);
+  if (gfx_picture_physic->autobox_enabled) update_box(&gfx_picture_physic->box, position.x, position.y);
+}
+
+void set_position_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, Vec2short position) {
+  aSpriteSetPos(&gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT, position.x, position.y);
+  update_box(&gfx_animated_sprite_physic->box, position.x, position.y);
+}
+
+// deprecated
 
 void set_x_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short x) { set_pos_gasp(gfx_animated_sprite_physic, x, gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT.posY); }
 void set_y_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short y) { set_pos_gasp(gfx_animated_sprite_physic, gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT.posX, y); }
@@ -410,6 +673,22 @@ void set_pos_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short 
 
 /* GFX POSITION MOVE*/
 
+void move_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic, short x_offset, short y_offset) {
+  pictureMove(&gfx_picture_physic->gfx_picture.pictureDAT, x_offset, y_offset);
+  if (gfx_picture_physic->autobox_enabled) update_box(&gfx_picture_physic->box, gfx_picture_physic->gfx_picture.pictureDAT.posX, gfx_picture_physic->gfx_picture.pictureDAT.posY);
+}
+
+void move_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short x_offset, short y_offset) {
+  move_gas(&gfx_animated_sprite_physic->gfx_animated_sprite, x_offset, y_offset);
+  update_box(&gfx_animated_sprite_physic->box, gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT.posX, gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT.posY);
+}
+
+void move_gfx_animated_sprite(GFX_Animated_Sprite *gfx_animated_sprite, short x_offset, short y_offset) { aSpriteMove(&gfx_animated_sprite->aSpriteDAT, x_offset, y_offset); }
+void move_gfx_picture(GFX_Picture *gfx_picture, short x, short y) { pictureMove(&gfx_picture->pictureDAT, x, y); }
+void move_gfx_scroller(GFX_Scroller *gfx_scroller, short x, short y) { scrollerSetPos(&gfx_scroller->scrollerDAT, gfx_scroller->scrollerDAT.scrlPosX + x, gfx_scroller->scrollerDAT.scrlPosY + y); }
+
+// deprecated
+
 void move_gpp(GFX_Picture_Physic *gfx_picture_physic, short x_offset, short y_offset) {
   pictureMove(&gfx_picture_physic->gfx_picture.pictureDAT, x_offset, y_offset);
   if (gfx_picture_physic->autobox_enabled) update_box(&gfx_picture_physic->box, gfx_picture_physic->gfx_picture.pictureDAT.posX, gfx_picture_physic->gfx_picture.pictureDAT.posY);
@@ -428,6 +707,14 @@ void move_gs(GFX_Scroller *gfx_scroller, short x, short y) { scrollerSetPos(&gfx
  /*  GFX ANIMATION    */
 /*-------------------*/
 
+void set_animation_gfx_animated_sprite(GFX_Animated_Sprite *gfx_animated_sprite, WORD anim) { aSpriteSetAnim(&gfx_animated_sprite->aSpriteDAT, anim); }
+void set_animation_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, WORD anim) { aSpriteSetAnim(&gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT, anim); }
+
+void update_animation_gfx_animated_sprite(GFX_Animated_Sprite *gfx_animated_sprite) { aSpriteAnimate(&gfx_animated_sprite->aSpriteDAT); }
+void update_animation_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic) { aSpriteAnimate(&gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT); }
+
+// deprecated
+
 void set_anim_gas(GFX_Animated_Sprite *gfx_animated_sprite, WORD anim) { aSpriteSetAnim(&gfx_animated_sprite->aSpriteDAT, anim); }
 void set_anim_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, WORD anim) { aSpriteSetAnim(&gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT, anim); }
 
@@ -437,6 +724,23 @@ void update_anim_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic) { 
   /*-------------------*/
  /*  GFX DESTROY      */
 /*-------------------*/
+
+void destroy_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic) { destroy_gfx_picture(&gfx_picture_physic->gfx_picture); }
+void destroy_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic) { destroy_gfx_animated_sprite(&gfx_animated_sprite_physic->gfx_animated_sprite); }
+
+void destroy_gfx_picture(GFX_Picture *gfx_picture) {
+  pictureHide(&gfx_picture->pictureDAT);
+  sprite_index_manager_set_free(gfx_picture->pictureDAT.baseSprite, gfx_picture->pictureInfoDAT->tileWidth);
+  clearSprites(gfx_picture->pictureDAT.baseSprite, gfx_picture->pictureInfoDAT->tileWidth);
+}
+
+void destroy_gfx_animated_sprite(GFX_Animated_Sprite *animated_sprite) {
+  aSpriteHide(&animated_sprite->aSpriteDAT);
+  sprite_index_manager_set_free(animated_sprite->aSpriteDAT.baseSprite, animated_sprite->spriteInfoDAT->maxWidth);
+  clearSprites(animated_sprite->aSpriteDAT.baseSprite, animated_sprite->aSpriteDAT.tileWidth);
+}
+
+// deprecated
 
 void destroy_gpp(GFX_Picture_Physic *gfx_picture_physic) { destroy_gp(&gfx_picture_physic->gfx_picture); }
 void destroy_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic) { destroy_gas(&gfx_animated_sprite_physic->gfx_animated_sprite); }
@@ -457,7 +761,7 @@ void destroy_gas(GFX_Animated_Sprite *animated_sprite) {
  //                                   GPU                                    //
 //--------------------------------------------------------------------------//
 
-void inline init_gpu() {
+void init_gpu() {
   backgroundColor(0x7000); // todo (minor) - macro with some colors ...
   clearFixLayer();
   initGfx();
@@ -467,7 +771,7 @@ void inline init_gpu() {
   palette_index_manager_init();
 }
 
-void inline clear_vram() {
+void clear_vram() {
   WORD addr = 0x0000;
   WORD addr_end = 0x8FFF;
   disableIRQ();
@@ -485,7 +789,7 @@ void inline clear_vram() {
  /* GPU VBL                      */
 /*------------------------------*/
 
-DWORD inline wait_vbl_max(WORD nb) {
+DWORD wait_vbl_max(WORD nb) {
   WORD i = 0;
   for (i = 0; i <= nb; i++) waitVBlank();
   return DAT_frameCounter;
@@ -541,7 +845,7 @@ WORD get_max_palette_index_used() {
 /*--------------*/
 
 WORD get_shrunk_proportional_table(WORD index) { return shrunk_table_prop[index]; } // todo (minor) - rename shrunk_proportional_table
-void inline shrunk_addr(WORD addr, WORD shrunk_value) { SC234Put(addr, shrunk_value); }
+void shrunk_addr(WORD addr, WORD shrunk_value) { SC234Put(addr, shrunk_value); }
 
 WORD shrunk_forge(BYTE xc, BYTE yc) { // todo (minor) - xcF, ycFF
   //F FF - x (hor) , y (vert)
@@ -714,7 +1018,24 @@ void play_cdda(unsigned char track) {
  //                                  JOYPAD                                    //
 //----------------------------------------------------------------------------//
 
-void inline debug_joypad_p1() {
+void debug_joypad(BYTE id) {
+  if (id == 0) {
+    JOYPAD_READ_P1
+  } else {
+    // JOYPAD_READ_P2 // TODO
+  }
+  if (joypad_is_start(id))  {  fix_print_neocore(10, 11,  "JOYPAD START"); }
+  if (joypad_is_up(id))     {  fix_print_neocore(10, 11,  "JOYPAD UP   "); }
+  if (joypad_is_down(id))   {  fix_print_neocore(10, 11,  "JOYPAD DOWN "); }
+  if (joypad_is_left(id))   {  fix_print_neocore(10, 11,  "JOYPAD LEFT "); }
+  if (joypad_is_right(id))  {  fix_print_neocore(10, 11,  "JOYPAD RIGHT"); }
+  if (joypad_is_a(id))      {  fix_print_neocore(10, 11,  "JOYPAD A    "); }
+  if (joypad_is_b(id))      {  fix_print_neocore(10, 11,  "JOYPAD B    "); }
+  if (joypad_is_c(id))      {  fix_print_neocore(10, 11,  "JOYPAD C    "); }
+  if (joypad_is_d(id))      {  fix_print_neocore(10, 11,  "JOYPAD D    "); }
+}
+
+void debug_joypad_p1() {
   JOYPAD_READ_P1
   if (joypad_p1_is_start())  {  fix_print_neocore(10, 11,  "JOYPAD START"); }
   if (joypad_p1_is_up())     {  fix_print_neocore(10, 11,  "JOYPAD UP   "); }
@@ -730,6 +1051,16 @@ void inline debug_joypad_p1() {
 void update_joypad_p1() { JOYPAD_READ_P1; }
 void update_joypad_edge_p1() { JOYPAD_READ_EDGE_P1; }
 
+void update_joypad(BYTE id) {
+  if (id == 0) { JOYPAD_READ_P1 };
+  // if (id = 1) JOYPAD_READ_P2; TODO
+}
+
+void update_joypad_edge(BYTE id) {
+  if (id == 0) JOYPAD_READ_EDGE_P1;
+}
+
+// TODO : remove deprecated code to v2.0.0
 BOOL joypad_p1_is_up()     { return (JOYPAD_IS_UP_P1)     ? (true) : (false); }
 BOOL joypad_p1_is_down()   { return (JOYPAD_IS_DOWN_P1)   ? (true) : (false); }
 BOOL joypad_p1_is_left()   { return (JOYPAD_IS_LEFT_P1)   ? (true) : (false); }
@@ -739,13 +1070,89 @@ BOOL joypad_p1_is_a()      { return (JOYPAD_IS_A_P1)      ? (true) : (false); }
 BOOL joypad_p1_is_b()      { return (JOYPAD_IS_B_P1)      ? (true) : (false); }
 BOOL joypad_p1_is_c()      { return (JOYPAD_IS_C_P1)      ? (true) : (false); }
 BOOL joypad_p1_is_d()      { return (JOYPAD_IS_D_P1)      ? (true) : (false); }
+//
 
+BOOL joypad_is_up(BYTE id)     { return (JOYPAD_IS_UP_P1 && id == 0)     ? (true) : (false); }
+BOOL joypad_is_down(BYTE id)   { return (JOYPAD_IS_DOWN_P1 && id == 0)   ? (true) : (false); }
+BOOL joypad_is_left(BYTE id)   { return (JOYPAD_IS_LEFT_P1 && id == 0)   ? (true) : (false); }
+BOOL joypad_is_right(BYTE id)  { return (JOYPAD_IS_RIGHT_P1 && id == 0)  ? (true) : (false); }
+BOOL joypad_is_start(BYTE id)  { return (JOYPAD_IS_START_P1 && id == 0)  ? (true) : (false); }
+BOOL joypad_is_a(BYTE id)      { return (JOYPAD_IS_A_P1 && id == 0)      ? (true) : (false); }
+BOOL joypad_is_b(BYTE id)      { return (JOYPAD_IS_B_P1 && id == 0)      ? (true) : (false); }
+BOOL joypad_is_c(BYTE id)      { return (JOYPAD_IS_C_P1 && id == 0)      ? (true) : (false); }
+BOOL joypad_is_d(BYTE id)      { return (JOYPAD_IS_D_P1 && id == 0)      ? (true) : (false); }
+
+BOOL joypad_0_is_a()      { return joypad_is_a(0); }
+BOOL joypad_0_is_b()      { return joypad_is_b(0); }
+BOOL joypad_0_is_c()      { return joypad_is_c(0); }
+BOOL joypad_0_is_d()      { return joypad_is_d(0); }
+BOOL joypad_0_is_left()   { return joypad_is_left(0); }
+BOOL joypad_0_is_right()  { return joypad_is_right(0); }
+BOOL joypad_0_is_up()     { return joypad_is_up(0); }
+BOOL joypad_0_is_down()   { return joypad_is_down(0); }
+BOOL joypad_0_is_select() { return joypad_0_is_select(0); }
+BOOL joypad_0_is_start()  { return joypad_is_start(0); }
 
   //----------------------------------------------------------------------------//
  //                                  UTIL                                      //
 //----------------------------------------------------------------------------//
 
-void inline fix_print_neocore(int x, int y, char *label) { fixPrint(x, y, 0, 0, label); }
+DWORD get_frame_to_second(DWORD frame) {
+  return frame / 60;
+}
+
+DWORD get_second_to_frame(DWORD second) {
+  return second * 60;
+}
+
+void init_system() {
+  init_adpcm();
+  init_gpu();
+}
+
+void init_all_system() {
+  init_system();
+}
+
+Vec2short get_relative_position(Box box, Vec2short world_coord) {
+  Vec2short coord = {
+    world_coord.x - box.p0.x,
+    get_inverse(world_coord.y - box.p3.y)
+  };
+  return coord;
+}
+
+void pause(BOOL (*exitFunc)()) {
+  update_joypad(0);
+  while(!exitFunc()) {
+    update_joypad(0);
+    wait_vbl();
+  }
+}
+
+void sleep(DWORD frame) {
+  wait_vbl_max(frame);
+}
+
+BOOL each_frame(DWORD frame) {
+  return (get_frame_counter() % frame == 0) ? true : false;
+}
+
+// TODO get_negative
+short get_positive(short num) {
+  if (num < 0) num = ~num + 1;
+  return num;
+}
+
+short get_inverse(int num) { // TODO TEST
+  return -num;
+}
+
+int get_random(int range) {
+  return RAND(range);
+}
+
+void fix_print_neocore(int x, int y, char *label) { fixPrint(x, y, 0, 0, label); }
 
 WORD free_ram_info() {
   // $000000  $0FFFFF    Vector Table, 68k program (.PRG files), 68k RAM
@@ -774,6 +1181,15 @@ void init_log() {
   #endif
 }
 
+void set_position_log(WORD _x, WORD _y) {
+  x = _x;
+  y = _y;
+  x_default = x;
+  y_default = y;
+}
+
+// deprecated
+
 void set_pos_log(WORD _x, WORD _y){
   x = _x;
   y = _y;
@@ -781,7 +1197,7 @@ void set_pos_log(WORD _x, WORD _y){
   y_default = y;
 }
 
-WORD inline log_info(char *label){
+WORD log_info(char *label){
   #ifdef LOGGER_ON
   fixPrintf(x, y , 0, 0 , label);
   autoInc();
@@ -789,7 +1205,11 @@ WORD inline log_info(char *label){
   #endif
 }
 
-void inline log_word(char *label, WORD value){
+void log(char *message) {
+  log_info(message);
+}
+
+void log_word(char *label, WORD value){
   #ifdef LOGGER_ON
   WORD yc = y;
   x = x_default + log_info(label) + 2;
@@ -798,7 +1218,7 @@ void inline log_word(char *label, WORD value){
   #endif
 }
 
-void inline log_int(char *label, int value){
+void log_int(char *label, int value){
   #ifdef LOGGER_ON
   WORD yc = y;
   x = x_default + log_info(label) + 2;
@@ -807,7 +1227,7 @@ void inline log_int(char *label, int value){
   #endif
 }
 
-void inline log_dword(char *label, DWORD value){
+void log_dword(char *label, DWORD value){
   #ifdef LOGGER_ON
   WORD yc = y;
   x = x_default + log_info(label) + 2;
@@ -816,7 +1236,7 @@ void inline log_dword(char *label, DWORD value){
   #endif
 }
 
-void inline log_short(char *label, short value) {
+void log_short(char *label, short value) {
   #ifdef LOGGER_ON
   WORD yc = y;
   x = x_default + log_info(label) + 2;
@@ -825,7 +1245,7 @@ void inline log_short(char *label, short value) {
   #endif
 }
 
-void inline log_byte(char *label, BYTE value) {
+void log_byte(char *label, BYTE value) {
   #ifdef LOGGER_ON
   WORD yc = y;
   x = x_default + log_info(label) + 2;
@@ -834,7 +1254,7 @@ void inline log_byte(char *label, BYTE value) {
   #endif
 }
 
-void inline log_bool(char *label, BOOL value) {
+void log_bool(char *label, BOOL value) {
   #ifdef LOGGER_ON
   WORD yc = y;
   x = x_default + log_info(label) + 2;
@@ -843,7 +1263,7 @@ void inline log_bool(char *label, BOOL value) {
   #endif
 }
 
-void inline log_gas(char *label, GFX_Animated_Sprite *gfx_animated_sprite) {
+void log_gas(char *label, GFX_Animated_Sprite *gfx_animated_sprite) {
   #ifdef LOGGER_ON
   log_info(label);
   log_word("BASESPRITE : " , gfx_animated_sprite->aSpriteDAT.baseSprite);
@@ -861,7 +1281,7 @@ void inline log_gas(char *label, GFX_Animated_Sprite *gfx_animated_sprite) {
   #endif
 }
 
-void inline log_spriteInfo(char *label, spriteInfo *si) {
+void log_spriteInfo(char *label, spriteInfo *si) {
   #ifdef LOGGER_ON
   log_info(label);
   log_word("PALCOUNT : ", si->palCount);
@@ -870,7 +1290,7 @@ void inline log_spriteInfo(char *label, spriteInfo *si) {
   #endif
 }
 
-void inline log_box(char *label, Box *b) {
+void log_box(char *label, Box *b) {
   #ifdef LOGGER_ON
   log_info(label);
   log_short("P0X", (short)b->p0.x);
@@ -896,7 +1316,7 @@ void inline log_box(char *label, Box *b) {
   #endif
 }
 
-void inline log_pictureInfo(char *label, pictureInfo *pi) {
+void log_pictureInfo(char *label, pictureInfo *pi) {
   #ifdef LOGGER_ON
   log_info(label);
   log_word("COLSIZE : ", (WORD)pi->colSize);
@@ -905,6 +1325,38 @@ void inline log_pictureInfo(char *label, pictureInfo *pi) {
   log_word("TILEHEIGHT : ", (WORD)pi->tileHeight);
   #endif
 }
+
+  /*---------------*/
+ /* SOUND         */
+/*---------------*/
+
+void init_adpcm() {
+  init_adpcm_player();
+}
+
+Adpcm_player *get_adpcm_player() {
+  return &adpcm_player;
+}
+
+void push_remaining_frame_adpcm_player(DWORD frame) {
+  adpcm_player.remaining_frame += frame;
+  adpcm_player.state = PLAYING;
+}
+
+void update_adpcm_player() {
+  if (adpcm_player.remaining_frame != 0) {
+    adpcm_player.state = PLAYING;
+    adpcm_player.remaining_frame -= 1;
+  }
+
+  if (adpcm_player.remaining_frame > 0 && adpcm_player.state != IDLE) {
+    adpcm_player.state = PLAYING;
+    adpcm_player.remaining_frame -= 1;
+  }
+
+  if (adpcm_player.remaining_frame == 0) adpcm_player.state = IDLE;
+}
+
 
   /*---------------*/
  /* UTIL VECTOR   */

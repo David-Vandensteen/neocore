@@ -1,7 +1,9 @@
+.DS_Store
 *.png_reject.png
 dist/
 build/
 *.wav
+*.mp3
 .vscode
 SPR.cd
 char.bin

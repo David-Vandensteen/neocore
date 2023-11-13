@@ -9,7 +9,15 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.2, and includes t
 The library is mainly tested on Raine and MAME emulators and is compatible with Windows 10 and Windows 11 for building.
   
 I share my tools and my code, these could possibly help your projects on this platform.  
-(**Doxygen doc**) http://azertyvortex.free.fr/neocore-doxy/r3/neocore_8h.html  
+
+## Doc
+
+  - Doxygen : http://azertyvortex.free.fr/neocore-doxy/r5/neocore_8h.html
+  - Snippet : https://github.com/David-Vandensteen/neocore/tree/develop/snippet
+
+### Game, demo, code learning
+
+  - Pong : https://github.com/David-Vandensteen/neogeo-cd-pong
     
 ## Feature
 
@@ -55,11 +63,11 @@ ___***Warn : mak script override path environment variable during the compiling,
 ```
 - **Run with Raine**
 ```cmd
-.\mak.bat run:raine
+.\mak.bat raine
 ```
 - **Run with Mame**
 ```cmd
-.\mak.bat run:mame
+.\mak.bat mame
 ```
 or
 ```cmd
@@ -71,7 +79,7 @@ or
 ```
 ## Create your first experimentation
 ```cmd
-xcopy /E /I templates\sample samples\awesome_project
+xcopy /E /I bootstrap\sample samples\awesome_project
 ```
 
 Edit project.xml and set the project name  
@@ -130,7 +138,7 @@ $project = "c:\my-git\myGame"
 * Replace `c:\my-git\myGame` with your real path. 
 
 ```cmd
-xcopy /E /I src-lib $project\neocore\src-lib; copy manifest.xml $project\neocore; copy templates\.gitignore $project\.gitignore; xcopy /E /I toolchain $project\neocore\toolchain; xcopy /E /I templates\project $project\src; notepad $project\src\project.xml
+xcopy /E /I src-lib $project\neocore\src-lib; copy manifest.xml $project\neocore; copy bootstrap\.gitignore $project\.gitignore; xcopy /E /I toolchain $project\neocore\toolchain; xcopy /E /I bootstrap\standalone $project\src; notepad $project\src\project.xml
 ```
 
 ## DATlib assets (in progress)
@@ -151,7 +159,7 @@ The Animator tool is available here:
 ## Compiling the lib (necessary if you develop Neocore lib)
 ```cmd
 cd src-lib
-.\build-neocore.bat
+.\build-neocore.bat -gccPath ..\build\gcc\gcc-2.95.2 -includePath ..\build\include -libraryPath ..\build\lib
 ```
 This script override path environment variable during the compilation.  
 its avoid collisions with other bin, sdk, gcc...  

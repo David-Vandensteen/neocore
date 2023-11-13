@@ -13,6 +13,25 @@ function Watch-Error {
   }
 }
 
+function Write-DATXML {
+  param(
+    [Parameter(Mandatory=$true)][String] $InputFile,
+    [Parameter(Mandatory=$true)][String] $OutputFile
+  )
+
+  $xmlDoc = New-Object System.Xml.XmlDocument
+  $xmlDoc.Load($InputFile)
+
+  $charDataNode = $xmlDoc.SelectSingleNode("//chardata")
+
+  $newXmlDoc = New-Object System.Xml.XmlDocument
+
+  $newNode = $newXmlDoc.ImportNode($charDataNode, $true)
+  $newXmlDoc.AppendChild($newNode)
+
+  $newXmlDoc.Save($OutputFile)
+}
+
 function Write-Sprite {
   param (
     [Parameter(Mandatory=$true)][String] $Format,
@@ -46,11 +65,14 @@ function Write-Sprite {
   if (-not $process.HasExited) {
       $process.Kill()
       Logger-Error -Message "Timeout : compiling sprite exceed timeout ..."
+      Watch-Error
   } else {
       Write-Host "Compiled"
   }
 
   $timer.Stop()
+
+  Watch-Error
 
   & CharSplit.exe char.bin "-$Format" $OutputFile
   Remove-Item -Path char.bin -Force

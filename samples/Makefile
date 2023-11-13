@@ -4,26 +4,31 @@
 PROJECTNAME = $(PROJECT)
 NEOBUILDTEMP = $(PATHBUILD)
 
+#INCLUDE_PATH = $(INCLUDE_PATH)
+#LIBRARY_PATH = $(LIBRARY_PATH)
+
 #######################################
 # Base dir of your m68k gcc toolchain #
 #######################################
 
-BASEDIR = $(NEODEV)
-AS = $(BASEDIR)/m68k/bin/as
-LD = $(BASEDIR)/m68k/bin/gcc
-CC = $(BASEDIR)/m68k/bin/gcc
-AR = $(BASEDIR)/m68k/bin/ar
-OBJC = $(BASEDIR)/m68k/bin/objcopy
-BIN2O = $(BASEDIR)/m68k/bin/bin2elf
-GFXCC = $(BASEDIR)/m68k/bin/gfxcc
-FIXCNV = $(BASEDIR)/m68k/bin/fixcnv
+#BASEDIR = $(NEODEV)
+
+AS = $(GCC_PATH)/as
+LD = $(GCC_PATH)/gcc
+CC = $(GCC_PATH)/gcc
+AR = $(GCC_PATH)/ar
+OBJC = $(GCC_PATH)/objcopy
+BIN2O = $(GCC_PATH)/bin2elf
+GFXCC = $(GCC_PATH)/gfxcc
+FIXCNV = $(GCC_PATH)/m68k/bin/fixcnv
 
 #######################################
 # Path to libraries and include files #
 #######################################
 
-INCDIR = $(BASEDIR)/m68k/include
-LIBDIR = $(BASEDIR)/m68k/lib
+#INCDIR = $(BASEDIR)/m68k/include
+#LIBDIR = $(BASEDIR)/m68k/lib
+
 TMPDIR = $(TEMP)
 
 ###################################
@@ -40,12 +45,13 @@ PADBYTE = 0xFF
 ##############################
 # Object Files and Libraries #
 ##############################
-SRC_C= $(wildcard *.c)
+#SRC_C := $(wildcard *.c) $(wildcard */*.c)
+SRC_C := $(shell find -name '*.c' | tr "\n" " ")
 
 OBJS = $(NEOBUILDTEMP)/crt0_$(OUTPUT).o
 OBJS := $(OBJS) $(NEOBUILDTEMP)/palettes.o
 OBJS := $(OBJS) $(NEOBUILDTEMP)/maps.o
-OBJS += $(patsubst %.c,$(NEOBUILDTEMP)/%.o,$(wildcard *.c))
+OBJS += $(patsubst %.c,$(NEOBUILDTEMP)/%.o,$(SRC_C))
 
 LIBS = -lneocore -lDATlib -lmath -lprocess -lc -lgcc
 
@@ -54,7 +60,7 @@ LIBS = -lneocore -lDATlib -lmath -lprocess -lc -lgcc
 #####################
 
 ASFLAGS = -m68000 --register-prefix-optional
-LDFLAGS = -Wl,-T$(BASEDIR)/src/system/neo$(OUTPUT).x -Xlinker -Map=$(NEOBUILDTEMP)/output.map
+LDFLAGS = -Wl,-T$(NEO_GEO_SYSTEM) -Xlinker -Map=$(NEOBUILDTEMP)/output.map
 CCFLAGS = -m68000 -O3 -Wall -fomit-frame-pointer -ffast-math -fno-builtin -nostartfiles -nodefaultlibs -D__$(OUTPUT)__
 ARFLAGS = cr
 DEBUG = -g
@@ -68,15 +74,18 @@ FIXFILES = $(BASEDIR)/src/shared/fix_font.bmp
 # Make rules #
 ##############
 all: $(FILEPRG)
-$(FILEPRG) : $(NEOBUILDTEMP)/$(PROJECTNAME).o
+
+$(FILEPRG): $(NEOBUILDTEMP)/$(PROJECTNAME).o
 	$(OBJC) -O binary $< $@
 
-$(NEOBUILDTEMP)/$(PROJECTNAME).o : $(OBJS)
-
-	$(LD) -L$(LIBDIR) $(CCFLAGS) $(LDFLAGS) $(OBJS) $(LIBS) -o $@
+$(NEOBUILDTEMP)/$(PROJECTNAME).o: $(OBJS)
+	$(LD) -L$(LIBRARY_PATH) $(CCFLAGS) $(LDFLAGS) $(OBJS) $(LIBS) -o $@
 
 $(NEOBUILDTEMP)/%.o: %.c
-	$(CC) -I$(INCDIR) $(CCFLAGS) -c $< -o $@
+	$(CC) -I$(INCLUDE_PATH) -I$(PROJECT_PATH) $(CCFLAGS) -c $< -o $@
+
+$(NEOBUILDTEMP)/%.o: */%.c
+	$(CC) -I$(INCLUDE_PATH) -I$(PROJECT_PATH) $(CCFLAGS) -c $< -o $@
 
 $(NEOBUILDTEMP)/%.o: %.s
 	$(AS) $(ASFLAGS) $< -o $@
