@@ -45,7 +45,8 @@ PADBYTE = 0xFF
 ##############################
 # Object Files and Libraries #
 ##############################
-SRC_C := $(wildcard *.c) $(wildcard */*.c)
+#SRC_C := $(wildcard *.c) $(wildcard */*.c)
+SRC_C := $(shell find -name '*.c' | tr "\n" " ")
 
 OBJS = $(NEOBUILDTEMP)/crt0_$(OUTPUT).o
 OBJS := $(OBJS) $(NEOBUILDTEMP)/palettes.o
