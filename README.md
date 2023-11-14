@@ -13,7 +13,7 @@ I share my tools and my code, these could possibly help your projects on this pl
 ## Doc
 
   - Doxygen : http://azertyvortex.free.fr/neocore-doxy/r5/neocore_8h.html
-  - Snippet : https://github.com/David-Vandensteen/neocore/tree/develop/snippet
+  - Snippet : https://github.com/David-Vandensteen/neocore/tree/release/1.0.5/snippet
 
 ### Game, demo, code learning
 
@@ -73,10 +73,15 @@ or
 ```cmd
 .\mak.bat run
 ```
-- Delivery ISO and Mame
+- Delivery ISO
 ```cmd
-.\mak.bat dist
+.\mak.bat dist:iso
 ```
+- Delivery MAME
+```cmd
+.\mak.bat dist:mame
+```
+
 ## Create your first experimentation
 ```cmd
 xcopy /E /I bootstrap\sample samples\awesome_project
