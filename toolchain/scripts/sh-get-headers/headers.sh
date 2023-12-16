@@ -1,25 +1,3 @@
-# #!/bin/bash
-# build_folder="../../../build"
-
-# if [ ! -d "$build_folder" ]; then
-#     echo "$build_folder not found."
-#     exit 1
-# fi
-
-# cd "$build_folder"
-# mkdir header
-# cd header
-
-# curl -O http://azertyvortex.free.fr/download/neodev-header.zip
-# curl -O http://azertyvortex.free.fr/download/DATlib-header.zip
-
-# unzip neodev-header.zip
-# unzip DATlib-header.zip
-
-# rm neodev-header.zip
-# rm DATlib-header.zip
-
-
 #!/bin/bash
 
 build_folder="../../../build"
