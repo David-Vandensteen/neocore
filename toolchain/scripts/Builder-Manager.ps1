@@ -2,6 +2,7 @@
 # David Vandensteen
 # MIT
 
+
 param (
   [Parameter(Mandatory=$true)][String] $ConfigFile,
   [String] $Rule = "default"
@@ -57,6 +58,7 @@ function Check {
     }
     return $true
   }
+
   function Check-XMLError {
     param ([Parameter(Mandatory=$true)][String] $Entry)
     Write-Host "error : xml $Entry not found" -ForegroundColor Red
@@ -186,9 +188,12 @@ function Main {
   Write-Host "--------------------------------------------"
   Write-Host ""
 
+  Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\module-check-rule.ps1"
   Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\module-logger.ps1"
   Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\module-sdk.ps1"
   Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\module-emulators.ps1"
+
+  Check-Rule
 
   $raineProcessName = [System.IO.Path]::GetFileNameWithoutExtension($Config.project.emulator.raine.exeFile)
   $mameProcessName = [System.IO.Path]::GetFileNameWithoutExtension($Config.project.emulator.mame.exeFile)
