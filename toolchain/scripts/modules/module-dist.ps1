@@ -65,7 +65,7 @@ function Write-Dist {
 
       $destination = Join-Path `
                       -Path $Config.project.distPath `
-                      -ChildPath "$($Config.project.name)\$($Config.project.version)\iso"
+                      -ChildPath "$($Config.project.name)\$($Config.project.name)-$($Config.project.version)\iso"
 
       Copy-Item -Path $source -Destination $destination
 
