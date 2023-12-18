@@ -76,6 +76,19 @@ function Check {
     if (-Not($Config.project.neocorePath)) { Check-XMLError -Entry "project.neocorePath" }
     if (-Not($Config.project.buildPath)) { Check-XMLError -Entry "project.buildPath" }
     if (-Not($Config.project.distPath)) { Check-XMLError -Entry "project.distPath" }
+    if (-Not($Config.project.emulator)) { Check-XMLError -Entry "project.emulator" }
+    if (-Not($Config.project.compiler)) { Check-XMLError -Entry "project.compiler" }
+    if (-Not($Config.project.compiler.path)) { Check-XMLError -Entry "project.compiler.path" }
+    if (-Not($Config.project.compiler.includePath)) { Check-XMLError -Entry "project.compiler.includePath" }
+    if (-Not($Config.project.compiler.libraryPath)) { Check-XMLError -Entry "project.compiler.libraryPath" }
+    if (-Not($Config.project.compiler.systemFile)) { Check-XMLError -Entry "project.compiler.systemFile" }
+
+    if ($Config.project.sound) {
+      if ($Config.project.sound.cdda) {
+        if (-Not($Config.project.sound.cdda.dist.iso.format)) { Check-XMLError -Entry "project.sound.cdda.dist.iso.format" }
+        if (-Not($Config.project.sound.cdda.tracks)) { Check-XMLError -Entry "project.sound.cdda.tracks" }
+      }
+    }
   }
   function Check-Path {
     if ((Test-Path -Path $Config.project.makefile) -eq $false) { Check-PathError -Path $Config.project.makefile }

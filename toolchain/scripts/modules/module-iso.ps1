@@ -1,5 +1,5 @@
 Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-install-component.ps1"
-Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-mp3towav.ps1"
+Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-audio-convert.ps1"
 
 function Write-ISO {
   param (
@@ -81,21 +81,73 @@ function Write-CUE {
     $ext = [System.IO.Path]::GetExtension($File)
     $path = [System.IO.Path]::GetDirectoryName($File)
 
-    Write-Host $baseName
-    Write-Host $ext
-    Write-Host $path
-
     Copy-Item -Path $File -Destination "$($buildConfig.pathBuild)\$path"
 
-    if ($ext -eq ".mp3") {
+    if ($ext -eq ".mp3" -or ($ext -eq ".wav" -and $Config.dist.iso.format -eq ".mp3")) {
       if ((Test-Path -Path "$($buildConfig.pathNeocore)\bin\mpg123-1.31.3-static-x86-64") -eq $false) {
-        Install-Component -URL "$($buildConfig.baseURL)/mpg123-1.31.3-static-x86-64.zip" -PathDownload $buildConfig.pathSpool -PathInstall "$($buildConfig.pathNeocore)\bin"
+        Install-Component `
+          -URL "$($buildConfig.baseURL)/mpg123-1.31.3-static-x86-64.zip" `
+          -PathDownload $buildConfig.pathSpool `
+          -PathInstall "$($buildConfig.pathNeocore)\bin"
       }
+    }
+
+    if (-Not($Rule -like "*dist*")) {
+      if ($ext -eq ".wav") {
+        Write-Host "copy $File" -ForegroundColor Blue
+        Copy-Item -Path "$($buildConfig.pathBuild)\$path\$baseName$ext" -Destination $path\$baseName$ext
+      }
+
+      if ($ext -eq ".mp3") {
+        Write-WAV `
+          -mpg123 "$($buildConfig.pathNeocore)\bin\mpg123-1.31.3-static-x86-64\mpg123.exe" `
+          -WAVFile "$($buildConfig.pathBuild)\$path\$baseName.wav" `
+          -MP3File "$path\$baseName.mp3"
+        $File = "$path\$baseName.wav"
+      }
+    }
+
+    if ($Rule -eq "dist:mame" -and $ext -eq ".mp3") {
       Write-WAV `
         -mpg123 "$($buildConfig.pathNeocore)\bin\mpg123-1.31.3-static-x86-64\mpg123.exe" `
         -WAVFile "$($buildConfig.pathBuild)\$path\$baseName.wav" `
         -MP3File "$path\$baseName.mp3"
       $File = "$path\$baseName.wav"
+    }
+
+    if ($Rule -eq "dist:mame" -and $ext -eq ".wav") {
+      Write-Host "copy $File" -ForegroundColor Blue
+      Copy-Item -Path "$($buildConfig.pathBuild)\$path\$baseName$ext" -Destination $path\$baseName$ext
+    }
+
+    if ($Rule -like "dist:iso") {
+      if ($ext -eq ".mp3" -and $Config.dist.iso.format -eq "wav") {
+        Write-WAV `
+          -mpg123 "$($buildConfig.pathNeocore)\bin\mpg123-1.31.3-static-x86-64\mpg123.exe" `
+          -WAVFile "$($buildConfig.pathBuild)\$path\$baseName.wav" `
+          -MP3File "$path\$baseName.mp3"
+        $File = "$path\$baseName.wav"
+      }
+
+      if ($ext -eq ".wav" -and $Config.dist.iso.format -eq "wav") {
+        Write-Host "copy $File" -ForegroundColor Blue
+        Copy-Item -Path "$($buildConfig.pathBuild)\$path\$baseName$ext" -Destination $path\$baseName$ext
+      }
+
+      if ($ext -eq ".wav" -and $Config.dist.iso.format -eq "mp3") {
+        if ((Test-Path -Path "$($buildConfig.pathNeocore)\bin\ffmpeg.exe") -eq $false) {
+          Install-Component `
+            -URL "$($buildConfig.baseURL)/ffmpeg-23-12-18.zip" `
+            -PathDownload $buildConfig.pathSpool `
+            -PathInstall "$($buildConfig.pathNeocore)\bin"
+        }
+
+        Write-MP3 `
+          -ffmpeg "$($buildConfig.pathNeocore)\bin\ffmpeg.exe" `
+          -WAVFile "$path\$baseName.wav" `
+          -MP3File "$($buildConfig.pathBuild)\$path\$baseName.mp3"
+        $File = "$path\$baseName.wav"
+      }
     }
 
     return (
@@ -112,7 +164,6 @@ function Write-CUE {
   if ($Config) {
     $tracks = $Config.tracks.track
     $tracks | ForEach-Object {
-      Write-Host "DEBUG : $($_.file)"
       Get-CUETrack `
         -Rule $Rule `
         -File $_.file `

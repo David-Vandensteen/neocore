@@ -39,6 +39,11 @@
   </compiler>
   <sound>
     <cdda>
+      <dist>
+        <iso>
+          <format>mp3</format>
+        </iso>
+      </dist>
       <tracks>
         <track><!-- track id 1 is reserved for the binary program -->
           <id>2</id>
