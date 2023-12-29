@@ -1,6 +1,5 @@
 /*
   David Vandensteen
-  2018
 */
 
   //--------------------------------------------------------------------------//
@@ -778,6 +777,7 @@ void log_gas(char *label, GFX_Animated_Sprite *gfx_animated_sprite);
 void log_spriteInfo(char *label, spriteInfo *si);
 void log_box(char *label, Box *b);
 void log_pictureInfo(char *label, pictureInfo *pi);
+void log_vec2short(char *label, Vec2short vec2short);
 
   /*---------------*/
  /* SOUND         */
