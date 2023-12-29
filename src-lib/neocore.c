@@ -1,6 +1,5 @@
 /*
   David Vandensteen
-  2018
 */
 
 #include <DATlib.h>
@@ -1135,6 +1134,7 @@ void sleep(DWORD frame) {
 }
 
 BOOL each_frame(DWORD frame) {
+  if (frame == 0) return true;
   return (get_frame_counter() % frame == 0) ? true : false;
 }
 
@@ -1324,6 +1324,12 @@ void log_pictureInfo(char *label, pictureInfo *pi) {
   log_word("TILEWIDTH : ", (WORD)pi->tileWidth);
   log_word("TILEHEIGHT : ", (WORD)pi->tileHeight);
   #endif
+}
+
+void log_vec2short(char *label, Vec2short vec2short) {
+  log_info(label);
+  log_short("X", vec2short.x);
+  log_short("Y", vec2short.y);
 }
 
   /*---------------*/

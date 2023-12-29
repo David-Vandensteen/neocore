@@ -40,7 +40,7 @@ function Write-Dist {
 
   if ($ISOFile -and $Config.project.sound.cdda.tracks.track) {
     Write-Host ""
-    Write-Host "copy sound tracks"
+    Write-Host "copy sound tracks" -ForegroundColor Blue
     Write-Host ""
     Write-Host "CUE file : $CUEFile"
     $content = [System.IO.File]::ReadAllText($CUEFile)
@@ -49,25 +49,30 @@ function Write-Dist {
 
       $fileName = Split-Path -Path $file -Leaf -Resolve
       $filePath = Split-Path -Path $file
+      $fileExt = [System.IO.Path]::GetExtension($File)
+
+      if ($buildConfig.rule -eq "dist:iso" ) {
+        $ext = $Config.project.sound.cdda.dist.iso.format
+      } else {
+        $ext = "wav"
+      }
+
       $fileNameWithoutExt = [System.IO.Path]::GetFileNameWithoutExtension($fileName)
 
       $source = Join-Path `
                   -Path $Config.project.buildPath `
-                  -ChildPath "$($Config.project.name)\$($filePath)\$($fileNameWithoutExt).wav"
+                  -ChildPath "$($Config.project.name)\$($filePath)\$($fileNameWithoutExt).$ext"
 
       $destination = Join-Path `
                       -Path $Config.project.distPath `
-                      -ChildPath "$($Config.project.name)\$($Config.project.version)\iso"
+                      -ChildPath "$($Config.project.name)\$($Config.project.name)-$($Config.project.version)\iso"
 
-      Write-Host "file $file"
-      Write-Host "fileName $fileName"
-      Write-Host "fileNameWithoutExt $fileNameWithoutExt"
-      Write-Host "filePath $filePath"
-      Write-Host "destination $destination"
       Copy-Item -Path $source -Destination $destination
-      $content = $content.Replace("$($filePath)\$($fileNameWithoutExt).wav", "$fileNameWithoutExt.wav")
+
+      $content = $content.Replace("$($filePath)\$($fileNameWithoutExt).wav", "$($fileNameWithoutExt).$ext")
+      $content = $content.Replace("$($filePath)\$($fileNameWithoutExt).mp3", "$($fileNameWithoutExt).$ext")
     }
-    Write-Host "make a cue file"
+    Write-Host "make the cue file" -ForegroundColor Blue
     Write-Host $content
     $content | Out-File -FilePath "$PathDestination\iso\$ProjectName.cue" -Encoding ascii -Force
   }
