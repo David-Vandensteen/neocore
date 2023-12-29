@@ -1,6 +1,5 @@
 /*
   David Vandensteen
-  2018
 */
 
 #include <DATlib.h>
@@ -1135,6 +1134,7 @@ void sleep(DWORD frame) {
 }
 
 BOOL each_frame(DWORD frame) {
+  if (frame == 0) return true;
   return (get_frame_counter() % frame == 0) ? true : false;
 }
 
