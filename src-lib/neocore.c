@@ -35,7 +35,6 @@
 #define X 0
 #define Y 1
 
-#define LOGGER_ON
 #define LOGGER_X_INIT   1
 #define LOGGER_Y_INIT   2
 
@@ -1032,13 +1031,11 @@ char nc_get_sin(WORD index) { return sinTable[index]; }
 
 void nc_init_log() {
   nc_shadow_init_system();
-  #ifdef LOGGER_ON // TODO : find better way to desactivate logger
   x = LOGGER_X_INIT;
   y = LOGGER_Y_INIT;
   x_default = LOGGER_X_INIT;
   y_default = LOGGER_Y_INIT;
   clearFixLayer();
-  #endif
 }
 
 void nc_set_position_log(WORD _x, WORD _y) {
@@ -1049,11 +1046,9 @@ void nc_set_position_log(WORD _x, WORD _y) {
 }
 
 WORD nc_log_info(char *label){
-  #ifdef LOGGER_ON
   fixPrintf(x, y , 0, 0 , label);
   nc_autoInc();
   return nc_countChar(label);
-  #endif
 }
 
 void nc_log(char *message) {
@@ -1061,70 +1056,55 @@ void nc_log(char *message) {
 }
 
 void nc_log_word(char *label, WORD value){
-  #ifdef LOGGER_ON
   WORD yc = y;
   x = x_default + nc_log_info(label) + 2;
   fixPrintf(x , yc, 0, 0, "%04d", value);
   x = x_default;
-  #endif
 }
 
 void nc_log_int(char *label, int value){
-  #ifdef LOGGER_ON
   WORD yc = y;
   x = x_default + nc_log_info(label) + 2;
   fixPrintf(x , yc, 0, 0, "%08d", value);
   x = x_default;
-  #endif
 }
 
 void nc_log_dword(char *label, DWORD value){
-  #ifdef LOGGER_ON
   WORD yc = y;
   x = x_default + nc_log_info(label) + 2;
   fixPrintf(x , yc, 0, 0, "%08d", value);
   x = x_default;
-  #endif
 }
 
 void nc_log_short(char *label, short value) {
-  #ifdef LOGGER_ON
   WORD yc = y;
   x = x_default + nc_log_info(label) + 2;
   fixPrintf(x , yc, 0, 0, "%02d", value);
   x = x_default;
-  #endif
 }
 
 void nc_log_byte(char *label, BYTE value) {
-  #ifdef LOGGER_ON
   WORD yc = y;
   x = x_default + nc_log_info(label) + 2;
   fixPrintf(x , yc, 0, 0, "%02d", value);
   x = x_default;
-  #endif
 }
 
 void nc_log_bool(char *label, BOOL value) {
-  #ifdef LOGGER_ON
   WORD yc = y;
   x = x_default + nc_log_info(label) + 2;
   fixPrintf(x , yc, 0, 0, "%01d", value);
   x = x_default;
-  #endif
 }
 
 void nc_log_spriteInfo(char *label, spriteInfo *si) {
-  #ifdef LOGGER_ON
   nc_log_info(label);
   nc_log_word("PALCOUNT : ", si->palCount);
   nc_log_word("FRAMECOUNT : ", si->frameCount);
   nc_log_word("MAXWIDTH : ", si->maxWidth);
-  #endif
 }
 
 void nc_log_box(char *label, Box *b) {
-  #ifdef LOGGER_ON
   nc_log_info(label);
   nc_log_short("P0X", (short)b->p0.x);
   nc_log_short("P0Y", (short)b->p0.y);
@@ -1146,17 +1126,14 @@ void nc_log_box(char *label, Box *b) {
   nc_log_info("");
   nc_log_short("WIDTH OFFSET ", b->widthOffset);
   nc_log_short("HEIGHT OFFSET ", b->heightOffset);
-  #endif
 }
 
 void nc_log_pictureInfo(char *label, pictureInfo *pi) {
-  #ifdef LOGGER_ON
   nc_log_info(label);
   nc_log_word("COLSIZE : ", (WORD)pi->colSize);
   nc_log_word("UNUSED HEIGHT : ", (WORD)pi->unused__height);
   nc_log_word("TILEWIDTH : ", (WORD)pi->tileWidth);
   nc_log_word("TILEHEIGHT : ", (WORD)pi->tileHeight);
-  #endif
 }
 
 void nc_log_vec2short(char *label, Vec2short vec2short) {
