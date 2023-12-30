@@ -16,9 +16,6 @@ int main(void) {
     if (nc_joypad_is_b(0)) nc_log_info("ITS B !");
     if (nc_joypad_is_c(0)) nc_log_info("ITS C !");
     if (nc_joypad_is_d(0)) nc_log_info("ITS D !");
-
-    nc_close_vbl();
   };
-  nc_close_vbl();
   return 0;
 }

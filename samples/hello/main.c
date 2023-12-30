@@ -21,9 +21,6 @@ int main(void) {
     nc_set_position_log(7, 20);
     nc_log_info("DAVID VANDENSTEEN");
     /* logger is an easy way to write a text without coordinate constraint */
-
-    nc_close_vbl();
   };
-  nc_close_vbl();
   return 0;
 }

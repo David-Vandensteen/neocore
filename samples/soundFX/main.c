@@ -51,8 +51,6 @@ int main(void) {
     debug_adpcm_player();
 
     nc_set_position_log(0, 0);
-    nc_close_vbl();
   };
-  nc_close_vbl();
   return 0;
 }

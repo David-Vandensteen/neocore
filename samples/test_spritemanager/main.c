@@ -45,8 +45,6 @@ int main(void) {
   while(1) {
     nc_update();
     update();
-    nc_close_vbl();
   };
-  nc_close_vbl();
   return 0;
 }

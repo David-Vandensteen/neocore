@@ -25,8 +25,6 @@ int main(void) {
       logo_swap_palette.data[1] = 0x0000;
       palJobPut(logo.pictureDAT.basePalette, logo_swap_palette.palCount, logo_swap_palette.data);
     }
-    nc_close_vbl();
   };
-  nc_close_vbl();
   return 0;
 }

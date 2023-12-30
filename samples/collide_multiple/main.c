@@ -37,8 +37,6 @@ int main(void) {
       if (nc_get_frame_counter() % 20) { nc_hide_gfx_animated_sprite_physic(&player); } else { nc_show_gfx_animated_sprite_physic(&player); }
      } else { nc_show_gfx_animated_sprite_physic(&player); }
     nc_update_animation_gfx_animated_sprite_physic(&player);
-    nc_close_vbl();
   };
-  nc_close_vbl();
   return 0;
 }

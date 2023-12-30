@@ -49,9 +49,6 @@ int main(void) {
     } else { nc_show_gfx_animated_sprite_physic(&player);}
 
     nc_update_animation_gfx_animated_sprite_physic(&player);
-
-    nc_close_vbl();
   };
-  nc_close_vbl();
   return 0;
 }

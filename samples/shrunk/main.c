@@ -31,8 +31,6 @@ int main(void) {
     nc_shrunk(logo3.pictureDAT.baseSprite, logo3.pictureDAT.info->tileWidth, nc_get_shrunk_proportional_table(nc_get_frame_counter() & SHRUNK_TABLE_PROP_SIZE)); // todo (minor) - rename SHRUNK_PROPORTIONAL_TABLE_SIZE
 
     /* neocore provide a precalculated table for keep "aspect ratio" */
-    nc_close_vbl();
   };
-  nc_close_vbl();
   return 0;
 }

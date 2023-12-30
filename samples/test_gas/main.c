@@ -59,8 +59,6 @@ int main(void) {
     if (nc_get_frame_counter() >= (frame_seq - accumulator)) {
       nc_log_info("TEST END");
     }
-    nc_close_vbl();
   };
-  nc_close_vbl();
   return 0;
 }

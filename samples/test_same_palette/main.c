@@ -26,8 +26,6 @@ int main(void) {
     nc_log_word("PAL PLANET ", (int)planet.paletteInfoDAT);
     nc_log_word("PAL BACK   ", (int)backgroung.paletteInfoDAT);
     nc_update_animation_gfx_animated_sprite(&player);
-    nc_close_vbl();
   };
-  nc_close_vbl();
   return 0;
 }
