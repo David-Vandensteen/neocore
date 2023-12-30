@@ -204,32 +204,32 @@ JOYPAD_INIT_P1
  //                                   GFX                                    //
 //--------------------------------------------------------------------------//
 
-void shrunk_centroid_gfx_picture(GFX_Picture *gfx_picture, short center_x, short center_y, WORD shrunk_value) {
-  shrunk(gfx_picture->pictureDAT.baseSprite, gfx_picture->pictureDAT.info->tileWidth, shrunk_value);
+void shrunk_centroid_gfx_picture(
+  GFX_Picture *gfx_picture,
+  short center_x,
+  short center_y,
+  WORD shrunk_value
+  ) {
+  shrunk(
+    gfx_picture->pictureDAT.baseSprite,
+    gfx_picture->pictureDAT.info->tileWidth, shrunk_value
+  );
   pictureSetPos(
     &gfx_picture->pictureDAT,
-    shrunk_centroid_get_translated_x(center_x, gfx_picture->pictureInfoDAT->tileWidth, SHRUNK_EXTRACT_X(shrunk_value)),
-    shrunk_centroid_get_translated_y(center_y, gfx_picture->pictureInfoDAT->tileHeight, SHRUNK_EXTRACT_Y(shrunk_value))
+    shrunk_centroid_get_translated_x(
+      center_x,
+      gfx_picture->pictureInfoDAT->tileWidth,
+      SHRUNK_EXTRACT_X(shrunk_value)
+    ),
+    shrunk_centroid_get_translated_y(
+      center_y,
+      gfx_picture->pictureInfoDAT->tileHeight,
+      SHRUNK_EXTRACT_Y(shrunk_value)
+    )
   );
 }
 
 void destroy_gfx_scroller(GFX_Scroller *gfx_scroller) {
-  sprite_index_manager_set_free(gfx_scroller->scrollerDAT.baseSprite, 21);
-  clearSprites(gfx_scroller->scrollerDAT.baseSprite, 21);
-}
-
-// deprecated
-
-void shrunk_centroid_gp(GFX_Picture *gfx_picture, short center_x, short center_y, WORD shrunk_value) {
-  shrunk(gfx_picture->pictureDAT.baseSprite, gfx_picture->pictureDAT.info->tileWidth, shrunk_value);
-  pictureSetPos(
-    &gfx_picture->pictureDAT,
-    shrunk_centroid_get_translated_x(center_x, gfx_picture->pictureInfoDAT->tileWidth, SHRUNK_EXTRACT_X(shrunk_value)),
-    shrunk_centroid_get_translated_y(center_y, gfx_picture->pictureInfoDAT->tileHeight, SHRUNK_EXTRACT_Y(shrunk_value))
-  );
-}
-
-void destroy_gs(GFX_Scroller *gfx_scroller) {
   sprite_index_manager_set_free(gfx_scroller->scrollerDAT.baseSprite, 21);
   clearSprites(gfx_scroller->scrollerDAT.baseSprite, 21);
 }
@@ -254,14 +254,22 @@ void init_gfx_picture_physic(
   }
 }
 
-void init_gfx_picture(GFX_Picture *gfx_picture, pictureInfo *pictureInfo, paletteInfo *paletteInfo) {
+void init_gfx_picture(
+  GFX_Picture *gfx_picture,
+  pictureInfo *pictureInfo,
+  paletteInfo *paletteInfo
+  ) {
   gfx_picture->paletteInfoDAT = paletteInfo;
   gfx_picture->pictureInfoDAT = pictureInfo;
   gfx_picture->pixel_height = pictureInfo->tileHeight * 32;
   gfx_picture->pixel_width = pictureInfo->tileWidth * 32;
 }
 
-void init_gfx_animated_sprite(GFX_Animated_Sprite *gfx_animated_sprite ,spriteInfo *spriteInfo, paletteInfo *paletteInfo) {
+void init_gfx_animated_sprite(
+  GFX_Animated_Sprite *gfx_animated_sprite,
+  spriteInfo *spriteInfo,
+  paletteInfo *paletteInfo
+  ) {
   gfx_animated_sprite->spriteInfoDAT = spriteInfo;
   gfx_animated_sprite->paletteInfoDAT = paletteInfo;
 };
@@ -290,67 +298,11 @@ void init_gfx_animated_sprite_physic(
   );
 }
 
-void init_gfx_scroller(GFX_Scroller *gfx_scroller, scrollerInfo *scrollerInfo, paletteInfo *paletteInfo) {
-  gfx_scroller->scrollerInfoDAT = scrollerInfo;
-  gfx_scroller->paletteInfoDAT = paletteInfo;
-}
-
-// deprecated
-
-void init_gpp(
-  GFX_Picture_Physic *gfx_picture_physic,
-  pictureInfo *pi,
-  paletteInfo *pali,
-  short box_witdh,
-  short box_height,
-  short box_width_offset,
-  short box_height_offset,
-  BOOL autobox_enabled
-) {
-  init_gp(&gfx_picture_physic->gfx_picture, pi, pali);
-  gfx_picture_physic->autobox_enabled = autobox_enabled;
-  if (gfx_picture_physic->autobox_enabled) {
-    init_box(&gfx_picture_physic->box, box_witdh, box_height, box_width_offset, box_height_offset);
-  }
-}
-
-void init_gp(GFX_Picture *gfx_picture, pictureInfo *pictureInfo, paletteInfo *paletteInfo) {
-  gfx_picture->paletteInfoDAT = paletteInfo;
-  gfx_picture->pictureInfoDAT = pictureInfo;
-  gfx_picture->pixel_height = pictureInfo->tileHeight * 32;
-  gfx_picture->pixel_width = pictureInfo->tileWidth * 32;
-}
-
-void init_gas(GFX_Animated_Sprite *gfx_animated_sprite ,spriteInfo *spriteInfo, paletteInfo *paletteInfo) {
-  gfx_animated_sprite->spriteInfoDAT = spriteInfo;
-  gfx_animated_sprite->paletteInfoDAT = paletteInfo;
-};
-
-void init_gasp(
-    GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic,
-    spriteInfo *spriteInfo,
-    paletteInfo *paletteInfo,
-    short box_witdh,
-    short box_height,
-    short box_width_offset,
-    short box_height_offset
+void init_gfx_scroller(
+  GFX_Scroller *gfx_scroller,
+  scrollerInfo *scrollerInfo,
+  paletteInfo *paletteInfo
   ) {
-  init_box(
-    &gfx_animated_sprite_physic->box,
-    box_witdh,
-    box_height,
-    box_width_offset,
-    box_height_offset
-  );
-  gfx_animated_sprite_physic->physic_enabled = true;
-  init_gas(
-    &gfx_animated_sprite_physic->gfx_animated_sprite,
-    spriteInfo,
-    paletteInfo
-  );
-}
-
-void init_gs(GFX_Scroller *gfx_scroller, scrollerInfo *scrollerInfo, paletteInfo *paletteInfo) {
   gfx_scroller->scrollerInfoDAT = scrollerInfo;
   gfx_scroller->paletteInfoDAT = paletteInfo;
 }
@@ -384,7 +336,12 @@ void display_gfx_picture(GFX_Picture *gfx_picture, short x, short y) {
   );
 }
 
-void display_gfx_animated_sprite(GFX_Animated_Sprite *animated_sprite, short x, short y, WORD anim) {
+void display_gfx_animated_sprite(
+  GFX_Animated_Sprite *animated_sprite,
+  short x,
+  short y,
+  WORD anim
+  ) {
   WORD palette_index = palette_index_manager_use(animated_sprite->paletteInfoDAT);
   aSpriteInit(
     &animated_sprite->aSpriteDAT,
@@ -404,7 +361,12 @@ void display_gfx_animated_sprite(GFX_Animated_Sprite *animated_sprite, short x, 
   aSpriteSetAnim(&animated_sprite->aSpriteDAT, anim);
 }
 
-void display_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short x, short y, WORD anim) {
+void display_gfx_animated_sprite_physic(
+  GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic,
+  short x,
+  short y,
+  WORD anim
+  ) {
   display_gfx_animated_sprite(
     &gfx_animated_sprite_physic->gfx_animated_sprite,
     x,
@@ -431,80 +393,6 @@ void display_gfx_scroller(GFX_Scroller *gfx_scroller, short x, short y) {
   );
 }
 
-// deprecated
-
-void display_gpp(GFX_Picture_Physic *gfx_picture_physic, short x, short y) {
-  display_gp(&gfx_picture_physic->gfx_picture, x, y);
-  if (gfx_picture_physic->autobox_enabled) {
-    update_box(&gfx_picture_physic->box, x, y);
-  }
-}
-
-void display_gp(GFX_Picture *gfx_picture, short x, short y) {
-  WORD palette_index = palette_index_manager_use(gfx_picture->paletteInfoDAT);
-  pictureInit(
-    &gfx_picture->pictureDAT,
-    gfx_picture->pictureInfoDAT,
-    sprite_index_manager_use(gfx_picture->pictureInfoDAT->tileWidth),
-    palette_index,
-    x,
-    y,
-    FLIP_NONE
-  );
-  palJobPut(
-    palette_index,
-    gfx_picture->paletteInfoDAT->palCount,
-    gfx_picture->paletteInfoDAT->data
-  );
-}
-
-void display_gas(GFX_Animated_Sprite *animated_sprite, short x, short y, WORD anim) {
-  WORD palette_index = palette_index_manager_use(animated_sprite->paletteInfoDAT);
-  aSpriteInit(
-    &animated_sprite->aSpriteDAT,
-    animated_sprite->spriteInfoDAT,
-    sprite_index_manager_use(animated_sprite->spriteInfoDAT->maxWidth),
-    palette_index,
-    x,
-    y,
-    anim,
-    FLIP_NONE
-  );
-  palJobPut(
-    palette_index,
-    animated_sprite->paletteInfoDAT->palCount,
-    animated_sprite->paletteInfoDAT->data
-  );
-  aSpriteSetAnim(&animated_sprite->aSpriteDAT, anim);
-}
-
-void display_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short x, short y, WORD anim) {
-  display_gas(
-    &gfx_animated_sprite_physic->gfx_animated_sprite,
-    x,
-    y,
-    anim
-  );
-  update_box(&gfx_animated_sprite_physic->box, x, y);
-}
-
-void display_gs(GFX_Scroller *gfx_scroller, short x, short y) {
-  WORD palette_index = palette_index_manager_use(gfx_scroller->paletteInfoDAT);
-  scrollerInit(
-    &gfx_scroller->scrollerDAT,
-    gfx_scroller->scrollerInfoDAT,
-    sprite_index_manager_use(21),
-    palette_index,
-    x,
-    y
-  );
-  palJobPut(
-    palette_index,
-    gfx_scroller->paletteInfoDAT->palCount,
-    gfx_scroller->paletteInfoDAT->data
-  );
-}
-
 void debug_paletteInfo(paletteInfo *palette, BOOL palCount, BOOL data) {
   BYTE i = 0;
   if (palCount) log_word("PALCOUNT", palette->palCount);
@@ -513,40 +401,42 @@ void debug_paletteInfo(paletteInfo *palette, BOOL palCount, BOOL data) {
   }
 }
 
-
   /*------------------*/
  /*  GFX VISIBILITY  */
 /*------------------*/
 
 void hide_gfx_picture(GFX_Picture *gfx_picture) { pictureHide(&gfx_picture->pictureDAT); }
-void hide_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic) { pictureHide(&gfx_picture_physic->gfx_picture.pictureDAT); }
-void hide_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic) { hide_gas(&gfx_animated_sprite_physic->gfx_animated_sprite); }
+
+void hide_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic) {
+  pictureHide(&gfx_picture_physic->gfx_picture.pictureDAT);
+}
+
+void hide_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic) {
+  aSpriteHide(&gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT);
+  clearSprites(
+    gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT.baseSprite,
+    gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT.tileWidth
+  );
+}
 
 void hide_gfx_animated_sprite(GFX_Animated_Sprite *animated_sprite) {
   aSpriteHide(&animated_sprite->aSpriteDAT);
   clearSprites(animated_sprite->aSpriteDAT.baseSprite, animated_sprite->aSpriteDAT.tileWidth);
 }
 
-void show_gfx_animated_sprite(GFX_Animated_Sprite *gfx_animated_sprite) { aSpriteShow(&gfx_animated_sprite->aSpriteDAT); }
-void show_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic) { aSpriteShow(&gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT); }
-void show_gfx_picture(GFX_Picture *gfx_picture) { pictureShow(&gfx_picture->pictureDAT); }
-void show_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic) { pictureShow(&gfx_picture_physic->gfx_picture.pictureDAT); }
-
-// deprecated
-
-void hide_gp(GFX_Picture *gfx_picture) { pictureHide(&gfx_picture->pictureDAT); }
-void hide_gpp(GFX_Picture_Physic *gfx_picture_physic) { pictureHide(&gfx_picture_physic->gfx_picture.pictureDAT); }
-void hide_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic) { hide_gas(&gfx_animated_sprite_physic->gfx_animated_sprite); }
-
-void hide_gas(GFX_Animated_Sprite *animated_sprite) {
-  aSpriteHide(&animated_sprite->aSpriteDAT);
-  clearSprites(animated_sprite->aSpriteDAT.baseSprite, animated_sprite->aSpriteDAT.tileWidth);
+void show_gfx_animated_sprite(GFX_Animated_Sprite *gfx_animated_sprite) {
+  aSpriteShow(&gfx_animated_sprite->aSpriteDAT);
 }
 
-void show_gas(GFX_Animated_Sprite *gfx_animated_sprite) { aSpriteShow(&gfx_animated_sprite->aSpriteDAT); }
-void show_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic) { aSpriteShow(&gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT); }
-void show_gp(GFX_Picture *gfx_picture) { pictureShow(&gfx_picture->pictureDAT); }
-void show_gpp(GFX_Picture_Physic *gfx_picture_physic) { pictureShow(&gfx_picture_physic->gfx_picture.pictureDAT); }
+void show_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic) {
+  aSpriteShow(&gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT);
+}
+
+void show_gfx_picture(GFX_Picture *gfx_picture) { pictureShow(&gfx_picture->pictureDAT); }
+
+void show_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic) {
+  pictureShow(&gfx_picture_physic->gfx_picture.pictureDAT);
+}
 
   /*------------------*/
  /*  GFX POSITION    */
@@ -554,17 +444,32 @@ void show_gpp(GFX_Picture_Physic *gfx_picture_physic) { pictureShow(&gfx_picture
 
 /* GFX POSITION GETTER */
 
-short get_x_gfx_animated_sprite(GFX_Animated_Sprite gfx_animated_sprite) { return gfx_animated_sprite.aSpriteDAT.posX; }
-short get_y_gfx_animated_sprite(GFX_Animated_Sprite gfx_animated_sprite) { return gfx_animated_sprite.aSpriteDAT.posY; }
+short get_x_gfx_animated_sprite(GFX_Animated_Sprite gfx_animated_sprite) {
+  return gfx_animated_sprite.aSpriteDAT.posX;
+}
 
-short get_x_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic gfx_animated_sprite_physic) { return gfx_animated_sprite_physic.gfx_animated_sprite.aSpriteDAT.posX; }
-short get_y_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic gfx_animated_sprite_physic) { return gfx_animated_sprite_physic.gfx_animated_sprite.aSpriteDAT.posY; }
+short get_y_gfx_animated_sprite(GFX_Animated_Sprite gfx_animated_sprite) {
+  return gfx_animated_sprite.aSpriteDAT.posY;
+}
+
+short get_x_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic gfx_animated_sprite_physic) {
+  return gfx_animated_sprite_physic.gfx_animated_sprite.aSpriteDAT.posX;
+}
+
+short get_y_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic gfx_animated_sprite_physic) {
+  return gfx_animated_sprite_physic.gfx_animated_sprite.aSpriteDAT.posY;
+}
 
 short get_x_gfx_picture(GFX_Picture gfx_picture) { return gfx_picture.pictureDAT.posX; }
 short get_y_gfx_picture(GFX_Picture gfx_picture) { return gfx_picture.pictureDAT.posY; }
 
-short get_x_gfx_picture_physic(GFX_Picture_Physic gfx_picture_physic) { return gfx_picture_physic.gfx_picture.pictureDAT.posX; }
-short get_y_gfx_picture_physic(GFX_Picture_Physic gfx_picture_physic) { return gfx_picture_physic.gfx_picture.pictureDAT.posY; }
+short get_x_gfx_picture_physic(GFX_Picture_Physic gfx_picture_physic) {
+  return gfx_picture_physic.gfx_picture.pictureDAT.posX;
+}
+
+short get_y_gfx_picture_physic(GFX_Picture_Physic gfx_picture_physic) {
+  return gfx_picture_physic.gfx_picture.pictureDAT.posY;
+}
 
 short get_x_gfx_scroller(GFX_Scroller gfx_scroller) { return gfx_scroller.scrollerDAT.scrlPosX; }
 short get_y_gfx_scroller(GFX_Scroller gfx_scroller) { return gfx_scroller.scrollerDAT.scrlPosY; }
@@ -577,7 +482,9 @@ Vec2short get_position_gfx_animated_sprite(GFX_Animated_Sprite gfx_animated_spri
   return position;
 }
 
-Vec2short get_position_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic gfx_animated_sprite_physic) {
+Vec2short get_position_gfx_animated_sprite_physic(
+  GFX_Animated_Sprite_Physic gfx_animated_sprite_physic
+  ) {
   Vec2short position = {
     get_x_gfx_animated_sprite_physic(gfx_animated_sprite_physic),
     get_y_gfx_animated_sprite_physic(gfx_animated_sprite_physic)
@@ -609,150 +516,184 @@ Vec2short get_position_gfx_scroller(GFX_Scroller gfx_scroller) {
   return position;
 }
 
-// deprecated
-
-short get_x_gas(GFX_Animated_Sprite gfx_animated_sprite) { return gfx_animated_sprite.aSpriteDAT.posX; }
-short get_y_gas(GFX_Animated_Sprite gfx_animated_sprite) { return gfx_animated_sprite.aSpriteDAT.posY; }
-
-short get_x_gasp(GFX_Animated_Sprite_Physic gfx_animated_sprite_physic) { return gfx_animated_sprite_physic.gfx_animated_sprite.aSpriteDAT.posX; }
-short get_y_gasp(GFX_Animated_Sprite_Physic gfx_animated_sprite_physic) { return gfx_animated_sprite_physic.gfx_animated_sprite.aSpriteDAT.posY; }
-
-short get_x_gp(GFX_Picture gfx_picture) { return gfx_picture.pictureDAT.posX; }
-short get_y_gp(GFX_Picture gfx_picture) { return gfx_picture.pictureDAT.posY; }
-
-short get_x_gpp(GFX_Picture_Physic gfx_picture_physic) { return gfx_picture_physic.gfx_picture.pictureDAT.posX; }
-short get_y_gpp(GFX_Picture_Physic gfx_picture_physic) { return gfx_picture_physic.gfx_picture.pictureDAT.posY; }
-
-short get_x_gs(GFX_Scroller gfx_scroller) { return gfx_scroller.scrollerDAT.scrlPosX; }
-short get_y_gs(GFX_Scroller gfx_scroller) { return gfx_scroller.scrollerDAT.scrlPosY; }
-
 /* GFX POSITION SETTER */
 
-void set_x_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short x) { set_pos_gasp(gfx_animated_sprite_physic, x, gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT.posY); }
-void set_y_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short y) { set_pos_gasp(gfx_animated_sprite_physic, gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT.posX, y); }
-
-void set_x_gfx_scroller(GFX_Scroller *gfx_scroller, short x) { scrollerSetPos(&gfx_scroller->scrollerDAT, x, gfx_scroller->scrollerDAT.scrlPosY); }
-void set_y_gfx_scroller(GFX_Scroller *gfx_scroller, short x) { scrollerSetPos(&gfx_scroller->scrollerDAT, gfx_scroller->scrollerDAT.scrlPosX, y); }
-
-void set_position_gfx_scroller(GFX_Scroller *gfx_scroller, Vec2short position) { scrollerSetPos(&gfx_scroller->scrollerDAT, position.x, position.y); }
-void set_position_gfx_animated_sprite(GFX_Animated_Sprite *gfx_animated_sprite, Vec2short position) { aSpriteSetPos(&gfx_animated_sprite->aSpriteDAT, x, y); }
-void set_position_gfx_picture(GFX_Picture *gfx_picture, Vec2short position) { pictureSetPos(&gfx_picture->pictureDAT, position.x, position.y); }
-
-void set_position_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic, Vec2short position) {
-  pictureSetPos(&gfx_picture_physic->gfx_picture.pictureDAT, position.x, position.y);
-  if (gfx_picture_physic->autobox_enabled) update_box(&gfx_picture_physic->box, position.x, position.y);
+void set_x_gfx_animated_sprite_physic(
+  GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic,
+  short x
+  ) {
+  aSpriteSetPos(
+    &gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT,
+    x,
+    gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT.posY
+  );
+  update_box(
+    &gfx_animated_sprite_physic->box,
+    x,
+    gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT.posY
+  );
 }
 
-void set_position_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, Vec2short position) {
-  aSpriteSetPos(&gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT, position.x, position.y);
-  update_box(&gfx_animated_sprite_physic->box, position.x, position.y);
+void set_y_gfx_animated_sprite_physic(
+  GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic,
+  short y
+  ) {
+  aSpriteSetPos(
+    &gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT,
+    gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT.posX,
+    y
+  );
+  update_box(
+    &gfx_animated_sprite_physic->box,
+    gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT.posX,
+    y
+  );
 }
 
-// deprecated
+void set_x_gfx_scroller(GFX_Scroller *gfx_scroller, short x) {
+  scrollerSetPos(&gfx_scroller->scrollerDAT, x, gfx_scroller->scrollerDAT.scrlPosY);
+}
 
-void set_x_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short x) { set_pos_gasp(gfx_animated_sprite_physic, x, gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT.posY); }
-void set_y_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short y) { set_pos_gasp(gfx_animated_sprite_physic, gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT.posX, y); }
+void set_y_gfx_scroller(GFX_Scroller *gfx_scroller, short x) {
+  scrollerSetPos(&gfx_scroller->scrollerDAT, gfx_scroller->scrollerDAT.scrlPosX, y);
+}
 
-void set_x_gs(GFX_Scroller *gfx_scroller, short x) { scrollerSetPos(&gfx_scroller->scrollerDAT, x, gfx_scroller->scrollerDAT.scrlPosY); }
-void set_y_gs(GFX_Scroller *gfx_scroller, short x) { scrollerSetPos(&gfx_scroller->scrollerDAT, gfx_scroller->scrollerDAT.scrlPosX, y); }
-void set_pos_gs(GFX_Scroller *gfx_scroller, short x, short y) { scrollerSetPos(&gfx_scroller->scrollerDAT, x, y); }
+void set_position_gfx_scroller(GFX_Scroller *gfx_scroller, short x, short y) {
+  scrollerSetPos(&gfx_scroller->scrollerDAT, x, y);
+}
 
-void set_pos_gas(GFX_Animated_Sprite *gfx_animated_sprite, short x, short y) { aSpriteSetPos(&gfx_animated_sprite->aSpriteDAT, x, y); }
-void set_pos_gp(GFX_Picture *gfx_picture, short x, short y) { pictureSetPos(&gfx_picture->pictureDAT, x, y); }
+void set_position_gfx_animated_sprite(
+  GFX_Animated_Sprite *gfx_animated_sprite,
+  short x,
+  short y
+  ) {
+  aSpriteSetPos(&gfx_animated_sprite->aSpriteDAT, x, y);
+}
 
-void set_pos_gpp(GFX_Picture_Physic *gfx_picture_physic, short x, short y) {
+void set_position_gfx_picture(GFX_Picture *gfx_picture, short x, short y) {
+  pictureSetPos(&gfx_picture->pictureDAT, x, y);
+}
+
+void set_position_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic, short x, short y) {
   pictureSetPos(&gfx_picture_physic->gfx_picture.pictureDAT, x, y);
   if (gfx_picture_physic->autobox_enabled) update_box(&gfx_picture_physic->box, x, y);
 }
 
-void set_pos_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short x, short y) {
-  aSpriteSetPos(&gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT, x, y);
+void set_position_gfx_animated_sprite_physic(
+  GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic,
+  short x,
+  short y
+  ) {
+  aSpriteSetPos(
+    &gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT,
+    x,
+    y
+  );
   update_box(&gfx_animated_sprite_physic->box, x, y);
 }
 
 /* GFX POSITION MOVE*/
 
-void move_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic, short x_offset, short y_offset) {
+void move_gfx_picture_physic(
+  GFX_Picture_Physic *gfx_picture_physic,
+  short x_offset,
+  short y_offset
+  ) {
   pictureMove(&gfx_picture_physic->gfx_picture.pictureDAT, x_offset, y_offset);
-  if (gfx_picture_physic->autobox_enabled) update_box(&gfx_picture_physic->box, gfx_picture_physic->gfx_picture.pictureDAT.posX, gfx_picture_physic->gfx_picture.pictureDAT.posY);
+  if (gfx_picture_physic->autobox_enabled) {
+    update_box(
+      &gfx_picture_physic->box,
+      gfx_picture_physic->gfx_picture.pictureDAT.posX,
+      gfx_picture_physic->gfx_picture.pictureDAT.posY
+    );
+  }
 }
 
-void move_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short x_offset, short y_offset) {
-  move_gas(&gfx_animated_sprite_physic->gfx_animated_sprite, x_offset, y_offset);
-  update_box(&gfx_animated_sprite_physic->box, gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT.posX, gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT.posY);
+void move_gfx_animated_sprite_physic(
+  GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic,
+  short x_offset,
+  short y_offset
+  ) {
+  aSpriteMove(&gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT, x_offset, y_offset);
+  update_box(
+    &gfx_animated_sprite_physic->box,
+    gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT.posX,
+    gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT.posY
+  );
 }
 
-void move_gfx_animated_sprite(GFX_Animated_Sprite *gfx_animated_sprite, short x_offset, short y_offset) { aSpriteMove(&gfx_animated_sprite->aSpriteDAT, x_offset, y_offset); }
-void move_gfx_picture(GFX_Picture *gfx_picture, short x, short y) { pictureMove(&gfx_picture->pictureDAT, x, y); }
-void move_gfx_scroller(GFX_Scroller *gfx_scroller, short x, short y) { scrollerSetPos(&gfx_scroller->scrollerDAT, gfx_scroller->scrollerDAT.scrlPosX + x, gfx_scroller->scrollerDAT.scrlPosY + y); }
-
-// deprecated
-
-void move_gpp(GFX_Picture_Physic *gfx_picture_physic, short x_offset, short y_offset) {
-  pictureMove(&gfx_picture_physic->gfx_picture.pictureDAT, x_offset, y_offset);
-  if (gfx_picture_physic->autobox_enabled) update_box(&gfx_picture_physic->box, gfx_picture_physic->gfx_picture.pictureDAT.posX, gfx_picture_physic->gfx_picture.pictureDAT.posY);
+void move_gfx_animated_sprite(
+  GFX_Animated_Sprite *gfx_animated_sprite,
+  short x_offset,
+  short y_offset
+  ) {
+  aSpriteMove(&gfx_animated_sprite->aSpriteDAT, x_offset, y_offset);
 }
 
-void move_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, short x_offset, short y_offset) {
-  move_gas(&gfx_animated_sprite_physic->gfx_animated_sprite, x_offset, y_offset);
-  update_box(&gfx_animated_sprite_physic->box, gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT.posX, gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT.posY);
+void move_gfx_picture(GFX_Picture *gfx_picture, short x, short y) {
+  pictureMove(&gfx_picture->pictureDAT, x, y);
 }
 
-void move_gas(GFX_Animated_Sprite *gfx_animated_sprite, short x_offset, short y_offset) { aSpriteMove(&gfx_animated_sprite->aSpriteDAT, x_offset, y_offset); }
-void move_gp(GFX_Picture *gfx_picture, short x, short y) { pictureMove(&gfx_picture->pictureDAT, x, y); }
-void move_gs(GFX_Scroller *gfx_scroller, short x, short y) { scrollerSetPos(&gfx_scroller->scrollerDAT, gfx_scroller->scrollerDAT.scrlPosX + x, gfx_scroller->scrollerDAT.scrlPosY + y); }
+void move_gfx_scroller(GFX_Scroller *gfx_scroller, short x, short y) {
+  scrollerSetPos(
+    &gfx_scroller->scrollerDAT,
+    gfx_scroller->scrollerDAT.scrlPosX + x,
+    gfx_scroller->scrollerDAT.scrlPosY + y
+  );
+}
 
   /*-------------------*/
  /*  GFX ANIMATION    */
 /*-------------------*/
 
-void set_animation_gfx_animated_sprite(GFX_Animated_Sprite *gfx_animated_sprite, WORD anim) { aSpriteSetAnim(&gfx_animated_sprite->aSpriteDAT, anim); }
-void set_animation_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, WORD anim) { aSpriteSetAnim(&gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT, anim); }
+void set_animation_gfx_animated_sprite(GFX_Animated_Sprite *gfx_animated_sprite, WORD anim) {
+  aSpriteSetAnim(&gfx_animated_sprite->aSpriteDAT, anim);
+}
 
-void update_animation_gfx_animated_sprite(GFX_Animated_Sprite *gfx_animated_sprite) { aSpriteAnimate(&gfx_animated_sprite->aSpriteDAT); }
-void update_animation_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic) { aSpriteAnimate(&gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT); }
+void set_animation_gfx_animated_sprite_physic(
+  GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic,
+  WORD anim
+  ) {
+  aSpriteSetAnim(&gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT, anim);
+}
 
-// deprecated
+void update_animation_gfx_animated_sprite(GFX_Animated_Sprite *gfx_animated_sprite) {
+  aSpriteAnimate(&gfx_animated_sprite->aSpriteDAT);
+}
 
-void set_anim_gas(GFX_Animated_Sprite *gfx_animated_sprite, WORD anim) { aSpriteSetAnim(&gfx_animated_sprite->aSpriteDAT, anim); }
-void set_anim_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic, WORD anim) { aSpriteSetAnim(&gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT, anim); }
-
-void update_anim_gas(GFX_Animated_Sprite *gfx_animated_sprite) { aSpriteAnimate(&gfx_animated_sprite->aSpriteDAT); }
-void update_anim_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic) { aSpriteAnimate(&gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT); }
+void update_animation_gfx_animated_sprite_physic(
+  GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic
+  ) {
+  aSpriteAnimate(&gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT);
+}
 
   /*-------------------*/
  /*  GFX DESTROY      */
 /*-------------------*/
 
-void destroy_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic) { destroy_gfx_picture(&gfx_picture_physic->gfx_picture); }
-void destroy_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic) { destroy_gfx_animated_sprite(&gfx_animated_sprite_physic->gfx_animated_sprite); }
+void destroy_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic) {
+  destroy_gfx_picture(&gfx_picture_physic->gfx_picture);
+}
+
+void destroy_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic) {
+  destroy_gfx_animated_sprite(&gfx_animated_sprite_physic->gfx_animated_sprite);
+}
 
 void destroy_gfx_picture(GFX_Picture *gfx_picture) {
   pictureHide(&gfx_picture->pictureDAT);
-  sprite_index_manager_set_free(gfx_picture->pictureDAT.baseSprite, gfx_picture->pictureInfoDAT->tileWidth);
+  sprite_index_manager_set_free(
+    gfx_picture->pictureDAT.baseSprite,
+    gfx_picture->pictureInfoDAT->tileWidth
+  );
   clearSprites(gfx_picture->pictureDAT.baseSprite, gfx_picture->pictureInfoDAT->tileWidth);
 }
 
 void destroy_gfx_animated_sprite(GFX_Animated_Sprite *animated_sprite) {
   aSpriteHide(&animated_sprite->aSpriteDAT);
-  sprite_index_manager_set_free(animated_sprite->aSpriteDAT.baseSprite, animated_sprite->spriteInfoDAT->maxWidth);
-  clearSprites(animated_sprite->aSpriteDAT.baseSprite, animated_sprite->aSpriteDAT.tileWidth);
-}
-
-// deprecated
-
-void destroy_gpp(GFX_Picture_Physic *gfx_picture_physic) { destroy_gp(&gfx_picture_physic->gfx_picture); }
-void destroy_gasp(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic) { destroy_gas(&gfx_animated_sprite_physic->gfx_animated_sprite); }
-
-void destroy_gp(GFX_Picture *gfx_picture) {
-  pictureHide(&gfx_picture->pictureDAT);
-  sprite_index_manager_set_free(gfx_picture->pictureDAT.baseSprite, gfx_picture->pictureInfoDAT->tileWidth);
-  clearSprites(gfx_picture->pictureDAT.baseSprite, gfx_picture->pictureInfoDAT->tileWidth);
-}
-
-void destroy_gas(GFX_Animated_Sprite *animated_sprite) {
-  aSpriteHide(&animated_sprite->aSpriteDAT);
-  sprite_index_manager_set_free(animated_sprite->aSpriteDAT.baseSprite, animated_sprite->spriteInfoDAT->maxWidth);
+  sprite_index_manager_set_free(
+    animated_sprite->aSpriteDAT.baseSprite,
+    animated_sprite->spriteInfoDAT->maxWidth
+  );
   clearSprites(animated_sprite->aSpriteDAT.baseSprite, animated_sprite->aSpriteDAT.tileWidth);
 }
 
@@ -865,7 +806,9 @@ WORD shrunk_range(WORD addr_start, WORD addr_end, WORD shrunk_value) {
   return addr_end;
 }
 
-void shrunk(WORD base_sprite, WORD max_width, WORD value) { shrunk_range(0x8000 + base_sprite, 0x8000 + base_sprite + max_width, value); }
+void shrunk(WORD base_sprite, WORD max_width, WORD value) {
+  shrunk_range(0x8000 + base_sprite, 0x8000 + base_sprite + max_width, value);
+}
 
 int shrunk_centroid_get_translated_x(short centerPosX, WORD tileWidth, BYTE shrunkX) {
   FIXED newX = FIX(centerPosX);
@@ -1034,22 +977,6 @@ void debug_joypad(BYTE id) {
   if (joypad_is_d(id))      {  fix_print_neocore(10, 11,  "JOYPAD D    "); }
 }
 
-void debug_joypad_p1() {
-  JOYPAD_READ_P1
-  if (joypad_p1_is_start())  {  fix_print_neocore(10, 11,  "JOYPAD START"); }
-  if (joypad_p1_is_up())     {  fix_print_neocore(10, 11,  "JOYPAD UP   "); }
-  if (joypad_p1_is_down())   {  fix_print_neocore(10, 11,  "JOYPAD DOWN "); }
-  if (joypad_p1_is_left())   {  fix_print_neocore(10, 11,  "JOYPAD LEFT "); }
-  if (joypad_p1_is_right())  {  fix_print_neocore(10, 11,  "JOYPAD RIGHT"); }
-  if (joypad_p1_is_a())      {  fix_print_neocore(10, 11,  "JOYPAD A    "); }
-  if (joypad_p1_is_b())      {  fix_print_neocore(10, 11,  "JOYPAD B    "); }
-  if (joypad_p1_is_c())      {  fix_print_neocore(10, 11,  "JOYPAD C    "); }
-  if (joypad_p1_is_d())      {  fix_print_neocore(10, 11,  "JOYPAD D    "); }
-}
-
-void update_joypad_p1() { JOYPAD_READ_P1; }
-void update_joypad_edge_p1() { JOYPAD_READ_EDGE_P1; }
-
 void update_joypad(BYTE id) {
   if (id == 0) { JOYPAD_READ_P1 };
   // if (id = 1) JOYPAD_READ_P2; TODO
@@ -1058,18 +985,6 @@ void update_joypad(BYTE id) {
 void update_joypad_edge(BYTE id) {
   if (id == 0) JOYPAD_READ_EDGE_P1;
 }
-
-// TODO : remove deprecated code to v2.0.0
-BOOL joypad_p1_is_up()     { return (JOYPAD_IS_UP_P1)     ? (true) : (false); }
-BOOL joypad_p1_is_down()   { return (JOYPAD_IS_DOWN_P1)   ? (true) : (false); }
-BOOL joypad_p1_is_left()   { return (JOYPAD_IS_LEFT_P1)   ? (true) : (false); }
-BOOL joypad_p1_is_right()  { return (JOYPAD_IS_RIGHT_P1)  ? (true) : (false); }
-BOOL joypad_p1_is_start()  { return (JOYPAD_IS_START_P1)  ? (true) : (false); }
-BOOL joypad_p1_is_a()      { return (JOYPAD_IS_A_P1)      ? (true) : (false); }
-BOOL joypad_p1_is_b()      { return (JOYPAD_IS_B_P1)      ? (true) : (false); }
-BOOL joypad_p1_is_c()      { return (JOYPAD_IS_C_P1)      ? (true) : (false); }
-BOOL joypad_p1_is_d()      { return (JOYPAD_IS_D_P1)      ? (true) : (false); }
-//
 
 BOOL joypad_is_up(BYTE id)     { return (JOYPAD_IS_UP_P1 && id == 0)     ? (true) : (false); }
 BOOL joypad_is_down(BYTE id)   { return (JOYPAD_IS_DOWN_P1 && id == 0)   ? (true) : (false); }
@@ -1182,15 +1097,6 @@ void init_log() {
 }
 
 void set_position_log(WORD _x, WORD _y) {
-  x = _x;
-  y = _y;
-  x_default = x;
-  y_default = y;
-}
-
-// deprecated
-
-void set_pos_log(WORD _x, WORD _y){
   x = _x;
   y = _y;
   x_default = x;
@@ -1376,10 +1282,6 @@ BOOL vector_is_left(short x, short y, short v1x, short v1y, short v2x, short v2y
   (d > 0) ? (rt = false) : (rt = true);
   return rt;
 }
-
-void vec2int_init(Vec2int *vec, int x, int y)         { vec->x = x; vec->y = y; }
-void vec2short_init(Vec2short *vec, short x, short y) { vec->x = x; vec->y = y; }
-void vec2byte_init(Vec2byte *vec, BYTE x, BYTE y)     { vec->x = x; vec->y = y; }
 
 BOOL vectors_collide(Box *box, Vec2short vec[], BYTE vector_max) {
   BOOL p0 = false, p1 = false, p2 = false, p3 = false, p4 = false;
