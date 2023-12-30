@@ -393,7 +393,6 @@ void nc_log_dword(char *label, DWORD value);
 void nc_log_short(char *label, short value);
 void nc_log_byte(char *label, BYTE value);
 void nc_log_bool(char *label, BOOL value);
-void nc_log_gas(char *label, GFX_Animated_Sprite *gfx_animated_sprite);
 void nc_log_spriteInfo(char *label, spriteInfo *si);
 void nc_log_box(char *label, Box *b);
 void nc_log_pictureInfo(char *label, pictureInfo *pi);

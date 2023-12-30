@@ -1114,24 +1114,6 @@ void nc_log_bool(char *label, BOOL value) {
   #endif
 }
 
-void nc_log_gas(char *label, GFX_Animated_Sprite *gfx_animated_sprite) {
-  #ifdef LOGGER_ON
-  nc_log_info(label);
-  nc_log_word("BASESPRITE : " , gfx_animated_sprite->aSpriteDAT.baseSprite);
-  nc_log_word("BASEPALETTE : ", gfx_animated_sprite->aSpriteDAT.basePalette);
-  nc_log_short("POSX : ", gfx_animated_sprite->aSpriteDAT.posX);
-  nc_log_short("POSY : ", gfx_animated_sprite->aSpriteDAT.posY);
-  nc_log_short("CURRENTSTEPNUM : ", gfx_animated_sprite->aSpriteDAT.currentStepNum);
-  nc_log_short("MAXSTEP : ", gfx_animated_sprite->aSpriteDAT.maxStep);
-  nc_log_dword("COUNTER : ", gfx_animated_sprite->aSpriteDAT.counter);
-  nc_log_word("REPEATS : ", gfx_animated_sprite->aSpriteDAT.repeats);
-  nc_log_word("CURRENTFLIP : ", gfx_animated_sprite->aSpriteDAT.currentFlip);
-  nc_log_word("TILEWIDTH : ", gfx_animated_sprite->aSpriteDAT.tileWidth);
-  nc_log_word("ANIMID : ", gfx_animated_sprite->aSpriteDAT.animID);
-  nc_log_word("FLAGS", gfx_animated_sprite->aSpriteDAT.flags);
-  #endif
-}
-
 void nc_log_spriteInfo(char *label, spriteInfo *si) {
   #ifdef LOGGER_ON
   nc_log_info(label);
