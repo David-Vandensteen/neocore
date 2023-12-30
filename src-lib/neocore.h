@@ -113,14 +113,14 @@ typedef struct Adpcm_player {
  /*  GFX INIT        */
 /*------------------*/
 
-void init_gfx_scroller(
+void nc_init_gfx_scroller(
   GFX_Scroller *gfx_scroller,
   scrollerInfo *scrollerInfo,
   paletteInfo *paletteInfo
 );
 
-void init_gfx_picture(GFX_Picture *gfx_picture, pictureInfo *pictureInfo, paletteInfo *paletteInfo);
-void init_gfx_picture_physic(
+void nc_init_gfx_picture(GFX_Picture *gfx_picture, pictureInfo *pictureInfo, paletteInfo *paletteInfo);
+void nc_init_gfx_picture_physic(
   GFX_Picture_Physic *gfx_picture_physic,
   pictureInfo *pi,
   paletteInfo *pali,
@@ -131,13 +131,13 @@ void init_gfx_picture_physic(
   BOOL autobox_enabled
 );
 
-void init_gfx_animated_sprite(
+void nc_init_gfx_animated_sprite(
   GFX_Animated_Sprite *gfx_animated_sprite,
   spriteInfo *spriteInfo,
   paletteInfo *paletteInfo
 );
 
-void init_gfx_animated_sprite_physic(
+void nc_init_gfx_animated_sprite_physic(
   GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic,
   spriteInfo *spriteInfo,
   paletteInfo *paletteInfo,
@@ -151,40 +151,40 @@ void init_gfx_animated_sprite_physic(
  /*  GFX DISPLAY     */
 /*------------------*/
 
-void display_gfx_scroller(GFX_Scroller *gfx_scroller, short x, short y);
-void display_gfx_picture(GFX_Picture *gfx_picture, short x, short y);
-void display_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic, short x, short y);
+void nc_display_gfx_scroller(GFX_Scroller *gfx_scroller, short x, short y);
+void nc_display_gfx_picture(GFX_Picture *gfx_picture, short x, short y);
+void nc_display_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic, short x, short y);
 
-void display_gfx_animated_sprite(
+void nc_display_gfx_animated_sprite(
   GFX_Animated_Sprite *gfx_animated_sprite,
   short x,
   short y,
   WORD anim
 );
 
-void display_gfx_animated_sprite_physic(
+void nc_display_gfx_animated_sprite_physic(
   GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic,
   short x,
   short y,
   WORD anim
 );
 
-void debug_paletteInfo(paletteInfo *palette, BOOL palCount, BOOL data);
+void nc_debug_paletteInfo(paletteInfo *palette, BOOL palCount, BOOL data);
 
   /*------------------*/
  /*  GFX VISIBILITY  */
 /*------------------*/
 
-void hide_gfx_animated_sprite(GFX_Animated_Sprite *gfx_animated_sprite);
+void nc_hide_gfx_animated_sprite(GFX_Animated_Sprite *gfx_animated_sprite);
 
-void hide_gfx_picture(GFX_Picture *gfx_picture);
-void hide_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic);
-void hide_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic);
+void nc_hide_gfx_picture(GFX_Picture *gfx_picture);
+void nc_hide_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic);
+void nc_hide_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic);
 
-void show_gfx_animated_sprite(GFX_Animated_Sprite *gfx_animated_sprite);
-void show_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic);
-void show_gfx_picture(GFX_Picture *gfx_picture);
-void show_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic);
+void nc_show_gfx_animated_sprite(GFX_Animated_Sprite *gfx_animated_sprite);
+void nc_show_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic);
+void nc_show_gfx_picture(GFX_Picture *gfx_picture);
+void nc_show_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic);
 
   /*------------------*/
  /*  GFX POSITION    */
@@ -192,54 +192,54 @@ void show_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic);
 
 /* GFX POSITION GETTER */
 
-Vec2short get_position_gfx_animated_sprite(GFX_Animated_Sprite gfx_animated_sprite);
+Vec2short nc_get_position_gfx_animated_sprite(GFX_Animated_Sprite gfx_animated_sprite);
 
-Vec2short get_position_gfx_animated_sprite_physic(
+Vec2short nc_get_position_gfx_animated_sprite_physic(
   GFX_Animated_Sprite_Physic gfx_animated_sprite_physic
 );
 
-Vec2short get_position_gfx_picture(GFX_Picture gfx_picture);
-Vec2short get_position_gfx_picture_physic(GFX_Picture_Physic gfx_picture_physic);
-Vec2short get_position_gfx_scroller(GFX_Scroller gfx_scroller);
+Vec2short nc_get_position_gfx_picture(GFX_Picture gfx_picture);
+Vec2short nc_get_position_gfx_picture_physic(GFX_Picture_Physic gfx_picture_physic);
+Vec2short nc_get_position_gfx_scroller(GFX_Scroller gfx_scroller);
 
 /* GFX POSITION SETTER */
 
-void set_position_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic, short x, short y);
+void nc_set_position_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic, short x, short y);
 
-void set_position_gfx_animated_sprite_physic(
+void nc_set_position_gfx_animated_sprite_physic(
   GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic,
   short x,
   short y
 );
 
-void set_position_gfx_scroller(GFX_Scroller *gfx_scroller, short x, short y);
-void set_position_gfx_animated_sprite(GFX_Animated_Sprite *gfx_animated_sprite, short x, short y);
-void set_position_gfx_picture(GFX_Picture *gfx_picture, short x, short y);
+void nc_set_position_gfx_scroller(GFX_Scroller *gfx_scroller, short x, short y);
+void nc_set_position_gfx_animated_sprite(GFX_Animated_Sprite *gfx_animated_sprite, short x, short y);
+void nc_set_position_gfx_picture(GFX_Picture *gfx_picture, short x, short y);
 
 /* GFX POSITION MOVE*/
 
-void move_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic, short x_offset, short y_offset);
+void nc_move_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic, short x_offset, short y_offset);
 
-void move_gfx_animated_sprite_physic(
+void nc_move_gfx_animated_sprite_physic(
   GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic,
   short x_offset,
   short y_offset
 );
 
-void move_gfx_animated_sprite(
+void nc_move_gfx_animated_sprite(
   GFX_Animated_Sprite *gfx_animated_sprite,
   short x_offset,
   short y_offset
 );
 
-void move_gfx_picture(GFX_Picture *gfx_picture, short x, short y);
-void move_gfx_scroller(GFX_Scroller *gfx_scroller, short x, short y);
+void nc_move_gfx_picture(GFX_Picture *gfx_picture, short x, short y);
+void nc_move_gfx_scroller(GFX_Scroller *gfx_scroller, short x, short y);
 
   /*-------------------*/
  /*  GFX SHRUNK       */
 /*-------------------*/
 
-void shrunk_centroid_gfx_picture(
+void nc_shrunk_centroid_gfx_picture(
   GFX_Picture *gfx_picture,
   short center_x,
   short center_y,
@@ -250,16 +250,16 @@ void shrunk_centroid_gfx_picture(
  /*  GFX ANIMATION    */
 /*-------------------*/
 
-void set_animation_gfx_animated_sprite(GFX_Animated_Sprite *gfx_animated_sprite, WORD anim);
+void nc_set_animation_gfx_animated_sprite(GFX_Animated_Sprite *gfx_animated_sprite, WORD anim);
 
-void set_animation_gfx_animated_sprite_physic(
+void nc_set_animation_gfx_animated_sprite_physic(
   GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic,
   WORD anim
 );
 
-void update_animation_gfx_animated_sprite(GFX_Animated_Sprite *gfx_animated_sprite);
+void nc_update_animation_gfx_animated_sprite(GFX_Animated_Sprite *gfx_animated_sprite);
 
-void update_animation_gfx_animated_sprite_physic(
+void nc_update_animation_gfx_animated_sprite_physic(
   GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic
 );
 
@@ -267,165 +267,165 @@ void update_animation_gfx_animated_sprite_physic(
  /*  GFX DESTROY      */
 /*-------------------*/
 
-void destroy_gfx_scroller(GFX_Scroller *gfx_scroller);
-void destroy_gfx_picture(GFX_Picture *gfx_picture);
-void destroy_gfx_animated_sprite(GFX_Animated_Sprite *gfx_animated_sprite);
+void nc_destroy_gfx_scroller(GFX_Scroller *gfx_scroller);
+void nc_destroy_gfx_picture(GFX_Picture *gfx_picture);
+void nc_destroy_gfx_animated_sprite(GFX_Animated_Sprite *gfx_animated_sprite);
 
-void destroy_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic);
-void destroy_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic);
+void nc_destroy_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic);
+void nc_destroy_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic);
 
   //--------------------------------------------------------------------------//
  //                                   GPU                                    //
 //--------------------------------------------------------------------------//
 
-void init_gpu();
-void clear_vram();
-char get_sin(WORD index);
+void nc_init_gpu();
+void nc_clear_vram();
+char nc_get_sin(WORD index);
 
   /*------------------------------*/
  /* GPU VBL                      */
 /*------------------------------*/
 
-DWORD wait_vbl_max(WORD nb);
-#define wait_vbl() update_adpcm_player(); waitVBlank()
+DWORD nc_wait_vbl_max(WORD nb);
+#define nc_wait_vbl() nc_update_adpcm_player(); waitVBlank()
 
   /*------------------------------*/
  /* GPU SPRITE INDEX MANAGEMENT  */
 /*------------------------------*/
 
-void clear_sprite_index_table();
-WORD get_max_free_sprite_index();
-WORD get_max_sprite_index_used();
+void nc_clear_sprite_index_table();
+WORD nc_get_max_free_sprite_index();
+WORD nc_get_max_sprite_index_used();
 
   /*---------------*/
  /* GPU PALETTE   */
 /*---------------*/
 
-void destroy_palette(paletteInfo* paletteInfo);
-void clear_palette_index_table();
-WORD get_max_free_palette_index();
-WORD get_max_palette_index_used();
+void nc_destroy_palette(paletteInfo* paletteInfo);
+void nc_clear_palette_index_table();
+WORD nc_get_max_free_palette_index();
+WORD nc_get_max_palette_index_used();
 
   /*--------------*/
  /* GPU shrunk   */
 /*--------------*/
 
-WORD get_shrunk_proportional_table(WORD index);
-int shrunk_centroid_get_translated_x(short centerPosX, WORD tileWidth, BYTE shrunkX);
-int shrunk_centroid_get_translated_y(short centerPosY, WORD tileHeight, BYTE shrunkY);
-void shrunk(WORD base_sprite, WORD max_width, WORD value);
-WORD shrunk_forge(BYTE xc, BYTE yc);
-void shrunk_addr(WORD addr, WORD shrunk_value);
-WORD shrunk_range(WORD addr_start, WORD addr_end, WORD shrunk_value);
+WORD nc_get_shrunk_proportional_table(WORD index);
+int nc_shrunk_centroid_get_translated_x(short centerPosX, WORD tileWidth, BYTE shrunkX);
+int nc_shrunk_centroid_get_translated_y(short centerPosY, WORD tileHeight, BYTE shrunkY);
+void nc_shrunk(WORD base_sprite, WORD max_width, WORD value);
+WORD nc_shrunk_forge(BYTE xc, BYTE yc);
+void nc_shrunk_addr(WORD addr, WORD shrunk_value);
+WORD nc_shrunk_range(WORD addr_start, WORD addr_end, WORD shrunk_value);
 
   //--------------------------------------------------------------------------//
  //                                PHYSIC                                    //
 //--------------------------------------------------------------------------//
 
-BYTE collide_boxes(Box *box, Box *boxes[], BYTE box_max);
-BOOL collide_box(Box *box1, Box *box2);
-void init_box(Box *box, short width, short height, short widthOffset, short heightOffset);
-void update_box(Box *box, short x, short y);
+BYTE nc_collide_boxes(Box *box, Box *boxes[], BYTE box_max);
+BOOL nc_collide_box(Box *box1, Box *box2);
+void nc_init_box(Box *box, short width, short height, short widthOffset, short heightOffset);
+void nc_update_box(Box *box, short x, short y);
 
 //void mask_display(picture pic[], Vec2short vec[], BYTE vector_max); // todo (minor) - rename ? (vectorsDisplay)
-void update_mask(short x, short y, Vec2short vec[], Vec2short offset[], BYTE vector_max); // todo (minor) - rename ? (vectorsDebug)
+void nc_update_mask(short x, short y, Vec2short vec[], Vec2short offset[], BYTE vector_max); // todo (minor) - rename ? (vectorsDebug)
 
-void shrunk_box(Box *box, Box *bOrigin, WORD shrunkValue);
-void resize_box(Box *Box, short edge); // todo (minor) - deprecated ?
+void nc_shrunk_box(Box *box, Box *bOrigin, WORD shrunkValue);
+void nc_resize_box(Box *Box, short edge); // todo (minor) - deprecated ?
 
   //--------------------------------------------------------------------------//
  //                                SOUND                                     //
 //--------------------------------------------------------------------------//
 
-void play_cdda(BYTE track);
+void nc_play_cdda(BYTE track);
 
   //----------------------------------------------------------------------------//
  //                                  JOYPAD                                    //
 //----------------------------------------------------------------------------//
 
-void update_joypad(BYTE id);
-void update_joypad_edge(BYTE id);
+void nc_update_joypad(BYTE id);
+void nc_update_joypad_edge(BYTE id);
 
-void joypad_update(BYTE id);
-BOOL joypad_is_up(BYTE id);
-BOOL joypad_is_down(BYTE id);
-BOOL joypad_is_left(BYTE id);
-BOOL joypad_is_right(BYTE id);
-BOOL joypad_is_start(BYTE id);
-BOOL joypad_is_a(BYTE id);
-BOOL joypad_is_b(BYTE id);
-BOOL joypad_is_c(BYTE id);
-BOOL joypad_is_d(BYTE id);
+void nc_joypad_update(BYTE id);
+BOOL nc_joypad_is_up(BYTE id);
+BOOL nc_joypad_is_down(BYTE id);
+BOOL nc_joypad_is_left(BYTE id);
+BOOL nc_joypad_is_right(BYTE id);
+BOOL nc_joypad_is_start(BYTE id);
+BOOL nc_joypad_is_a(BYTE id);
+BOOL nc_joypad_is_b(BYTE id);
+BOOL nc_joypad_is_c(BYTE id);
+BOOL nc_joypad_is_d(BYTE id);
 
-BOOL joypad_0_is_a();
-BOOL joypad_0_is_b();
-BOOL joypad_0_is_c();
-BOOL joypad_0_is_d();
-BOOL joypad_0_is_left();
-BOOL joypad_0_is_right();
-BOOL joypad_0_is_up();
-BOOL joypad_0_is_down();
-BOOL joypad_0_is_select();
-BOOL joypad_0_is_start();
+BOOL nc_joypad_0_is_a();
+BOOL nc_joypad_0_is_b();
+BOOL nc_joypad_0_is_c();
+BOOL nc_joypad_0_is_d();
+BOOL nc_joypad_0_is_left();
+BOOL nc_joypad_0_is_right();
+BOOL nc_joypad_0_is_up();
+BOOL nc_joypad_0_is_down();
+BOOL nc_joypad_0_is_select();
+BOOL nc_joypad_0_is_start();
 
-void debug_joypad(BYTE id);
+void nc_debug_joypad(BYTE id);
 
   //----------------------------------------------------------------------------//
  //                                  UTIL                                      //
 //----------------------------------------------------------------------------//
 
-DWORD get_frame_to_second(DWORD frame);
-DWORD get_second_to_frame(DWORD second);
-void init_system();
-void init_all_system();
-Vec2short get_relative_position(Box box, Vec2short world_coord);
-void pause(BOOL (*exitFunc)());
-void sleep(DWORD frame);
-BOOL each_frame(DWORD frame);
-short get_positive(short num);
-short get_inverse(int num); // TODO TEST
-int get_random(int range);
-void fix_print_neocore(int x, int y, char *label);
-WORD free_ram_info();
-#define close_vbl() SCClose()
-#define get_frame_counter() DAT_frameCounter
+DWORD nc_get_frame_to_second(DWORD frame);
+DWORD nc_get_second_to_frame(DWORD second);
+void nc_init_system();
+void nc_init_all_system();
+Vec2short nc_get_relative_position(Box box, Vec2short world_coord);
+void nc_pause(BOOL (*exitFunc)());
+void nc_sleep(DWORD frame);
+BOOL nc_each_frame(DWORD frame);
+short nc_get_positive(short num);
+short nc_get_inverse(int num); // TODO TEST
+int nc_get_random(int range);
+void nc_fix_print_neocore(int x, int y, char *label);
+WORD nc_free_ram_info();
+#define nc_close_vbl() SCClose()
+#define nc_get_frame_counter() DAT_frameCounter
 
   /*---------------*/
  /* UTIL LOGGER   */
 /*---------------*/
 
-void init_log();
-void set_position_log(WORD _x, WORD _y);
+void nc_init_log();
+void nc_set_position_log(WORD _x, WORD _y);
 
-WORD log_info(char *txt);
-void log(char *message);
+WORD nc_log_info(char *txt);
+void nc_log(char *message);
 
-void log_word(char *label, WORD value);
-void log_int(char *label, int value);
-void log_dword(char *label, DWORD value);
-void log_short(char *label, short value);
-void log_byte(char *label, BYTE value);
-void log_bool(char *label, BOOL value);
-void log_gas(char *label, GFX_Animated_Sprite *gfx_animated_sprite);
-void log_spriteInfo(char *label, spriteInfo *si);
-void log_box(char *label, Box *b);
-void log_pictureInfo(char *label, pictureInfo *pi);
-void log_vec2short(char *label, Vec2short vec2short);
+void nc_log_word(char *label, WORD value);
+void nc_log_int(char *label, int value);
+void nc_log_dword(char *label, DWORD value);
+void nc_log_short(char *label, short value);
+void nc_log_byte(char *label, BYTE value);
+void nc_log_bool(char *label, BOOL value);
+void nc_log_gas(char *label, GFX_Animated_Sprite *gfx_animated_sprite);
+void nc_log_spriteInfo(char *label, spriteInfo *si);
+void nc_log_box(char *label, Box *b);
+void nc_log_pictureInfo(char *label, pictureInfo *pi);
+void nc_log_vec2short(char *label, Vec2short vec2short);
 
   /*---------------*/
  /* SOUND         */
 /*---------------*/
 
-void init_adpcm();
-void update_adpcm_player();
-void push_remaining_frame_adpcm_player(DWORD frame);
-Adpcm_player *get_adpcm_player();
+void nc_init_adpcm();
+void nc_update_adpcm_player();
+void nc_push_remaining_frame_adpcm_player(DWORD frame);
+Adpcm_player *nc_get_adpcm_player();
 
   /*---------------*/
  /* UTIL VECTOR   */
 /*---------------*/
 
-BOOL vectors_collide(Box *box, Vec2short vec[], BYTE vector_max);
-BOOL vector_is_left(short x, short y, short v1x, short v1y, short v2x, short v2y);
+BOOL nc_vectors_collide(Box *box, Vec2short vec[], BYTE vector_max);
+BOOL nc_vector_is_left(short x, short y, short v1x, short v1y, short v2x, short v2y);
 
 #endif

@@ -48,7 +48,7 @@
 
 static Adpcm_player adpcm_player;
 
-static void init_adpcm_player() {
+static void nc_init_adpcm_player() {
   adpcm_player.state = IDLE;
   adpcm_player.remaining_frame = 0;
 }
@@ -56,7 +56,7 @@ static void init_adpcm_player() {
 static BOOL sprite_index_manager_status[SPRITE_INDEX_MANAGER_MAX];
 static paletteInfo *palette_index_manager_status[PALETTE_INDEX_MANAGER_MAX];
 
-static BOOL collide_point(short x, short y, Vec2short vec[], BYTE vector_max);
+static BOOL nc_collide_point(short x, short y, Vec2short vec[], BYTE vector_max);
 static const WORD shrunk_table_prop[] = { 0x000 , 0x001 , 0x002 , 0x003 , 0x004 , 0x005 , 0x006 , 0x007 , 0x008 , 0x009 , 0x00a , 0x00b , 0x00c , 0x00d , 0x00e , 0x00f , 0x010 , 0x111 , 0x112 , 0x113 , 0x114 , 0x115 , 0x116 , 0x117 , 0x118 , 0x119 , 0x11a , 0x11b , 0x11c , 0x11d , 0x11e , 0x11f , 0x120 , 0x121 , 0x222 , 0x223 , 0x224 , 0x225 , 0x226 , 0x227 , 0x228 , 0x229 , 0x22a , 0x22b , 0x22c , 0x22d , 0x22e , 0x22f , 0x230 , 0x231 , 0x232 , 0x333 , 0x334 , 0x335 , 0x336 , 0x337 , 0x338 , 0x339 , 0x33a , 0x33b , 0x33c , 0x33d , 0x33e , 0x33f , 0x340 , 0x341 , 0x342 , 0x343 , 0x444 , 0x445 , 0x446 , 0x447 , 0x448 , 0x449 , 0x44a , 0x44b , 0x44c , 0x44d , 0x44e , 0x44f , 0x450 , 0x451 , 0x452 , 0x453 , 0x454 , 0x555 , 0x556 , 0x557 , 0x558 , 0x559 , 0x55a , 0x55b , 0x55c , 0x55d , 0x55e , 0x55f , 0x560 , 0x561 , 0x562 , 0x563 , 0x564 , 0x565 , 0x666 , 0x667 , 0x668 , 0x669 , 0x66a , 0x66b , 0x66c , 0x66d , 0x66e , 0x66f , 0x670 , 0x671 , 0x672 , 0x673 , 0x674 , 0x675 , 0x676 , 0x777 , 0x778 , 0x779 , 0x77a , 0x77b , 0x77c , 0x77d , 0x77e , 0x77f , 0x780 , 0x781 , 0x782 , 0x783 , 0x784 , 0x785 , 0x786 , 0x787 , 0x888 , 0x889 , 0x88a , 0x88b , 0x88c , 0x88d , 0x88e , 0x88f , 0x890 , 0x891 , 0x892 , 0x893 , 0x894 , 0x895 , 0x896 , 0x897 , 0x898 , 0x999 , 0x99a , 0x99b , 0x99c , 0x99d , 0x99e , 0x99f , 0x9a0 , 0x9a1 , 0x9a2 , 0x9a3 , 0x9a4 , 0x9a5 , 0x9a6 , 0x9a7 , 0x9a8 , 0x9a9 , 0xaaa , 0xaab , 0xaac , 0xaad , 0xaae , 0xaaf , 0xab0 , 0xab1 , 0xab2 , 0xab3 , 0xab4 , 0xab5 , 0xab6 , 0xab7 , 0xab8 , 0xab9 , 0xaba , 0xbbb , 0xbbc , 0xbbd , 0xbbe , 0xbbf , 0xbc0 , 0xbc1 , 0xbc2 , 0xbc3 , 0xbc4 , 0xbc5 , 0xbc6 , 0xbc7 , 0xbc8 , 0xbc9 , 0xbca , 0xbcb , 0xccc , 0xccd , 0xcce , 0xccf , 0xcd0 , 0xcd1 , 0xcd2 , 0xcd3 , 0xcd4 , 0xcd5 , 0xcd6 , 0xcd7 , 0xcd8 , 0xcd9 , 0xcda , 0xcdb , 0xcdc , 0xddd , 0xdde , 0xddf , 0xde0 , 0xde1 , 0xde2 , 0xde3 , 0xde4 , 0xde5 , 0xde6 , 0xde7 , 0xde8 , 0xde9 , 0xdea , 0xdeb , 0xdec , 0xded , 0xeee , 0xeef , 0xef0 , 0xef1 , 0xef2 , 0xef3 , 0xef4 , 0xef5 , 0xef6 , 0xef7 , 0xef8 , 0xef9 , 0xefa , 0xefb , 0xefc , 0xefd , 0xefe , 0xfff , 0xefe , 0xefd , 0xefc , 0xefb , 0xefa , 0xef9 , 0xef8 , 0xef7 , 0xef6 , 0xef5 , 0xef4 , 0xef3 , 0xef2 , 0xef1 , 0xef0 , 0xeef , 0xeee , 0xded , 0xdec , 0xdeb , 0xdea , 0xde9 , 0xde8 , 0xde7 , 0xde6 , 0xde5 , 0xde4 , 0xde3 , 0xde2 , 0xde1 , 0xde0 , 0xddf , 0xdde , 0xddd , 0xcdc , 0xcdb , 0xcda , 0xcd9 , 0xcd8 , 0xcd7 , 0xcd6 , 0xcd5 , 0xcd4 , 0xcd3 , 0xcd2 , 0xcd1 , 0xcd0 , 0xccf , 0xcce , 0xccd , 0xccc , 0xbcb , 0xbca , 0xbc9 , 0xbc8 , 0xbc7 , 0xbc6 , 0xbc5 , 0xbc4 , 0xbc3 , 0xbc2 , 0xbc1 , 0xbc0 , 0xbbf , 0xbbe , 0xbbd , 0xbbc , 0xbbb , 0xaba , 0xab9 , 0xab8 , 0xab7 , 0xab6 , 0xab5 , 0xab4 , 0xab3 , 0xab2 , 0xab1 , 0xab0 , 0xaaf , 0xaae , 0xaad , 0xaac , 0xaab , 0xaaa , 0x9a9 , 0x9a8 , 0x9a7 , 0x9a6 , 0x9a5 , 0x9a4 , 0x9a3 , 0x9a2 , 0x9a1 , 0x9a0 , 0x99f , 0x99e , 0x99d , 0x99c , 0x99b , 0x99a , 0x999 , 0x898 , 0x897 , 0x896 , 0x895 , 0x894 , 0x893 , 0x892 , 0x891 , 0x890 , 0x88f , 0x88e , 0x88d , 0x88c , 0x88b , 0x88a , 0x889 , 0x888 , 0x787 , 0x786 , 0x785 , 0x784 , 0x783 , 0x782 , 0x781 , 0x780 , 0x77f , 0x77e , 0x77d , 0x77c , 0x77b , 0x77a , 0x779 , 0x778 , 0x777 , 0x676 , 0x675 , 0x674 , 0x673 , 0x672 , 0x671 , 0x670 , 0x66f , 0x66e , 0x66d , 0x66c , 0x66b , 0x66a , 0x669 , 0x668 , 0x667 , 0x666 , 0x565 , 0x564 , 0x563 , 0x562 , 0x561 , 0x560 , 0x55f , 0x55e , 0x55d , 0x55c , 0x55b , 0x55a , 0x559 , 0x558 , 0x557 , 0x556 , 0x555 , 0x454 , 0x453 , 0x452 , 0x451 , 0x450 , 0x44f , 0x44e , 0x44d , 0x44c , 0x44b , 0x44a , 0x449 , 0x448 , 0x447 , 0x446 , 0x445 , 0x444 , 0x343 , 0x342 , 0x341 , 0x340 , 0x33f , 0x33e , 0x33d , 0x33c , 0x33b , 0x33a , 0x339 , 0x338 , 0x337 , 0x336 , 0x335 , 0x334 , 0x333 , 0x232 , 0x231 , 0x230 , 0x22f , 0x22e , 0x22d , 0x22c , 0x22b , 0x22a , 0x229 , 0x228 , 0x227 , 0x226 , 0x225 , 0x224 , 0x223 , 0x222 , 0x121 , 0x120 , 0x11f , 0x11e , 0x11d , 0x11c , 0x11b , 0x11a , 0x119 , 0x118 , 0x117 , 0x116 , 0x115 , 0x114 , 0x113 , 0x112 , 0x111 , 0x010 , 0x00f , 0x00e , 0x00d , 0x00c , 0x00b , 0x00a , 0x009 , 0x008 , 0x007 , 0x006 , 0x005 , 0x004 , 0x003 , 0x002 , 0x001 , 0x000 , 0x001 , 0x002 , 0x003 , 0x004 , 0x005 , 0x006 , 0x007 , 0x008 , 0x009 , 0x00a , 0x00b , 0x00c , 0x00d , 0x00e , 0x00f , 0x010 , 0x111 , 0x112 , 0x113 , 0x114 , 0x115 , 0x116 , 0x117 , 0x118 , 0x119 , 0x11a , 0x11b , 0x11c , 0x11d , 0x11e , 0x11f , 0x120 , 0x121 , 0x222 , 0x223 , 0x224 , 0x225 , 0x226 , 0x227 , 0x228 , 0x229 , 0x22a , 0x22b , 0x22c , 0x22d , 0x22e , 0x22f , 0x230 , 0x231 , 0x232 , 0x333 , 0x334 , 0x335 , 0x336 , 0x337 , 0x338 , 0x339 , 0x33a , 0x33b , 0x33c , 0x33d , 0x33e , 0x33f , 0x340 , 0x341 , 0x342 , 0x343 , 0x444 , 0x445 , 0x446 , 0x447 , 0x448 , 0x449 , 0x44a , 0x44b , 0x44c , 0x44d , 0x44e , 0x44f , 0x450 , 0x451 , 0x452 , 0x453 , 0x454 , 0x555 , 0x556 , 0x557 , 0x558 , 0x559 , 0x55a , 0x55b , 0x55c , 0x55d , 0x55e , 0x55f , 0x560 , 0x561 , 0x562 , 0x563 , 0x564 , 0x565 , 0x666 , 0x667 , 0x668 , 0x669 , 0x66a , 0x66b , 0x66c , 0x66d , 0x66e , 0x66f , 0x670 , 0x671 , 0x672 , 0x673 , 0x674 , 0x675 , 0x676 , 0x777 , 0x778 , 0x779 , 0x77a , 0x77b , 0x77c , 0x77d , 0x77e , 0x77f , 0x780 , 0x781 , 0x782 , 0x783 , 0x784 , 0x785 , 0x786 , 0x787 , 0x888 , 0x889 , 0x88a , 0x88b , 0x88c , 0x88d , 0x88e , 0x88f , 0x890 , 0x891 , 0x892 , 0x893 , 0x894 , 0x895 , 0x896 , 0x897 , 0x898 , 0x999 , 0x99a , 0x99b , 0x99c , 0x99d , 0x99e , 0x99f , 0x9a0 , 0x9a1 , 0x9a2 , 0x9a3 , 0x9a4 , 0x9a5 , 0x9a6 , 0x9a7 , 0x9a8 , 0x9a9 , 0xaaa , 0xaab , 0xaac , 0xaad , 0xaae , 0xaaf , 0xab0 , 0xab1 , 0xab2 , 0xab3 , 0xab4 , 0xab5 , 0xab6 , 0xab7 , 0xab8 , 0xab9 , 0xaba , 0xbbb , 0xbbc , 0xbbd , 0xbbe , 0xbbf , 0xbc0 , 0xbc1 , 0xbc2 , 0xbc3 , 0xbc4 , 0xbc5 , 0xbc6 , 0xbc7 , 0xbc8 , 0xbc9 , 0xbca , 0xbcb , 0xccc , 0xccd , 0xcce , 0xccf , 0xcd0 , 0xcd1 , 0xcd2 , 0xcd3 , 0xcd4 , 0xcd5 , 0xcd6 , 0xcd7 , 0xcd8 , 0xcd9 , 0xcda , 0xcdb , 0xcdc , 0xddd , 0xdde , 0xddf , 0xde0 , 0xde1 , 0xde2 , 0xde3 , 0xde4 , 0xde5 , 0xde6 , 0xde7 , 0xde8 , 0xde9 , 0xdea , 0xdeb , 0xdec , 0xded , 0xeee , 0xeef , 0xef0 , 0xef1 , 0xef2 , 0xef3 , 0xef4 , 0xef5 , 0xef6 , 0xef7 , 0xef8 , 0xef9 , 0xefa , 0xefb , 0xefc , 0xefd , 0xefe , 0xfff };
 static const char sinTable[] = {
   32,34,35,37,38,40,41,43,44,46,47,48,50,51,52,53,
@@ -69,12 +69,12 @@ static const char sinTable[] = {
   9,11,12,13,14,16,17,18,20,21,23,24,26,27,29,30
 };
 
-static BOOL collide_point(short x, short y, Vec2short vec[], BYTE vector_max) {
+static BOOL nc_collide_point(short x, short y, Vec2short vec[], BYTE vector_max) {
   BYTE i = 0, j = 0;
   for (i = 0; i < vector_max; i++) {
     j = i + 1;
     if (j == vector_max) { j = 0; }
-    if (vector_is_left( // foreach edge vector check if dot is  left
+    if (nc_vector_is_left( // foreach edge vector check if dot is  left
         x,
         y,
         vec[i].x, vec[i].y,
@@ -91,37 +91,37 @@ static int y = LOGGER_Y_INIT;
 static int x_default = LOGGER_X_INIT;
 static int y_default = LOGGER_Y_INIT;
 
-void static setX(WORD _x);
-void static setY(WORD _y);
-void static setPosDefault();
-WORD static countChar(char *txt);
-void static autoInc(); // todo (minor) - logger_auto ... ?
+void static nc_setX(WORD _x);
+void static nc_setY(WORD _y);
+void static nc_setPosDefault();
+WORD static nc_countChar(char *txt);
+void static nc_autoInc(); // todo (minor) - logger_auto ... ?
 
-void static setX(WORD _x) { x = _x; }
-void static setY(WORD _y) { y = _y; }
+void static nc_setX(WORD _x) { x = _x; }
+void static nc_setY(WORD _y) { y = _y; }
 
-void static setPosDefault() {
+void static nc_setPosDefault() {
   x = LOGGER_X_INIT;
   y = LOGGER_Y_INIT;
 }
 
-static void sprite_index_manager_init() {
+static void nc_sprite_index_manager_init() {
   WORD i = 0;
   sprite_index_manager_status[0] = true;
   for (i = 1; i < SPRITE_INDEX_MANAGER_MAX; i++) sprite_index_manager_status[i] = false;
 }
 
-static void sprite_index_manager_set(WORD index, WORD max) {
+static void nc_sprite_index_manager_set(WORD index, WORD max) {
   WORD i = index;
   for (i = index; i < index + max; i++) sprite_index_manager_status[i] = true;
 }
 
-static void sprite_index_manager_set_free(WORD index, WORD max) {
+static void nc_sprite_index_manager_set_free(WORD index, WORD max) {
   WORD i = index;
   for (i = index; i < index + max; i++) sprite_index_manager_status[i] = false;
 }
 
-static WORD sprite_index_manager_use(WORD max) {
+static WORD nc_sprite_index_manager_use(WORD max) {
   WORD i, j = 0;
   WORD found = 0;
   for( i = 0; i < SPRITE_INDEX_MANAGER_MAX; i++) {
@@ -130,7 +130,7 @@ static WORD sprite_index_manager_use(WORD max) {
         if (!sprite_index_manager_status[j]) {
           found++;
           if (found >= max) {
-            sprite_index_manager_set(i, max);
+            nc_sprite_index_manager_set(i, max);
             return i;
           }
         } else {
@@ -142,17 +142,17 @@ static WORD sprite_index_manager_use(WORD max) {
   return 0; // TODO : no zero return
 }
 
-static void palette_index_manager_init() {
+static void nc_palette_index_manager_init() {
   WORD i = 0;
   for (i = 0; i <= 16; i++) palette_index_manager_status[i] = (paletteInfo*) 1;
 }
 
-static void palette_index_manager_set(paletteInfo *pi, WORD index) {
+static void nc_palette_index_manager_set(paletteInfo *pi, WORD index) {
   WORD i = index;
   for (i = index; i < index + pi->palCount; i++) palette_index_manager_status[i] = pi;
 }
 
-static void palette_index_manager_set_free(paletteInfo *pi) {
+static void nc_palette_index_manager_set_free(paletteInfo *pi) {
   WORD i = 0;
   for (i = 0; i <PALETTE_INDEX_MANAGER_MAX; i++) {
     if (palette_index_manager_status[i] == pi) {
@@ -161,7 +161,7 @@ static void palette_index_manager_set_free(paletteInfo *pi) {
   }
 }
 
-static WORD palette_index_manager_use(paletteInfo *pi) {
+static WORD nc_palette_index_manager_use(paletteInfo *pi) {
   WORD i, j = 0;
   WORD found = 0;
   for (i = 0; i < PALETTE_INDEX_MANAGER_MAX; i++) {
@@ -173,7 +173,7 @@ static WORD palette_index_manager_use(paletteInfo *pi) {
           if (!palette_index_manager_status[j]) {
             found++;
             if (found >= pi->palCount) {
-              palette_index_manager_set(pi, i);
+              nc_palette_index_manager_set(pi, i);
               return i;
             }
           }
@@ -186,7 +186,7 @@ static WORD palette_index_manager_use(paletteInfo *pi) {
   return 0; // TODO : no zero return
 }
 
-WORD static countChar(char *txt) {
+WORD static nc_countChar(char *txt) {
   WORD i = 0;
     while (txt[i] != '\0') {
     i++;
@@ -194,7 +194,7 @@ WORD static countChar(char *txt) {
   return i;
 }
 
-void static autoInc() { y++; }
+void static nc_autoInc() { y++; }
 
 NEOCORE_INIT
 JOYPAD_INIT_P1
@@ -204,24 +204,24 @@ JOYPAD_INIT_P1
  //                                   GFX                                    //
 //--------------------------------------------------------------------------//
 
-void shrunk_centroid_gfx_picture(
+void nc_shrunk_centroid_gfx_picture(
   GFX_Picture *gfx_picture,
   short center_x,
   short center_y,
   WORD shrunk_value
   ) {
-  shrunk(
+  nc_shrunk(
     gfx_picture->pictureDAT.baseSprite,
     gfx_picture->pictureDAT.info->tileWidth, shrunk_value
   );
   pictureSetPos(
     &gfx_picture->pictureDAT,
-    shrunk_centroid_get_translated_x(
+    nc_shrunk_centroid_get_translated_x(
       center_x,
       gfx_picture->pictureInfoDAT->tileWidth,
       SHRUNK_EXTRACT_X(shrunk_value)
     ),
-    shrunk_centroid_get_translated_y(
+    nc_shrunk_centroid_get_translated_y(
       center_y,
       gfx_picture->pictureInfoDAT->tileHeight,
       SHRUNK_EXTRACT_Y(shrunk_value)
@@ -229,15 +229,15 @@ void shrunk_centroid_gfx_picture(
   );
 }
 
-void destroy_gfx_scroller(GFX_Scroller *gfx_scroller) {
-  sprite_index_manager_set_free(gfx_scroller->scrollerDAT.baseSprite, 21);
+void nc_destroy_gfx_scroller(GFX_Scroller *gfx_scroller) {
+  nc_sprite_index_manager_set_free(gfx_scroller->scrollerDAT.baseSprite, 21);
   clearSprites(gfx_scroller->scrollerDAT.baseSprite, 21);
 }
 
   /*------------------*/
  /*  GFX INIT        */
 /*------------------*/
-void init_gfx_picture_physic(
+void nc_init_gfx_picture_physic(
   GFX_Picture_Physic *gfx_picture_physic,
   pictureInfo *pi,
   paletteInfo *pali,
@@ -247,14 +247,14 @@ void init_gfx_picture_physic(
   short box_height_offset,
   BOOL autobox_enabled
 ) {
-  init_gfx_picture(&gfx_picture_physic->gfx_picture, pi, pali);
+  nc_init_gfx_picture(&gfx_picture_physic->gfx_picture, pi, pali);
   gfx_picture_physic->autobox_enabled = autobox_enabled;
   if (gfx_picture_physic->autobox_enabled) {
-    init_box(&gfx_picture_physic->box, box_witdh, box_height, box_width_offset, box_height_offset);
+    nc_init_box(&gfx_picture_physic->box, box_witdh, box_height, box_width_offset, box_height_offset);
   }
 }
 
-void init_gfx_picture(
+void nc_init_gfx_picture(
   GFX_Picture *gfx_picture,
   pictureInfo *pictureInfo,
   paletteInfo *paletteInfo
@@ -265,7 +265,7 @@ void init_gfx_picture(
   gfx_picture->pixel_width = pictureInfo->tileWidth * 32;
 }
 
-void init_gfx_animated_sprite(
+void nc_init_gfx_animated_sprite(
   GFX_Animated_Sprite *gfx_animated_sprite,
   spriteInfo *spriteInfo,
   paletteInfo *paletteInfo
@@ -274,7 +274,7 @@ void init_gfx_animated_sprite(
   gfx_animated_sprite->paletteInfoDAT = paletteInfo;
 };
 
-void init_gfx_animated_sprite_physic(
+void nc_init_gfx_animated_sprite_physic(
     GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic,
     spriteInfo *spriteInfo,
     paletteInfo *paletteInfo,
@@ -283,7 +283,7 @@ void init_gfx_animated_sprite_physic(
     short box_width_offset,
     short box_height_offset
   ) {
-  init_box(
+  nc_init_box(
     &gfx_animated_sprite_physic->box,
     box_witdh,
     box_height,
@@ -291,14 +291,14 @@ void init_gfx_animated_sprite_physic(
     box_height_offset
   );
   gfx_animated_sprite_physic->physic_enabled = true;
-  init_gfx_animated_sprite(
+  nc_init_gfx_animated_sprite(
     &gfx_animated_sprite_physic->gfx_animated_sprite,
     spriteInfo,
     paletteInfo
   );
 }
 
-void init_gfx_scroller(
+void nc_init_gfx_scroller(
   GFX_Scroller *gfx_scroller,
   scrollerInfo *scrollerInfo,
   paletteInfo *paletteInfo
@@ -311,19 +311,19 @@ void init_gfx_scroller(
  /*  GFX DISPLAY     */
 /*------------------*/
 
-void display_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic, short x, short y) {
-  display_gfx_picture(&gfx_picture_physic->gfx_picture, x, y);
+void nc_display_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic, short x, short y) {
+  nc_display_gfx_picture(&gfx_picture_physic->gfx_picture, x, y);
   if (gfx_picture_physic->autobox_enabled) {
-    update_box(&gfx_picture_physic->box, x, y);
+    nc_update_box(&gfx_picture_physic->box, x, y);
   }
 }
 
-void display_gfx_picture(GFX_Picture *gfx_picture, short x, short y) {
-  WORD palette_index = palette_index_manager_use(gfx_picture->paletteInfoDAT);
+void nc_display_gfx_picture(GFX_Picture *gfx_picture, short x, short y) {
+  WORD palette_index = nc_palette_index_manager_use(gfx_picture->paletteInfoDAT);
   pictureInit(
     &gfx_picture->pictureDAT,
     gfx_picture->pictureInfoDAT,
-    sprite_index_manager_use(gfx_picture->pictureInfoDAT->tileWidth),
+    nc_sprite_index_manager_use(gfx_picture->pictureInfoDAT->tileWidth),
     palette_index,
     x,
     y,
@@ -336,17 +336,17 @@ void display_gfx_picture(GFX_Picture *gfx_picture, short x, short y) {
   );
 }
 
-void display_gfx_animated_sprite(
+void nc_display_gfx_animated_sprite(
   GFX_Animated_Sprite *animated_sprite,
   short x,
   short y,
   WORD anim
   ) {
-  WORD palette_index = palette_index_manager_use(animated_sprite->paletteInfoDAT);
+  WORD palette_index = nc_palette_index_manager_use(animated_sprite->paletteInfoDAT);
   aSpriteInit(
     &animated_sprite->aSpriteDAT,
     animated_sprite->spriteInfoDAT,
-    sprite_index_manager_use(animated_sprite->spriteInfoDAT->maxWidth),
+    nc_sprite_index_manager_use(animated_sprite->spriteInfoDAT->maxWidth),
     palette_index,
     x,
     y,
@@ -361,27 +361,27 @@ void display_gfx_animated_sprite(
   aSpriteSetAnim(&animated_sprite->aSpriteDAT, anim);
 }
 
-void display_gfx_animated_sprite_physic(
+void nc_display_gfx_animated_sprite_physic(
   GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic,
   short x,
   short y,
   WORD anim
   ) {
-  display_gfx_animated_sprite(
+  nc_display_gfx_animated_sprite(
     &gfx_animated_sprite_physic->gfx_animated_sprite,
     x,
     y,
     anim
   );
-  update_box(&gfx_animated_sprite_physic->box, x, y);
+  nc_update_box(&gfx_animated_sprite_physic->box, x, y);
 }
 
-void display_gfx_scroller(GFX_Scroller *gfx_scroller, short x, short y) {
-  WORD palette_index = palette_index_manager_use(gfx_scroller->paletteInfoDAT);
+void nc_display_gfx_scroller(GFX_Scroller *gfx_scroller, short x, short y) {
+  WORD palette_index = nc_palette_index_manager_use(gfx_scroller->paletteInfoDAT);
   scrollerInit(
     &gfx_scroller->scrollerDAT,
     gfx_scroller->scrollerInfoDAT,
-    sprite_index_manager_use(21),
+    nc_sprite_index_manager_use(21),
     palette_index,
     x,
     y
@@ -393,11 +393,11 @@ void display_gfx_scroller(GFX_Scroller *gfx_scroller, short x, short y) {
   );
 }
 
-void debug_paletteInfo(paletteInfo *palette, BOOL palCount, BOOL data) {
+void nc_debug_paletteInfo(paletteInfo *palette, BOOL palCount, BOOL data) {
   BYTE i = 0;
-  if (palCount) log_word("PALCOUNT", palette->palCount);
+  if (palCount) nc_log_word("PALCOUNT", palette->palCount);
   if (data) {
-    for(i = 0; i < (palette->palCount MULT16); i++) log_word("DATA", palette->data[i]);
+    for(i = 0; i < (palette->palCount MULT16); i++) nc_log_word("DATA", palette->data[i]);
   }
 }
 
@@ -405,13 +405,13 @@ void debug_paletteInfo(paletteInfo *palette, BOOL palCount, BOOL data) {
  /*  GFX VISIBILITY  */
 /*------------------*/
 
-void hide_gfx_picture(GFX_Picture *gfx_picture) { pictureHide(&gfx_picture->pictureDAT); }
+void nc_hide_gfx_picture(GFX_Picture *gfx_picture) { pictureHide(&gfx_picture->pictureDAT); }
 
-void hide_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic) {
+void nc_hide_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic) {
   pictureHide(&gfx_picture_physic->gfx_picture.pictureDAT);
 }
 
-void hide_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic) {
+void nc_hide_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic) {
   aSpriteHide(&gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT);
   clearSprites(
     gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT.baseSprite,
@@ -419,22 +419,22 @@ void hide_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic *gfx_animated_sp
   );
 }
 
-void hide_gfx_animated_sprite(GFX_Animated_Sprite *animated_sprite) {
+void nc_hide_gfx_animated_sprite(GFX_Animated_Sprite *animated_sprite) {
   aSpriteHide(&animated_sprite->aSpriteDAT);
   clearSprites(animated_sprite->aSpriteDAT.baseSprite, animated_sprite->aSpriteDAT.tileWidth);
 }
 
-void show_gfx_animated_sprite(GFX_Animated_Sprite *gfx_animated_sprite) {
+void nc_show_gfx_animated_sprite(GFX_Animated_Sprite *gfx_animated_sprite) {
   aSpriteShow(&gfx_animated_sprite->aSpriteDAT);
 }
 
-void show_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic) {
+void nc_show_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic) {
   aSpriteShow(&gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT);
 }
 
-void show_gfx_picture(GFX_Picture *gfx_picture) { pictureShow(&gfx_picture->pictureDAT); }
+void nc_show_gfx_picture(GFX_Picture *gfx_picture) { pictureShow(&gfx_picture->pictureDAT); }
 
-void show_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic) {
+void nc_show_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic) {
   pictureShow(&gfx_picture_physic->gfx_picture.pictureDAT);
 }
 
@@ -444,7 +444,7 @@ void show_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic) {
 
 /* GFX POSITION GETTER */
 
-Vec2short get_position_gfx_animated_sprite(GFX_Animated_Sprite gfx_animated_sprite) {
+Vec2short nc_get_position_gfx_animated_sprite(GFX_Animated_Sprite gfx_animated_sprite) {
   Vec2short position = {
     gfx_animated_sprite.aSpriteDAT.posX,
     gfx_animated_sprite.aSpriteDAT.posY
@@ -452,7 +452,7 @@ Vec2short get_position_gfx_animated_sprite(GFX_Animated_Sprite gfx_animated_spri
   return position;
 }
 
-Vec2short get_position_gfx_animated_sprite_physic(
+Vec2short nc_get_position_gfx_animated_sprite_physic(
   GFX_Animated_Sprite_Physic gfx_animated_sprite_physic
   ) {
   Vec2short position = {
@@ -462,7 +462,7 @@ Vec2short get_position_gfx_animated_sprite_physic(
   return position;
 }
 
-Vec2short get_position_gfx_picture(GFX_Picture gfx_picture) {
+Vec2short nc_get_position_gfx_picture(GFX_Picture gfx_picture) {
   Vec2short position = {
     gfx_picture.pictureDAT.posX,
     gfx_picture.pictureDAT.posY
@@ -470,7 +470,7 @@ Vec2short get_position_gfx_picture(GFX_Picture gfx_picture) {
   return position;
 }
 
-Vec2short get_position_gfx_picture_physic(GFX_Picture_Physic gfx_picture_physic) {
+Vec2short nc_get_position_gfx_picture_physic(GFX_Picture_Physic gfx_picture_physic) {
   Vec2short position = {
     gfx_picture_physic.gfx_picture.pictureDAT.posX,
     gfx_picture_physic.gfx_picture.pictureDAT.posY
@@ -478,7 +478,7 @@ Vec2short get_position_gfx_picture_physic(GFX_Picture_Physic gfx_picture_physic)
   return position;
 }
 
-Vec2short get_position_gfx_scroller(GFX_Scroller gfx_scroller) {
+Vec2short nc_get_position_gfx_scroller(GFX_Scroller gfx_scroller) {
   Vec2short position = {
     gfx_scroller.scrollerDAT.scrlPosX,
     gfx_scroller.scrollerDAT.scrlPosY
@@ -488,11 +488,11 @@ Vec2short get_position_gfx_scroller(GFX_Scroller gfx_scroller) {
 
 /* GFX POSITION SETTER */
 
-void set_position_gfx_scroller(GFX_Scroller *gfx_scroller, short x, short y) {
+void nc_set_position_gfx_scroller(GFX_Scroller *gfx_scroller, short x, short y) {
   scrollerSetPos(&gfx_scroller->scrollerDAT, x, y);
 }
 
-void set_position_gfx_animated_sprite(
+void nc_set_position_gfx_animated_sprite(
   GFX_Animated_Sprite *gfx_animated_sprite,
   short x,
   short y
@@ -500,16 +500,16 @@ void set_position_gfx_animated_sprite(
   aSpriteSetPos(&gfx_animated_sprite->aSpriteDAT, x, y);
 }
 
-void set_position_gfx_picture(GFX_Picture *gfx_picture, short x, short y) {
+void nc_set_position_gfx_picture(GFX_Picture *gfx_picture, short x, short y) {
   pictureSetPos(&gfx_picture->pictureDAT, x, y);
 }
 
-void set_position_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic, short x, short y) {
+void nc_set_position_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic, short x, short y) {
   pictureSetPos(&gfx_picture_physic->gfx_picture.pictureDAT, x, y);
-  if (gfx_picture_physic->autobox_enabled) update_box(&gfx_picture_physic->box, x, y);
+  if (gfx_picture_physic->autobox_enabled) nc_update_box(&gfx_picture_physic->box, x, y);
 }
 
-void set_position_gfx_animated_sprite_physic(
+void nc_set_position_gfx_animated_sprite_physic(
   GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic,
   short x,
   short y
@@ -519,19 +519,19 @@ void set_position_gfx_animated_sprite_physic(
     x,
     y
   );
-  update_box(&gfx_animated_sprite_physic->box, x, y);
+  nc_update_box(&gfx_animated_sprite_physic->box, x, y);
 }
 
 /* GFX POSITION MOVE*/
 
-void move_gfx_picture_physic(
+void nc_move_gfx_picture_physic(
   GFX_Picture_Physic *gfx_picture_physic,
   short x_offset,
   short y_offset
   ) {
   pictureMove(&gfx_picture_physic->gfx_picture.pictureDAT, x_offset, y_offset);
   if (gfx_picture_physic->autobox_enabled) {
-    update_box(
+    nc_update_box(
       &gfx_picture_physic->box,
       gfx_picture_physic->gfx_picture.pictureDAT.posX,
       gfx_picture_physic->gfx_picture.pictureDAT.posY
@@ -539,20 +539,20 @@ void move_gfx_picture_physic(
   }
 }
 
-void move_gfx_animated_sprite_physic(
+void nc_move_gfx_animated_sprite_physic(
   GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic,
   short x_offset,
   short y_offset
   ) {
   aSpriteMove(&gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT, x_offset, y_offset);
-  update_box(
+  nc_update_box(
     &gfx_animated_sprite_physic->box,
     gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT.posX,
     gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT.posY
   );
 }
 
-void move_gfx_animated_sprite(
+void nc_move_gfx_animated_sprite(
   GFX_Animated_Sprite *gfx_animated_sprite,
   short x_offset,
   short y_offset
@@ -560,11 +560,11 @@ void move_gfx_animated_sprite(
   aSpriteMove(&gfx_animated_sprite->aSpriteDAT, x_offset, y_offset);
 }
 
-void move_gfx_picture(GFX_Picture *gfx_picture, short x, short y) {
+void nc_move_gfx_picture(GFX_Picture *gfx_picture, short x, short y) {
   pictureMove(&gfx_picture->pictureDAT, x, y);
 }
 
-void move_gfx_scroller(GFX_Scroller *gfx_scroller, short x, short y) {
+void nc_move_gfx_scroller(GFX_Scroller *gfx_scroller, short x, short y) {
   scrollerSetPos(
     &gfx_scroller->scrollerDAT,
     gfx_scroller->scrollerDAT.scrlPosX + x,
@@ -576,22 +576,22 @@ void move_gfx_scroller(GFX_Scroller *gfx_scroller, short x, short y) {
  /*  GFX ANIMATION    */
 /*-------------------*/
 
-void set_animation_gfx_animated_sprite(GFX_Animated_Sprite *gfx_animated_sprite, WORD anim) {
+void nc_set_animation_gfx_animated_sprite(GFX_Animated_Sprite *gfx_animated_sprite, WORD anim) {
   aSpriteSetAnim(&gfx_animated_sprite->aSpriteDAT, anim);
 }
 
-void set_animation_gfx_animated_sprite_physic(
+void nc_set_animation_gfx_animated_sprite_physic(
   GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic,
   WORD anim
   ) {
   aSpriteSetAnim(&gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT, anim);
 }
 
-void update_animation_gfx_animated_sprite(GFX_Animated_Sprite *gfx_animated_sprite) {
+void nc_update_animation_gfx_animated_sprite(GFX_Animated_Sprite *gfx_animated_sprite) {
   aSpriteAnimate(&gfx_animated_sprite->aSpriteDAT);
 }
 
-void update_animation_gfx_animated_sprite_physic(
+void nc_update_animation_gfx_animated_sprite_physic(
   GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic
   ) {
   aSpriteAnimate(&gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT);
@@ -601,26 +601,26 @@ void update_animation_gfx_animated_sprite_physic(
  /*  GFX DESTROY      */
 /*-------------------*/
 
-void destroy_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic) {
-  destroy_gfx_picture(&gfx_picture_physic->gfx_picture);
+void nc_destroy_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic) {
+  nc_destroy_gfx_picture(&gfx_picture_physic->gfx_picture);
 }
 
-void destroy_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic) {
-  destroy_gfx_animated_sprite(&gfx_animated_sprite_physic->gfx_animated_sprite);
+void nc_destroy_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic) {
+  nc_destroy_gfx_animated_sprite(&gfx_animated_sprite_physic->gfx_animated_sprite);
 }
 
-void destroy_gfx_picture(GFX_Picture *gfx_picture) {
+void nc_destroy_gfx_picture(GFX_Picture *gfx_picture) {
   pictureHide(&gfx_picture->pictureDAT);
-  sprite_index_manager_set_free(
+  nc_sprite_index_manager_set_free(
     gfx_picture->pictureDAT.baseSprite,
     gfx_picture->pictureInfoDAT->tileWidth
   );
   clearSprites(gfx_picture->pictureDAT.baseSprite, gfx_picture->pictureInfoDAT->tileWidth);
 }
 
-void destroy_gfx_animated_sprite(GFX_Animated_Sprite *animated_sprite) {
+void nc_destroy_gfx_animated_sprite(GFX_Animated_Sprite *animated_sprite) {
   aSpriteHide(&animated_sprite->aSpriteDAT);
-  sprite_index_manager_set_free(
+  nc_sprite_index_manager_set_free(
     animated_sprite->aSpriteDAT.baseSprite,
     animated_sprite->spriteInfoDAT->maxWidth
   );
@@ -631,17 +631,17 @@ void destroy_gfx_animated_sprite(GFX_Animated_Sprite *animated_sprite) {
  //                                   GPU                                    //
 //--------------------------------------------------------------------------//
 
-void init_gpu() {
+void nc_init_gpu() {
   backgroundColor(0x7000); // todo (minor) - macro with some colors ...
   clearFixLayer();
   initGfx();
   volMEMWORD(0x400002) = 0xffff;  // debug text white
   LSPCmode = 0x1c00;              // autoanim speed
-  sprite_index_manager_init();
-  palette_index_manager_init();
+  nc_sprite_index_manager_init();
+  nc_palette_index_manager_init();
 }
 
-void clear_vram() {
+void nc_clear_vram() {
   WORD addr = 0x0000;
   WORD addr_end = 0x8FFF;
   disableIRQ();
@@ -650,16 +650,16 @@ void clear_vram() {
   }
   enableIRQ();
   SCClose();
-  wait_vbl_max(10);
+  nc_wait_vbl_max(10);
   SCClose();
-  wait_vbl_max(10);
+  nc_wait_vbl_max(10);
 }
 
   /*------------------------------*/
  /* GPU VBL                      */
 /*------------------------------*/
 
-DWORD wait_vbl_max(WORD nb) {
+DWORD nc_wait_vbl_max(WORD nb) {
   WORD i = 0;
   for (i = 0; i <= nb; i++) waitVBlank();
   return DAT_frameCounter;
@@ -669,9 +669,9 @@ DWORD wait_vbl_max(WORD nb) {
  /* GPU SPRITE INDEX MANAGEMENT  */
 /*------------------------------*/
 
-void clear_sprite_index_table() { sprite_index_manager_init(); }
+void nc_clear_sprite_index_table() { nc_sprite_index_manager_init(); }
 
-WORD get_max_free_sprite_index() {
+WORD nc_get_max_free_sprite_index() {
   WORD i, max = 0;
   for (i = 0; i < SPRITE_INDEX_MANAGER_MAX; i++) {
     if (sprite_index_manager_status[i] != true) max++;
@@ -679,7 +679,7 @@ WORD get_max_free_sprite_index() {
   return max;
 }
 
-WORD get_max_sprite_index_used() {
+WORD nc_get_max_sprite_index_used() {
   WORD i, max = 0;
   for (i = 0; i < SPRITE_INDEX_MANAGER_MAX; i++) {
     if (sprite_index_manager_status[i] != false) max++;
@@ -691,10 +691,10 @@ WORD get_max_sprite_index_used() {
  /* GPU PALETTE   */
 /*---------------*/
 
-void clear_palette_index_table() { palette_index_manager_init(); }
-void destroy_palette(paletteInfo* paletteInfo) { palette_index_manager_set_free(paletteInfo); }
+void nc_clear_palette_index_table() { nc_palette_index_manager_init(); }
+void nc_destroy_palette(paletteInfo* paletteInfo) { nc_palette_index_manager_set_free(paletteInfo); }
 
-WORD get_max_free_palette_index() {
+WORD nc_get_max_free_palette_index() {
   WORD i, max = 0;
   for (i = 0; i < PALETTE_INDEX_MANAGER_MAX; i++) {
     if (palette_index_manager_status[i] == (paletteInfo*) NULL) max++;
@@ -702,7 +702,7 @@ WORD get_max_free_palette_index() {
   return max;
 }
 
-WORD get_max_palette_index_used() {
+WORD nc_get_max_palette_index_used() {
   WORD i, max = 0;
   for (i = 0; i < PALETTE_INDEX_MANAGER_MAX; i++) {
     if (palette_index_manager_status[i] != (paletteInfo*) NULL) max++;
@@ -714,10 +714,10 @@ WORD get_max_palette_index_used() {
  /* GPU shrunk   */
 /*--------------*/
 
-WORD get_shrunk_proportional_table(WORD index) { return shrunk_table_prop[index]; } // todo (minor) - rename shrunk_proportional_table
-void shrunk_addr(WORD addr, WORD shrunk_value) { SC234Put(addr, shrunk_value); }
+WORD nc_get_shrunk_proportional_table(WORD index) { return shrunk_table_prop[index]; } // todo (minor) - rename shrunk_proportional_table
+void nc_shrunk_addr(WORD addr, WORD shrunk_value) { SC234Put(addr, shrunk_value); }
 
-WORD shrunk_forge(BYTE xc, BYTE yc) { // todo (minor) - xcF, ycFF
+WORD nc_shrunk_forge(BYTE xc, BYTE yc) { // todo (minor) - xcF, ycFF
   //F FF - x (hor) , y (vert)
   // vertical shrinking   8 bits
   // horizontal shrinking 4 bits
@@ -727,7 +727,7 @@ WORD shrunk_forge(BYTE xc, BYTE yc) { // todo (minor) - xcF, ycFF
   return value;
 }
 
-WORD shrunk_range(WORD addr_start, WORD addr_end, WORD shrunk_value) {
+WORD nc_shrunk_range(WORD addr_start, WORD addr_end, WORD shrunk_value) {
   WORD cur_addr = addr_start;
   while (cur_addr < addr_end) {
     SC234Put(cur_addr, shrunk_value);
@@ -736,17 +736,17 @@ WORD shrunk_range(WORD addr_start, WORD addr_end, WORD shrunk_value) {
   return addr_end;
 }
 
-void shrunk(WORD base_sprite, WORD max_width, WORD value) {
-  shrunk_range(0x8000 + base_sprite, 0x8000 + base_sprite + max_width, value);
+void nc_shrunk(WORD base_sprite, WORD max_width, WORD value) {
+  nc_shrunk_range(0x8000 + base_sprite, 0x8000 + base_sprite + max_width, value);
 }
 
-int shrunk_centroid_get_translated_x(short centerPosX, WORD tileWidth, BYTE shrunkX) {
+int nc_shrunk_centroid_get_translated_x(short centerPosX, WORD tileWidth, BYTE shrunkX) {
   FIXED newX = FIX(centerPosX);
   newX -= (shrunkX + 1) * FIX((tileWidth MULT8) / 0x10);
   return fixtoi(newX);
 }
 
-int shrunk_centroid_get_translated_y(short centerPosY, WORD tileHeight, BYTE shrunkY) {
+int nc_shrunk_centroid_get_translated_y(short centerPosY, WORD tileHeight, BYTE shrunkY) {
   FIXED newY = FIX(centerPosY);
   newY -= shrunkY * FIX((tileHeight MULT8) / 0xFF);
   return fixtoi(newY);
@@ -756,7 +756,7 @@ int shrunk_centroid_get_translated_y(short centerPosY, WORD tileHeight, BYTE shr
  //                                PHYSIC                                    //
 //--------------------------------------------------------------------------//
 
-BYTE collide_boxes(Box *box, Box *boxes[], BYTE box_max) {
+BYTE nc_collide_boxes(Box *box, Box *boxes[], BYTE box_max) {
   BYTE rt = false;
   BYTE i = 0;
   for (i = 0; i < box_max; i++) {
@@ -773,7 +773,7 @@ BYTE collide_boxes(Box *box, Box *boxes[], BYTE box_max) {
   return rt;
 }
 
-BOOL collide_box(Box *box1, Box *box2) { // todo - return a frixion vector
+BOOL nc_collide_box(Box *box1, Box *box2) { // todo - return a frixion vector
   if(
       box1->p1.x >= box2->p0.x
           &&
@@ -787,14 +787,14 @@ BOOL collide_box(Box *box1, Box *box2) { // todo - return a frixion vector
     } else { return false; }
 }
 
-void init_box(Box *box, short width, short height, short widthOffset, short heightOffset) {
+void nc_init_box(Box *box, short width, short height, short widthOffset, short heightOffset) {
   box->width = width;
   box->height = height;
   box->widthOffset = widthOffset;
   box->heightOffset = heightOffset;
 }
 
-void update_box(Box *box, short x, short y) {
+void nc_update_box(Box *box, short x, short y) {
   box->p0.x = x + box->widthOffset;
   box->p0.y = y + box->heightOffset;
 
@@ -811,7 +811,7 @@ void update_box(Box *box, short x, short y) {
   box->p4.y = box->p0.y + ((box->p3.y - box->p0.y) DIV2);
 }
 
-void shrunk_box(Box *box, Box *bOrigin, WORD shrunkValue) {
+void nc_shrunk_box(Box *box, Box *bOrigin, WORD shrunkValue) {
   // todo (minor) - optim.
   // if i can read the shrunk VRAM value, i can compute the origin box...
   // todo (minor) - improve precision
@@ -846,7 +846,7 @@ void shrunk_box(Box *box, Box *bOrigin, WORD shrunkValue) {
 }
 
 // todo (minor) - deprecated ?
-void resize_box(Box *box, short edge) {
+void nc_resize_box(Box *box, short edge) {
   box->p0.x -= edge;
   box->p0.y -= edge;
 
@@ -860,7 +860,7 @@ void resize_box(Box *box, short edge) {
   box->p3.y += edge;
 }
 
-void update_mask(short x, short y, Vec2short vec[], Vec2short offset[], BYTE vector_max) {
+void nc_update_mask(short x, short y, Vec2short vec[], Vec2short offset[], BYTE vector_max) {
   BYTE i = 0;
   for (i = 0; i < vector_max; i++) {
     vec[i].x = x + offset[i].x;
@@ -871,7 +871,7 @@ void update_mask(short x, short y, Vec2short vec[], Vec2short offset[], BYTE vec
   //--------------------------------------------------------------------------//
  //                                SOUND                                     //
 //--------------------------------------------------------------------------//
-void play_cdda(unsigned char track) {
+void nc_play_cdda(unsigned char track) {
   disableIRQ();
   asm(
     "loop_track_%=:              \n\t"
@@ -890,116 +890,116 @@ void play_cdda(unsigned char track) {
  //                                  JOYPAD                                    //
 //----------------------------------------------------------------------------//
 
-void debug_joypad(BYTE id) {
+void nc_debug_joypad(BYTE id) {
   if (id == 0) {
     JOYPAD_READ_P1
   } else {
     // JOYPAD_READ_P2 // TODO
   }
-  if (joypad_is_start(id))  {  fix_print_neocore(10, 11,  "JOYPAD START"); }
-  if (joypad_is_up(id))     {  fix_print_neocore(10, 11,  "JOYPAD UP   "); }
-  if (joypad_is_down(id))   {  fix_print_neocore(10, 11,  "JOYPAD DOWN "); }
-  if (joypad_is_left(id))   {  fix_print_neocore(10, 11,  "JOYPAD LEFT "); }
-  if (joypad_is_right(id))  {  fix_print_neocore(10, 11,  "JOYPAD RIGHT"); }
-  if (joypad_is_a(id))      {  fix_print_neocore(10, 11,  "JOYPAD A    "); }
-  if (joypad_is_b(id))      {  fix_print_neocore(10, 11,  "JOYPAD B    "); }
-  if (joypad_is_c(id))      {  fix_print_neocore(10, 11,  "JOYPAD C    "); }
-  if (joypad_is_d(id))      {  fix_print_neocore(10, 11,  "JOYPAD D    "); }
+  if (nc_joypad_is_start(id))  {  nc_fix_print_neocore(10, 11,  "JOYPAD START"); }
+  if (nc_joypad_is_up(id))     {  nc_fix_print_neocore(10, 11,  "JOYPAD UP   "); }
+  if (nc_joypad_is_down(id))   {  nc_fix_print_neocore(10, 11,  "JOYPAD DOWN "); }
+  if (nc_joypad_is_left(id))   {  nc_fix_print_neocore(10, 11,  "JOYPAD LEFT "); }
+  if (nc_joypad_is_right(id))  {  nc_fix_print_neocore(10, 11,  "JOYPAD RIGHT"); }
+  if (nc_joypad_is_a(id))      {  nc_fix_print_neocore(10, 11,  "JOYPAD A    "); }
+  if (nc_joypad_is_b(id))      {  nc_fix_print_neocore(10, 11,  "JOYPAD B    "); }
+  if (nc_joypad_is_c(id))      {  nc_fix_print_neocore(10, 11,  "JOYPAD C    "); }
+  if (nc_joypad_is_d(id))      {  nc_fix_print_neocore(10, 11,  "JOYPAD D    "); }
 }
 
-void update_joypad(BYTE id) {
+void nc_update_joypad(BYTE id) {
   if (id == 0) { JOYPAD_READ_P1 };
   // if (id = 1) JOYPAD_READ_P2; TODO
 }
 
-void update_joypad_edge(BYTE id) {
+void nc_update_joypad_edge(BYTE id) {
   if (id == 0) JOYPAD_READ_EDGE_P1;
 }
 
-BOOL joypad_is_up(BYTE id)     { return (JOYPAD_IS_UP_P1 && id == 0)     ? (true) : (false); }
-BOOL joypad_is_down(BYTE id)   { return (JOYPAD_IS_DOWN_P1 && id == 0)   ? (true) : (false); }
-BOOL joypad_is_left(BYTE id)   { return (JOYPAD_IS_LEFT_P1 && id == 0)   ? (true) : (false); }
-BOOL joypad_is_right(BYTE id)  { return (JOYPAD_IS_RIGHT_P1 && id == 0)  ? (true) : (false); }
-BOOL joypad_is_start(BYTE id)  { return (JOYPAD_IS_START_P1 && id == 0)  ? (true) : (false); }
-BOOL joypad_is_a(BYTE id)      { return (JOYPAD_IS_A_P1 && id == 0)      ? (true) : (false); }
-BOOL joypad_is_b(BYTE id)      { return (JOYPAD_IS_B_P1 && id == 0)      ? (true) : (false); }
-BOOL joypad_is_c(BYTE id)      { return (JOYPAD_IS_C_P1 && id == 0)      ? (true) : (false); }
-BOOL joypad_is_d(BYTE id)      { return (JOYPAD_IS_D_P1 && id == 0)      ? (true) : (false); }
+BOOL nc_joypad_is_up(BYTE id)     { return (JOYPAD_IS_UP_P1 && id == 0)     ? (true) : (false); }
+BOOL nc_joypad_is_down(BYTE id)   { return (JOYPAD_IS_DOWN_P1 && id == 0)   ? (true) : (false); }
+BOOL nc_joypad_is_left(BYTE id)   { return (JOYPAD_IS_LEFT_P1 && id == 0)   ? (true) : (false); }
+BOOL nc_joypad_is_right(BYTE id)  { return (JOYPAD_IS_RIGHT_P1 && id == 0)  ? (true) : (false); }
+BOOL nc_joypad_is_start(BYTE id)  { return (JOYPAD_IS_START_P1 && id == 0)  ? (true) : (false); }
+BOOL nc_joypad_is_a(BYTE id)      { return (JOYPAD_IS_A_P1 && id == 0)      ? (true) : (false); }
+BOOL nc_joypad_is_b(BYTE id)      { return (JOYPAD_IS_B_P1 && id == 0)      ? (true) : (false); }
+BOOL nc_joypad_is_c(BYTE id)      { return (JOYPAD_IS_C_P1 && id == 0)      ? (true) : (false); }
+BOOL nc_joypad_is_d(BYTE id)      { return (JOYPAD_IS_D_P1 && id == 0)      ? (true) : (false); }
 
-BOOL joypad_0_is_a()      { return joypad_is_a(0); }
-BOOL joypad_0_is_b()      { return joypad_is_b(0); }
-BOOL joypad_0_is_c()      { return joypad_is_c(0); }
-BOOL joypad_0_is_d()      { return joypad_is_d(0); }
-BOOL joypad_0_is_left()   { return joypad_is_left(0); }
-BOOL joypad_0_is_right()  { return joypad_is_right(0); }
-BOOL joypad_0_is_up()     { return joypad_is_up(0); }
-BOOL joypad_0_is_down()   { return joypad_is_down(0); }
-BOOL joypad_0_is_select() { return joypad_0_is_select(0); }
-BOOL joypad_0_is_start()  { return joypad_is_start(0); }
+BOOL nc_joypad_0_is_a()      { return nc_joypad_is_a(0); }
+BOOL nc_joypad_0_is_b()      { return nc_joypad_is_b(0); }
+BOOL nc_joypad_0_is_c()      { return nc_joypad_is_c(0); }
+BOOL nc_joypad_0_is_d()      { return nc_joypad_is_d(0); }
+BOOL nc_joypad_0_is_left()   { return nc_joypad_is_left(0); }
+BOOL nc_joypad_0_is_right()  { return nc_joypad_is_right(0); }
+BOOL nc_joypad_0_is_up()     { return nc_joypad_is_up(0); }
+BOOL nc_joypad_0_is_down()   { return nc_joypad_is_down(0); }
+BOOL nc_joypad_0_is_select() { return nc_joypad_0_is_select(0); }
+BOOL nc_joypad_0_is_start()  { return nc_joypad_is_start(0); }
 
   //----------------------------------------------------------------------------//
  //                                  UTIL                                      //
 //----------------------------------------------------------------------------//
 
-DWORD get_frame_to_second(DWORD frame) {
+DWORD nc_get_frame_to_second(DWORD frame) {
   return frame / 60;
 }
 
-DWORD get_second_to_frame(DWORD second) {
+DWORD nc_get_second_to_frame(DWORD second) {
   return second * 60;
 }
 
-void init_system() {
-  init_adpcm();
-  init_gpu();
+void nc_init_system() {
+  nc_init_adpcm();
+  nc_init_gpu();
 }
 
-void init_all_system() {
-  init_system();
+void nc_init_all_system() {
+  nc_init_system();
 }
 
-Vec2short get_relative_position(Box box, Vec2short world_coord) {
+Vec2short nc_get_relative_position(Box box, Vec2short world_coord) {
   Vec2short coord = {
     world_coord.x - box.p0.x,
-    get_inverse(world_coord.y - box.p3.y)
+    nc_get_inverse(world_coord.y - box.p3.y)
   };
   return coord;
 }
 
-void pause(BOOL (*exitFunc)()) {
-  update_joypad(0);
+void nc_pause(BOOL (*exitFunc)()) {
+  nc_update_joypad(0);
   while(!exitFunc()) {
-    update_joypad(0);
-    wait_vbl();
+    nc_update_joypad(0);
+    nc_wait_vbl();
   }
 }
 
-void sleep(DWORD frame) {
-  wait_vbl_max(frame);
+void nc_sleep(DWORD frame) {
+  nc_wait_vbl_max(frame);
 }
 
-BOOL each_frame(DWORD frame) {
+BOOL nc_each_frame(DWORD frame) {
   if (frame == 0) return true;
-  return (get_frame_counter() % frame == 0) ? true : false;
+  return (nc_get_frame_counter() % frame == 0) ? true : false;
 }
 
 // TODO get_negative
-short get_positive(short num) {
+short nc_get_positive(short num) {
   if (num < 0) num = ~num + 1;
   return num;
 }
 
-short get_inverse(int num) { // TODO TEST
+short nc_get_inverse(int num) { // TODO TEST
   return -num;
 }
 
-int get_random(int range) {
+int nc_get_random(int range) {
   return RAND(range);
 }
 
-void fix_print_neocore(int x, int y, char *label) { fixPrint(x, y, 0, 0, label); }
+void nc_fix_print_neocore(int x, int y, char *label) { fixPrint(x, y, 0, 0, label); }
 
-WORD free_ram_info() {
+WORD nc_free_ram_info() {
   // $000000  $0FFFFF    Vector Table, 68k program (.PRG files), 68k RAM
   // $100000  $00F2FF    WORKRAM_USER  User RAM/Work RAM
   int addr_end = 0x0FFFF, addr_used = 0x0FFFF;
@@ -1010,13 +1010,13 @@ WORD free_ram_info() {
   return addr_end - used;
 }
 
-char get_sin(WORD index) { return sinTable[index]; }
+char nc_get_sin(WORD index) { return sinTable[index]; }
 
   /*---------------*/
  /* UTIL LOGGER   */
 /*---------------*/
 
-void init_log() {
+void nc_init_log() {
   #ifdef LOGGER_ON // TODO : find better way to desactivate logger
   x = LOGGER_X_INIT;
   y = LOGGER_Y_INIT;
@@ -1026,166 +1026,166 @@ void init_log() {
   #endif
 }
 
-void set_position_log(WORD _x, WORD _y) {
+void nc_set_position_log(WORD _x, WORD _y) {
   x = _x;
   y = _y;
   x_default = x;
   y_default = y;
 }
 
-WORD log_info(char *label){
+WORD nc_log_info(char *label){
   #ifdef LOGGER_ON
   fixPrintf(x, y , 0, 0 , label);
-  autoInc();
-  return countChar(label);
+  nc_autoInc();
+  return nc_countChar(label);
   #endif
 }
 
-void log(char *message) {
-  log_info(message);
+void nc_log(char *message) {
+  nc_log_info(message);
 }
 
-void log_word(char *label, WORD value){
+void nc_log_word(char *label, WORD value){
   #ifdef LOGGER_ON
   WORD yc = y;
-  x = x_default + log_info(label) + 2;
+  x = x_default + nc_log_info(label) + 2;
   fixPrintf(x , yc, 0, 0, "%04d", value);
   x = x_default;
   #endif
 }
 
-void log_int(char *label, int value){
+void nc_log_int(char *label, int value){
   #ifdef LOGGER_ON
   WORD yc = y;
-  x = x_default + log_info(label) + 2;
+  x = x_default + nc_log_info(label) + 2;
   fixPrintf(x , yc, 0, 0, "%08d", value);
   x = x_default;
   #endif
 }
 
-void log_dword(char *label, DWORD value){
+void nc_log_dword(char *label, DWORD value){
   #ifdef LOGGER_ON
   WORD yc = y;
-  x = x_default + log_info(label) + 2;
+  x = x_default + nc_log_info(label) + 2;
   fixPrintf(x , yc, 0, 0, "%08d", value);
   x = x_default;
   #endif
 }
 
-void log_short(char *label, short value) {
+void nc_log_short(char *label, short value) {
   #ifdef LOGGER_ON
   WORD yc = y;
-  x = x_default + log_info(label) + 2;
+  x = x_default + nc_log_info(label) + 2;
   fixPrintf(x , yc, 0, 0, "%02d", value);
   x = x_default;
   #endif
 }
 
-void log_byte(char *label, BYTE value) {
+void nc_log_byte(char *label, BYTE value) {
   #ifdef LOGGER_ON
   WORD yc = y;
-  x = x_default + log_info(label) + 2;
+  x = x_default + nc_log_info(label) + 2;
   fixPrintf(x , yc, 0, 0, "%02d", value);
   x = x_default;
   #endif
 }
 
-void log_bool(char *label, BOOL value) {
+void nc_log_bool(char *label, BOOL value) {
   #ifdef LOGGER_ON
   WORD yc = y;
-  x = x_default + log_info(label) + 2;
+  x = x_default + nc_log_info(label) + 2;
   fixPrintf(x , yc, 0, 0, "%01d", value);
   x = x_default;
   #endif
 }
 
-void log_gas(char *label, GFX_Animated_Sprite *gfx_animated_sprite) {
+void nc_log_gas(char *label, GFX_Animated_Sprite *gfx_animated_sprite) {
   #ifdef LOGGER_ON
-  log_info(label);
-  log_word("BASESPRITE : " , gfx_animated_sprite->aSpriteDAT.baseSprite);
-  log_word("BASEPALETTE : ", gfx_animated_sprite->aSpriteDAT.basePalette);
-  log_short("POSX : ", gfx_animated_sprite->aSpriteDAT.posX);
-  log_short("POSY : ", gfx_animated_sprite->aSpriteDAT.posY);
-  log_short("CURRENTSTEPNUM : ", gfx_animated_sprite->aSpriteDAT.currentStepNum);
-  log_short("MAXSTEP : ", gfx_animated_sprite->aSpriteDAT.maxStep);
-  log_dword("COUNTER : ", gfx_animated_sprite->aSpriteDAT.counter);
-  log_word("REPEATS : ", gfx_animated_sprite->aSpriteDAT.repeats);
-  log_word("CURRENTFLIP : ", gfx_animated_sprite->aSpriteDAT.currentFlip);
-  log_word("TILEWIDTH : ", gfx_animated_sprite->aSpriteDAT.tileWidth);
-  log_word("ANIMID : ", gfx_animated_sprite->aSpriteDAT.animID);
-  log_word("FLAGS", gfx_animated_sprite->aSpriteDAT.flags);
+  nc_log_info(label);
+  nc_log_word("BASESPRITE : " , gfx_animated_sprite->aSpriteDAT.baseSprite);
+  nc_log_word("BASEPALETTE : ", gfx_animated_sprite->aSpriteDAT.basePalette);
+  nc_log_short("POSX : ", gfx_animated_sprite->aSpriteDAT.posX);
+  nc_log_short("POSY : ", gfx_animated_sprite->aSpriteDAT.posY);
+  nc_log_short("CURRENTSTEPNUM : ", gfx_animated_sprite->aSpriteDAT.currentStepNum);
+  nc_log_short("MAXSTEP : ", gfx_animated_sprite->aSpriteDAT.maxStep);
+  nc_log_dword("COUNTER : ", gfx_animated_sprite->aSpriteDAT.counter);
+  nc_log_word("REPEATS : ", gfx_animated_sprite->aSpriteDAT.repeats);
+  nc_log_word("CURRENTFLIP : ", gfx_animated_sprite->aSpriteDAT.currentFlip);
+  nc_log_word("TILEWIDTH : ", gfx_animated_sprite->aSpriteDAT.tileWidth);
+  nc_log_word("ANIMID : ", gfx_animated_sprite->aSpriteDAT.animID);
+  nc_log_word("FLAGS", gfx_animated_sprite->aSpriteDAT.flags);
   #endif
 }
 
-void log_spriteInfo(char *label, spriteInfo *si) {
+void nc_log_spriteInfo(char *label, spriteInfo *si) {
   #ifdef LOGGER_ON
-  log_info(label);
-  log_word("PALCOUNT : ", si->palCount);
-  log_word("FRAMECOUNT : ", si->frameCount);
-  log_word("MAXWIDTH : ", si->maxWidth);
+  nc_log_info(label);
+  nc_log_word("PALCOUNT : ", si->palCount);
+  nc_log_word("FRAMECOUNT : ", si->frameCount);
+  nc_log_word("MAXWIDTH : ", si->maxWidth);
   #endif
 }
 
-void log_box(char *label, Box *b) {
+void nc_log_box(char *label, Box *b) {
   #ifdef LOGGER_ON
-  log_info(label);
-  log_short("P0X", (short)b->p0.x);
-  log_short("P0Y", (short)b->p0.y);
-  log_info("");
-  log_short("P1X", (short)b->p1.x);
-  log_short("P1Y", (short)b->p1.y);
-  log_info("");
-  log_short("P2X", (short)b->p2.x);
-  log_short("P2Y", (short)b->p2.y);
-  log_info("");
-  log_short("P3X", (short)b->p3.x);
-  log_short("P3Y", (short)b->p3.y);
-  log_info("");
-  log_short("P4X", (short)b->p4.x);
-  log_short("P4Y", (short)b->p4.y);
-  log_info("");
-  log_short("WIDTH ", b->width);
-  log_short("HEIGHT ", b->height);
-  log_info("");
-  log_short("WIDTH OFFSET ", b->widthOffset);
-  log_short("HEIGHT OFFSET ", b->heightOffset);
+  nc_log_info(label);
+  nc_log_short("P0X", (short)b->p0.x);
+  nc_log_short("P0Y", (short)b->p0.y);
+  nc_log_info("");
+  nc_log_short("P1X", (short)b->p1.x);
+  nc_log_short("P1Y", (short)b->p1.y);
+  nc_log_info("");
+  nc_log_short("P2X", (short)b->p2.x);
+  nc_log_short("P2Y", (short)b->p2.y);
+  nc_log_info("");
+  nc_log_short("P3X", (short)b->p3.x);
+  nc_log_short("P3Y", (short)b->p3.y);
+  nc_log_info("");
+  nc_log_short("P4X", (short)b->p4.x);
+  nc_log_short("P4Y", (short)b->p4.y);
+  nc_log_info("");
+  nc_log_short("WIDTH ", b->width);
+  nc_log_short("HEIGHT ", b->height);
+  nc_log_info("");
+  nc_log_short("WIDTH OFFSET ", b->widthOffset);
+  nc_log_short("HEIGHT OFFSET ", b->heightOffset);
   #endif
 }
 
-void log_pictureInfo(char *label, pictureInfo *pi) {
+void nc_log_pictureInfo(char *label, pictureInfo *pi) {
   #ifdef LOGGER_ON
-  log_info(label);
-  log_word("COLSIZE : ", (WORD)pi->colSize);
-  log_word("UNUSED HEIGHT : ", (WORD)pi->unused__height);
-  log_word("TILEWIDTH : ", (WORD)pi->tileWidth);
-  log_word("TILEHEIGHT : ", (WORD)pi->tileHeight);
+  nc_log_info(label);
+  nc_log_word("COLSIZE : ", (WORD)pi->colSize);
+  nc_log_word("UNUSED HEIGHT : ", (WORD)pi->unused__height);
+  nc_log_word("TILEWIDTH : ", (WORD)pi->tileWidth);
+  nc_log_word("TILEHEIGHT : ", (WORD)pi->tileHeight);
   #endif
 }
 
-void log_vec2short(char *label, Vec2short vec2short) {
-  log_info(label);
-  log_short("X", vec2short.x);
-  log_short("Y", vec2short.y);
+void nc_log_vec2short(char *label, Vec2short vec2short) {
+  nc_log_info(label);
+  nc_log_short("X", vec2short.x);
+  nc_log_short("Y", vec2short.y);
 }
 
   /*---------------*/
  /* SOUND         */
 /*---------------*/
 
-void init_adpcm() {
-  init_adpcm_player();
+void nc_init_adpcm() {
+  nc_init_adpcm_player();
 }
 
-Adpcm_player *get_adpcm_player() {
+Adpcm_player *nc_get_adpcm_player() {
   return &adpcm_player;
 }
 
-void push_remaining_frame_adpcm_player(DWORD frame) {
+void nc_push_remaining_frame_adpcm_player(DWORD frame) {
   adpcm_player.remaining_frame += frame;
   adpcm_player.state = PLAYING;
 }
 
-void update_adpcm_player() {
+void nc_update_adpcm_player() {
   if (adpcm_player.remaining_frame != 0) {
     adpcm_player.state = PLAYING;
     adpcm_player.remaining_frame -= 1;
@@ -1204,7 +1204,7 @@ void update_adpcm_player() {
  /* UTIL VECTOR   */
 /*---------------*/
 
-BOOL vector_is_left(short x, short y, short v1x, short v1y, short v2x, short v2y) {
+BOOL nc_vector_is_left(short x, short y, short v1x, short v1y, short v2x, short v2y) {
   BOOL rt = false;
   short vectorD[2] = {v2x - v1x, v2y - v1y};
   short vectorT[2] = {x - v1x, y -v1y};
@@ -1213,12 +1213,12 @@ BOOL vector_is_left(short x, short y, short v1x, short v1y, short v2x, short v2y
   return rt;
 }
 
-BOOL vectors_collide(Box *box, Vec2short vec[], BYTE vector_max) {
+BOOL nc_vectors_collide(Box *box, Vec2short vec[], BYTE vector_max) {
   BOOL p0 = false, p1 = false, p2 = false, p3 = false, p4 = false;
-  p0 = collide_point(box->p0.x, box->p0.y, vec, vector_max);
-  p1 = collide_point(box->p1.x, box->p1.y, vec, vector_max);
-  p2 = collide_point(box->p2.x, box->p2.y, vec, vector_max);
-  p3 = collide_point(box->p3.x, box->p3.y, vec, vector_max);
-  p4 = collide_point(box->p4.x, box->p4.y, vec, vector_max);
+  p0 = nc_collide_point(box->p0.x, box->p0.y, vec, vector_max);
+  p1 = nc_collide_point(box->p1.x, box->p1.y, vec, vector_max);
+  p2 = nc_collide_point(box->p2.x, box->p2.y, vec, vector_max);
+  p3 = nc_collide_point(box->p3.x, box->p3.y, vec, vector_max);
+  p4 = nc_collide_point(box->p4.x, box->p4.y, vec, vector_max);
   return (p0 || p1 || p2 || p3 || p4);
 }
