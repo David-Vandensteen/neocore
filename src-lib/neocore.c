@@ -776,6 +776,15 @@ int nc_shrunk_centroid_get_translated_y(short centerPosY, WORD tileHeight, BYTE 
  //                                MATH                                      //
 //--------------------------------------------------------------------------//
 
+short nc_get_positive(short num) {
+  if (num < 0) num = ~num + 1;
+  return num;
+}
+
+short nc_get_inverse(int num) {
+  return -num;
+}
+
   //--------------------------------------------------------------------------//
  //                                PHYSIC                                    //
 //--------------------------------------------------------------------------//
@@ -994,16 +1003,6 @@ void nc_sleep(DWORD frame) {
 BOOL nc_each_frame(DWORD frame) {
   if (frame == 0) return true;
   return (nc_get_frame_counter() % frame == 0) ? true : false;
-}
-
-// TODO get_negative
-short nc_get_positive(short num) {
-  if (num < 0) num = ~num + 1;
-  return num;
-}
-
-short nc_get_inverse(int num) { // TODO TEST
-  return -num;
 }
 
 void nc_fix_print_neocore(int x, int y, char *label) { fixPrint(x, y, 0, 0, label); }

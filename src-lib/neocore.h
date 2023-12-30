@@ -316,6 +316,9 @@ WORD nc_shrunk_range(WORD addr_start, WORD addr_end, WORD shrunk_value);
 #define nc_bitwise_multiplication_32(value) (value << 5)
 #define nc_bitwise_multiplication_64(value) (value << 6)
 
+short nc_get_positive(short num); // TODO : macro
+short nc_get_inverse(int num); // TODO : macro
+
 #define nc_get_random(range) rand() % range
 
   //--------------------------------------------------------------------------//
@@ -371,8 +374,6 @@ Vec2short nc_get_relative_position(Box box, Vec2short world_coord);
 void nc_pause(BOOL (*exitFunc)());
 void nc_sleep(DWORD frame);
 BOOL nc_each_frame(DWORD frame);
-short nc_get_positive(short num);
-short nc_get_inverse(int num); // TODO TEST
 void nc_fix_print_neocore(int x, int y, char *label);
 WORD nc_free_ram_info();
 #define nc_get_frame_counter() DAT_frameCounter
