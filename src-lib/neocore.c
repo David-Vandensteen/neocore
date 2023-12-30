@@ -444,40 +444,10 @@ void show_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic) {
 
 /* GFX POSITION GETTER */
 
-short get_x_gfx_animated_sprite(GFX_Animated_Sprite gfx_animated_sprite) {
-  return gfx_animated_sprite.aSpriteDAT.posX;
-}
-
-short get_y_gfx_animated_sprite(GFX_Animated_Sprite gfx_animated_sprite) {
-  return gfx_animated_sprite.aSpriteDAT.posY;
-}
-
-short get_x_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic gfx_animated_sprite_physic) {
-  return gfx_animated_sprite_physic.gfx_animated_sprite.aSpriteDAT.posX;
-}
-
-short get_y_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic gfx_animated_sprite_physic) {
-  return gfx_animated_sprite_physic.gfx_animated_sprite.aSpriteDAT.posY;
-}
-
-short get_x_gfx_picture(GFX_Picture gfx_picture) { return gfx_picture.pictureDAT.posX; }
-short get_y_gfx_picture(GFX_Picture gfx_picture) { return gfx_picture.pictureDAT.posY; }
-
-short get_x_gfx_picture_physic(GFX_Picture_Physic gfx_picture_physic) {
-  return gfx_picture_physic.gfx_picture.pictureDAT.posX;
-}
-
-short get_y_gfx_picture_physic(GFX_Picture_Physic gfx_picture_physic) {
-  return gfx_picture_physic.gfx_picture.pictureDAT.posY;
-}
-
-short get_x_gfx_scroller(GFX_Scroller gfx_scroller) { return gfx_scroller.scrollerDAT.scrlPosX; }
-short get_y_gfx_scroller(GFX_Scroller gfx_scroller) { return gfx_scroller.scrollerDAT.scrlPosY; }
-
 Vec2short get_position_gfx_animated_sprite(GFX_Animated_Sprite gfx_animated_sprite) {
   Vec2short position = {
-    get_x_gfx_animated_sprite(gfx_animated_sprite),
-    get_y_gfx_animated_sprite(gfx_animated_sprite)
+    gfx_animated_sprite.aSpriteDAT.posX,
+    gfx_animated_sprite.aSpriteDAT.posY
   };
   return position;
 }
@@ -486,77 +456,37 @@ Vec2short get_position_gfx_animated_sprite_physic(
   GFX_Animated_Sprite_Physic gfx_animated_sprite_physic
   ) {
   Vec2short position = {
-    get_x_gfx_animated_sprite_physic(gfx_animated_sprite_physic),
-    get_y_gfx_animated_sprite_physic(gfx_animated_sprite_physic)
+    gfx_animated_sprite_physic.gfx_animated_sprite.aSpriteDAT.posX,
+    gfx_animated_sprite_physic.gfx_animated_sprite.aSpriteDAT.posY
   };
   return position;
 }
 
 Vec2short get_position_gfx_picture(GFX_Picture gfx_picture) {
   Vec2short position = {
-    get_x_gfx_picture(gfx_picture),
-    get_y_gfx_picture(gfx_picture)
+    gfx_picture.pictureDAT.posX,
+    gfx_picture.pictureDAT.posY
   };
   return position;
 }
 
 Vec2short get_position_gfx_picture_physic(GFX_Picture_Physic gfx_picture_physic) {
   Vec2short position = {
-    get_x_gfx_picture_physic(gfx_picture_physic),
-    get_y_gfx_picture_physic(gfx_picture_physic)
+    gfx_picture_physic.gfx_picture.pictureDAT.posX,
+    gfx_picture_physic.gfx_picture.pictureDAT.posY
   };
   return position;
 }
 
 Vec2short get_position_gfx_scroller(GFX_Scroller gfx_scroller) {
   Vec2short position = {
-    get_x_gfx_scroller(gfx_scroller),
-    get_y_gfx_scroller(gfx_scroller)
+    gfx_scroller.scrollerDAT.scrlPosX,
+    gfx_scroller.scrollerDAT.scrlPosY
   };
   return position;
 }
 
 /* GFX POSITION SETTER */
-
-void set_x_gfx_animated_sprite_physic(
-  GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic,
-  short x
-  ) {
-  aSpriteSetPos(
-    &gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT,
-    x,
-    gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT.posY
-  );
-  update_box(
-    &gfx_animated_sprite_physic->box,
-    x,
-    gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT.posY
-  );
-}
-
-void set_y_gfx_animated_sprite_physic(
-  GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic,
-  short y
-  ) {
-  aSpriteSetPos(
-    &gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT,
-    gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT.posX,
-    y
-  );
-  update_box(
-    &gfx_animated_sprite_physic->box,
-    gfx_animated_sprite_physic->gfx_animated_sprite.aSpriteDAT.posX,
-    y
-  );
-}
-
-void set_x_gfx_scroller(GFX_Scroller *gfx_scroller, short x) {
-  scrollerSetPos(&gfx_scroller->scrollerDAT, x, gfx_scroller->scrollerDAT.scrlPosY);
-}
-
-void set_y_gfx_scroller(GFX_Scroller *gfx_scroller, short x) {
-  scrollerSetPos(&gfx_scroller->scrollerDAT, gfx_scroller->scrollerDAT.scrlPosX, y);
-}
 
 void set_position_gfx_scroller(GFX_Scroller *gfx_scroller, short x, short y) {
   scrollerSetPos(&gfx_scroller->scrollerDAT, x, y);

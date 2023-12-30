@@ -192,21 +192,6 @@ void show_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic);
 
 /* GFX POSITION GETTER */
 
-short get_x_gfx_animated_sprite(GFX_Animated_Sprite gfx_animated_sprite);
-short get_y_gfx_animated_sprite(GFX_Animated_Sprite gfx_animated_sprite);
-
-short get_x_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic gfx_animated_sprite_physic);
-short get_y_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic gfx_animated_sprite_physic);
-
-short get_x_gfx_picture(GFX_Picture gfx_picture);
-short get_y_gfx_picture(GFX_Picture gfx_picture);
-
-short get_x_gfx_picture_physic(GFX_Picture_Physic gfx_picture_physic);
-short get_y_gfx_picture_physic(GFX_Picture_Physic gfx_picture_physic);
-
-short get_x_gfx_scroller(GFX_Scroller gfx_scroller);
-short get_y_gfx_scroller(GFX_Scroller gfx_scroller);
-
 Vec2short get_position_gfx_animated_sprite(GFX_Animated_Sprite gfx_animated_sprite);
 
 Vec2short get_position_gfx_animated_sprite_physic(
@@ -226,19 +211,6 @@ void set_position_gfx_animated_sprite_physic(
   short x,
   short y
 );
-
-void set_x_gfx_animated_sprite_physic(
-  GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic,
-  short x
-);
-
-void set_y_gfx_animated_sprite_physic(
-  GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic,
-  short y
-);
-
-void set_x_gfx_scroller(GFX_Scroller *gfx_scroller, short x);
-void set_y_gfx_scroller(GFX_Scroller *gfx_scroller, short x);
 
 void set_position_gfx_scroller(GFX_Scroller *gfx_scroller, short x, short y);
 void set_position_gfx_animated_sprite(GFX_Animated_Sprite *gfx_animated_sprite, short x, short y);
