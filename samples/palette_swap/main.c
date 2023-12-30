@@ -10,14 +10,14 @@ int main(void) {
   nc_display_gfx_picture(&logo, 50, 100);
   logo_swap_palette.palCount = logo.paletteInfoDAT->palCount;
 
-  for (i = 0; i < nc_bitwise_multiplication_16(logo.paletteInfoDAT->palCount); i++) { logo_swap_palette.data[i] = RAND(0xFFFF); }
+  for (i = 0; i < nc_bitwise_multiplication_16(logo.paletteInfoDAT->palCount); i++) { logo_swap_palette.data[i] = nc_get_random(0xFFFF); }
   logo_swap_palette.data[1] = 0x0000;
 
   while(1) {
     nc_update();
     nc_init_log();
     if (nc_get_frame_counter() % 8 == 0) {
-      for (i = 0; i < nc_bitwise_multiplication_16(logo.paletteInfoDAT->palCount); i++) { logo_swap_palette.data[i] = RAND(0xFFFF); }
+      for (i = 0; i < nc_bitwise_multiplication_16(logo.paletteInfoDAT->palCount); i++) { logo_swap_palette.data[i] = nc_get_random(0xFFFF); }
       logo_swap_palette.data[1] = 0x0000;
       palJobPut(logo.pictureDAT.basePalette, logo_swap_palette.palCount, logo_swap_palette.data);
     }
