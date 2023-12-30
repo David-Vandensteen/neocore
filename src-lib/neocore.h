@@ -25,8 +25,8 @@
 #define MANUALBOX 0
 #define AUTOBOX 1
 
-enum direction { NONE, UP, DOWN, LEFT, RIGHT };
-enum sound_state { IDLE, PLAYING };
+enum Direction { NONE, UP, DOWN, LEFT, RIGHT };
+enum Sound_state { IDLE, PLAYING };
 
   //--------------------------------------------------------------------------//
  //                          STRUCTURE                                       //
@@ -82,7 +82,7 @@ typedef struct GFX_Scroller {
 } GFX_Scroller;
 
 typedef struct Adpcm_player {
-  enum sound_state state;
+  enum Sound_state state;
   DWORD remaining_frame;
 } Adpcm_player;
 
