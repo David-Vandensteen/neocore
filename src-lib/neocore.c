@@ -48,6 +48,7 @@
 
 static Adpcm_player adpcm_player;
 static BOOL is_init = false;
+static BOOL joypad_edge_mode = false;
 
 static void nc_init_adpcm_player() {
   adpcm_player.state = IDLE;
@@ -671,10 +672,11 @@ void nc_clear_vram() {
  /* GPU VBL                      */
 /*------------------------------*/
 
-void nc_wait_vbl() {
+void nc_update() {
   nc_shadow_init_system();
-  nc_update_adpcm_player();
   waitVBlank();
+  nc_update_adpcm_player();
+  joypad_edge_mode ? nc_update_joypad_edge(0) : nc_update_joypad(0);
 }
 
 DWORD nc_wait_vbl_max(WORD nb) {
@@ -889,6 +891,7 @@ void nc_update_mask(short x, short y, Vec2short vec[], Vec2short offset[], BYTE 
   //--------------------------------------------------------------------------//
  //                                SOUND                                     //
 //--------------------------------------------------------------------------//
+
 void nc_play_cdda(unsigned char track) {
   disableIRQ();
   asm(
@@ -907,6 +910,8 @@ void nc_play_cdda(unsigned char track) {
   //----------------------------------------------------------------------------//
  //                                  JOYPAD                                    //
 //----------------------------------------------------------------------------//
+
+void nc_set_joypad_edge_mode(BOOL actived) { joypad_edge_mode = actived; }
 
 void nc_debug_joypad(BYTE id) {
   if (id == 0) {
@@ -988,7 +993,7 @@ void nc_pause(BOOL (*exitFunc)()) {
   nc_update_joypad(0);
   while(!exitFunc()) {
     nc_update_joypad(0);
-    nc_wait_vbl();
+    waitVBlank();
   }
 }
 

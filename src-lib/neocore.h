@@ -286,7 +286,7 @@ char nc_get_sin(WORD index);
  /* GPU VBL                      */
 /*------------------------------*/
 
-void nc_wait_vbl();
+void nc_update();
 DWORD nc_wait_vbl_max(WORD nb);
 
   /*------------------------------*/
@@ -343,8 +343,10 @@ void nc_play_cdda(BYTE track);
  //                                  JOYPAD                                    //
 //----------------------------------------------------------------------------//
 
-void nc_update_joypad(BYTE id);
-void nc_update_joypad_edge(BYTE id);
+void nc_set_joypad_edge_mode(BOOL actived);
+
+void nc_update_joypad(BYTE id); // todo update with mode
+void nc_update_joypad_edge(BYTE id); // todo remove
 
 void nc_joypad_update(BYTE id);
 BOOL nc_joypad_is_up(BYTE id);
