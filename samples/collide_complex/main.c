@@ -70,14 +70,16 @@ static void init_mask() {
 }
 
 static void update_player() {
+  Vec2short position;
   update_joypad(0);
-  if (joypad_is_left(0) && get_x_gfx_animated_sprite_physic(player) > 0) { move_gfx_animated_sprite_physic(&player, -1, 0); }
-  if (joypad_is_right(0) && get_x_gfx_animated_sprite_physic(player) < 280) { move_gfx_animated_sprite_physic(&player, 1, 0); }
-  if (joypad_is_up(0) && get_y_gfx_animated_sprite_physic(player) > 0) {
+  position = get_position_gfx_animated_sprite_physic(player);
+  if (joypad_is_left(0) && position.x > 0) { move_gfx_animated_sprite_physic(&player, -1, 0); }
+  if (joypad_is_right(0) && position.x < 280) { move_gfx_animated_sprite_physic(&player, 1, 0); }
+  if (joypad_is_up(0) && position.y > 0) {
     move_gfx_animated_sprite_physic(&player, 0, -1);
     set_animation_gfx_animated_sprite_physic(&player, PLAYER_SPRITE_ANIM_UP);
   }
-  if (joypad_is_down(0) && get_y_gfx_animated_sprite_physic(player) < 200) {
+  if (joypad_is_down(0) && position.y < 200) {
     move_gfx_animated_sprite_physic(&player, 0, 1);
     set_animation_gfx_animated_sprite_physic(&player, PLAYER_SPRITE_ANIM_DOWN);
   }

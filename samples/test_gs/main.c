@@ -11,7 +11,9 @@ int main(void) {
   while(1) {
     wait_vbl();
     move_gfx_scroller(&background, 1, 0);
-    if (get_x_gfx_scroller(background) > 512) set_position_gfx_scroller(&background, 0, 0);
+    if (get_position_gfx_scroller(background).x > 512) {
+      set_position_gfx_scroller(&background, 0, 0);
+    }
     close_vbl();
   };
   close_vbl();

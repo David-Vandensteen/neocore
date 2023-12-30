@@ -25,12 +25,18 @@ static void display() {
 }
 
 static void update() {
+  Vec2short position_spectrum02;
+  Vec2short position_k7;
+
+  position_spectrum02 = get_position_gfx_scroller(spectrum02);
+  position_k7 = get_position_gfx_picture(k7);
+
   init_log();
   update_joypad_edge(0);
   log_byte("AUDIO TRACK : ", track_num - 1);
   if (get_frame_counter() % 2 == 0) {
     move_gfx_scroller(&spectrum02, 1, 0);
-    if (get_x_gfx_scroller(spectrum02) > 960) set_x_gfx_scroller(&spectrum02, 0);
+    if (position_spectrum02.x > 960) set_position_gfx_scroller(&spectrum02, 0, position_spectrum02.y);
   }
   if (get_frame_counter() % 5 == 0) {
     if (k7_direction) {
@@ -39,8 +45,8 @@ static void update() {
       move_gfx_picture(&k7, -1, 0);
     }
   }
-  if (get_x_gfx_picture(k7) > 50) k7_direction = false;
-  if (get_x_gfx_picture(k7) < 40) k7_direction = true;
+  if (position_k7.x > 50) k7_direction = false;
+  if (position_k7.x < 40) k7_direction = true;
   if (joypad_is_left(0) && track_num > 2) play_cdda(--track_num);
   if (joypad_is_right(0) && track_num < 5) play_cdda(++track_num);
 }

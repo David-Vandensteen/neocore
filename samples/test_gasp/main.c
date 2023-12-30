@@ -25,7 +25,7 @@ int main(void) {
     }
     frame_seq += accumulator;
     if (get_frame_counter() >= (frame_seq - accumulator) && get_frame_counter() < frame_seq) {
-      if (get_x_gfx_animated_sprite_physic(player) < 0) {
+      if (get_position_gfx_animated_sprite_physic(player).x < 0) {
         set_position_gfx_animated_sprite_physic(&player, 150, 150);
       } else {
         set_animation_gfx_animated_sprite_physic(&player, PLAYER_SPRITE_ANIM_UP);
@@ -38,8 +38,8 @@ int main(void) {
       log_info("GET X AND Y");
       set_position_gfx_animated_sprite_physic(&player, 181, 57);
       set_animation_gfx_animated_sprite_physic(&player, PLAYER_SPRITE_ANIM_IDLE);
-      log_short("X", get_x_gfx_animated_sprite_physic(player));
-      log_short("Y", get_y_gfx_animated_sprite_physic(player));
+      log_short("X", get_position_gfx_animated_sprite_physic(player).x);
+      log_short("Y", get_position_gfx_animated_sprite_physic(player).y);
     }
     frame_seq += accumulator;
     if (get_frame_counter() >= (frame_seq - accumulator) && get_frame_counter() < frame_seq) {

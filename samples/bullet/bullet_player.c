@@ -72,11 +72,13 @@ static void update_states(short x, short y) {
 
 static void update_move() {
   BYTE i = 0;
+  Vec2short position;
   for (i = 0; i < get_bullet_max(); i++) {
     if (sprites_state[i]) {
+      position = get_position_gfx_animated_sprite_physic(sprites[i]);
       move_gfx_animated_sprite_physic(&sprites[i], get_bullet_max(), 0);
       update_animation_gfx_animated_sprite_physic(&sprites[i]);
-      if (get_x_gfx_animated_sprite_physic(sprites[i]) > 320) {
+      if (position.x > 320) {
         free_sprite(i);
       }
     }

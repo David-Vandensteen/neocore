@@ -31,7 +31,7 @@ static void update() {
   }
   frame_seq += accumulator;
   if (get_frame_counter() >= (frame_seq - accumulator) && get_frame_counter() < frame_seq) {
-    if (get_x_gfx_picture(asteroid) < 0) {
+    if (get_position_gfx_picture(asteroid).x < 0) {
       set_position_gfx_picture(&asteroid, 150, 150);
     } else {
       log_info("MOVE GP -1 -1");
@@ -42,8 +42,8 @@ static void update() {
   if (get_frame_counter() >= (frame_seq - accumulator) && get_frame_counter() < frame_seq) {
     log_info("GET X AND Y GP");
     set_position_gfx_picture(&asteroid, 181, 57);
-    log_short("X", get_x_gfx_picture(asteroid));
-    log_short("Y", get_y_gfx_picture(asteroid));
+    log_short("X", get_position_gfx_picture(asteroid).x);
+    log_short("Y", get_position_gfx_picture(asteroid).y);
   }
   frame_seq += accumulator;
   if (get_frame_counter() >= (frame_seq - accumulator) && get_frame_counter() < frame_seq) {
