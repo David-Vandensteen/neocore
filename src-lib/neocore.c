@@ -951,17 +951,6 @@ BOOL nc_joypad_is_b(BYTE id)      { return (JOYPAD_IS_B_P1 && id == 0)      ? (t
 BOOL nc_joypad_is_c(BYTE id)      { return (JOYPAD_IS_C_P1 && id == 0)      ? (true) : (false); }
 BOOL nc_joypad_is_d(BYTE id)      { return (JOYPAD_IS_D_P1 && id == 0)      ? (true) : (false); }
 
-BOOL nc_joypad_0_is_a()      { return nc_joypad_is_a(0); }
-BOOL nc_joypad_0_is_b()      { return nc_joypad_is_b(0); }
-BOOL nc_joypad_0_is_c()      { return nc_joypad_is_c(0); }
-BOOL nc_joypad_0_is_d()      { return nc_joypad_is_d(0); }
-BOOL nc_joypad_0_is_left()   { return nc_joypad_is_left(0); }
-BOOL nc_joypad_0_is_right()  { return nc_joypad_is_right(0); }
-BOOL nc_joypad_0_is_up()     { return nc_joypad_is_up(0); }
-BOOL nc_joypad_0_is_down()   { return nc_joypad_is_down(0); }
-BOOL nc_joypad_0_is_select() { return nc_joypad_0_is_select(0); }
-BOOL nc_joypad_0_is_start()  { return nc_joypad_is_start(0); }
-
   //----------------------------------------------------------------------------//
  //                                  UTIL                                      //
 //----------------------------------------------------------------------------//

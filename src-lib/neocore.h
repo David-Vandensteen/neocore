@@ -351,6 +351,7 @@ void nc_play_cdda(BYTE track);
 void nc_set_joypad_edge_mode(BOOL actived);
 void nc_update_joypad(BYTE id);
 void nc_joypad_update(BYTE id);
+
 BOOL nc_joypad_is_up(BYTE id);
 BOOL nc_joypad_is_down(BYTE id);
 BOOL nc_joypad_is_left(BYTE id);
@@ -360,17 +361,6 @@ BOOL nc_joypad_is_a(BYTE id);
 BOOL nc_joypad_is_b(BYTE id);
 BOOL nc_joypad_is_c(BYTE id);
 BOOL nc_joypad_is_d(BYTE id);
-
-BOOL nc_joypad_0_is_a();
-BOOL nc_joypad_0_is_b();
-BOOL nc_joypad_0_is_c();
-BOOL nc_joypad_0_is_d();
-BOOL nc_joypad_0_is_left();
-BOOL nc_joypad_0_is_right();
-BOOL nc_joypad_0_is_up();
-BOOL nc_joypad_0_is_down();
-BOOL nc_joypad_0_is_select();
-BOOL nc_joypad_0_is_start();
 
 void nc_debug_joypad(BYTE id);
 
