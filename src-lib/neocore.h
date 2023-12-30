@@ -17,7 +17,6 @@
 #define nc_copy_box(box_src, box_dest) memcpy(box_dest, box_src, sizeof(Box))
 
 #define FIX(value) value * 65536
-#define RAND(value) rand() % value
 
 #define SHRUNK_EXTRACT_X(value) value >> 8
 #define SHRUNK_EXTRACT_Y(value) (BYTE)value
@@ -317,6 +316,8 @@ WORD nc_shrunk_range(WORD addr_start, WORD addr_end, WORD shrunk_value);
 #define nc_bitwise_multiplication_32(value) (value << 5)
 #define nc_bitwise_multiplication_64(value) (value << 6)
 
+#define nc_get_random(range) rand() % range
+
   //--------------------------------------------------------------------------//
  //                                PHYSIC                                    //
 //--------------------------------------------------------------------------//
@@ -372,7 +373,6 @@ void nc_sleep(DWORD frame);
 BOOL nc_each_frame(DWORD frame);
 short nc_get_positive(short num);
 short nc_get_inverse(int num); // TODO TEST
-int nc_get_random(int range);
 void nc_fix_print_neocore(int x, int y, char *label);
 WORD nc_free_ram_info();
 #define nc_get_frame_counter() DAT_frameCounter

@@ -1006,10 +1006,6 @@ short nc_get_inverse(int num) { // TODO TEST
   return -num;
 }
 
-int nc_get_random(int range) {
-  return RAND(range);
-}
-
 void nc_fix_print_neocore(int x, int y, char *label) { fixPrint(x, y, 0, 0, label); }
 
 WORD nc_free_ram_info() {
