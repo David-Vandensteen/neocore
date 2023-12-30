@@ -18,7 +18,7 @@ int main(void) {
     &asteroid,
     &asteroid_sprite,
     &asteroid_sprite_Palettes,
-    (asteroid_sprite.tileWidth MULT8),
+    nc_bitwise_multiplication_8(asteroid_sprite.tileWidth),
     32,
     0,
     0,
