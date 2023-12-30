@@ -47,6 +47,7 @@
 //--------------------------------------------------------------------------//
 
 static Adpcm_player adpcm_player;
+static BOOL is_init = false;
 
 static void nc_init_adpcm_player() {
   adpcm_player.state = IDLE;
@@ -83,6 +84,13 @@ static BOOL nc_collide_point(short x, short y, Vec2short vec[], BYTE vector_max)
     ) { return false; } // if dot is left of the current vector, we return now (collide is impossible)
   }
   return true;
+}
+
+static void nc_shadow_init_system() {
+  if (is_init == false) {
+    nc_init_system();
+    is_init = true;
+  }
 }
 
 static int x = LOGGER_X_INIT;
@@ -199,7 +207,6 @@ void static nc_autoInc() { y++; }
 NEOCORE_INIT
 JOYPAD_INIT_P1
 
-
   //--------------------------------------------------------------------------//
  //                                   GFX                                    //
 //--------------------------------------------------------------------------//
@@ -247,6 +254,7 @@ void nc_init_gfx_picture_physic(
   short box_height_offset,
   BOOL autobox_enabled
 ) {
+  nc_shadow_init_system();
   nc_init_gfx_picture(&gfx_picture_physic->gfx_picture, pi, pali);
   gfx_picture_physic->autobox_enabled = autobox_enabled;
   if (gfx_picture_physic->autobox_enabled) {
@@ -259,6 +267,7 @@ void nc_init_gfx_picture(
   pictureInfo *pictureInfo,
   paletteInfo *paletteInfo
   ) {
+  nc_shadow_init_system();
   gfx_picture->paletteInfoDAT = paletteInfo;
   gfx_picture->pictureInfoDAT = pictureInfo;
   gfx_picture->pixel_height = pictureInfo->tileHeight * 32;
@@ -270,6 +279,7 @@ void nc_init_gfx_animated_sprite(
   spriteInfo *spriteInfo,
   paletteInfo *paletteInfo
   ) {
+  nc_shadow_init_system();
   gfx_animated_sprite->spriteInfoDAT = spriteInfo;
   gfx_animated_sprite->paletteInfoDAT = paletteInfo;
 };
@@ -283,6 +293,7 @@ void nc_init_gfx_animated_sprite_physic(
     short box_width_offset,
     short box_height_offset
   ) {
+  nc_shadow_init_system();
   nc_init_box(
     &gfx_animated_sprite_physic->box,
     box_witdh,
@@ -303,6 +314,7 @@ void nc_init_gfx_scroller(
   scrollerInfo *scrollerInfo,
   paletteInfo *paletteInfo
   ) {
+  nc_shadow_init_system();
   gfx_scroller->scrollerInfoDAT = scrollerInfo;
   gfx_scroller->paletteInfoDAT = paletteInfo;
 }
@@ -658,6 +670,12 @@ void nc_clear_vram() {
   /*------------------------------*/
  /* GPU VBL                      */
 /*------------------------------*/
+
+void nc_wait_vbl() {
+  nc_shadow_init_system();
+  nc_update_adpcm_player();
+  waitVBlank();
+}
 
 DWORD nc_wait_vbl_max(WORD nb) {
   WORD i = 0;
@@ -1017,6 +1035,7 @@ char nc_get_sin(WORD index) { return sinTable[index]; }
 /*---------------*/
 
 void nc_init_log() {
+  nc_shadow_init_system();
   #ifdef LOGGER_ON // TODO : find better way to desactivate logger
   x = LOGGER_X_INIT;
   y = LOGGER_Y_INIT;

@@ -286,8 +286,8 @@ char nc_get_sin(WORD index);
  /* GPU VBL                      */
 /*------------------------------*/
 
+void nc_wait_vbl();
 DWORD nc_wait_vbl_max(WORD nb);
-#define nc_wait_vbl() nc_update_adpcm_player(); waitVBlank()
 
   /*------------------------------*/
  /* GPU SPRITE INDEX MANAGEMENT  */
