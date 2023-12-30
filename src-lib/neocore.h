@@ -14,7 +14,7 @@
 
 #define SHRUNK_TABLE_PROP_SIZE    0x2fe
 
-#define BOXCOPY(bFrom, bTo)   memcpy(bTo, bFrom, sizeof(Box))
+#define copy_box(box_src, box_dest) memcpy(box_dest, box_src, sizeof(Box))
 
 #define FIX(value) value * 65536
 #define RAND(value) rand() % value
