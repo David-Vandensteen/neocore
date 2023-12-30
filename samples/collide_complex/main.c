@@ -71,7 +71,6 @@ static void init_mask() {
 
 static void update_player() {
   Vec2short position;
-  nc_update_joypad(0);
   position = nc_get_position_gfx_animated_sprite_physic(player);
   if (nc_joypad_is_left(0) && position.x > 0) { nc_move_gfx_animated_sprite_physic(&player, -1, 0); }
   if (nc_joypad_is_right(0) && position.x < 280) { nc_move_gfx_animated_sprite_physic(&player, 1, 0); }
@@ -98,7 +97,7 @@ int main(void) {
   init();
   display();
   while(1) {
-    nc_wait_vbl();
+    nc_update();
     update();
     nc_close_vbl();
   };

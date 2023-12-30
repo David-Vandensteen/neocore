@@ -18,7 +18,7 @@ int main(void) {
   logo_swap_palette.data[1] = 0x0000;
 
   while(1) {
-    nc_wait_vbl();
+    nc_update();
     nc_init_log();
     if (nc_get_frame_counter() % 8 == 0) {
       for (i = 0; i < (logo.paletteInfoDAT->palCount MULT16); i++) { logo_swap_palette.data[i] = RAND(0xFFFF); }

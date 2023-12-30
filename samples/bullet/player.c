@@ -23,7 +23,6 @@ void player_display(short x, short y) {
 void player_update() {
   Vec2short position = nc_get_position_gfx_animated_sprite_physic(player_sprite);
   nc_update_animation_gfx_animated_sprite_physic(&player_sprite);
-  nc_update_joypad(0);
   if (nc_joypad_is_up(0) && position.y > get_player_min_y()) {
     nc_move_gfx_animated_sprite_physic(&player_sprite, 0, -get_player_speed());
     nc_set_animation_gfx_animated_sprite_physic(&player_sprite, PLAYER_IMG_ANIM_UP);

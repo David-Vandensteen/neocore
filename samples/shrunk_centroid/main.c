@@ -85,7 +85,7 @@ int main(void) {
   init();
   display();
   while(1) {
-    nc_wait_vbl();
+    nc_update();
     update();
     nc_close_vbl();
   };

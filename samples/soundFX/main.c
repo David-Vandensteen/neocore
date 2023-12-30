@@ -28,14 +28,14 @@ void debug_adpcm_player() {
 int main(void) {
   nc_init_log();
   log_and_sound("");
+  nc_set_joypad_edge_mode(true);
 
   while(1) {
-    nc_wait_vbl();
+    nc_update();
     nc_init_log();
     nc_log("INTERACT WITH JOYPAD ...");
 
     nc_set_position_log(3, 2);
-    nc_update_joypad_edge(0);
     nc_debug_joypad(0);
 
     if (nc_joypad_is_up(0)) log_and_sound("ITS UP !");

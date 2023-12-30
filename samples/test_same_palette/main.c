@@ -16,7 +16,7 @@ int main(void) {
   nc_display_gfx_animated_sprite(&player, 150, 10, PLAYER_SPRITE_ANIM_IDLE);
 
   while(1) {
-    nc_wait_vbl();
+    nc_update();
     nc_init_log();
     nc_log_byte("PALI PLAYER ", player.aSpriteDAT.basePalette);
     nc_log_byte("PALI PLANET ", planet.pictureDAT.basePalette);

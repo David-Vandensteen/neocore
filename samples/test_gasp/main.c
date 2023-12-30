@@ -10,7 +10,7 @@ int main(void) {
   while(1) {
     const DWORD accumulator = 200;
     DWORD frame_seq = accumulator;
-    nc_wait_vbl();
+    nc_update();
     nc_init_log();
     nc_update_animation_gfx_animated_sprite_physic(&player);
     if (nc_get_frame_counter() < frame_seq) {

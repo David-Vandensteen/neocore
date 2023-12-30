@@ -7,7 +7,7 @@ int main(void) {
   nc_init_gfx_picture(&neogeoLogo, &logo, &logo_Palettes);
   nc_display_gfx_picture(&neogeoLogo, 100, 160);
   while(1) {
-    nc_wait_vbl();
+    nc_update();
     nc_init_log();
     /* logger set automatically the cursor position on next line */
     nc_log_info("HELLO NEO GEO !!!");

@@ -22,7 +22,7 @@ int main(void) {
   nc_display_gfx_picture(&logo3, 10, 150);
 
   while(1) {
-    nc_wait_vbl();
+    nc_update();
     if (nc_get_frame_counter() % 5 == 0) logo1_shrunk_x++;
     logo2_shrunk_y +=3;
 
