@@ -95,7 +95,6 @@ static void update() {
 }
 
 int main(void) {
-  nc_init_gpu();
   init();
   display();
   while(1) {

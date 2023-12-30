@@ -8,7 +8,6 @@ static void display();
 static void update();
 
 static void init() {
-  nc_init_gpu();
   nc_init_gfx_picture_physic(&asteroid, &asteroid_asset, &asteroid_asset_Palettes, 0, 0, 0, 0, AUTOBOX);
 }
 

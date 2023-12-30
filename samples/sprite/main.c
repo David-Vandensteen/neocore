@@ -5,7 +5,6 @@ int main(void) {
   GFX_Animated_Sprite player;
   GFX_Scroller background;
   GFX_Picture planet;
-  nc_init_gpu();
   nc_init_gfx_picture(&planet, &planet04_sprite, &planet04_sprite_Palettes);
   nc_init_gfx_animated_sprite(&player, &player_sprite, &player_sprite_Palettes);
   nc_init_gfx_scroller(&background, &background_sprite, &background_sprite_Palettes);

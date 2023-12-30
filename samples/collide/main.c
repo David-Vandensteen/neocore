@@ -5,7 +5,6 @@ static GFX_Animated_Sprite_Physic player;
 static GFX_Picture_Physic asteroid;
 
 int main(void) {
-  nc_init_gpu();
   nc_init_gfx_animated_sprite_physic(
     &player,
     &player_sprite,

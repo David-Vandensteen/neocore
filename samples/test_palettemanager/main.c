@@ -9,7 +9,6 @@ static void update();
 static GFX_Picture planet01, planet02, planet03;
 
 static void init() {
-  nc_init_gpu();
   nc_init_gfx_picture(&planet01, &planet04_sprite, &planet04_sprite_Palettes);
   nc_init_gfx_picture(&planet02, &planet04_sprite, &planet04_sprite_Palettes);
   nc_init_gfx_picture(&planet03, &planet04_sprite, &player_sprite_Palettes);

@@ -8,7 +8,6 @@ static void display();
 static void update();
 
 static void init() {
-  nc_init_gpu();
   player_init();
   asteroid_init();
 }

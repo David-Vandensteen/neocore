@@ -16,7 +16,6 @@ static GFX_Picture planets[PLANETS_MAX];
 
 static void init() {
   WORD i = 0;
-  nc_init_gpu();
   for (i = 0; i < PLANETS_MAX; i++) nc_init_gfx_picture(&planets[i], &planet04_sprite, &planet04_sprite_Palettes);
 }
 

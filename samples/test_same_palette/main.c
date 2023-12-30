@@ -7,7 +7,6 @@ static GFX_Animated_Sprite player;
 static GFX_Scroller backgroung;
 
 int main(void) {
-  nc_init_gpu();
   nc_init_gfx_scroller(&backgroung, &background_sprite, &background_sprite_Palettes);
   nc_init_gfx_picture(&planet, &planet04_sprite, &background_sprite_Palettes);
   nc_init_gfx_animated_sprite(&player, &player_sprite, &background_sprite_Palettes);

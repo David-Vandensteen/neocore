@@ -10,7 +10,6 @@ int main(void) {
   static GFX_Picture logo;
   static paletteInfo logo_swap_palette;
   BYTE i = 0;
-  nc_init_gpu();
   nc_init_gfx_picture(&logo, &logo_sprite, &logo_sprite_Palettes);
   nc_display_gfx_picture(&logo, 50, 100);
   logo_swap_palette.palCount = logo.paletteInfoDAT->palCount;

@@ -13,7 +13,6 @@ static void display();
 static void update();
 
 static void init() {
-  nc_init_gpu();
   copy_word_array((WORD*) &logo_Palettes.data, (WORD*) &duplicated_palette, 16);
 }
 

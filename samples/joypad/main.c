@@ -1,7 +1,6 @@
 #include <neocore.h>
 
 int main(void) {
-  nc_init_gpu();
   while(1) {
     nc_wait_vbl();
     nc_init_log();

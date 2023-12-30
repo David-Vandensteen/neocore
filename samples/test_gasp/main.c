@@ -5,7 +5,6 @@
 GFX_Animated_Sprite_Physic player;
 
 int main(void) {
-  nc_init_gpu();
   nc_init_gfx_animated_sprite_physic(&player, &player_sprite, &player_sprite_Palettes, 0, 0, 0, 0);
   nc_display_gfx_animated_sprite_physic(&player, 100, 100, PLAYER_SPRITE_ANIM_IDLE);
   while(1) {

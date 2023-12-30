@@ -26,7 +26,6 @@ void debug_adpcm_player() {
 }
 
 int main(void) {
-  nc_init_all_system();
   nc_init_log();
   log_and_sound("");
 

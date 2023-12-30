@@ -82,7 +82,6 @@ static void update_logo3() { // Vertical
 }
 
 int main(void) {
-  nc_init_gpu();
   init();
   display();
   while(1) {

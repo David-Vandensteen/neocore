@@ -5,7 +5,6 @@
 static GFX_Scroller background;
 
 int main(void) {
-  nc_init_gpu();
   nc_init_gfx_scroller(&background, &background_sprite, &background_sprite_Palettes);
   nc_display_gfx_scroller(&background, 0, 0);
   while(1) {

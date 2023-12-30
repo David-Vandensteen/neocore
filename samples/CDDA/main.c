@@ -14,7 +14,6 @@ static BYTE track_num = 2;
 
 static void init() {
   nc_play_cdda(track_num);
-  nc_init_gpu();
   nc_init_gfx_scroller(&spectrum02, &spectrum02_sprite, &spectrum02_sprite_Palettes);
   nc_init_gfx_picture(&k7, &k7_sprite, &k7_sprite_Palettes);
 }
