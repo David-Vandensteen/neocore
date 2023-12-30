@@ -10,33 +10,33 @@ static Box *asteroids_box[ASTEROID_MAX];
 int main(void) {
   BYTE i = 0;
   init_gpu();
-  init_gasp(&player, &player_sprite, &player_sprite_Palettes, 48, 16, 0, 0);
-  display_gasp(&player, 10, 10, PLAYER_SPRITE_ANIM_IDLE);
+  init_gfx_animated_sprite_physic(&player, &player_sprite, &player_sprite_Palettes, 48, 16, 0, 0);
+  display_gfx_animated_sprite_physic(&player, 10, 10, PLAYER_SPRITE_ANIM_IDLE);
   for (i = 0; i < ASTEROID_MAX; i++) {
-    init_gpp(&asteroids[i], &asteroid_sprite, &asteroid_sprite_Palettes, 8, 8, 0, 0, AUTOBOX);
-    display_gpp(&asteroids[i], RAND(300), RAND(200));
+    init_gfx_picture_physic(&asteroids[i], &asteroid_sprite, &asteroid_sprite_Palettes, 8, 8, 0, 0, AUTOBOX);
+    display_gfx_picture_physic(&asteroids[i], RAND(300), RAND(200));
     asteroids_box[i] = &asteroids[i].box;
   }
   while(1) {
     wait_vbl();
-    update_joypad_p1();
+    update_joypad(0);
 
-    if (joypad_p1_is_left() && get_x_gasp(player) > 0) { move_gasp(&player, -1, 0); }
-    if (joypad_p1_is_right() && get_x_gasp(player) < 280) { move_gasp(&player, 1, 0); }
-    if (joypad_p1_is_up() && get_y_gasp(player) > 0) {
-      move_gasp(&player, 0, -1);
-      set_anim_gasp(&player, PLAYER_SPRITE_ANIM_UP);
+    if (joypad_is_left(0) && get_x_gfx_animated_sprite_physic(player) > 0) { move_gfx_animated_sprite_physic(&player, -1, 0); }
+    if (joypad_is_right(0) && get_x_gfx_animated_sprite_physic(player) < 280) { move_gfx_animated_sprite_physic(&player, 1, 0); }
+    if (joypad_is_up(0) && get_y_gfx_animated_sprite_physic(player) > 0) {
+      move_gfx_animated_sprite_physic(&player, 0, -1);
+      set_animation_gfx_animated_sprite_physic(&player, PLAYER_SPRITE_ANIM_UP);
     }
-    if (joypad_p1_is_down() && get_y_gasp(player) < 200) {
-      move_gasp(&player, 0, 1);
-      set_anim_gasp(&player, PLAYER_SPRITE_ANIM_DOWN);
+    if (joypad_is_down(0) && get_y_gfx_animated_sprite_physic(player) < 200) {
+      move_gfx_animated_sprite_physic(&player, 0, 1);
+      set_animation_gfx_animated_sprite_physic(&player, PLAYER_SPRITE_ANIM_DOWN);
     }
-    if (!joypad_p1_is_down() && !joypad_p1_is_up()) set_anim_gasp(&player, PLAYER_SPRITE_ANIM_IDLE);
+    if (!joypad_is_down(0) && !joypad_is_up(0)) set_animation_gfx_animated_sprite_physic(&player, PLAYER_SPRITE_ANIM_IDLE);
 
      if (collide_boxes(&player.box, asteroids_box, ASTEROID_MAX)) {
-      if (get_frame_counter() % 20) { hide_gasp(&player); } else { show_gasp(&player); }
-     } else { show_gasp(&player); }
-    update_anim_gasp(&player);
+      if (get_frame_counter() % 20) { hide_gfx_animated_sprite_physic(&player); } else { show_gfx_animated_sprite_physic(&player); }
+     } else { show_gfx_animated_sprite_physic(&player); }
+    update_animation_gfx_animated_sprite_physic(&player);
     close_vbl();
   };
   close_vbl();

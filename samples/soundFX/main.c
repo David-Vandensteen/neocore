@@ -39,19 +39,19 @@ int main(void) {
     update_joypad_edge(0);
     debug_joypad(0);
 
-    if (joypad_p1_is_up()) log_and_sound("ITS UP !");
-    if (joypad_p1_is_down()) log_and_sound("ITS DOWN !");
-    if (joypad_p1_is_left()) log_and_sound("ITS LEFT !");
-    if (joypad_p1_is_right()) log_and_sound("ITS RIGHT !");
-    if (joypad_p1_is_a()) log_and_sound("ITS A !");
-    if (joypad_p1_is_b()) log_and_sound("ITS B !");
-    if (joypad_p1_is_c()) log_and_sound("ITS C !");
-    if (joypad_p1_is_d()) log_and_sound("ITS D !");
+    if (joypad_is_up(0)) log_and_sound("ITS UP !");
+    if (joypad_is_down(0)) log_and_sound("ITS DOWN !");
+    if (joypad_is_left(0)) log_and_sound("ITS LEFT !");
+    if (joypad_is_right(0)) log_and_sound("ITS RIGHT !");
+    if (joypad_is_a(0)) log_and_sound("ITS A !");
+    if (joypad_is_b(0)) log_and_sound("ITS B !");
+    if (joypad_is_c(0)) log_and_sound("ITS C !");
+    if (joypad_is_d(0)) log_and_sound("ITS D !");
 
     set_position_log(3, 20);
     debug_adpcm_player();
 
-    set_pos_log(0, 0);
+    set_position_log(0, 0);
     close_vbl();
   };
   close_vbl();

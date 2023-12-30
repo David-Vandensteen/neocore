@@ -17,7 +17,7 @@ static GFX_Picture planets[PLANETS_MAX];
 static void init() {
   WORD i = 0;
   init_gpu();
-  for (i = 0; i < PLANETS_MAX; i++) init_gp(&planets[i], &planet04_sprite, &planet04_sprite_Palettes);
+  for (i = 0; i < PLANETS_MAX; i++) init_gfx_picture(&planets[i], &planet04_sprite, &planet04_sprite_Palettes);
 }
 
 static void display() {
@@ -28,8 +28,8 @@ static void display() {
     //y = 10 + (i * 3);
     x = 100 + ( i * 10);
     y = 100;
-    display_gp(&planets[i], 0, 0 + i);
-    shrunk_centroid_gp(&planets[i], x, y, get_shrunk_proportional_table(50));
+    display_gfx_picture(&planets[i], 0, 0 + i);
+    shrunk_centroid_gfx_picture(&planets[i], x, y, get_shrunk_proportional_table(50));
   }
 }
 

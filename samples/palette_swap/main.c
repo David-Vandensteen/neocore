@@ -11,8 +11,8 @@ int main(void) {
   static paletteInfo logo_swap_palette;
   BYTE i = 0;
   init_gpu();
-  init_gp(&logo, &logo_sprite, &logo_sprite_Palettes);
-  display_gp(&logo, 50, 100);
+  init_gfx_picture(&logo, &logo_sprite, &logo_sprite_Palettes);
+  display_gfx_picture(&logo, 50, 100);
   logo_swap_palette.palCount = logo.paletteInfoDAT->palCount;
 
   for (i = 0; i < (logo.paletteInfoDAT->palCount MULT16); i++) { logo_swap_palette.data[i] = RAND(0xFFFF); }

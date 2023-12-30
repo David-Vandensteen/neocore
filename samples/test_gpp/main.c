@@ -9,11 +9,11 @@ static void update();
 
 static void init() {
   init_gpu();
-  init_gpp(&asteroid, &asteroid_asset, &asteroid_asset_Palettes, 0, 0, 0, 0, AUTOBOX);
+  init_gfx_picture_physic(&asteroid, &asteroid_asset, &asteroid_asset_Palettes, 0, 0, 0, 0, AUTOBOX);
 }
 
 static void display() {
-  display_gpp(&asteroid, 100, 100);
+  display_gfx_picture_physic(&asteroid, 100, 100);
 }
 
 static void update() {
@@ -27,38 +27,38 @@ static void update() {
   frame_seq += accumulator;
   if (get_frame_counter() >= (frame_seq - accumulator) && get_frame_counter() < frame_seq) {
     log_info("SET POS GPP 150 150");
-    set_pos_gpp(&asteroid, 150, 150);
+    set_position_gfx_picture_physic(&asteroid, 150, 150);
   }
   frame_seq += accumulator;
   if (get_frame_counter() >= (frame_seq - accumulator) && get_frame_counter() < frame_seq) {
-    if (get_x_gpp(asteroid) < 0) {
-      set_pos_gpp(&asteroid, 150, 150);
+    if (get_x_gfx_picture_physic(asteroid) < 0) {
+      set_position_gfx_picture_physic(&asteroid, 150, 150);
     } else {
       log_info("MOVE GPP -1 -1");
-      move_gpp(&asteroid, -1, -1);
+      move_gfx_picture_physic(&asteroid, -1, -1);
     }
   }
   frame_seq += accumulator;
   if (get_frame_counter() >= (frame_seq - accumulator) && get_frame_counter() < frame_seq) {
     log_info("GET X AND Y GPP");
-    set_pos_gpp(&asteroid, 181, 57);
-    log_short("X", get_x_gpp(asteroid));
-    log_short("Y", get_y_gpp(asteroid));
+    set_position_gfx_picture_physic(&asteroid, 181, 57);
+    log_short("X", get_x_gfx_picture_physic(asteroid));
+    log_short("Y", get_y_gfx_picture_physic(asteroid));
   }
   frame_seq += accumulator;
   if (get_frame_counter() >= (frame_seq - accumulator) && get_frame_counter() < frame_seq) {
     log_info("HIDE GPP");
-    hide_gpp(&asteroid);
+    hide_gfx_picture_physic(&asteroid);
   }
   frame_seq += accumulator;
   if (get_frame_counter() >= (frame_seq - accumulator) && get_frame_counter() < frame_seq) {
     log_info("SHOW GPP");
-    show_gpp(&asteroid);
+    show_gfx_picture_physic(&asteroid);
   }
   frame_seq += accumulator;
   if (get_frame_counter() >= (frame_seq - accumulator) && get_frame_counter() < frame_seq) {
     log_info("DESTROY GPP");
-    destroy_gpp(&asteroid);
+    destroy_gfx_picture_physic(&asteroid);
   }
   frame_seq += accumulator;
   if (get_frame_counter() >= (frame_seq - accumulator)) {

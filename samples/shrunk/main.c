@@ -6,21 +6,21 @@ int main(void) {
   BYTE logo1_shrunk_x = 0;
   BYTE logo2_shrunk_y = 0;
   init_gpu();
-  init_gp(&logo1, &logo_sprite, &logo_sprite_Palettes);
-  init_gp(&logo2, &logo_sprite, &logo_sprite_Palettes);
-  init_gp(&logo3, &logo_sprite, &logo_sprite_Palettes);
+  init_gfx_picture(&logo1, &logo_sprite, &logo_sprite_Palettes);
+  init_gfx_picture(&logo2, &logo_sprite, &logo_sprite_Palettes);
+  init_gfx_picture(&logo3, &logo_sprite, &logo_sprite_Palettes);
   init_log();
   log_info("HORIZONTAL SHRUNK");
-  init_gp(&logo1, &logo_sprite, &logo_sprite_Palettes);
-  init_gp(&logo2, &logo_sprite, &logo_sprite_Palettes);
-  init_gp(&logo3, &logo_sprite, &logo_sprite_Palettes);
-  display_gp(&logo1, 10, 20);
-  set_pos_log(1, 10);
+  init_gfx_picture(&logo1, &logo_sprite, &logo_sprite_Palettes);
+  init_gfx_picture(&logo2, &logo_sprite, &logo_sprite_Palettes);
+  init_gfx_picture(&logo3, &logo_sprite, &logo_sprite_Palettes);
+  display_gfx_picture(&logo1, 10, 20);
+  set_position_log(1, 10);
   log_info("VERTICAL SHRUNK");
-  display_gp(&logo2, 10, 80);
-  set_pos_log(1, 19);
+  display_gfx_picture(&logo2, 10, 80);
+  set_position_log(1, 19);
   log_info("PROPORTIONAL SHRUNK");
-  display_gp(&logo3, 10, 150);
+  display_gfx_picture(&logo3, 10, 150);
 
   while(1) {
     wait_vbl();

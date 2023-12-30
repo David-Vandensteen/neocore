@@ -10,15 +10,15 @@ static GFX_Picture planet01, planet02, planet03;
 
 static void init() {
   init_gpu();
-  init_gp(&planet01, &planet04_sprite, &planet04_sprite_Palettes);
-  init_gp(&planet02, &planet04_sprite, &planet04_sprite_Palettes);
-  init_gp(&planet03, &planet04_sprite, &player_sprite_Palettes);
+  init_gfx_picture(&planet01, &planet04_sprite, &planet04_sprite_Palettes);
+  init_gfx_picture(&planet02, &planet04_sprite, &planet04_sprite_Palettes);
+  init_gfx_picture(&planet03, &planet04_sprite, &player_sprite_Palettes);
 }
 
 static void display() {
-  display_gp(&planet01, 10, 10);
-  display_gp(&planet02, 100, 100);
-  display_gp(&planet03, 200, 100);
+  display_gfx_picture(&planet01, 10, 10);
+  display_gfx_picture(&planet02, 100, 100);
+  display_gfx_picture(&planet03, 200, 100);
 }
 
 static void update() {

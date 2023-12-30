@@ -6,14 +6,14 @@ GFX_Animated_Sprite_Physic player;
 
 int main(void) {
   init_gpu();
-  init_gasp(&player, &player_sprite, &player_sprite_Palettes, 0, 0, 0, 0);
-  display_gasp(&player, 100, 100, PLAYER_SPRITE_ANIM_IDLE);
+  init_gfx_animated_sprite_physic(&player, &player_sprite, &player_sprite_Palettes, 0, 0, 0, 0);
+  display_gfx_animated_sprite_physic(&player, 100, 100, PLAYER_SPRITE_ANIM_IDLE);
   while(1) {
     const DWORD accumulator = 200;
     DWORD frame_seq = accumulator;
     wait_vbl();
     init_log();
-    update_anim_gasp(&player);
+    update_animation_gfx_animated_sprite_physic(&player);
     if (get_frame_counter() < frame_seq) {
       log_info("INIT GASP");
       log_info("DISPLAY GASP AT 100 100");
@@ -21,40 +21,40 @@ int main(void) {
     frame_seq += accumulator;
     if (get_frame_counter() >= (frame_seq - accumulator) && get_frame_counter() < frame_seq) {
       log_info("SET POS 150 150");
-      set_pos_gasp(&player, 150, 150);
+      set_position_gfx_animated_sprite_physic(&player, 150, 150);
     }
     frame_seq += accumulator;
     if (get_frame_counter() >= (frame_seq - accumulator) && get_frame_counter() < frame_seq) {
-      if (get_x_gasp(player) < 0) {
-        set_pos_gasp(&player, 150, 150);
+      if (get_x_gfx_animated_sprite_physic(player) < 0) {
+        set_position_gfx_animated_sprite_physic(&player, 150, 150);
       } else {
-        set_anim_gasp(&player, PLAYER_SPRITE_ANIM_UP);
+        set_animation_gfx_animated_sprite_physic(&player, PLAYER_SPRITE_ANIM_UP);
         log_info("MOVE -1 -1");
-        move_gasp(&player, -1, -1);
+        move_gfx_animated_sprite_physic(&player, -1, -1);
       }
     }
     frame_seq += accumulator;
     if (get_frame_counter() >= (frame_seq - accumulator) && get_frame_counter() < frame_seq) {
       log_info("GET X AND Y");
-      set_pos_gasp(&player, 181, 57);
-      set_anim_gasp(&player, PLAYER_SPRITE_ANIM_IDLE);
-      log_short("X", get_x_gasp(player));
-      log_short("Y", get_y_gasp(player));
+      set_position_gfx_animated_sprite_physic(&player, 181, 57);
+      set_animation_gfx_animated_sprite_physic(&player, PLAYER_SPRITE_ANIM_IDLE);
+      log_short("X", get_x_gfx_animated_sprite_physic(player));
+      log_short("Y", get_y_gfx_animated_sprite_physic(player));
     }
     frame_seq += accumulator;
     if (get_frame_counter() >= (frame_seq - accumulator) && get_frame_counter() < frame_seq) {
       log_info("HIDE");
-      hide_gas(&player);
+      hide_gfx_animated_sprite_physic(&player);
     }
     frame_seq += accumulator;
     if (get_frame_counter() >= (frame_seq - accumulator) && get_frame_counter() < frame_seq) {
       log_info("SHOW");
-      show_gasp(&player);
+      show_gfx_animated_sprite_physic(&player);
     }
     frame_seq += accumulator;
     if (get_frame_counter() >= (frame_seq - accumulator) && get_frame_counter() < frame_seq) {
       log_info("DESTROY");
-      destroy_gasp(&player);
+      destroy_gfx_animated_sprite_physic(&player);
     }
     frame_seq += accumulator;
     if (get_frame_counter() >= (frame_seq - accumulator)) {

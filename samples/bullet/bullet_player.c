@@ -65,7 +65,7 @@ static void update_states(short x, short y) {
   free_aSprite = get_free_sprite();
   if (free_aSprite) {
     Vec2short position = {x + get_bullet_xoffset(), y};
-    set_position_gfx_animated_sprite_physic(free_aSprite, position);
+    set_position_gfx_animated_sprite_physic(free_aSprite, position.x, position.y);
     show_gfx_animated_sprite_physic(free_aSprite);
   }
 }

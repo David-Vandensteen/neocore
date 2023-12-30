@@ -11,8 +11,8 @@ GFX_Picture neogeoLogo;
 
 int main(void) {
   init_gpu();
-  init_gp(&neogeoLogo, &logo, &logo_Palettes);
-  display_gp(&neogeoLogo, 100, 160);
+  init_gfx_picture(&neogeoLogo, &logo, &logo_Palettes);
+  display_gfx_picture(&neogeoLogo, 100, 160);
   while(1) {
     wait_vbl();
     init_log();
@@ -25,7 +25,7 @@ int main(void) {
     log_short("PRINT SHORT", -10);
 
     /* force a position */
-    set_pos_log(7, 20);
+    set_position_log(7, 20);
     log_info("DAVID VANDENSTEEN");
     /* logger is an easy way to write a text without coordinate constraint */
 
