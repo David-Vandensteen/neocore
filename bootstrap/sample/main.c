@@ -6,7 +6,7 @@ static void display();
 static void update();
 
 static void init() {
-  init_gpu();
+  nc_init_gpu();
 }
 
 static void display() {
@@ -14,18 +14,18 @@ static void display() {
 }
 
 static void update() {
-  init_log();
-  log_info("HELLO NEO GEO !!!");
+  nc_init_log();
+  nc_log_info("HELLO NEO GEO !!!");
 }
 
 int main(void) {
   init();
   // display();
   while(1) {
-    wait_vbl();
+    nc_wait_vbl();
     update();
-    close_vbl();
+    nc_close_vbl();
   };
-  close_vbl();
+  nc_close_vbl();
   return 0;
 }

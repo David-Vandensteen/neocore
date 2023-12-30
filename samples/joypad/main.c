@@ -1,31 +1,25 @@
-/*
-  David Vandensteen
-  2019
-  <dvandensteen@gmail.com>
-*/
-
 #include <neocore.h>
 
 int main(void) {
-  init_gpu();
+  nc_init_gpu();
   while(1) {
-    wait_vbl();
-    init_log();
-    log_info("INTERACT WITH JOYPAD ...");
-    update_joypad_edge(0);
-    debug_joypad(0);
+    nc_wait_vbl();
+    nc_init_log();
+    nc_log_info("INTERACT WITH JOYPAD ...");
+    nc_update_joypad_edge(0);
+    nc_debug_joypad(0);
 
-    if (joypad_is_up(0)) log_info("ITS UP !");
-    if (joypad_is_down(0)) log_info("ITS DOWN !");
-    if (joypad_is_left(0)) log_info("ITS LEFT !");
-    if (joypad_is_right(0)) log_info("ITS RIGHT !");
-    if (joypad_is_a(0)) log_info("ITS A !");
-    if (joypad_is_b(0)) log_info("ITS B !");
-    if (joypad_is_c(0)) log_info("ITS C !");
-    if (joypad_is_d(0)) log_info("ITS D !");
+    if (nc_joypad_is_up(0)) nc_log_info("ITS UP !");
+    if (nc_joypad_is_down(0)) nc_log_info("ITS DOWN !");
+    if (nc_joypad_is_left(0)) nc_log_info("ITS LEFT !");
+    if (nc_joypad_is_right(0)) nc_log_info("ITS RIGHT !");
+    if (nc_joypad_is_a(0)) nc_log_info("ITS A !");
+    if (nc_joypad_is_b(0)) nc_log_info("ITS B !");
+    if (nc_joypad_is_c(0)) nc_log_info("ITS C !");
+    if (nc_joypad_is_d(0)) nc_log_info("ITS D !");
 
-    close_vbl();
+    nc_close_vbl();
   };
-  close_vbl();
+  nc_close_vbl();
   return 0;
 }
