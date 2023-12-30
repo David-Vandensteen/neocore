@@ -389,7 +389,6 @@ short nc_get_inverse(int num); // TODO TEST
 int nc_get_random(int range);
 void nc_fix_print_neocore(int x, int y, char *label);
 WORD nc_free_ram_info();
-#define nc_close_vbl() SCClose()
 #define nc_get_frame_counter() DAT_frameCounter
 
   /*---------------*/

@@ -674,6 +674,7 @@ void nc_clear_vram() {
 
 void nc_update() {
   nc_shadow_init_system();
+  SCClose();
   waitVBlank();
   nc_update_adpcm_player();
   joypad_edge_mode ? nc_update_joypad_edge(0) : nc_update_joypad(0);
