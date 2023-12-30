@@ -677,7 +677,7 @@ void nc_update() {
   SCClose();
   waitVBlank();
   nc_update_adpcm_player();
-  joypad_edge_mode ? nc_update_joypad_edge(0) : nc_update_joypad(0);
+  nc_update_joypad(0);
 }
 
 DWORD nc_wait_vbl_max(WORD nb) {
@@ -932,12 +932,9 @@ void nc_debug_joypad(BYTE id) {
 }
 
 void nc_update_joypad(BYTE id) {
-  if (id == 0) { JOYPAD_READ_P1 };
+  if (id == 0 && joypad_edge_mode == false) { JOYPAD_READ_P1 };
+  if (id == 0 && joypad_edge_mode == true) { JOYPAD_READ_EDGE_P1 };
   // if (id = 1) JOYPAD_READ_P2; TODO
-}
-
-void nc_update_joypad_edge(BYTE id) {
-  if (id == 0) JOYPAD_READ_EDGE_P1;
 }
 
 BOOL nc_joypad_is_up(BYTE id)     { return (JOYPAD_IS_UP_P1 && id == 0)     ? (true) : (false); }

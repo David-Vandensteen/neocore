@@ -344,10 +344,7 @@ void nc_play_cdda(BYTE track);
 //----------------------------------------------------------------------------//
 
 void nc_set_joypad_edge_mode(BOOL actived);
-
-void nc_update_joypad(BYTE id); // todo update with mode
-void nc_update_joypad_edge(BYTE id); // todo remove
-
+void nc_update_joypad(BYTE id);
 void nc_joypad_update(BYTE id);
 BOOL nc_joypad_is_up(BYTE id);
 BOOL nc_joypad_is_down(BYTE id);
