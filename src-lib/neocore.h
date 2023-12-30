@@ -18,19 +18,6 @@
 #define __ALIGN64__     __attribute__ ((aligned (64)))
 #define __ALIGN128__    __attribute__ ((aligned (128)))
 
-#define MULT2              << 1
-#define MULT4              << 2
-#define MULT8              << 3
-#define MULT16             << 4
-#define MULT32             << 5
-#define MULT64             << 6
-#define DIV2               >> 1
-#define DIV4               >> 2
-#define DIV8               >> 3
-#define DIV16              >> 4
-#define DIV32              >> 5
-#define DIV64              >> 6
-
 #define SHRUNK_TABLE_PROP_SIZE    0x2fe
 
 #define BOXCOPY(bFrom, bTo)   memcpy(bTo, bFrom, sizeof(Box))
@@ -317,6 +304,24 @@ void nc_shrunk(WORD base_sprite, WORD max_width, WORD value);
 WORD nc_shrunk_forge(BYTE xc, BYTE yc);
 void nc_shrunk_addr(WORD addr, WORD shrunk_value);
 WORD nc_shrunk_range(WORD addr_start, WORD addr_end, WORD shrunk_value);
+
+  //--------------------------------------------------------------------------//
+ //                                MATH                                      //
+//--------------------------------------------------------------------------//
+
+#define nc_bitwise_division_2(value) (value >> 1)
+#define nc_bitwise_division_4(value) (value >> 2)
+#define nc_bitwise_division_8(value) (value >> 3)
+#define nc_bitwise_division_16(value) (value >> 4)
+#define nc_bitwise_division_32(value) (value >> 5)
+#define nc_bitwise_division_64(value) (value >> 6)
+
+#define nc_bitwise_multiplication_2(value) (value << 1)
+#define nc_bitwise_multiplication_4(value) (value << 2)
+#define nc_bitwise_multiplication_8(value) (value << 3)
+#define nc_bitwise_multiplication_16(value) (value << 4)
+#define nc_bitwise_multiplication_32(value) (value << 5)
+#define nc_bitwise_multiplication_64(value) (value << 6)
 
   //--------------------------------------------------------------------------//
  //                                PHYSIC                                    //

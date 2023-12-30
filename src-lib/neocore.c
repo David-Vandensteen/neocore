@@ -410,7 +410,7 @@ void nc_debug_paletteInfo(paletteInfo *palette, BOOL palCount, BOOL data) {
   BYTE i = 0;
   if (palCount) nc_log_word("PALCOUNT", palette->palCount);
   if (data) {
-    for(i = 0; i < (palette->palCount MULT16); i++) nc_log_word("DATA", palette->data[i]);
+    for(i = 0; i < (nc_bitwise_multiplication_16(palette->palCount)); i++) nc_log_word("DATA", palette->data[i]);
   }
 }
 
@@ -763,15 +763,19 @@ void nc_shrunk(WORD base_sprite, WORD max_width, WORD value) {
 
 int nc_shrunk_centroid_get_translated_x(short centerPosX, WORD tileWidth, BYTE shrunkX) {
   FIXED newX = FIX(centerPosX);
-  newX -= (shrunkX + 1) * FIX((tileWidth MULT8) / 0x10);
+  newX -= (shrunkX + 1) * FIX((nc_bitwise_multiplication_8(tileWidth)) / 0x10);
   return fixtoi(newX);
 }
 
 int nc_shrunk_centroid_get_translated_y(short centerPosY, WORD tileHeight, BYTE shrunkY) {
   FIXED newY = FIX(centerPosY);
-  newY -= shrunkY * FIX((tileHeight MULT8) / 0xFF);
+  newY -= shrunkY * FIX((nc_bitwise_multiplication_8(tileHeight)) / 0xFF);
   return fixtoi(newY);
 }
+
+  //--------------------------------------------------------------------------//
+ //                                MATH                                      //
+//--------------------------------------------------------------------------//
 
   //--------------------------------------------------------------------------//
  //                                PHYSIC                                    //
@@ -828,8 +832,8 @@ void nc_update_box(Box *box, short x, short y) {
   box->p3.x = box->p0.x;
   box->p3.y = box->p2.y;
 
-  box->p4.x = box->p0.x + ((box->p1.x - box->p0.x) DIV2);
-  box->p4.y = box->p0.y + ((box->p3.y - box->p0.y) DIV2);
+  box->p4.x = box->p0.x + nc_bitwise_division_2((box->p1.x - box->p0.x));
+  box->p4.y = box->p0.y + nc_bitwise_division_2((box->p3.y - box->p0.y));
 }
 
 void nc_shrunk_box(Box *box, Box *bOrigin, WORD shrunkValue) {
@@ -838,8 +842,8 @@ void nc_shrunk_box(Box *box, Box *bOrigin, WORD shrunkValue) {
   // todo (minor) - improve precision
   // todo (minor) - consider box offsets
   BYTE shrunk_x = SHRUNK_EXTRACT_X(shrunkValue);
-  BYTE pix_step_x = (bOrigin->width DIV16);
-  BYTE trim_x = (((15 - shrunk_x) * pix_step_x) DIV2);
+  BYTE pix_step_x = (nc_bitwise_division_16(bOrigin->width));
+  BYTE trim_x = nc_bitwise_division_2((15 - shrunk_x) * pix_step_x);
 
   int trim_y;
   FIXED shrunk_y = FIX(SHRUNK_EXTRACT_Y(shrunkValue));
@@ -847,23 +851,23 @@ void nc_shrunk_box(Box *box, Box *bOrigin, WORD shrunkValue) {
   FIXED shrunk_y_multiplicator = fsub(FIX(255), shrunk_y);
   shrunk_y_multiplicator = fmul(shrunk_y_multiplicator, pix_step_y);
   trim_y = fixtoi(shrunk_y_multiplicator);
-  trim_y =  (trim_y DIV2);
+  trim_y =  nc_bitwise_division_2(trim_y);
   trim_y += 1;
 
-  box->p0.x = bOrigin->p0.x + trim_x - (bOrigin->width DIV2);
-  box->p0.y = bOrigin->p0.y + trim_y - (bOrigin->height DIV2);
+  box->p0.x = bOrigin->p0.x + trim_x - (nc_bitwise_division_2(bOrigin->width));
+  box->p0.y = bOrigin->p0.y + trim_y - (nc_bitwise_division_2(bOrigin->height));
 
-  box->p1.x = bOrigin->p1.x - trim_x - (bOrigin->width DIV2);
-  box->p1.y = bOrigin->p1.y + trim_y - (bOrigin->height DIV2);
+  box->p1.x = bOrigin->p1.x - trim_x - (nc_bitwise_division_2(bOrigin->width));
+  box->p1.y = bOrigin->p1.y + trim_y - (nc_bitwise_division_2(bOrigin->height));
 
-  box->p2.x = bOrigin->p2.x - trim_x - (bOrigin->width DIV2);
-  box->p2.y = bOrigin->p2.y - trim_y - (bOrigin->height DIV2);
+  box->p2.x = bOrigin->p2.x - trim_x - (nc_bitwise_division_2(bOrigin->width));
+  box->p2.y = bOrigin->p2.y - trim_y - (nc_bitwise_division_2(bOrigin->height));
 
-  box->p3.x = bOrigin->p3.x + trim_x - (bOrigin->width DIV2);
-  box->p3.y = bOrigin->p3.y - trim_y - (bOrigin->height DIV2);
+  box->p3.x = bOrigin->p3.x + trim_x - (nc_bitwise_division_2(bOrigin->width));
+  box->p3.y = bOrigin->p3.y - trim_y - (nc_bitwise_division_2(bOrigin->height));
 
-  box->p4.x = box->p0.x + ((box->p1.x - box->p0.x) DIV2);
-  box->p4.y = box->p0.y + ((box->p3.y - box->p0.y) DIV2);
+  box->p4.x = box->p0.x + nc_bitwise_division_2((box->p1.x - box->p0.x));
+  box->p4.y = box->p0.y + nc_bitwise_division_2((box->p3.y - box->p0.y));
 }
 
 // todo (minor) - deprecated ?
