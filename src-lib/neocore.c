@@ -957,10 +957,6 @@ void nc_init_system() {
   nc_init_gpu();
 }
 
-void nc_init_all_system() {
-  nc_init_system();
-}
-
 Vec2short nc_get_relative_position(Box box, Vec2short world_coord) {
   Vec2short coord = {
     world_coord.x - box.p0.x,
