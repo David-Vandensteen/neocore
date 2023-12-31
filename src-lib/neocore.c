@@ -761,15 +761,15 @@ void nc_shrunk(WORD base_sprite, WORD max_width, WORD value) {
 }
 
 int nc_shrunk_centroid_get_translated_x(short centerPosX, WORD tileWidth, BYTE shrunkX) {
-  FIXED newX = FIX(centerPosX);
-  newX -= (shrunkX + 1) * FIX((nc_bitwise_multiplication_8(tileWidth)) / 0x10);
-  return fixtoi(newX);
+  FIXED newX = nc_fix(centerPosX);
+  newX -= (shrunkX + 1) * nc_fix((nc_bitwise_multiplication_8(tileWidth)) / 0x10);
+  return nc_fix_to_int(newX);
 }
 
 int nc_shrunk_centroid_get_translated_y(short centerPosY, WORD tileHeight, BYTE shrunkY) {
-  FIXED newY = FIX(centerPosY);
-  newY -= shrunkY * FIX((nc_bitwise_multiplication_8(tileHeight)) / 0xFF);
-  return fixtoi(newY);
+  FIXED newY = nc_fix(centerPosY);
+  newY -= shrunkY * nc_fix((nc_bitwise_multiplication_8(tileHeight)) / 0xFF);
+  return nc_fix_to_int(newY);
 }
 
   //--------------------------------------------------------------------------//
@@ -845,11 +845,11 @@ void nc_shrunk_box(Box *box, Box *bOrigin, WORD shrunkValue) {
   BYTE trim_x = nc_bitwise_division_2((15 - shrunk_x) * pix_step_x);
 
   int trim_y;
-  FIXED shrunk_y = FIX(SHRUNK_EXTRACT_Y(shrunkValue));
-  FIXED pix_step_y = FIX((float)bOrigin->height / (float)256); // todo (minor) - hmmm !!! float
-  FIXED shrunk_y_multiplicator = fsub(FIX(255), shrunk_y);
+  FIXED shrunk_y = nc_fix(SHRUNK_EXTRACT_Y(shrunkValue));
+  FIXED pix_step_y = nc_fix((float)bOrigin->height / (float)256); // todo (minor) - hmmm !!! float
+  FIXED shrunk_y_multiplicator = nc_fix_sub(nc_fix(255), shrunk_y);
   shrunk_y_multiplicator = fmul(shrunk_y_multiplicator, pix_step_y);
-  trim_y = fixtoi(shrunk_y_multiplicator);
+  trim_y = nc_fix_to_int(shrunk_y_multiplicator);
   trim_y =  nc_bitwise_division_2(trim_y);
   trim_y += 1;
 

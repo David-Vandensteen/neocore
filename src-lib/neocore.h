@@ -321,7 +321,16 @@ WORD nc_shrunk_range(WORD addr_start, WORD addr_end, WORD shrunk_value);
 
 #define nc_abs(num) ((num) < 0 ? ~(num) + 1 : (num))
 #define nc_negative(num) -num
-#define FIX(value) value * 65536
+
+#define nc_fix(num) num * 65536
+#define nc_fix_to_int(num) fixtoi(num)
+#define nc_int_to_fix(num) itofix(num)
+#define nc_fix_add(num1, num2) fadd(num1, num2)
+#define nc_fix_sub(num1, num2) fsub(num1, num2)
+#define nc_fix_mul(num1, num2) fmul(num1, num2)
+#define nc_cos(num) fcos(num)
+#define nc_sin(num) fsin(num)
+#define nc_tan(num) ftan(num)
 
   //--------------------------------------------------------------------------//
  //                                PHYSIC                                    //
