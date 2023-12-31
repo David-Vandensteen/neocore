@@ -16,8 +16,6 @@
 
 #define nc_copy_box(box_src, box_dest) memcpy(box_dest, box_src, sizeof(Box))
 
-#define FIX(value) value * 65536
-
 #define SHRUNK_EXTRACT_X(value) value >> 8
 #define SHRUNK_EXTRACT_Y(value) (BYTE)value
 
@@ -316,10 +314,14 @@ WORD nc_shrunk_range(WORD addr_start, WORD addr_end, WORD shrunk_value);
 #define nc_bitwise_multiplication_32(value) (value << 5)
 #define nc_bitwise_multiplication_64(value) (value << 6)
 
-short nc_get_positive(short num); // TODO : macro
-short nc_get_inverse(int num); // TODO : macro
-
 #define nc_get_random(range) rand() % range
+
+#define nc_min(a,b) ((a) < (b) ? (a) : (b))
+#define nc_max(a,b) ((a) > (b) ? (a) : (b))
+
+#define nc_abs(num) ((num) < 0 ? ~(num) + 1 : (num))
+#define nc_negative(num) -num
+#define FIX(value) value * 65536
 
   //--------------------------------------------------------------------------//
  //                                PHYSIC                                    //

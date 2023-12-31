@@ -776,15 +776,6 @@ int nc_shrunk_centroid_get_translated_y(short centerPosY, WORD tileHeight, BYTE 
  //                                MATH                                      //
 //--------------------------------------------------------------------------//
 
-short nc_get_positive(short num) {
-  if (num < 0) num = ~num + 1;
-  return num;
-}
-
-short nc_get_inverse(int num) {
-  return -num;
-}
-
   //--------------------------------------------------------------------------//
  //                                PHYSIC                                    //
 //--------------------------------------------------------------------------//
@@ -983,7 +974,7 @@ void nc_init_all_system() {
 Vec2short nc_get_relative_position(Box box, Vec2short world_coord) {
   Vec2short coord = {
     world_coord.x - box.p0.x,
-    nc_get_inverse(world_coord.y - box.p3.y)
+    nc_negative(world_coord.y - box.p3.y)
   };
   return coord;
 }
