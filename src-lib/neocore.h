@@ -377,8 +377,8 @@ void nc_debug_joypad(BYTE id);
  //                                  UTIL                                      //
 //----------------------------------------------------------------------------//
 
-DWORD nc_get_frame_to_second(DWORD frame);
-DWORD nc_get_second_to_frame(DWORD second);
+DWORD nc_frame_to_second(DWORD frame);
+DWORD nc_second_to_frame(DWORD second);
 void nc_init_system();
 void nc_init_all_system();
 Vec2short nc_get_relative_position(Box box, Vec2short world_coord);
