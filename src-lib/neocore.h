@@ -14,11 +14,6 @@
 
 #define SHRUNK_TABLE_PROP_SIZE    0x2fe
 
-#define nc_copy_box(box_src, box_dest) memcpy(box_dest, box_src, sizeof(Box))
-
-#define SHRUNK_EXTRACT_X(value) value >> 8
-#define SHRUNK_EXTRACT_Y(value) (BYTE)value
-
 #define MANUALBOX 0
 #define AUTOBOX 1
 
@@ -217,6 +212,9 @@ void nc_move_gfx_scroller(GFX_Scroller *gfx_scroller, short x, short y);
  /*  GFX SHRUNK       */
 /*-------------------*/
 
+#define nc_shrunk_extract_x(value) value >> 8
+#define nc_shrunk_extract_y(value) (BYTE)value
+
 void nc_shrunk_centroid_gfx_picture(
   GFX_Picture *gfx_picture,
   short center_x,
@@ -335,6 +333,8 @@ WORD nc_shrunk_range(WORD addr_start, WORD addr_end, WORD shrunk_value);
   //--------------------------------------------------------------------------//
  //                                PHYSIC                                    //
 //--------------------------------------------------------------------------//
+
+#define nc_copy_box(box_src, box_dest) memcpy(box_dest, box_src, sizeof(Box))
 
 BYTE nc_collide_boxes(Box *box, Box *boxes[], BYTE box_max);
 BOOL nc_collide_box(Box *box1, Box *box2);

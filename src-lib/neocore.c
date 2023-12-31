@@ -226,12 +226,12 @@ void nc_shrunk_centroid_gfx_picture(
     nc_shrunk_centroid_get_translated_x(
       center_x,
       gfx_picture->pictureInfoDAT->tileWidth,
-      SHRUNK_EXTRACT_X(shrunk_value)
+      nc_shrunk_extract_x(shrunk_value)
     ),
     nc_shrunk_centroid_get_translated_y(
       center_y,
       gfx_picture->pictureInfoDAT->tileHeight,
-      SHRUNK_EXTRACT_Y(shrunk_value)
+      nc_shrunk_extract_y(shrunk_value)
     )
   );
 }
@@ -840,12 +840,12 @@ void nc_shrunk_box(Box *box, Box *bOrigin, WORD shrunkValue) {
   // if i can read the shrunk VRAM value, i can compute the origin box...
   // todo (minor) - improve precision
   // todo (minor) - consider box offsets
-  BYTE shrunk_x = SHRUNK_EXTRACT_X(shrunkValue);
+  BYTE shrunk_x = nc_shrunk_extract_x(shrunkValue);
   BYTE pix_step_x = (nc_bitwise_division_16(bOrigin->width));
   BYTE trim_x = nc_bitwise_division_2((15 - shrunk_x) * pix_step_x);
 
   int trim_y;
-  FIXED shrunk_y = nc_fix(SHRUNK_EXTRACT_Y(shrunkValue));
+  FIXED shrunk_y = nc_fix(nc_shrunk_extract_y(shrunkValue));
   FIXED pix_step_y = nc_fix((float)bOrigin->height / (float)256); // todo (minor) - hmmm !!! float
   FIXED shrunk_y_multiplicator = nc_fix_sub(nc_fix(255), shrunk_y);
   shrunk_y_multiplicator = fmul(shrunk_y_multiplicator, pix_step_y);
