@@ -312,7 +312,7 @@ WORD nc_shrunk_range(WORD addr_start, WORD addr_end, WORD shrunk_value);
 #define nc_bitwise_multiplication_32(value) (value << 5)
 #define nc_bitwise_multiplication_64(value) (value << 6)
 
-#define nc_get_random(range) rand() % range
+#define nc_random(range) rand() % range
 
 #define nc_min(a,b) ((a) < (b) ? (a) : (b))
 #define nc_max(a,b) ((a) > (b) ? (a) : (b))

@@ -13,7 +13,7 @@ int main(void) {
   nc_display_gfx_animated_sprite_physic(&player, 10, 10, PLAYER_SPRITE_ANIM_IDLE);
   for (i = 0; i < ASTEROID_MAX; i++) {
     nc_init_gfx_picture_physic(&asteroids[i], &asteroid_sprite, &asteroid_sprite_Palettes, 8, 8, 0, 0, AUTOBOX);
-    nc_display_gfx_picture_physic(&asteroids[i], nc_get_random(300), nc_get_random(200));
+    nc_display_gfx_picture_physic(&asteroids[i], nc_random(300), nc_random(200));
     asteroids_box[i] = &asteroids[i].box;
   }
   while(1) {
