@@ -256,7 +256,6 @@ void nc_destroy_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic *gfx_anima
 
 void nc_init_gpu();
 void nc_clear_vram();
-char nc_get_sin(WORD index);
 
   /*------------------------------*/
  /* GPU VBL                      */
