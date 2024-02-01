@@ -12,7 +12,7 @@
 #include <DATlib.h>
 #include <math.h>
 
-#define SHRUNK_TABLE_PROP_SIZE    0x2fe
+#define SHRUNK_TABLE_PROP_SIZE 0x2fe
 
 #define MANUALBOX 0
 #define AUTOBOX 1
