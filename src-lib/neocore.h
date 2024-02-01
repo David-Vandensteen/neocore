@@ -326,7 +326,6 @@ WORD nc_shrunk_range(WORD addr_start, WORD addr_end, WORD shrunk_value);
 #define nc_fix_sub(num1, num2) fsub(num1, num2)
 #define nc_fix_mul(num1, num2) fmul(num1, num2)
 #define nc_cos(num) fcos(num)
-#define nc_sin(num) fsin(num)
 #define nc_tan(num) ftan(num)
 
   //--------------------------------------------------------------------------//
