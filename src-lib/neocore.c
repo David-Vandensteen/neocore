@@ -998,6 +998,14 @@ void nc_init_system() {
   nc_init_gpu();
 }
 
+void nc_reset() {
+  nc_set_joypad_edge_mode(false);
+  nc_clear_vram();
+  nc_clear_sprite_index_table();
+  nc_clear_palette_index_table();
+  nc_init_system();
+}
+
 Vec2short nc_get_relative_position(Box box, Vec2short world_coord) {
   Vec2short coord = {
     world_coord.x - box.p0.x,
