@@ -303,6 +303,8 @@ WORD nc_shrunk_range(WORD addr_start, WORD addr_end, WORD shrunk_value);
 #define nc_bitwise_division_16(value) (value >> 4)
 #define nc_bitwise_division_32(value) (value >> 5)
 #define nc_bitwise_division_64(value) (value >> 6)
+#define nc_bitwise_division_128(value) (value >> 7)
+#define nc_bitwise_division_256(value) (value >> 8)
 
 #define nc_bitwise_multiplication_2(value) (value << 1)
 #define nc_bitwise_multiplication_4(value) (value << 2)
@@ -310,6 +312,8 @@ WORD nc_shrunk_range(WORD addr_start, WORD addr_end, WORD shrunk_value);
 #define nc_bitwise_multiplication_16(value) (value << 4)
 #define nc_bitwise_multiplication_32(value) (value << 5)
 #define nc_bitwise_multiplication_64(value) (value << 6)
+#define nc_bitwise_multiplication_128(value) (value << 7)
+#define nc_bitwise_multiplication_256(value) (value << 8)
 
 #define nc_random(range) rand() % range
 
