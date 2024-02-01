@@ -387,7 +387,7 @@ Vec2short nc_get_relative_position(Box box, Vec2short world_coord);
 void nc_pause(BOOL (*exitFunc)());
 void nc_sleep(DWORD frame);
 BOOL nc_each_frame(DWORD frame);
-void nc_fix_print_neocore(int x, int y, char *label);
+void nc_print(int x, int y, char *label);
 WORD nc_free_ram_info();
 #define nc_get_frame_counter() DAT_frameCounter
 

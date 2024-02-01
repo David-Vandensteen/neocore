@@ -954,15 +954,15 @@ void nc_debug_joypad(BYTE id) {
   } else {
     // JOYPAD_READ_P2 // TODO
   }
-  if (nc_joypad_is_start(id))  {  nc_fix_print_neocore(10, 11,  "JOYPAD START"); }
-  if (nc_joypad_is_up(id))     {  nc_fix_print_neocore(10, 11,  "JOYPAD UP   "); }
-  if (nc_joypad_is_down(id))   {  nc_fix_print_neocore(10, 11,  "JOYPAD DOWN "); }
-  if (nc_joypad_is_left(id))   {  nc_fix_print_neocore(10, 11,  "JOYPAD LEFT "); }
-  if (nc_joypad_is_right(id))  {  nc_fix_print_neocore(10, 11,  "JOYPAD RIGHT"); }
-  if (nc_joypad_is_a(id))      {  nc_fix_print_neocore(10, 11,  "JOYPAD A    "); }
-  if (nc_joypad_is_b(id))      {  nc_fix_print_neocore(10, 11,  "JOYPAD B    "); }
-  if (nc_joypad_is_c(id))      {  nc_fix_print_neocore(10, 11,  "JOYPAD C    "); }
-  if (nc_joypad_is_d(id))      {  nc_fix_print_neocore(10, 11,  "JOYPAD D    "); }
+  if (nc_joypad_is_start(id))  {  nc_print(10, 11,  "JOYPAD START"); }
+  if (nc_joypad_is_up(id))     {  nc_print(10, 11,  "JOYPAD UP   "); }
+  if (nc_joypad_is_down(id))   {  nc_print(10, 11,  "JOYPAD DOWN "); }
+  if (nc_joypad_is_left(id))   {  nc_print(10, 11,  "JOYPAD LEFT "); }
+  if (nc_joypad_is_right(id))  {  nc_print(10, 11,  "JOYPAD RIGHT"); }
+  if (nc_joypad_is_a(id))      {  nc_print(10, 11,  "JOYPAD A    "); }
+  if (nc_joypad_is_b(id))      {  nc_print(10, 11,  "JOYPAD B    "); }
+  if (nc_joypad_is_c(id))      {  nc_print(10, 11,  "JOYPAD C    "); }
+  if (nc_joypad_is_d(id))      {  nc_print(10, 11,  "JOYPAD D    "); }
 }
 
 void nc_update_joypad(BYTE id) {
@@ -1031,7 +1031,7 @@ BOOL nc_each_frame(DWORD frame) {
   return (nc_get_frame_counter() % frame == 0) ? true : false;
 }
 
-void nc_fix_print_neocore(int x, int y, char *label) { fixPrint(x, y, 0, 0, label); }
+void nc_print(int x, int y, char *label) { fixPrint(x, y, 0, 0, label); }
 
 WORD nc_free_ram_info() {
   // $000000  $0FFFFF    Vector Table, 68k program (.PRG files), 68k RAM
