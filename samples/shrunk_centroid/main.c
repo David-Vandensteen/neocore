@@ -84,9 +84,11 @@ static void update_logo3() { // Vertical
 int main(void) {
   init();
   display();
+
   while(1) {
     nc_update();
     update();
   };
+
   return 0;
 }

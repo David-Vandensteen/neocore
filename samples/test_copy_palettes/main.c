@@ -16,9 +16,7 @@ static void init() {
   copy_word_array((WORD*) &logo_Palettes.data, (WORD*) &duplicated_palette, 16);
 }
 
-static void display() {
-
-}
+static void display() {}
 
 static void update() {
   if (nc_each_frame(60)) {
@@ -33,10 +31,11 @@ static void update() {
 
 int main(void) {
   init();
-  // display();
+
   while(1) {
     nc_update();
     update();
   };
+
   return 0;
 }

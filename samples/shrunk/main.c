@@ -5,6 +5,7 @@ int main(void) {
   GFX_Picture logo1, logo2, logo3;
   BYTE logo1_shrunk_x = 0;
   BYTE logo2_shrunk_y = 0;
+
   nc_init_gfx_picture(&logo1, &logo_sprite, &logo_sprite_Palettes);
   nc_init_gfx_picture(&logo2, &logo_sprite, &logo_sprite_Palettes);
   nc_init_gfx_picture(&logo3, &logo_sprite, &logo_sprite_Palettes);
@@ -32,5 +33,6 @@ int main(void) {
 
     /* neocore provide a precalculated table for keep "aspect ratio" */
   };
+
   return 0;
 }

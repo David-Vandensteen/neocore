@@ -36,9 +36,11 @@ static void update() {
 int main(void) {
   init();
   display();
+
   while(1) {
     nc_update();
     update();
   };
+
   return 0;
 }

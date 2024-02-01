@@ -29,10 +29,12 @@ static void update() {
   nc_log_info("MUST BE : 9");
   nc_log_word("P3 INDEX : ", planet03.pictureDAT.baseSprite);
   nc_log_info("MUST BE : 17");
+
   if (nc_get_frame_counter() == 500) {
     nc_destroy_gfx_picture(&planet01);
     nc_display_gfx_picture(&planet04, 100, 10);
   }
+
   if (nc_get_frame_counter() > 500) {
     nc_log_word("P4 INDEX : ", planet04.pictureDAT.baseSprite);
     nc_log_info("MUST BE : 1");
@@ -42,9 +44,11 @@ static void update() {
 int main(void) {
   init();
   display();
+
   while(1) {
     nc_update();
     update();
   };
+
   return 0;
 }

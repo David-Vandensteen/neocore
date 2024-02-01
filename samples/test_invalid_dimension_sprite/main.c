@@ -5,12 +5,8 @@ static void init();
 static void display();
 static void update();
 
-static void init() {
-}
-
-static void display() {
-
-}
+static void init() {}
+static void display() {}
 
 static void update() {
   nc_init_log();
@@ -20,9 +16,11 @@ static void update() {
 int main(void) {
   init();
   // display();
+
   while(1) {
     nc_update();
     update();
   };
+
   return 0;
 }

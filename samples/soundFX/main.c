@@ -52,5 +52,6 @@ int main(void) {
 
     nc_set_position_log(0, 0);
   };
+
   return 0;
 }

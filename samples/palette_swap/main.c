@@ -22,5 +22,6 @@ int main(void) {
       palJobPut(logo.pictureDAT.basePalette, logo_swap_palette.palCount, logo_swap_palette.data);
     }
   };
+
   return 0;
 }

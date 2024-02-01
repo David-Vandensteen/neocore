@@ -2,6 +2,7 @@
 
 int main(void) {
   nc_set_joypad_edge_mode(true);
+
   while(1) {
     nc_update();
     nc_init_log();
@@ -17,5 +18,6 @@ int main(void) {
     if (nc_joypad_is_c(0)) nc_log_info("ITS C !");
     if (nc_joypad_is_d(0)) nc_log_info("ITS D !");
   };
+
   return 0;
 }

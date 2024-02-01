@@ -50,5 +50,6 @@ int main(void) {
 
     nc_update_animation_gfx_animated_sprite_physic(&player);
   };
+
   return 0;
 }

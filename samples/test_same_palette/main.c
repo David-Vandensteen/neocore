@@ -27,5 +27,6 @@ int main(void) {
     nc_log_word("PAL BACK   ", (int)backgroung.paletteInfoDAT);
     nc_update_animation_gfx_animated_sprite(&player);
   };
+
   return 0;
 }

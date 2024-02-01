@@ -6,6 +6,7 @@ GFX_Picture neogeoLogo;
 int main(void) {
   nc_init_gfx_picture(&neogeoLogo, &logo, &logo_Palettes);
   nc_display_gfx_picture(&neogeoLogo, 100, 160);
+
   while(1) {
     nc_update();
     nc_init_log();
@@ -22,5 +23,6 @@ int main(void) {
     nc_log_info("DAVID VANDENSTEEN");
     /* logger is an easy way to write a text without coordinate constraint */
   };
+
   return 0;
 }
