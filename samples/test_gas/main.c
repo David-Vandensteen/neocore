@@ -5,63 +5,77 @@
 GFX_Animated_Sprite player;
 
 int main(void) {
-  init_gpu();
-  init_gas(&player, &player_sprite, &player_sprite_Palettes);
-  display_gas(&player, 100, 100, PLAYER_SPRITE_ANIM_IDLE);
+  nc_init_gfx_animated_sprite(&player, &player_sprite, &player_sprite_Palettes);
+  nc_display_gfx_animated_sprite(&player, 100, 100, PLAYER_SPRITE_ANIM_IDLE);
+
   while(1) {
     const DWORD accumulator = 200;
     DWORD frame_seq = accumulator;
-    wait_vbl();
-    init_log();
-    update_anim_gas(&player);
-    if (get_frame_counter() < frame_seq) {
-      log_info("INIT GAS");
-      log_info("DISPLAY GAS AT 100 100");
+    nc_update();
+    nc_init_log();
+    nc_update_animation_gfx_animated_sprite(&player);
+
+    if (nc_get_frame_counter() < frame_seq) {
+      nc_log_info("INIT GAS");
+      nc_log_info("DISPLAY GAS AT 100 100");
     }
+
     frame_seq += accumulator;
-    if (get_frame_counter() >= (frame_seq - accumulator) && get_frame_counter() < frame_seq) {
-      log_info("SET POS 150 150");
-      set_pos_gas(&player, 150, 150);
+
+    if (nc_get_frame_counter() >= (frame_seq - accumulator) && nc_get_frame_counter() < frame_seq) {
+      nc_log_info("SET POS 150 150");
+      nc_set_position_gfx_animated_sprite(&player, 150, 150);
     }
+
     frame_seq += accumulator;
-    if (get_frame_counter() >= (frame_seq - accumulator) && get_frame_counter() < frame_seq) {
-      if (get_x_gas(player) < 0) {
-        set_pos_gas(&player, 150, 150);
+
+    if (nc_get_frame_counter() >= (frame_seq - accumulator) && nc_get_frame_counter() < frame_seq) {
+      if (nc_get_position_gfx_animated_sprite(player).x < 0) {
+        nc_set_position_gfx_animated_sprite(&player, 150, 150);
       } else {
-        set_anim_gas(&player, PLAYER_SPRITE_ANIM_UP);
-        log_info("MOVE -1 -1");
-        move_gas(&player, -1, -1);
+        nc_set_animation_gfx_animated_sprite(&player, PLAYER_SPRITE_ANIM_UP);
+        nc_log_info("MOVE -1 -1");
+        nc_move_gfx_animated_sprite(&player, -1, -1);
       }
     }
+
     frame_seq += accumulator;
-    if (get_frame_counter() >= (frame_seq - accumulator) && get_frame_counter() < frame_seq) {
-      log_info("GET X AND Y");
-      set_pos_gas(&player, 181, 57);
-      set_anim_gas(&player, PLAYER_SPRITE_ANIM_IDLE);
-      log_short("X", get_x_gas(player));
-      log_short("Y", get_y_gas(player));
+
+    if (nc_get_frame_counter() >= (frame_seq - accumulator) && nc_get_frame_counter() < frame_seq) {
+      nc_log_info("GET X AND Y");
+      nc_set_position_gfx_animated_sprite(&player, 181, 57);
+      nc_set_animation_gfx_animated_sprite(&player, PLAYER_SPRITE_ANIM_IDLE);
+      nc_log_short("X", nc_get_position_gfx_animated_sprite(player).x);
+      nc_log_short("Y", nc_get_position_gfx_animated_sprite(player).y);
     }
+
     frame_seq += accumulator;
-    if (get_frame_counter() >= (frame_seq - accumulator) && get_frame_counter() < frame_seq) {
-      log_info("HIDE");
-      hide_gas(&player);
+
+    if (nc_get_frame_counter() >= (frame_seq - accumulator) && nc_get_frame_counter() < frame_seq) {
+      nc_log_info("HIDE");
+      nc_hide_gfx_animated_sprite(&player);
     }
+
     frame_seq += accumulator;
-    if (get_frame_counter() >= (frame_seq - accumulator) && get_frame_counter() < frame_seq) {
-      log_info("SHOW");
-      show_gas(&player);
+
+    if (nc_get_frame_counter() >= (frame_seq - accumulator) && nc_get_frame_counter() < frame_seq) {
+      nc_log_info("SHOW");
+      nc_show_gfx_animated_sprite(&player);
     }
+
     frame_seq += accumulator;
-    if (get_frame_counter() >= (frame_seq - accumulator) && get_frame_counter() < frame_seq) {
-      log_info("DESTROY");
-      destroy_gas(&player);
+
+    if (nc_get_frame_counter() >= (frame_seq - accumulator) && nc_get_frame_counter() < frame_seq) {
+      nc_log_info("DESTROY");
+      nc_destroy_gfx_animated_sprite(&player);
     }
+
     frame_seq += accumulator;
-    if (get_frame_counter() >= (frame_seq - accumulator)) {
-      log_info("TEST END");
+
+    if (nc_get_frame_counter() >= (frame_seq - accumulator)) {
+      nc_log_info("TEST END");
     }
-    close_vbl();
   };
-  close_vbl();
+
   return 0;
 }

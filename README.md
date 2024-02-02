@@ -12,8 +12,7 @@ I share my tools and my code, these could possibly help your projects on this pl
 
 ## Doc
 
-  - Doxygen : http://azertyvortex.free.fr/neocore-doxy/r5/neocore_8h.html
-  - Snippet : https://github.com/David-Vandensteen/neocore/tree/release/1.0.5/snippet
+  - Doxygen : http://azertyvortex.free.fr/neocore-doxy/r6/neocore_8h.html
 
 ### Game, demo, code learning
 
@@ -106,7 +105,6 @@ cd samples\awesome_project
 ```
 
 See `.\samples\awesome_project\project.xml`  
-and `.\samples\awesome_project\sprites.xml`  
 for settings.
 
 ## "Hot reload"

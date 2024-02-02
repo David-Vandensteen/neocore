@@ -3,14 +3,13 @@
 
 int main(void) {
   GFX_Picture background;
-  init_gpu();
-  init_gp(&background, &background_asset, &background_asset_Palettes);
 
-  display_gp(&background, 0, 0);
+  nc_init_gfx_picture(&background, &background_asset, &background_asset_Palettes);
+  nc_display_gfx_picture(&background, 0, 0);
+
   while(1) {
-    wait_vbl();
-    close_vbl();
+    nc_update();
   };
-  close_vbl();
+
   return 0;
 }

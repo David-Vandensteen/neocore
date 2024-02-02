@@ -6,9 +6,7 @@ static void init();
 static void display();
 static void update();
 
-static void init() {
-  init_gpu();
-}
+static void init() {}
 
 static void display() {}
 
@@ -18,12 +16,11 @@ static void update() {
 
 int main(void) {
   init();
-  // display();
+
   while(1) {
-    wait_vbl();
+    nc_update();
     update();
-    close_vbl();
   };
-  close_vbl();
+
   return 0;
 }
