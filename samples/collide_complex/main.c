@@ -22,7 +22,7 @@ static void update_player();
 
 static void init() {
   init_mask();
-  init_gasp(
+  nc_init_gfx_animated_sprite_physic(
     &player,
     &player_sprite,
     &player_sprite_Palettes,
@@ -31,12 +31,12 @@ static void init() {
     0,
     0
   );
-  init_gp(&peak, &peak_sprite, &peak_sprite_Palettes);
+  nc_init_gfx_picture(&peak, &peak_sprite, &peak_sprite_Palettes);
 }
 
 static void display() {
-  display_gp(&peak, peak_position[X], peak_position[Y]);
-  display_gasp(&player, 10, 10, PLAYER_SPRITE_ANIM_IDLE);
+  nc_display_gfx_picture(&peak, peak_position[X], peak_position[Y]);
+  nc_display_gfx_animated_sprite_physic(&player, 10, 10, PLAYER_SPRITE_ANIM_IDLE);
   display_mask_debug();
 }
 
@@ -44,8 +44,8 @@ static void display_mask_debug() {
   BYTE i = 0;
   GFX_Picture p;
   for (i = 0; i < PEAK_MASK_VECTOR_MAX; i++) {
-    init_gp(&p, &dot_sprite, &dot_sprite_Palettes);
-    display_gp(&p, peak_mask[i].x, peak_mask[i].y);
+    nc_init_gfx_picture(&p, &dot_sprite, &dot_sprite_Palettes);
+    nc_display_gfx_picture(&p, peak_mask[i].x, peak_mask[i].y);
   }
 }
 
@@ -70,22 +70,23 @@ static void init_mask() {
 }
 
 static void update_player() {
-  update_joypad_p1();
-  if (joypad_p1_is_left() && get_x_gasp(player) > 0) { move_gasp(&player, -1, 0); }
-  if (joypad_p1_is_right() && get_x_gasp(player) < 280) { move_gasp(&player, 1, 0); }
-  if (joypad_p1_is_up() && get_y_gasp(player) > 0) {
-    move_gasp(&player, 0, -1);
-    set_anim_gasp(&player, PLAYER_SPRITE_ANIM_UP);
+  Vec2short position;
+  position = nc_get_position_gfx_animated_sprite_physic(player);
+  if (nc_joypad_is_left(0) && position.x > 0) { nc_move_gfx_animated_sprite_physic(&player, -1, 0); }
+  if (nc_joypad_is_right(0) && position.x < 280) { nc_move_gfx_animated_sprite_physic(&player, 1, 0); }
+  if (nc_joypad_is_up(0) && position.y > 0) {
+    nc_move_gfx_animated_sprite_physic(&player, 0, -1);
+    nc_set_animation_gfx_animated_sprite_physic(&player, PLAYER_SPRITE_ANIM_UP);
   }
-  if (joypad_p1_is_down() && get_y_gasp(player) < 200) {
-    move_gasp(&player, 0, 1);
-    set_anim_gasp(&player, PLAYER_SPRITE_ANIM_DOWN);
+  if (nc_joypad_is_down(0) && position.y < 200) {
+    nc_move_gfx_animated_sprite_physic(&player, 0, 1);
+    nc_set_animation_gfx_animated_sprite_physic(&player, PLAYER_SPRITE_ANIM_DOWN);
   }
-  if (!joypad_p1_is_down() && !joypad_p1_is_up()) { set_anim_gasp(&player, PLAYER_SPRITE_ANIM_IDLE); }
-  if (vectors_collide(&player.box, peak_mask, PEAK_MASK_VECTOR_MAX)) {
-      if (get_frame_counter() % 20) { hide_gasp(&player); } else { show_gasp(&player); }
-  } else { show_gasp(&player); }
-  update_anim_gasp(&player);
+  if (!nc_joypad_is_down(0) && !nc_joypad_is_up(0)) { nc_set_animation_gfx_animated_sprite_physic(&player, PLAYER_SPRITE_ANIM_IDLE); }
+  if (nc_vectors_collide(&player.box, peak_mask, PEAK_MASK_VECTOR_MAX)) {
+      if (nc_get_frame_counter() % 20) { nc_hide_gfx_animated_sprite_physic(&player); } else { nc_show_gfx_animated_sprite_physic(&player); }
+  } else { nc_show_gfx_animated_sprite_physic(&player); }
+  nc_update_animation_gfx_animated_sprite_physic(&player);
 }
 
 static void update() {
@@ -93,14 +94,13 @@ static void update() {
 }
 
 int main(void) {
-  init_gpu();
   init();
   display();
+
   while(1) {
-    wait_vbl();
+    nc_update();
     update();
-    close_vbl();
   };
-  close_vbl();
+
   return 0;
 }

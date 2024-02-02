@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
-  <name>fixed_value</name>
+  <name>math</name>
   <version>1.0.0</version>
   <makefile>..\Makefile</makefile>
   <neocorePath>..\..\</neocorePath>

@@ -10,50 +10,48 @@
 #define SAMPLE_LENGTH 3
 
 void log_and_sound(char *message) {
-  if (get_adpcm_player()->state == IDLE) {
+  if (nc_get_adpcm_player()->state == IDLE) {
     send_sound_command(ADPCM_STOP);
     send_sound_command(ADPCM_MIXKIT_GAME_CLICK_1114);
-    push_remaining_frame_adpcm_player(get_second_to_frame(1));
+    nc_push_remaining_frame_adpcm_player(nc_second_to_frame(1));
   }
 }
 
 void debug_adpcm_player() {
-  if (get_adpcm_player()->state == IDLE) log("ADPCM SAMPLE IS READY");
-  log("");
-  if (get_adpcm_player()->state == PLAYING) log("ADPCM SAMPLE IS PLAYING");
-  log(""); log("");
-  log_dword("REMAINING", get_adpcm_player()->remaining_frame);
+  if (nc_get_adpcm_player()->state == IDLE) nc_log("ADPCM SAMPLE IS READY");
+  nc_log("");
+  if (nc_get_adpcm_player()->state == PLAYING) nc_log("ADPCM SAMPLE IS PLAYING");
+  nc_log(""); nc_log("");
+  nc_log_dword("REMAINING", nc_get_adpcm_player()->remaining_frame);
 }
 
 int main(void) {
-  init_all_system();
-  init_log();
+  nc_init_log();
   log_and_sound("");
+  nc_set_joypad_edge_mode(true);
 
   while(1) {
-    wait_vbl();
-    init_log();
-    log("INTERACT WITH JOYPAD ...");
+    nc_update();
+    nc_init_log();
+    nc_log("INTERACT WITH JOYPAD ...");
 
-    set_position_log(3, 2);
-    update_joypad_edge(0);
-    debug_joypad(0);
+    nc_set_position_log(3, 2);
+    nc_debug_joypad(0);
 
-    if (joypad_p1_is_up()) log_and_sound("ITS UP !");
-    if (joypad_p1_is_down()) log_and_sound("ITS DOWN !");
-    if (joypad_p1_is_left()) log_and_sound("ITS LEFT !");
-    if (joypad_p1_is_right()) log_and_sound("ITS RIGHT !");
-    if (joypad_p1_is_a()) log_and_sound("ITS A !");
-    if (joypad_p1_is_b()) log_and_sound("ITS B !");
-    if (joypad_p1_is_c()) log_and_sound("ITS C !");
-    if (joypad_p1_is_d()) log_and_sound("ITS D !");
+    if (nc_joypad_is_up(0)) log_and_sound("ITS UP !");
+    if (nc_joypad_is_down(0)) log_and_sound("ITS DOWN !");
+    if (nc_joypad_is_left(0)) log_and_sound("ITS LEFT !");
+    if (nc_joypad_is_right(0)) log_and_sound("ITS RIGHT !");
+    if (nc_joypad_is_a(0)) log_and_sound("ITS A !");
+    if (nc_joypad_is_b(0)) log_and_sound("ITS B !");
+    if (nc_joypad_is_c(0)) log_and_sound("ITS C !");
+    if (nc_joypad_is_d(0)) log_and_sound("ITS D !");
 
-    set_position_log(3, 20);
+    nc_set_position_log(3, 20);
     debug_adpcm_player();
 
-    set_pos_log(0, 0);
-    close_vbl();
+    nc_set_position_log(0, 0);
   };
-  close_vbl();
+
   return 0;
 }
