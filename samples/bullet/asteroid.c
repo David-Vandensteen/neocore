@@ -7,21 +7,21 @@ static BYTE hit;
 
 void asteroid_init() {
   hit = 0;
-  init_gfx_picture_physic(&asteroid, &asteroid_sprite, &asteroid_sprite_Palettes, 8, 8, 0, 0, AUTOBOX);
+  nc_init_gfx_picture_physic(&asteroid, &asteroid_sprite, &asteroid_sprite_Palettes, 8, 8, 0, 0, AUTOBOX);
 }
 
 void asteroid_display() {
-  display_gfx_picture_physic(&asteroid, 200, 100);
+  nc_display_gfx_picture_physic(&asteroid, 200, 100);
 }
 
 void asteroid_update() {
-  init_log();
-  log_byte("HIT", hit);
+  nc_init_log();
+  nc_log_byte("HIT", hit);
 }
 
 BOOL asteroid_collide(Box *b) {
   BOOL r = false;
-  if (collide_box(&asteroid.box, b)) {
+  if (nc_collide_box(&asteroid.box, b)) {
     hit += 1;
     r = true;
   }

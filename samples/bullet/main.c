@@ -1,7 +1,3 @@
-/*
-  David Vandensteen
-  2020
-*/
 #include <neocore.h>
 #include <math.h>
 #include "player.h"
@@ -12,7 +8,6 @@ static void display();
 static void update();
 
 static void init() {
-  init_gpu();
   player_init();
   asteroid_init();
 }
@@ -30,11 +25,11 @@ static void update() {
 int main(void) {
   init();
   display();
+
   while(1) {
-    wait_vbl();
+    nc_update();
     update();
-    close_vbl();
   };
-  close_vbl();
+
   return 0;
 }

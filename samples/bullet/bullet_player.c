@@ -43,20 +43,20 @@ static void collide() {
 
 static void free_sprite(BYTE index) {
   sprites_state[index] = false;
-  hide_gfx_animated_sprite_physic(&sprites[index]);
+  nc_hide_gfx_animated_sprite_physic(&sprites[index]);
 }
 
 static void debug() {
   BYTE i = 0;
-  init_log();
+  nc_init_log();
   for (i = 0; i < get_bullet_max(); i++) {
-    log_bool("STATE ", sprites_state[i]);
+    nc_log_bool("STATE ", sprites_state[i]);
   }
-  log_byte("PAL I :", sprites[0].gfx_animated_sprite.aSpriteDAT.basePalette);
-  if (joypad_is_a(0)) {
-    log_info("JOYPAD A 1");
+  nc_log_byte("PAL I :", sprites[0].gfx_animated_sprite.aSpriteDAT.basePalette);
+  if (nc_joypad_is_a(0)) {
+    nc_log_info("JOYPAD A 1");
   } else {
-    log_info("JOYPAD A 0");
+    nc_log_info("JOYPAD A 0");
   }
 }
 
@@ -65,18 +65,20 @@ static void update_states(short x, short y) {
   free_aSprite = get_free_sprite();
   if (free_aSprite) {
     Vec2short position = {x + get_bullet_xoffset(), y};
-    set_position_gfx_animated_sprite_physic(free_aSprite, position);
-    show_gfx_animated_sprite_physic(free_aSprite);
+    nc_set_position_gfx_animated_sprite_physic(free_aSprite, position.x, position.y);
+    nc_show_gfx_animated_sprite_physic(free_aSprite);
   }
 }
 
 static void update_move() {
   BYTE i = 0;
+  Vec2short position;
   for (i = 0; i < get_bullet_max(); i++) {
     if (sprites_state[i]) {
-      move_gfx_animated_sprite_physic(&sprites[i], get_bullet_max(), 0);
-      update_animation_gfx_animated_sprite_physic(&sprites[i]);
-      if (get_x_gfx_animated_sprite_physic(sprites[i]) > 320) {
+      position = nc_get_position_gfx_animated_sprite_physic(sprites[i]);
+      nc_move_gfx_animated_sprite_physic(&sprites[i], get_bullet_max(), 0);
+      nc_update_animation_gfx_animated_sprite_physic(&sprites[i]);
+      if (position.x > 320) {
         free_sprite(i);
       }
     }
@@ -88,28 +90,28 @@ void bullet_player_init() {
   state = false;
   for (i = 0; i < get_bullet_max(); i++) {
     sprites_state[i] = false;
-    init_gfx_animated_sprite_physic(&sprites[i], &bullet_img, &bullet_img_Palettes, 8, 8, 0, 0);
+    nc_init_gfx_animated_sprite_physic(&sprites[i], &bullet_img, &bullet_img_Palettes, 8, 8, 0, 0);
   }
 }
 
 void bullet_player_display(short x, short y) {
   BYTE i = 0;
   for (i = 0; i < get_bullet_max(); i++) {
-    display_gfx_animated_sprite_physic(&sprites[i], x + (i * get_bullet_xoffset()), y, BULLET_IMG_ANIM_IDLE);
-    hide_gfx_animated_sprite_physic(&sprites[i]);
+    nc_display_gfx_animated_sprite_physic(&sprites[i], x + (i * get_bullet_xoffset()), y, BULLET_IMG_ANIM_IDLE);
+    nc_hide_gfx_animated_sprite_physic(&sprites[i]);
   }
-  show_gfx_animated_sprite_physic(&sprites[0]);
+  nc_show_gfx_animated_sprite_physic(&sprites[0]);
 }
 
 void bullet_player_update(BOOL pstate, short x, short y) {
   state = pstate;
   update_move();
   collide();
-  if (get_frame_counter() % get_bullet_rate() == 0 && state) update_states(x, y);
+  if (nc_get_frame_counter() % get_bullet_rate() == 0 && state) update_states(x, y);
 }
 
 void bullet_player_destroy() {
   BYTE i;
   bullet_player_init();
-  for (i = 0; i < get_bullet_max(); i++) hide_gfx_animated_sprite_physic(&sprites[i]);
+  for (i = 0; i < get_bullet_max(); i++) nc_hide_gfx_animated_sprite_physic(&sprites[i]);
 }

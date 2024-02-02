@@ -5,35 +5,41 @@ int main(void) {
   GFX_Animated_Sprite player;
   GFX_Scroller background;
   GFX_Picture planet;
-  init_gpu();
-  init_gp(&planet, &planet04_sprite, &planet04_sprite_Palettes);
-  init_gas(&player, &player_sprite, &player_sprite_Palettes);
-  init_gs(&background, &background_sprite, &background_sprite_Palettes);
 
-  display_gs(&background, 0, 0);
-  display_gp(&planet, 20, 100);
-  display_gas(&player, 10, 10, PLAYER_SPRITE_ANIM_IDLE);
+  nc_init_gfx_picture(&planet, &planet04_sprite, &planet04_sprite_Palettes);
+  nc_init_gfx_animated_sprite(&player, &player_sprite, &player_sprite_Palettes);
+  nc_init_gfx_scroller(&background, &background_sprite, &background_sprite_Palettes);
+
+  nc_display_gfx_scroller(&background, 0, 0);
+  nc_display_gfx_picture(&planet, 20, 100);
+  nc_display_gfx_animated_sprite(&player, 10, 10, PLAYER_SPRITE_ANIM_IDLE);
 
   while(1) {
-    wait_vbl();
-    update_joypad_p1();
-    if (joypad_p1_is_left() && get_x_gas(player) > 0) { move_gas(&player, -1, 0); }
-    if (joypad_p1_is_right() && get_x_gas(player) < 280) { move_gas(&player, 1, 0); }
-    if (joypad_p1_is_up() && get_y_gas(player) > 0) {
-      move_gas(&player, 0, -1);
-      set_anim_gas(&player, PLAYER_SPRITE_ANIM_UP);
+    Vec2short position;
+    nc_update();
+    position = nc_get_position_gfx_animated_sprite(player);
+    if (nc_joypad_is_left(0) && position.x > 0) { nc_move_gfx_animated_sprite(&player, -1, 0); }
+    if (nc_joypad_is_right(0) && position.y < 280) { nc_move_gfx_animated_sprite(&player, 1, 0); }
+    if (nc_joypad_is_up(0) && position.y > 0) {
+      nc_move_gfx_animated_sprite(&player, 0, -1);
+      nc_set_animation_gfx_animated_sprite(&player, PLAYER_SPRITE_ANIM_UP);
     }
-    if (joypad_p1_is_down() && get_y_gas(player) < 200) {
-      move_gas(&player, 0, 1);
-      set_anim_gas(&player, PLAYER_SPRITE_ANIM_DOWN);
+    if (nc_joypad_is_down(0) && position.y < 200) {
+      nc_move_gfx_animated_sprite(&player, 0, 1);
+      nc_set_animation_gfx_animated_sprite(&player, PLAYER_SPRITE_ANIM_DOWN);
     }
-    if (!joypad_p1_is_down() && !joypad_p1_is_up()) { set_anim_gas(&player, PLAYER_SPRITE_ANIM_IDLE); }
+    if (!nc_joypad_is_down(0) && !nc_joypad_is_up(0)) { nc_set_animation_gfx_animated_sprite(&player, PLAYER_SPRITE_ANIM_IDLE); }
 
-    move_gs(&background, 1, 0);
-    if (get_x_gs(background) > 512) set_x_gs(&background, 0);
-    update_anim_gas(&player);
-    close_vbl();
+    nc_move_gfx_scroller(&background, 1, 0);
+    if (nc_get_position_gfx_scroller(background).x > 512) {
+      nc_set_position_gfx_scroller(
+        &background,
+        0,
+        nc_get_position_gfx_scroller(background).y
+      );
+    }
+    nc_update_animation_gfx_animated_sprite(&player);
   };
-  close_vbl();
+
   return 0;
 }
