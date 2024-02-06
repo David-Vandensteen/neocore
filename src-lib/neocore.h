@@ -332,6 +332,8 @@ WORD nc_shrunk_range(WORD addr_start, WORD addr_end, WORD shrunk_value);
 #define nc_cos(num) fcos(num)
 #define nc_tan(num) ftan(num)
 
+char nc_sin(WORD index);
+
   //--------------------------------------------------------------------------//
  //                                PHYSIC                                    //
 //--------------------------------------------------------------------------//
