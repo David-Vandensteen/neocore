@@ -1,4 +1,3 @@
-rem set doxygen=%USERPROFILE%\Documents\doxygen\doxygen.exe
 set doxygen=..\build\doxygen\doxygen.exe
 set doxyfile=Doxyfile
 
