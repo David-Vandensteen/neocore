@@ -15,19 +15,6 @@ function Remove-Project {
   if (Test-Path -Path $buildConfig.pathBuild) { Remove-Item $buildConfig.pathBuild -Force -ErrorAction SilentlyContinue }
 }
 
-function Set-EnvPath {
-  param (
-    [Parameter(Mandatory=$true)][String] $GCCPath,
-    [Parameter(Mandatory=$true)][String] $Bin
-  )
-
-  $env:path = "$GCCPath;$Bin;$env:windir\System32;$env:windir\System32\WindowsPowerShell\v1.0\"
-
-  Write-Host "Env Path: $env:path"
-  Write-Host "--------------------------------------------"
-  Write-Host ""
-}
-
 function Main {
   param (
     [Parameter(Mandatory=$true)][String] $Rule,
@@ -82,6 +69,7 @@ function Main {
   Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\module-logger.ps1"
   Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\module-sdk.ps1"
   Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\module-emulators.ps1"
+  Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\module-set-env-path.ps1"
 
   Check-Rule
 
