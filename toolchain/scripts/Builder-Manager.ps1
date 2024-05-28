@@ -2,41 +2,10 @@
 # David Vandensteen
 # MIT
 
-
 param (
   [Parameter(Mandatory=$true)][String] $ConfigFile,
   [String] $Rule = "default"
 )
-
-function Compare-FileHash {
-  param (
-      [Parameter(Mandatory = $true)]
-      [ValidateScript({Test-Path $_})]
-      [string]$SrcFile,
-
-      [Parameter(Mandatory = $true)]
-      [ValidateScript({Test-Path $_})]
-      [string]$DestFile
-  )
-
-  $hasher = [System.Security.Cryptography.SHA256]::Create()
-
-  $file1Bytes = [System.IO.File]::ReadAllBytes($SrcFile)
-  $file2Bytes = [System.IO.File]::ReadAllBytes($DestFile)
-
-  $file1Hash = $hasher.ComputeHash($file1Bytes)
-  $file2Hash = $hasher.ComputeHash($file2Bytes)
-
-  $file1HashString = [System.BitConverter]::ToString($file1Hash) -replace "-", ""
-  $file2HashString = [System.BitConverter]::ToString($file2Hash) -replace "-", ""
-
-  if ($file1HashString -eq $file2HashString) {
-    return $true
-  }
-  else {
-    return $false
-  }
-}
 
 function Check {
   param ([Parameter(Mandatory=$true)][xml] $Config)
@@ -50,6 +19,7 @@ function Check {
       [ValidateScript({Test-Path $_})]
       [string]$ManifestCache
   )
+    Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-compare-filehash.ps1"
     Write-Host "check manifest" -ForegroundColor Yellow
     Write-Host "source : $ManifestSource"
     Write-Host "cache : $ManifestCache"
@@ -64,11 +34,13 @@ function Check {
     Write-Host "error : xml $Entry not found" -ForegroundColor Red
     exit 1
   }
+
   function Check-PathError {
     param ([Parameter(Mandatory=$true)][String] $Path)
     Write-Host "error : $Path not found" -ForegroundColor Red
     exit 1
   }
+
   function Check-XML {
     if (-Not($Config.project.name)) { Check-XMLError -Entry "project.name" }
     if (-Not($Config.project.version)) { Check-XMLError -Entry "project.version" }
@@ -90,6 +62,7 @@ function Check {
       }
     }
   }
+
   function Check-Path {
     if ((Test-Path -Path $Config.project.makefile) -eq $false) { Check-PathError -Path $Config.project.makefile }
     if ((Test-Path -Path $Config.project.neocorePath) -eq $false) { Check-PathError -Path $Config.project.neocorePath }
@@ -128,6 +101,7 @@ function Check {
   if ($Config.project.name -like "*{*") { Write-Host "error : char { is not allowed in project name" -ForegroundColor Red; exit 1 }
   if ($Config.project.name -like "*}*") { Write-Host "error : char } is not allowed in project name" -ForegroundColor Red; exit 1 }
   if ($Config.project.name -like "*#*") { Write-Host "error : char # is not allowed in project name" -ForegroundColor Red; exit 1 }
+
   Write-Host "config is compliant" -ForegroundColor Green
 }
 
@@ -151,7 +125,6 @@ function Set-EnvPath {
   Write-Host "--------------------------------------------"
   Write-Host ""
 }
-
 
 function Main {
   param (
@@ -326,15 +299,18 @@ function Main {
 
   if ($Rule -eq "clean") { exit 0 }
   if ($Rule -eq "sprite") { BuilderSprite }
+
   if (($Rule -eq "make") -or ($Rule -eq "") -or (!$Rule) -or ($Rule -eq "default") ) {
     BuilderSprite
     BuilderProgram
   }
+
   if ($Rule -eq "iso") {
     BuilderSprite
     BuilderProgram
     BuilderISO
   }
+
   if ($Rule -eq "run:raine" -or $Rule -eq "raine") {
     Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-raine.ps1"
     BuilderSprite
@@ -342,6 +318,7 @@ function Main {
     BuilderISO
     RunnerRaine
   }
+
   if ($Rule -eq "run:mame" -or $Rule -eq "mame" -or $Rule -eq "run") {
     Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-mame.ps1"
     BuilderSprite
@@ -350,6 +327,7 @@ function Main {
     BuilderMame
     RunnerMame
   }
+
   if ($Rule -eq "serve:raine") {
     Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-sprite.ps1"
     Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-program.ps1"
@@ -365,6 +343,7 @@ function Main {
       Stop-Emulators -RaineProcessName $raineProcessName -MameProcessName $mameProcessName
     }
   }
+
   if ($Rule -eq "serve:mame" -or $Rule -eq "serve") {
     Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-sprite.ps1"
     Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-program.ps1"
@@ -381,6 +360,7 @@ function Main {
       Stop-Emulators -RaineProcessName $raineProcessName -MameProcessName $mameProcessName
     }
   }
+
   if ($Rule -eq "dist:iso" -or $Rule -eq "dist:raine") {
     Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-dist.ps1"
 
@@ -394,6 +374,7 @@ function Main {
       -ISOFile "$($buildConfig.pathBuild)\$($buildConfig.projectName).iso" `
       -CUEFile "$($buildConfig.pathBuild)\$($buildConfig.projectName).cue" `
   }
+
   if ($Rule -eq "dist:mame" -or $Rule -eq "dist:chd") {
     Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-mame.ps1"
     Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-dist.ps1"
@@ -408,6 +389,7 @@ function Main {
       -CHDFile "$($buildConfig.pathMame)\roms\neocdz\$($buildConfig.projectName).chd" `
       -HashFile "$($buildConfig.pathMame)\hash\neocd.xml"
   }
+
   if ($Rule -eq "only:sprite") { BuilderSprite }
   if ($Rule -eq "only:program") { BuilderProgram }
   if ($Rule -eq "only:iso") { BuilderISO }
