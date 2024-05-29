@@ -104,12 +104,6 @@ function Main {
       -BinPath "$($Config.project.buildPath)\bin"
   }
 
-  function BuilderSprite {
-    Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-sprite.ps1"
-    Write-DATXML -InputFile $ConfigFile -OutputFile "$($buildConfig.pathBuild)\chardata.xml"
-    Write-Sprite -XMLFile "$($buildConfig.pathBuild)\chardata.xml" -Format "cd" -OutputFile "$($buildConfig.pathBuild)\$($buildConfig.projectName)"
-  }
-
   function BuilderISO {
     Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-iso.ps1"
 
@@ -183,6 +177,9 @@ function Main {
   }
 
   if ($Rule -eq "clean") { exit 0 }
+
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\builders\builder-sprite.ps1"
+
   if ($Rule -eq "sprite") { BuilderSprite }
 
   if (($Rule -eq "make") -or ($Rule -eq "") -or (!$Rule) -or ($Rule -eq "default") ) {
