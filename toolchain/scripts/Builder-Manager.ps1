@@ -7,14 +7,6 @@ param (
   [String] $Rule = "default"
 )
 
-function Remove-Project {
-  Write-Host "clean $($buildConfig.pathBuild)" -ForegroundColor Yellow
-  if (Test-Path -Path $buildConfig.pathBuild) {
-    Get-ChildItem -Path $buildConfig.pathBuild -Recurse -ErrorAction SilentlyContinue | Remove-Item -force -Recurse -ErrorAction SilentlyContinue
-  }
-  if (Test-Path -Path $buildConfig.pathBuild) { Remove-Item $buildConfig.pathBuild -Force -ErrorAction SilentlyContinue }
-}
-
 function Main {
   param (
     [Parameter(Mandatory=$true)][String] $Rule,
@@ -70,6 +62,7 @@ function Main {
   Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\module-sdk.ps1"
   Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\module-emulators.ps1"
   Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\module-set-env-path.ps1"
+  Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\utils\remove-project.ps1"
 
   Check-Rule
 
