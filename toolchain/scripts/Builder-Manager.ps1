@@ -91,17 +91,6 @@ function Main {
   if ($Rule -notmatch "^only:") { Remove-Project }
   if ((Test-Path -Path $buildConfig.pathBuild) -eq $false) { New-Item -Path $buildConfig.pathBuild -ItemType Directory -Force }
 
-  function RunnerMame {
-    $exeName = [System.IO.Path]::GetFileName($Config.project.emulator.mame.exeFile)
-    $mamePath = Split-Path $Config.project.emulator.mame.exeFile
-
-    Mame `
-      -ExeName $exeName `
-      -GameName $buildConfig.projectName `
-      -PathMame $mamePath `
-      -XMLArgsFile "$($buildConfig.pathNeocore)\mame-args.xml"
-  }
-
   function RunnerRaine {
     $exeName = [System.IO.Path]::GetFileName($Config.project.emulator.raine.exeFile)
 
@@ -120,6 +109,8 @@ function Main {
   Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\builders\builder-program.ps1"
   Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\builders\builder-iso.ps1"
   Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\builders\builder-mame.ps1"
+
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\runners\runner-mame.ps1"
 
   if ($Rule -eq "sprite") { BuilderSprite }
 
