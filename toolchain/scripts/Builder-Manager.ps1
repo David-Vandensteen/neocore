@@ -91,45 +91,6 @@ function Main {
   if ($Rule -notmatch "^only:") { Remove-Project }
   if ((Test-Path -Path $buildConfig.pathBuild) -eq $false) { New-Item -Path $buildConfig.pathBuild -ItemType Directory -Force }
 
-  function BuilderISO {
-    Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-iso.ps1"
-
-    Write-Cache `
-      -PRGFile $buildConfig.PRGFile `
-      -SpriteFile "$($buildConfig.pathBuild)\$($buildConfig.projectName).cd" `
-      -PathISOBuildFolder "$($buildConfig.pathBuild)\iso" `
-      -PathCDTemplate "$($buildConfig.pathNeocore)\cd_template" `
-
-    if ($config.project.sound.sfx.pcm) {
-      Write-SFX `
-      -PathISOBuildFolder "$($buildConfig.pathBuild)\iso" `
-      -PCMFile "$($config.project.sound.sfx.pcm)"
-    }
-
-    if ($config.project.sound.sfx.z80) {
-      Write-SFX `
-        -PathISOBuildFolder "$($buildConfig.pathBuild)\iso" `
-        -Z80File "$($config.project.sound.sfx.z80)"
-    }
-
-    Write-ISO `
-      -PRGFile $buildConfig.PRGFile `
-      -SpriteFile "$($buildConfig.pathBuild)\$($buildConfig.projectName).cd" `
-      -OutputFile "$($buildConfig.pathBuild)\$($buildConfig.projectName).iso" `
-      -PathISOBuildFolder "$($buildConfig.pathBuild)\iso" `
-      -PathCDTemplate "$($buildConfig.pathNeocore)\cd_template" `
-
-    $configCDDA = $null
-
-    if ($Config.project.sound.cdda.tracks.track) { $configCDDA = $config.project.sound.cdda }
-
-    Write-CUE `
-      -Rule $buildConfig.rule `
-      -OutputFile "$($buildConfig.pathBuild)\$($buildConfig.projectName).cue" `
-      -ISOName "$($buildConfig.projectName).iso" `
-      -Config $configCDDA
-  }
-
   function BuilderMame {
     $mamePath = Split-Path $Config.project.emulator.mame.exeFile
     $name = $Config.project.name
@@ -167,6 +128,7 @@ function Main {
 
   Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\builders\builder-sprite.ps1"
   Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\builders\builder-program.ps1"
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\builders\builder-iso.ps1"
 
   if ($Rule -eq "sprite") { BuilderSprite }
 
