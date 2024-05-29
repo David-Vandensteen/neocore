@@ -91,16 +91,6 @@ function Main {
   if ($Rule -notmatch "^only:") { Remove-Project }
   if ((Test-Path -Path $buildConfig.pathBuild) -eq $false) { New-Item -Path $buildConfig.pathBuild -ItemType Directory -Force }
 
-  function BuilderMame {
-    $mamePath = Split-Path $Config.project.emulator.mame.exeFile
-    $name = $Config.project.name
-    Write-Mame `
-      -ProjectName $name `
-      -PathMame $mamePath `
-      -CUEFile "$($buildConfig.pathBuild)\$name.cue" `
-      -OutputFile "$mamePath\roms\neocdz\$name.chd"
-  }
-
   function RunnerMame {
     $exeName = [System.IO.Path]::GetFileName($Config.project.emulator.mame.exeFile)
     $mamePath = Split-Path $Config.project.emulator.mame.exeFile
@@ -129,6 +119,7 @@ function Main {
   Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\builders\builder-sprite.ps1"
   Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\builders\builder-program.ps1"
   Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\builders\builder-iso.ps1"
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\builders\builder-mame.ps1"
 
   if ($Rule -eq "sprite") { BuilderSprite }
 
