@@ -91,18 +91,6 @@ function Main {
   if ($Rule -notmatch "^only:") { Remove-Project }
   if ((Test-Path -Path $buildConfig.pathBuild) -eq $false) { New-Item -Path $buildConfig.pathBuild -ItemType Directory -Force }
 
-  function RunnerRaine {
-    $exeName = [System.IO.Path]::GetFileName($Config.project.emulator.raine.exeFile)
-
-    $rainePath = Split-Path $Config.project.emulator.raine.exeFile
-
-    Raine `
-      -FileName "$($buildConfig.projectName).cue" `
-      -PathRaine $rainePath `
-      -PathISO $buildConfig.pathBuild `
-      -ExeName $exeName
-  }
-
   if ($Rule -eq "clean") { exit 0 }
 
   Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\builders\builder-sprite.ps1"
@@ -111,6 +99,7 @@ function Main {
   Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\builders\builder-mame.ps1"
 
   Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\runners\runner-mame.ps1"
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\runners\runner-raine.ps1"
 
   if ($Rule -eq "sprite") { BuilderSprite }
 
