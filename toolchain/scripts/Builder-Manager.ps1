@@ -14,7 +14,7 @@ function Main {
     [Parameter(Mandatory=$true)][xml] $Config
   )
 
-  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-check.ps1"
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\check.ps1"
 
   Check -Config $Config
 
