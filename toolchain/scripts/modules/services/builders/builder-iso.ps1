@@ -1,5 +1,5 @@
 function BuilderISO {
-  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-iso.ps1"
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\writers\iso.ps1"
 
   Write-Cache `
     -PRGFile $buildConfig.PRGFile `
