@@ -57,7 +57,7 @@ function Main {
   Write-Host "--------------------------------------------"
   Write-Host ""
 
-  Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\module-check-rule.ps1"
+  Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\services\check-rule.ps1"
   Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\utils\logger.ps1"
   Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\services\installers\sdk.ps1"
   Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\module-emulators.ps1"
