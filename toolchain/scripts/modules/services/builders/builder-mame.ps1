@@ -1,4 +1,6 @@
 function BuilderMame {
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-mame.ps1"
+
   $mamePath = Split-Path $Config.project.emulator.mame.exeFile
   $name = $Config.project.name
   Write-Mame `

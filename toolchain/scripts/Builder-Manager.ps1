@@ -93,6 +93,14 @@ function Main {
 
   if ($Rule -eq "clean") { exit 0 }
 
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-sprite.ps1"
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-program.ps1"
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-iso.ps1"
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-raine.ps1"
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-watcher.ps1"
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-dist.ps1"
+
+
   Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\builders\builder-sprite.ps1"
   Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\builders\builder-program.ps1"
   Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\builders\builder-iso.ps1"
@@ -115,7 +123,6 @@ function Main {
   }
 
   if ($Rule -eq "run:raine" -or $Rule -eq "raine") {
-    Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-raine.ps1"
     BuilderSprite
     BuilderProgram
     BuilderISO
@@ -123,7 +130,6 @@ function Main {
   }
 
   if ($Rule -eq "run:mame" -or $Rule -eq "mame" -or $Rule -eq "run") {
-    Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-mame.ps1"
     BuilderSprite
     BuilderProgram
     BuilderISO
@@ -132,11 +138,6 @@ function Main {
   }
 
   if ($Rule -eq "serve:raine") {
-    Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-sprite.ps1"
-    Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-program.ps1"
-    Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-iso.ps1"
-    Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-raine.ps1"
-    Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-watcher.ps1"
     While ($true) {
       BuilderSprite
       BuilderProgram
@@ -148,11 +149,6 @@ function Main {
   }
 
   if ($Rule -eq "serve:mame" -or $Rule -eq "serve") {
-    Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-sprite.ps1"
-    Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-program.ps1"
-    Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-iso.ps1"
-    Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-mame.ps1"
-    Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-watcher.ps1"
     While ($true) {
       BuilderSprite
       BuilderProgram
@@ -165,7 +161,6 @@ function Main {
   }
 
   if ($Rule -eq "dist:iso" -or $Rule -eq "dist:raine") {
-    Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-dist.ps1"
 
     if ((Test-Path -Path $Config.project.distPath) -eq $false) { New-Item -Path $Config.project.distPath -ItemType Directory -Force }
     BuilderSprite
@@ -179,8 +174,6 @@ function Main {
   }
 
   if ($Rule -eq "dist:mame" -or $Rule -eq "dist:chd") {
-    Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-mame.ps1"
-    Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-dist.ps1"
     if ((Test-Path -Path $Config.project.distPath) -eq $false) { New-Item -Path $Config.project.distPath -ItemType Directory -Force }
     BuilderSprite
     BuilderProgram

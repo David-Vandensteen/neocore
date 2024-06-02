@@ -1,3 +1,5 @@
+Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-raine.ps1"
+
 function RunnerRaine {
   $exeName = [System.IO.Path]::GetFileName($Config.project.emulator.raine.exeFile)
 

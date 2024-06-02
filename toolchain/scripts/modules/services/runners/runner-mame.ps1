@@ -1,3 +1,5 @@
+Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-mame.ps1"
+
 function RunnerMame {
   $exeName = [System.IO.Path]::GetFileName($Config.project.emulator.mame.exeFile)
   $mamePath = Split-Path $Config.project.emulator.mame.exeFile
