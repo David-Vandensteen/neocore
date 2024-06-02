@@ -94,7 +94,7 @@ function Main {
   if ($Rule -eq "clean") { exit 0 }
 
   Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-raine.ps1"
-  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-watcher.ps1"
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\utils\watcher.ps1"
 
   Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\writers\iso.ps1"
   Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\writers\dist.ps1"
