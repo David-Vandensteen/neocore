@@ -1,4 +1,4 @@
-Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-mame.ps1"
+Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\writers\mame.ps1"
 
 function RunnerMame {
   $exeName = [System.IO.Path]::GetFileName($Config.project.emulator.mame.exeFile)
