@@ -10,7 +10,7 @@ function Check {
       [ValidateScript({Test-Path $_})]
       [string]$ManifestCache
   )
-    Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-compare-filehash.ps1"
+    Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\utils\compare-filehash.ps1"
     Write-Host "check manifest" -ForegroundColor Yellow
     Write-Host "source : $ManifestSource"
     Write-Host "cache : $ManifestCache"
