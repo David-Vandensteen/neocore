@@ -1,5 +1,5 @@
 Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-install-component.ps1"
-Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-audio-convert.ps1"
+Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\utils\audio-convert.ps1"
 
 function Write-ISO {
   param (
