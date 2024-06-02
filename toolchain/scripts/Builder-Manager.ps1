@@ -61,7 +61,7 @@ function Main {
   Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\utils\logger.ps1"
   Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\services\installers\sdk.ps1"
   Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\utils\emulators.ps1"
-  Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\module-set-env-path.ps1"
+  Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\utils\set-env-path.ps1"
   Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\utils\remove-project.ps1"
 
   Check-Rule
