@@ -1,6 +1,7 @@
 ## 2.0.3
 
   - split toolchain code
+  - update sound fx sample
 
 ## 2.0.2
 
@@ -27,7 +28,6 @@
   - update second to frame
   - update random
   - update issue 80 sample
-  - update sound fx sample
   - add math sample
   - add min, max, abs
   - add fix macro
