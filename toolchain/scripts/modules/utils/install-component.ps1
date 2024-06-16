@@ -1,4 +1,4 @@
-Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-download.ps1"
+Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\utils\download.ps1"
 
 function Install-Component {
   param (
