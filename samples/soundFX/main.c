@@ -7,9 +7,7 @@
 #include "externs.h"
 #include "sound.h"
 
-#define SAMPLE_LENGTH 3
-
-void log_and_sound(char *message) {
+static void log_and_sound(char *message) {
   if (nc_get_adpcm_player()->state == IDLE) {
     send_sound_command(ADPCM_STOP);
     send_sound_command(ADPCM_MIXKIT_GAME_CLICK_1114);
@@ -17,7 +15,7 @@ void log_and_sound(char *message) {
   }
 }
 
-void debug_adpcm_player() {
+static void debug_adpcm_player() {
   if (nc_get_adpcm_player()->state == IDLE) nc_log("ADPCM SAMPLE IS READY");
   nc_log("");
   if (nc_get_adpcm_player()->state == PLAYING) nc_log("ADPCM SAMPLE IS PLAYING");

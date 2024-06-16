@@ -27,6 +27,7 @@
   - update second to frame
   - update random
   - update issue 80 sample
+  - update sound fx sample
   - add math sample
   - add min, max, abs
   - add fix macro
