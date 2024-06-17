@@ -6,7 +6,7 @@
 
 Neocore is a library and toolchain for developing on Neo Geo CD.  
 It provides high-level functions over Neo Dev Kit and DATlib 0.2, and includes tools and code that can help with projects on this platform.  
-The library is mainly tested on Raine and MAME emulators and is compatible with Windows 10 and Windows 11 for building.
+The library is mainly tested on Raine and MAME emulators and is compatible with ~~Windows 10 and~~ Windows 11 for building.
   
 I share my tools and my code, these could possibly help your projects on this platform.  
 
@@ -23,7 +23,7 @@ I share my tools and my code, these could possibly help your projects on this pl
  - High-level functions for Neo Geo CD development
  - Tools and code to assist with projects
  - Tested on Raine and MAME emulators
- - Compatible with Windows 10 and Windows 11
+ - Compatible with ~~Windows 10 and~~ Windows 11
 
 ## Note
 Please note that the library is under development and unoptimized, and the author is not responsible for any software damage.
@@ -81,32 +81,6 @@ or
 .\mak.bat dist:mame
 ```
 
-## Create your first experimentation
-```cmd
-xcopy /E /I bootstrap\sample samples\awesome_project
-```
-
-Edit project.xml and set the project name  
-```cmd
-notepad samples\awesome_project\project.xml
-```
-
-```xml
-<project>
-  <name>awesome_project</name>
-...
-```
-
-Compile and run it  
-
-```cmd
-cd samples\awesome_project
-.\mak.bat run
-```
-
-See `.\samples\awesome_project\project.xml`  
-for settings.
-
 ## "Hot reload"
 ```cmd
 cd samples\hello
@@ -133,7 +107,7 @@ cd samples\CDDA
 In the emulator, use joypad right and left to change audio track.  
 See `.\samples\CDDA\project.xml` for understanding how to set the audio file.
 
-## Create a "standalone" project
+## Create a project
 With powershell (you need to "be" in neocore folder root path)
 ```cmd
 $project = "c:\my-git\myGame"
@@ -143,6 +117,17 @@ $project = "c:\my-git\myGame"
 ```cmd
 xcopy /E /I src-lib $project\neocore\src-lib; copy manifest.xml $project\neocore; copy bootstrap\.gitignore $project\.gitignore; xcopy /E /I toolchain $project\neocore\toolchain; xcopy /E /I bootstrap\standalone $project\src; notepad $project\src\project.xml
 ```
+
+Compile and run it  
+
+```cmd
+cd $project
+.\mak.bat run
+```
+
+See `.\$project\project.xml`  
+for settings.
+
 
 ## DATlib assets (in progress)
 For making your own graphics, see the DATlib ref available here: (you need to building a sample for init build folder)  

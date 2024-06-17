@@ -1,3 +1,7 @@
+## 2.0.4
+
+  - remove git ignore wav file for standalone project
+
 ## 2.0.3
 
   - split toolchain code
