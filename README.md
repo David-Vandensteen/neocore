@@ -81,32 +81,6 @@ or
 .\mak.bat dist:mame
 ```
 
-## Create your first experimentation
-```cmd
-xcopy /E /I bootstrap\sample samples\awesome_project
-```
-
-Edit project.xml and set the project name  
-```cmd
-notepad samples\awesome_project\project.xml
-```
-
-```xml
-<project>
-  <name>awesome_project</name>
-...
-```
-
-Compile and run it  
-
-```cmd
-cd samples\awesome_project
-.\mak.bat run
-```
-
-See `.\samples\awesome_project\project.xml`  
-for settings.
-
 ## "Hot reload"
 ```cmd
 cd samples\hello
@@ -133,7 +107,7 @@ cd samples\CDDA
 In the emulator, use joypad right and left to change audio track.  
 See `.\samples\CDDA\project.xml` for understanding how to set the audio file.
 
-## Create a "standalone" project
+## Create a project
 With powershell (you need to "be" in neocore folder root path)
 ```cmd
 $project = "c:\my-git\myGame"
@@ -143,6 +117,17 @@ $project = "c:\my-git\myGame"
 ```cmd
 xcopy /E /I src-lib $project\neocore\src-lib; copy manifest.xml $project\neocore; copy bootstrap\.gitignore $project\.gitignore; xcopy /E /I toolchain $project\neocore\toolchain; xcopy /E /I bootstrap\standalone $project\src; notepad $project\src\project.xml
 ```
+
+Compile and run it  
+
+```cmd
+cd $project
+.\mak.bat run
+```
+
+See `.\$project\project.xml`  
+for settings.
+
 
 ## DATlib assets (in progress)
 For making your own graphics, see the DATlib ref available here: (you need to building a sample for init build folder)  
