@@ -79,15 +79,15 @@ If you encounter any problems after using it, simply close and restart a new com
 .\mak.bat dist:mame
 ```
 
-## "Hot reload"
+## Hot reload
 ```cmd
 cd samples\hello
 .\mak.bat serve
 ```
   
-Wait the running of the emulator and edit projects\hello\main.c  
-Now, remove **loggerInfo("DAVID VANDENSTEEN");** (for example)  
-Save the file
+Wait for the emulator to run and edit `samples\hello\main.c`.  
+Now, remove `loggerInfo("DAVID VANDENSTEEN");` (for example).  
+Save the file.
   
 The hot-reload process will rebuild & run your project automaticaly.
   
