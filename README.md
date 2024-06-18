@@ -160,7 +160,7 @@ If sdk was not found, build a sample (with mak script) to initialize cache (sdk 
 ## Dependencies
 
   - NeoDev
-  - DATLib
+  - DATlib
   - DATimage
   - NGFX SoundBuilder
   - Raine
