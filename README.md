@@ -38,7 +38,7 @@ Some graphics by **Grass**.
 ## Build and run (with Mame) a included example
 ```cmd
 cd samples\hello
-.\mak.bat run
+.\mak.bat run:mame
 ```
   
 ## Mak rules
@@ -62,15 +62,11 @@ ___***Warn : mak script override path environment variable during the compiling,
 ```
 - **Run with Raine**
 ```cmd
-.\mak.bat raine
+.\mak.bat run:raine
 ```
 - **Run with Mame**
 ```cmd
-.\mak.bat mame
-```
-or
-```cmd
-.\mak.bat run
+.\mak.bat run:mame
 ```
 - Delivery ISO
 ```cmd
