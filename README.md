@@ -166,7 +166,6 @@ If sdk was not found, build a sample (with mak script) to initialize cache (sdk 
   - Raine
   - Mame
   - CHDMAN
-  - 7-Zip
   - Doxygen
   - MSYS2
   - Mkisofs
