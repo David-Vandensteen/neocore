@@ -157,6 +157,20 @@ If sdk was not found, build a sample (with mak script) to initialize cache (sdk 
 ## Pull or checkout another branches
 **BE CAREFUL : You need to remove build folder `.\build` for supress cache files before compiling a project**  
 
+## Dependencies
+
+  - NeoDev
+  - DATLib
+  - DATimage
+  - NGFX SoundBuilder
+  - Raine
+  - Mame
+  - CHDMAN
+  - 7-Zip
+  - Doxygen
+  - MSYS2
+  - Mkisofs
+  - GCC
 
 ## SoundFX ... (todo)
 ## Use Neocore toolchain for DATlib project (without Neocore lib) (todo)
