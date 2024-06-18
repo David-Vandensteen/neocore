@@ -18,7 +18,7 @@ I share my tools and my code, these could possibly help your projects on this pl
 
   - Pong : https://github.com/David-Vandensteen/neogeo-cd-pong
     
-## Feature
+## Features
 
  - High-level functions for Neo Geo CD development
  - Tools and code to assist with projects
@@ -26,6 +26,7 @@ I share my tools and my code, these could possibly help your projects on this pl
  - Compatible with ~~Windows 10 and~~ Windows 11
 
 ## Note
+
 Please note that the library is under development and unoptimized, and the author is not responsible for any software damage.
 
 ## License
@@ -35,14 +36,15 @@ Copyright 2019 by David Vandensteen.
 Some graphics by **Grass**.    
 
     
-## Build and run (with Mame) a included example
+## Build and run (with Mame) an included example
 ```cmd
 cd samples\hello
 .\mak.bat run:mame
 ```
   
 ## Mak rules
-___***Warn : mak script override path environment variable during the compiling, if u have some problems after using it, just close and restart a new command terminal***___
+___***Warning: The mak script overrides the path environment variable during compilation.  
+If you encounter any problems after using it, simply close and restart a new command terminal.***___
 
 - Clean the builded resources
 ```cmd
