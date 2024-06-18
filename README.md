@@ -133,11 +133,11 @@ For making your own graphics, see the DATlib ref available here: (you need to bu
 .\build\neodev-sdk\doc\DATlib-LibraryReference.pdf
 ```
   
-DATlib Framer tool is available here:  
+The DATlib Framer tool is available here:    
 ```cmd
 .\build\neodev-sdk\m68k\bin\Framer.exe
 ```
-The Animator tool is available here:  
+The DATlib Animator tool is available here:  
 ```cmd
 .\build\neodev-sdk\m68k\bin\Animator.exe
 ```
