@@ -10,9 +10,9 @@ The library is mainly tested on Raine and MAME emulators and is compatible with 
   
 I share my tools and my code, these could possibly help your projects on this platform.  
 
-## Doc
+## Documentation
 
-  - Doxygen : http://azertyvortex.free.fr/neocore-doxy/r6/neocore_8h.html
+  - Doxygen: [http://azertyvortex.free.fr/neocore-doxy/r6/neocore_8h.html](http://azertyvortex.free.fr/neocore-doxy/r6/neocore_8h.html)
 
 ### Game, demo, code learning
 
