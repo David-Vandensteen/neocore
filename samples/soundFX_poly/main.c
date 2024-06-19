@@ -9,7 +9,7 @@
 
 // TODO patch neocore------------------------------------
 #define nc_wait_vbl() waitVBlank();
-#define stop_adpcm() send_sound_command(ADPCM_STOP);
+#define nc_stop_adpcm() send_sound_command(ADPCM_STOP);
 //---------------------------------------------------------
 
 static void play_adpcm(adpcm) { send_sound_command(adpcm); }
@@ -33,7 +33,7 @@ int main(void) {
     nc_debug_joypad(0);
 
     if (nc_joypad_is_up(0)) {
-      stop_adpcm();
+      nc_stop_adpcm();
       play_adpcm(ADPCM_ALARM01);
       nc_wait_vbl();
       play_adpcm(ADPCM_BELL);
@@ -42,17 +42,17 @@ int main(void) {
     }
 
     if (nc_joypad_is_down(0)) {
-      stop_adpcm();
+      nc_stop_adpcm();
       play_adpcm(ADPCM_BELL);
     }
 
     if (nc_joypad_is_left(0)) {
-      stop_adpcm();
+      nc_stop_adpcm();
       play_adpcm(ADPCM_ALARM01);
     }
 
     if (nc_joypad_is_right(0)) {
-      stop_adpcm();
+      nc_stop_adpcm();
       play_adpcm(ADPCM_FAIL);
     }
   };
