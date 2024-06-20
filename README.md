@@ -168,7 +168,3 @@ If sdk was not found, build a sample (with mak script) to initialize cache (sdk 
   - MSYS2
   - Mkisofs
   - GCC
-
-## SoundFX ... (todo)
-## Use Neocore toolchain for DATlib project (without Neocore lib) (todo)
-## Use Neocore toolchain for Neodev vanilla project (without DATlib & Neocore lib) (todo)
