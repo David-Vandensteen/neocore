@@ -99,7 +99,7 @@ Some problems currently:
 ``` cmd
 cd samples\CDDA
 .\download-assets
-.\mak.bat run
+.\mak.bat run:mame
 ```
   
 In the emulator, use joypad right and left to change audio track.  
@@ -120,7 +120,7 @@ Compile and run it
 
 ```cmd
 cd $project
-.\mak.bat run
+.\mak.bat run:mame
 ```
 
 See `.\$project\project.xml`  
