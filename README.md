@@ -168,3 +168,5 @@ If sdk was not found, build a sample (with mak script) to initialize cache (sdk 
   - MSYS2
   - Mkisofs
   - GCC
+  - mpg123
+  - ffmpeg
