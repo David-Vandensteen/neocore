@@ -6,26 +6,27 @@
 
 Neocore is a library and toolchain for developing on Neo Geo CD.  
 It provides high-level functions over Neo Dev Kit and DATlib 0.2, and includes tools and code that can help with projects on this platform.  
-The library is mainly tested on Raine and MAME emulators and is compatible with Windows 10 and Windows 11 for building.
+The library is mainly tested on Raine and MAME emulators and is compatible with ~~Windows 10 and~~ Windows 11 for building.
   
 I share my tools and my code, these could possibly help your projects on this platform.  
 
-## Doc
+## Documentation
 
-  - Doxygen : http://azertyvortex.free.fr/neocore-doxy/r6/neocore_8h.html
+  - Doxygen: [http://azertyvortex.free.fr/neocore-doxy/r6/neocore_8h.html](http://azertyvortex.free.fr/neocore-doxy/r6/neocore_8h.html)
 
 ### Game, demo, code learning
 
   - Pong : https://github.com/David-Vandensteen/neogeo-cd-pong
     
-## Feature
+## Features
 
  - High-level functions for Neo Geo CD development
  - Tools and code to assist with projects
  - Tested on Raine and MAME emulators
- - Compatible with Windows 10 and Windows 11
+ - Compatible with ~~Windows 10 and~~ Windows 11
 
 ## Note
+
 Please note that the library is under development and unoptimized, and the author is not responsible for any software damage.
 
 ## License
@@ -35,14 +36,15 @@ Copyright 2019 by David Vandensteen.
 Some graphics by **Grass**.    
 
     
-## Build and run (with Mame) a included example
+## Build and run (with Mame) an included example
 ```cmd
 cd samples\hello
-.\mak.bat run
+.\mak.bat run:mame
 ```
   
 ## Mak rules
-___***Warn : mak script override path environment variable during the compiling, if u have some problems after using it, just close and restart a new command terminal***___
+___***Warning: The mak script overrides the path environment variable during compilation.  
+If you encounter any problems after using it, simply close and restart a new command terminal.***___
 
 - Clean the builded resources
 ```cmd
@@ -62,15 +64,11 @@ ___***Warn : mak script override path environment variable during the compiling,
 ```
 - **Run with Raine**
 ```cmd
-.\mak.bat raine
+.\mak.bat run:raine
 ```
 - **Run with Mame**
 ```cmd
-.\mak.bat mame
-```
-or
-```cmd
-.\mak.bat run
+.\mak.bat run:mame
 ```
 - Delivery ISO
 ```cmd
@@ -81,41 +79,15 @@ or
 .\mak.bat dist:mame
 ```
 
-## Create your first experimentation
-```cmd
-xcopy /E /I bootstrap\sample samples\awesome_project
-```
-
-Edit project.xml and set the project name  
-```cmd
-notepad samples\awesome_project\project.xml
-```
-
-```xml
-<project>
-  <name>awesome_project</name>
-...
-```
-
-Compile and run it  
-
-```cmd
-cd samples\awesome_project
-.\mak.bat run
-```
-
-See `.\samples\awesome_project\project.xml`  
-for settings.
-
-## "Hot reload"
+## Hot reload
 ```cmd
 cd samples\hello
 .\mak.bat serve
 ```
   
-Wait the running of the emulator and edit projects\hello\main.c  
-Now, remove **loggerInfo("DAVID VANDENSTEEN");** (for example)  
-Save the file
+Wait for the emulator to run and edit `samples\hello\main.c`.  
+Now, remove `loggerInfo("DAVID VANDENSTEEN");` (for example).  
+Save the file.
   
 The hot-reload process will rebuild & run your project automaticaly.
   
@@ -127,13 +99,13 @@ Some problems currently:
 ``` cmd
 cd samples\CDDA
 .\download-assets
-.\mak.bat run
+.\mak.bat run:mame
 ```
   
 In the emulator, use joypad right and left to change audio track.  
 See `.\samples\CDDA\project.xml` for understanding how to set the audio file.
 
-## Create a "standalone" project
+## Create a project
 With powershell (you need to "be" in neocore folder root path)
 ```cmd
 $project = "c:\my-git\myGame"
@@ -144,17 +116,28 @@ $project = "c:\my-git\myGame"
 xcopy /E /I src-lib $project\neocore\src-lib; copy manifest.xml $project\neocore; copy bootstrap\.gitignore $project\.gitignore; xcopy /E /I toolchain $project\neocore\toolchain; xcopy /E /I bootstrap\standalone $project\src; notepad $project\src\project.xml
 ```
 
+Compile and run it  
+
+```cmd
+cd $project
+.\mak.bat run:mame
+```
+
+See `.\$project\project.xml`  
+for settings.
+
+
 ## DATlib assets (in progress)
 For making your own graphics, see the DATlib ref available here: (you need to building a sample for init build folder)  
 ```cmd
 .\build\neodev-sdk\doc\DATlib-LibraryReference.pdf
 ```
   
-DATlib Framer tool is available here:  
+The DATlib Framer tool is available here:    
 ```cmd
 .\build\neodev-sdk\m68k\bin\Framer.exe
 ```
-The Animator tool is available here:  
+The DATlib Animator tool is available here:  
 ```cmd
 .\build\neodev-sdk\m68k\bin\Animator.exe
 ```
@@ -172,7 +155,18 @@ If sdk was not found, build a sample (with mak script) to initialize cache (sdk 
 ## Pull or checkout another branches
 **BE CAREFUL : You need to remove build folder `.\build` for supress cache files before compiling a project**  
 
+## Dependencies
 
-## SoundFX ... (todo)
-## Use Neocore toolchain for DATlib project (without Neocore lib) (todo)
-## Use Neocore toolchain for Neodev vanilla project (without DATlib & Neocore lib) (todo)
+  - NeoDev
+  - DATlib
+  - DATimage
+  - NGFX SoundBuilder
+  - Raine
+  - Mame
+  - CHDMAN
+  - Doxygen
+  - MSYS2
+  - Mkisofs
+  - GCC
+  - mpg123
+  - ffmpeg

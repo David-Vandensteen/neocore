@@ -2,7 +2,6 @@
 *.png_reject.png
 dist/
 build/
-*.wav
 .vscode
 SPR.cd
 char.bin
