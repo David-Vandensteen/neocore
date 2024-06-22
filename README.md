@@ -35,10 +35,14 @@ Neocore is licensed under the MIT license.
 Copyright 2019 by David Vandensteen.  
 Some graphics by **Grass**.    
 
+## Init
+```cmd
+git clone git@github.com:David-Vandensteen/neocore.git
+```
     
 ## Build and run hello example
 ```cmd
-cd samples\hello
+cd neocore\samples\hello
 .\mak.bat run:mame
 ```
   
@@ -80,12 +84,12 @@ If you encounter any problems after using it, simply close and restart a new com
 ```
 
 ## Hot reload
+From `neocore\sample\hello` folder
 ```cmd
-cd samples\hello
 .\mak.bat serve
 ```
   
-Wait for the emulator to run and edit `samples\hello\main.c`.  
+Wait for the emulator to run and edit `main.c`.  
 Now, remove `loggerInfo("DAVID VANDENSTEEN");` (for example).  
 Save the file.
   
@@ -97,13 +101,13 @@ Some problems currently:
     
 ## CDDA
 ``` cmd
-cd samples\CDDA
+cd neocore\samples\CDDA
 .\download-assets
 .\mak.bat run:mame
 ```
   
 In the emulator, use joypad right and left to change audio track.  
-See `.\samples\CDDA\project.xml` for understanding how to set the audio file.
+See `neocore\samples\CDDA\project.xml` for understanding how to set the audio file.
 
 ## Create a project
 With powershell (you need to "be" in neocore folder root path)
@@ -130,21 +134,21 @@ for settings.
 ## DATlib assets (in progress)
 For making your own graphics, see the DATlib ref available here: (you need to building a sample for init build folder)  
 ```cmd
-.\build\neodev-sdk\doc\DATlib-LibraryReference.pdf
+.\neocore\build\neodev-sdk\doc\DATlib-LibraryReference.pdf
 ```
   
 The DATlib Framer tool is available here:    
 ```cmd
-.\build\neodev-sdk\m68k\bin\Framer.exe
+.\neocore\build\neodev-sdk\m68k\bin\Framer.exe
 ```
 The DATlib Animator tool is available here:  
 ```cmd
-.\build\neodev-sdk\m68k\bin\Animator.exe
+.\neocore\build\neodev-sdk\m68k\bin\Animator.exe
 ```
 
 ## Compiling the lib (necessary if you develop Neocore lib)
 ```cmd
-cd src-lib
+cd neocore\src-lib
 .\build-neocore.bat -gccPath ..\build\gcc\gcc-2.95.2 -includePath ..\build\include -libraryPath ..\build\lib
 ```
 This script override path environment variable during the compilation.  
@@ -153,7 +157,7 @@ If sdk was not found, build a sample (with mak script) to initialize cache (sdk 
 
 
 ## Pull or checkout another branches
-**BE CAREFUL : You need to remove build folder `.\build` for supress cache files before compiling a project**  
+**BE CAREFUL : You need to remove build folder `.\neocore\build` for supress cache files before compiling a project**  
 
 ## Dependencies
 
