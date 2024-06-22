@@ -133,7 +133,7 @@ This project is mainly tested on Raine and MAME emulators.
 To test and improve compatibility with the hardware, I am searching for a Neo-Geo CD with an SD loader and HDMI capabilities.  
 You can contribute to this effort with a donation if you want.
 
-[Make a Paypal donation to help developer](https://www.paypal.com/donate/?hosted_button_id=YAHAJGP58TYM4)
+[Make a Paypal donation to help Neocore project](https://www.paypal.com/donate/?hosted_button_id=YAHAJGP58TYM4)
 
 Here are other ways to contribute:
 
