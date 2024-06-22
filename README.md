@@ -24,10 +24,6 @@ I share my tools and my code, these could possibly help your projects on this pl
       -  [https://www.youtube.com/embed/YjRmvMAfgbc](https://www.youtube.com/embed/YjRmvMAfgbc)
       -  [http://azertyvortex.free.fr/flamble](http://azertyvortex.free.fr/flamble)
 
-## Documentation of Neocore C lib
-
-  - Doxygen: [http://azertyvortex.free.fr/neocore-doxy/r6/neocore_8h.html](http://azertyvortex.free.fr/neocore-doxy/r6/neocore_8h.html)
-    
 ## Init
 ```cmd
 git clone git@github.com:David-Vandensteen/neocore.git
@@ -121,8 +117,12 @@ cd $project
 ```
 
 See `.\$project\project.xml`  
-for settings.
+for settings.  
 
+## Documentation of Neocore C lib
+
+  - Doxygen: [http://azertyvortex.free.fr/neocore-doxy/r6/neocore_8h.html](http://azertyvortex.free.fr/neocore-doxy/r6/neocore_8h.html)
+    
 ## Note
 
 Please note that the library is under development and the author is not responsible for any software damage.  
