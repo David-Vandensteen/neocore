@@ -22,6 +22,14 @@ You can contribute to this effort with a donation if you want.
 
 [Make a Paypal donation to help developer](https://www.paypal.com/donate/?hosted_button_id=YAHAJGP58TYM4)
 
+Here are other ways to contribute:
+
+- If you own a Neo-Geo CD, you can test the examples and confirm issues.  
+- If you are a developer, you can create video tutorials or example code.
+
+Any help is welcome.
+
+
 ## Features
 
  - High abstraction level for Neo Geo CD development
