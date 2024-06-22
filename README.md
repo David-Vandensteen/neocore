@@ -28,13 +28,17 @@ You can contribute to this effort with a donation if you want.
  - Tools and code to assist with projects
  - Compatible with ~~Windows 10 and~~ Windows 11
 
-## Documentation
-
-  - Doxygen: [http://azertyvortex.free.fr/neocore-doxy/r6/neocore_8h.html](http://azertyvortex.free.fr/neocore-doxy/r6/neocore_8h.html)
-
 ### Game, demo, code learning
 
   - Pong : https://github.com/David-Vandensteen/neogeo-cd-pong
+  - Flamble :
+      -  [https://twitter.com/i/status/1296434554526478336](https://twitter.com/i/status/1296434554526478336)
+      -  [https://www.youtube.com/embed/YjRmvMAfgbc](https://www.youtube.com/embed/YjRmvMAfgbc)
+      -  [http://azertyvortex.free.fr/flamble](http://azertyvortex.free.fr/flamble)
+
+## Documentation of Neocore C lib
+
+  - Doxygen: [http://azertyvortex.free.fr/neocore-doxy/r6/neocore_8h.html](http://azertyvortex.free.fr/neocore-doxy/r6/neocore_8h.html)
     
 ## License
 
