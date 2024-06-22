@@ -40,12 +40,6 @@ You can contribute to this effort with a donation if you want.
 
   - Doxygen: [http://azertyvortex.free.fr/neocore-doxy/r6/neocore_8h.html](http://azertyvortex.free.fr/neocore-doxy/r6/neocore_8h.html)
     
-## License
-
-Neocore is licensed under the MIT license.  
-Copyright 2019 by David Vandensteen.  
-Some graphics by **Grass**.    
-
 ## Init
 ```cmd
 git clone git@github.com:David-Vandensteen/neocore.git
@@ -187,3 +181,10 @@ If sdk was not found, build a sample (with mak script) to initialize cache (sdk 
   - ffmpeg
 
 ## [Changelog](CHANGELOG.md)
+
+## License
+
+Neocore is licensed under the MIT license.  
+Copyright 2019 by David Vandensteen.  
+Some graphics by **Grass**.    
+
