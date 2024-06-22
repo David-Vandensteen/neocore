@@ -10,26 +10,6 @@ The library is compatible with ~~Windows 10 and~~ Windows 11 for building.
   
 I share my tools and my code, these could possibly help your projects on this platform.  
 
-## Note
-
-Please note that the library is under development and unoptimized, and the author is not responsible for any software damage.  
-This project is mainly tested on Raine and MAME emulators.  
-  
-**There is no guarantee or obligation from the author that anything will work on the real Neo-Geo hardware.**  
-
-To test and improve compatibility with the hardware, I am searching for a Neo-Geo CD with an SD loader and HDMI capabilities.  
-You can contribute to this effort with a donation if you want.
-
-[Make a Paypal donation to help developer](https://www.paypal.com/donate/?hosted_button_id=YAHAJGP58TYM4)
-
-Here are other ways to contribute:
-
-- If you own a Neo-Geo CD, you can test the examples and confirm issues.  
-- If you are a developer, you can create video tutorials or example code.
-
-Any help is welcome.
-
-
 ## Features
 
  - High abstraction level for Neo Geo CD development
@@ -143,6 +123,24 @@ cd $project
 See `.\$project\project.xml`  
 for settings.
 
+## Note
+
+Please note that the library is under development and the author is not responsible for any software damage.  
+This project is mainly tested on Raine and MAME emulators.  
+  
+**There is no guarantee or obligation from the author that anything will work on the real Neo-Geo hardware.**  
+
+To test and improve compatibility with the hardware, I am searching for a Neo-Geo CD with an SD loader and HDMI capabilities.  
+You can contribute to this effort with a donation if you want.
+
+[Make a Paypal donation to help developer](https://www.paypal.com/donate/?hosted_button_id=YAHAJGP58TYM4)
+
+Here are other ways to contribute:
+
+- If you own a Neo-Geo CD, you can test the examples and confirm issues.  
+- If you are a developer, you can create video tutorials or example code.
+
+Any help is welcome.
 
 ## DATlib assets (in progress)
 For making your own graphics, see the DATlib ref available here: (you need to building a  for init build folder)  
