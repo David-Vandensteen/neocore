@@ -42,7 +42,7 @@ git clone git@github.com:David-Vandensteen/neocore.git
     
 ## Build and run hello example
 ```cmd
-cd neocore\samples\hello
+cd neocore\s\hello
 .\mak.bat run:mame
 ```
   
@@ -84,7 +84,7 @@ If you encounter any problems after using it, simply close and restart a new com
 ```
 
 ## Hot reload
-From `neocore\sample\hello` folder
+From `neocore\samples\hello` folder
 ```cmd
 .\mak.bat serve
 ```
@@ -100,14 +100,14 @@ Some problems currently:
 * When you break this process, path is not restored in the current terminal (close & reopen a new terminal)  
     
 ## CDDA
+From `neocore\samples\CDDA`
 ``` cmd
-cd neocore\samples\CDDA
 .\download-assets
 .\mak.bat run:mame
 ```
   
 In the emulator, use joypad right and left to change audio track.  
-See `neocore\samples\CDDA\project.xml` for understanding how to set the audio file.
+See `neocore\s\CDDA\project.xml` for understanding how to set the audio file.
 
 ## Create a project
 With powershell (you need to "be" in neocore folder root path)
@@ -132,7 +132,7 @@ for settings.
 
 
 ## DATlib assets (in progress)
-For making your own graphics, see the DATlib ref available here: (you need to building a sample for init build folder)  
+For making your own graphics, see the DATlib ref available here: (you need to building a  for init build folder)  
 ```cmd
 .\neocore\build\neodev-sdk\doc\DATlib-LibraryReference.pdf
 ```
@@ -153,7 +153,7 @@ cd neocore\src-lib
 ```
 This script override path environment variable during the compilation.  
 its avoid collisions with other bin, sdk, gcc...  
-If sdk was not found, build a sample (with mak script) to initialize cache (sdk will install in build folder).  
+If sdk was not found, build a  (with mak script) to initialize cache (sdk will install in build folder).  
 
 
 ## Pull or checkout another branches
