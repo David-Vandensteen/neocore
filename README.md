@@ -36,7 +36,7 @@ Copyright 2019 by David Vandensteen.
 Some graphics by **Grass**.    
 
     
-## Build and run (with Mame) an included example
+## Build and run hello example
 ```cmd
 cd samples\hello
 .\mak.bat run:mame
