@@ -71,33 +71,6 @@ If you encounter any problems after using it, simply close and restart a new com
 ```cmd
 .\mak.bat dist:mame
 ```
-
-## Hot reload
-From `neocore\samples\hello` folder
-```cmd
-.\mak.bat serve
-```
-  
-Wait for the emulator to run and edit `main.c`.  
-Now, remove `loggerInfo("DAVID VANDENSTEEN");` (for example).  
-Save the file.
-  
-The hot-reload process will rebuild & run your project automaticaly.
-  
-Some problems currently:  
-* The process is not a real watcher (the rebuild is triggered only if the folder size change)  
-* When you break this process, path is not restored in the current terminal (close & reopen a new terminal)  
-    
-## CDDA
-From `neocore\samples\CDDA`
-``` cmd
-.\download-assets
-.\mak.bat run:mame
-```
-  
-In the emulator, use joypad right and left to change audio track.  
-See `neocore\s\CDDA\project.xml` for understanding how to set the audio file.
-
 ## Create a project
 With powershell (you need to "be" in neocore folder root path)
 ```cmd
@@ -140,7 +113,33 @@ Here are other ways to contribute:
 - If you own a Neo-Geo CD, you can test the examples open or confirm issues on real hardware.  
 - If you are a developer, you can create video tutorials or example code.
 
-Any help is welcome.
+Any help is welcome.  
+
+## Hot reload
+From `neocore\samples\hello` folder
+```cmd
+.\mak.bat serve
+```
+  
+Wait for the emulator to run and edit `main.c`.  
+Now, remove `loggerInfo("DAVID VANDENSTEEN");` (for example).  
+Save the file.
+  
+The hot-reload process will rebuild & run your project automaticaly.
+  
+Some problems currently:  
+* The process is not a real watcher (the rebuild is triggered only if the folder size change)  
+* When you break this process, path is not restored in the current terminal (close & reopen a new terminal)  
+    
+## CDDA
+From `neocore\samples\CDDA`
+``` cmd
+.\download-assets
+.\mak.bat run:mame
+```
+  
+In the emulator, use joypad right and left to change audio track.  
+See `neocore\s\CDDA\project.xml` for understanding how to set the audio file.
 
 ## DATlib assets (in progress)
 For making your own graphics, see the DATlib ref available here: (you need to building a  for init build folder)  
