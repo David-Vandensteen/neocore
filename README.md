@@ -22,12 +22,14 @@ I share my tools and my code, these could possibly help your projects on this pl
 
  - High-level functions for Neo Geo CD development
  - Tools and code to assist with projects
- - Tested on Raine and MAME emulators
  - Compatible with ~~Windows 10 and~~ Windows 11
 
 ## Note
 
-Please note that the library is under development and unoptimized, and the author is not responsible for any software damage.
+Please note that the library is under development and unoptimized, and the author is not responsible for any software damage.  
+This project is mainly tested on Raine and MAME emulators.  
+  
+**There is no guarantee or obligation from the author that anything will work on the real Neo-Geo hardware.**
 
 ## License
 
