@@ -22,6 +22,11 @@ You can contribute to this effort with a donation if you want.
 
 [Make a Paypal donation to help developer](https://www.paypal.com/donate/?hosted_button_id=YAHAJGP58TYM4)
 
+## Features
+
+ - High abstraction level for Neo Geo CD development
+ - Tools and code to assist with projects
+ - Compatible with ~~Windows 10 and~~ Windows 11
 
 ## Documentation
 
@@ -31,13 +36,6 @@ You can contribute to this effort with a donation if you want.
 
   - Pong : https://github.com/David-Vandensteen/neogeo-cd-pong
     
-## Features
-
- - High-level functions for Neo Geo CD development
- - Tools and code to assist with projects
- - Compatible with ~~Windows 10 and~~ Windows 11
-
-
 ## License
 
 Neocore is licensed under the MIT license.  
