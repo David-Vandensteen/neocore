@@ -6,7 +6,7 @@
 
 Neocore is a library and toolchain for developing on Neo Geo CD.  
 It provides high-level functions over Neo Dev Kit and DATlib 0.2, and includes tools and code that can help with projects on this platform.  
-The library is mainly tested on Raine and MAME emulators and is compatible with ~~Windows 10 and~~ Windows 11 for building.
+The library is compatible with ~~Windows 10 and~~ Windows 11 for building.
   
 I share my tools and my code, these could possibly help your projects on this platform.  
 
@@ -44,7 +44,7 @@ git clone git@github.com:David-Vandensteen/neocore.git
     
 ## Build and run hello example
 ```cmd
-cd neocore\s\hello
+cd .\neocore\samples\hello
 .\mak.bat run:mame
 ```
   
