@@ -170,3 +170,5 @@ If sdk was not found, build a sample (with mak script) to initialize cache (sdk 
   - GCC
   - mpg123
   - ffmpeg
+
+## [Changelog](CHANGELOG.md)
