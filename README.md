@@ -10,6 +10,19 @@ The library is compatible with ~~Windows 10 and~~ Windows 11 for building.
   
 I share my tools and my code, these could possibly help your projects on this platform.  
 
+## Note
+
+Please note that the library is under development and unoptimized, and the author is not responsible for any software damage.  
+This project is mainly tested on Raine and MAME emulators.  
+  
+**There is no guarantee or obligation from the author that anything will work on the real Neo-Geo hardware.**  
+
+To test and improve compatibility with the hardware, I am searching for a Neo-Geo CD with an SD loader and HDMI capabilities.  
+You can contribute to this effort with a donation if you want.
+
+[Make a Paypal donation to help developer](https://www.paypal.com/donate/?hosted_button_id=YAHAJGP58TYM4)
+
+
 ## Documentation
 
   - Doxygen: [http://azertyvortex.free.fr/neocore-doxy/r6/neocore_8h.html](http://azertyvortex.free.fr/neocore-doxy/r6/neocore_8h.html)
@@ -24,17 +37,6 @@ I share my tools and my code, these could possibly help your projects on this pl
  - Tools and code to assist with projects
  - Compatible with ~~Windows 10 and~~ Windows 11
 
-## Note
-
-Please note that the library is under development and unoptimized, and the author is not responsible for any software damage.  
-This project is mainly tested on Raine and MAME emulators.  
-  
-**There is no guarantee or obligation from the author that anything will work on the real Neo-Geo hardware.**  
-
-To improve compatibility with the hardware, I am searching for a Neo-Geo CD with an SD loader and HDMI capabilities.  
-You can contribute to this effort with a donation if you want.
-
-[Make a Paypal donation to help developer](https://www.paypal.com/donate/?hosted_button_id=YAHAJGP58TYM4)
 
 ## License
 
@@ -160,7 +162,7 @@ cd neocore\src-lib
 ```
 This script override path environment variable during the compilation.  
 its avoid collisions with other bin, sdk, gcc...  
-If sdk was not found, build a  (with mak script) to initialize cache (sdk will install in build folder).  
+If sdk was not found, build a sample (with mak script) to initialize cache (sdk will install in build folder).  
 
 
 ## Pull or checkout another branches
