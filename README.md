@@ -29,7 +29,12 @@ I share my tools and my code, these could possibly help your projects on this pl
 Please note that the library is under development and unoptimized, and the author is not responsible for any software damage.  
 This project is mainly tested on Raine and MAME emulators.  
   
-**There is no guarantee or obligation from the author that anything will work on the real Neo-Geo hardware.**
+**There is no guarantee or obligation from the author that anything will work on the real Neo-Geo hardware.**  
+
+To improve compatibility with the hardware, I am searching for a Neo-Geo CD with an SD loader and HDMI capabilities.  
+You can contribute to this effort with a donation if you want.
+
+[Make a Paypal donation to help developper](https://www.paypal.com/donate/?hosted_button_id=YAHAJGP58TYM4)
 
 ## License
 
