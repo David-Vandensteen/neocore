@@ -110,7 +110,7 @@ You can contribute to this effort with a donation if you want.
 
 Here are other ways to contribute:
 
-- If you own a Neo-Geo CD, you can test the examples open or confirm issues on real hardware.  
+- If you own a Neo-Geo CD, you can test the examples and open or confirm issues on real hardware.  
 - If you are a developer, you can create tutorials or example code.
 
 Any help is welcome.  
