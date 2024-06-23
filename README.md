@@ -20,9 +20,9 @@ I share my tools and my code, these could possibly help your projects on this pl
 
   - Pong : https://github.com/David-Vandensteen/neogeo-cd-pong
   - Flamble :
-      -  [https://twitter.com/i/status/1296434554526478336](https://twitter.com/i/status/1296434554526478336)
-      -  [https://www.youtube.com/embed/YjRmvMAfgbc](https://www.youtube.com/embed/YjRmvMAfgbc)
-      -  [http://azertyvortex.free.fr/flamble](http://azertyvortex.free.fr/flamble)
+    -  [https://twitter.com/i/status/1296434554526478336](https://twitter.com/i/status/1296434554526478336)
+    -  [https://www.youtube.com/embed/YjRmvMAfgbc](https://www.youtube.com/embed/YjRmvMAfgbc)
+    -  [http://azertyvortex.free.fr/flamble](http://azertyvortex.free.fr/flamble)
 
 ## Init
 ```cmd
@@ -111,7 +111,7 @@ You can contribute to this effort with a donation if you want.
 Here are other ways to contribute:
 
 - If you own a Neo-Geo CD, you can test the examples open or confirm issues on real hardware.  
-- If you are a developer, you can create video tutorials or example code.
+- If you are a developer, you can create tutorials or example code.
 
 Any help is welcome.  
 
