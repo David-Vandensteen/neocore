@@ -1,3 +1,5 @@
+## 2.1.0
+
 ## 2.0.4
 
   - remove git ignore wav file for standalone project
