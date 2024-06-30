@@ -147,9 +147,9 @@ For making your own graphics, see the DATlib ref available here: (you need to bu
 .\neocore\build\neodev-sdk\doc\DATlib-LibraryReference.pdf
 ```
   
-The DATlib Framer tool is available here:    
+Launch the DATlib Framer application:    
 ```cmd
-.\neocore\build\neodev-sdk\m68k\bin\Framer.exe
+mak framer
 ```
 The DATlib Animator tool is available here:  
 ```cmd
