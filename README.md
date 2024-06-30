@@ -6,43 +6,38 @@
 
 Neocore is a library and toolchain for developing on Neo Geo CD.  
 It provides high-level functions over Neo Dev Kit and DATlib 0.2, and includes tools and code that can help with projects on this platform.  
-The library is mainly tested on Raine and MAME emulators and is compatible with ~~Windows 10 and~~ Windows 11 for building.
+The library is compatible with ~~Windows 10 and~~ Windows 11 for building.
   
 I share my tools and my code, these could possibly help your projects on this platform.  
 
-## Doc
+## Features
 
-  - Doxygen : http://azertyvortex.free.fr/neocore-doxy/r6/neocore_8h.html
-
-### Game, demo, code learning
-
-  - Pong : https://github.com/David-Vandensteen/neogeo-cd-pong
-    
-## Feature
-
- - High-level functions for Neo Geo CD development
+ - High abstraction level for Neo Geo CD development
  - Tools and code to assist with projects
- - Tested on Raine and MAME emulators
  - Compatible with ~~Windows 10 and~~ Windows 11
 
-## Note
-Please note that the library is under development and unoptimized, and the author is not responsible for any software damage.
+### Game, demo, code learning using Neocore
 
-## License
+  - Pong : https://github.com/David-Vandensteen/neogeo-cd-pong
+  - Flamble :
+    -  [https://twitter.com/i/status/1296434554526478336](https://twitter.com/i/status/1296434554526478336)
+    -  [https://www.youtube.com/embed/YjRmvMAfgbc](https://www.youtube.com/embed/YjRmvMAfgbc)
+    -  [http://azertyvortex.free.fr/flamble](http://azertyvortex.free.fr/flamble)
 
-Neocore is licensed under the MIT license.  
-Copyright 2019 by David Vandensteen.  
-Some graphics by **Grass**.    
-
-    
-## Build and run (with Mame) a included example
+## Init
 ```cmd
-cd samples\hello
-.\mak.bat run
+git clone git@github.com:David-Vandensteen/neocore.git
+```
+    
+## Build and run hello example
+```cmd
+cd .\neocore\samples\hello
+.\mak.bat run:mame
 ```
   
 ## Mak rules
-___***Warn : mak script override path environment variable during the compiling, if u have some problems after using it, just close and restart a new command terminal***___
+___***Warning: The mak script overrides the path environment variable during compilation.  
+If you encounter any problems after using it, simply close and restart a new command terminal.***___
 
 - Clean the builded resources
 ```cmd
@@ -62,15 +57,11 @@ ___***Warn : mak script override path environment variable during the compiling,
 ```
 - **Run with Raine**
 ```cmd
-.\mak.bat raine
+.\mak.bat run:raine
 ```
 - **Run with Mame**
 ```cmd
-.\mak.bat mame
-```
-or
-```cmd
-.\mak.bat run
+.\mak.bat run:mame
 ```
 - Delivery ISO
 ```cmd
@@ -80,33 +71,6 @@ or
 ```cmd
 .\mak.bat dist:mame
 ```
-
-## "Hot reload"
-```cmd
-cd samples\hello
-.\mak.bat serve
-```
-  
-Wait the running of the emulator and edit projects\hello\main.c  
-Now, remove **loggerInfo("DAVID VANDENSTEEN");** (for example)  
-Save the file
-  
-The hot-reload process will rebuild & run your project automaticaly.
-  
-Some problems currently:  
-* The process is not a real watcher (the rebuild is triggered only if the folder size change)  
-* When you break this process, path is not restored in the current terminal (close & reopen a new terminal)  
-    
-## CDDA
-``` cmd
-cd samples\CDDA
-.\download-assets
-.\mak.bat run
-```
-  
-In the emulator, use joypad right and left to change audio track.  
-See `.\samples\CDDA\project.xml` for understanding how to set the audio file.
-
 ## Create a project
 With powershell (you need to "be" in neocore folder root path)
 ```cmd
@@ -122,31 +86,79 @@ Compile and run it
 
 ```cmd
 cd $project
-.\mak.bat run
+.\mak.bat run:mame
 ```
 
 See `.\$project\project.xml`  
-for settings.
+for settings.  
 
+## Documentation of Neocore C lib
 
-## DATlib assets (in progress)
-For making your own graphics, see the DATlib ref available here: (you need to building a sample for init build folder)  
+  - Doxygen: [http://azertyvortex.free.fr/neocore-doxy/r6/neocore_8h.html](http://azertyvortex.free.fr/neocore-doxy/r6/neocore_8h.html)
+    
+## Note
+
+Please note that the library is under development and the author is not responsible for any software damage.  
+This project is mainly tested on Raine and MAME emulators.  
+  
+**There is no guarantee or obligation from the author that anything will work on the real Neo-Geo hardware.**  
+
+To test and improve compatibility with the hardware, I am searching for a Neo-Geo CD with an SD loader and HDMI capabilities.  
+You can contribute to this effort with a donation if you want.
+
+[Make a Paypal donation to help Neocore project](https://www.paypal.com/donate/?hosted_button_id=YAHAJGP58TYM4)
+
+Here are other ways to contribute:
+
+- If you own a Neo-Geo CD, you can test the examples and open or confirm issues on real hardware.  
+- If you are a developer, you can create tutorials or example code.
+
+Any help is welcome.  
+
+## Hot reload
+From `neocore\samples\hello` folder
 ```cmd
-.\build\neodev-sdk\doc\DATlib-LibraryReference.pdf
+.\mak.bat serve
 ```
   
-DATlib Framer tool is available here:  
-```cmd
-.\build\neodev-sdk\m68k\bin\Framer.exe
+Wait for the emulator to run and edit `main.c`.  
+Now, remove `loggerInfo("DAVID VANDENSTEEN");` (for example).  
+Save the file.
+  
+The hot-reload process will rebuild & run your project automaticaly.
+  
+Some problems currently:  
+* The process is not a real watcher (the rebuild is triggered only if the folder size change)  
+* When you break this process, path is not restored in the current terminal (close & reopen a new terminal)  
+    
+## CDDA
+From `neocore\samples\CDDA`
+``` cmd
+.\download-assets
+.\mak.bat run:mame
 ```
-The Animator tool is available here:  
+  
+In the emulator, use joypad right and left to change audio track.  
+See `neocore\s\CDDA\project.xml` for understanding how to set the audio file.
+
+## DATlib assets (in progress)
+For making your own graphics, see the DATlib ref available here: (you need to building a  for init build folder)  
 ```cmd
-.\build\neodev-sdk\m68k\bin\Animator.exe
+.\neocore\build\neodev-sdk\doc\DATlib-LibraryReference.pdf
+```
+  
+The DATlib Framer tool is available here:    
+```cmd
+.\neocore\build\neodev-sdk\m68k\bin\Framer.exe
+```
+The DATlib Animator tool is available here:  
+```cmd
+.\neocore\build\neodev-sdk\m68k\bin\Animator.exe
 ```
 
 ## Compiling the lib (necessary if you develop Neocore lib)
 ```cmd
-cd src-lib
+cd neocore\src-lib
 .\build-neocore.bat -gccPath ..\build\gcc\gcc-2.95.2 -includePath ..\build\include -libraryPath ..\build\lib
 ```
 This script override path environment variable during the compilation.  
@@ -155,9 +167,29 @@ If sdk was not found, build a sample (with mak script) to initialize cache (sdk 
 
 
 ## Pull or checkout another branches
-**BE CAREFUL : You need to remove build folder `.\build` for supress cache files before compiling a project**  
+**BE CAREFUL : You need to remove build folder `.\neocore\build` for supress cache files before compiling a project**  
 
+## Dependencies
 
-## SoundFX ... (todo)
-## Use Neocore toolchain for DATlib project (without Neocore lib) (todo)
-## Use Neocore toolchain for Neodev vanilla project (without DATlib & Neocore lib) (todo)
+  - NeoDev
+  - DATlib
+  - DATimage
+  - NGFX SoundBuilder
+  - Raine
+  - Mame
+  - CHDMAN
+  - Doxygen
+  - MSYS2
+  - Mkisofs
+  - GCC
+  - mpg123
+  - ffmpeg
+
+## [Changelog](CHANGELOG.md)
+
+## License
+
+Neocore is licensed under the MIT license.  
+Copyright 2019 by David Vandensteen.  
+Some graphics by **Grass**.    
+
