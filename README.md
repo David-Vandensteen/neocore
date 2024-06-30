@@ -6,39 +6,32 @@
 
 Neocore is a library and toolchain for developing on Neo Geo CD.  
 It provides high-level functions over Neo Dev Kit and DATlib 0.2, and includes tools and code that can help with projects on this platform.  
-The library is mainly tested on Raine and MAME emulators and is compatible with ~~Windows 10 and~~ Windows 11 for building.
+The library is compatible with ~~Windows 10 and~~ Windows 11 for building.
   
 I share my tools and my code, these could possibly help your projects on this platform.  
 
-## Documentation
-
-  - Doxygen: [http://azertyvortex.free.fr/neocore-doxy/r6/neocore_8h.html](http://azertyvortex.free.fr/neocore-doxy/r6/neocore_8h.html)
-
-### Game, demo, code learning
-
-  - Pong : https://github.com/David-Vandensteen/neogeo-cd-pong
-    
 ## Features
 
- - High-level functions for Neo Geo CD development
+ - High abstraction level for Neo Geo CD development
  - Tools and code to assist with projects
- - Tested on Raine and MAME emulators
  - Compatible with ~~Windows 10 and~~ Windows 11
 
-## Note
+### Game, demo, code learning using Neocore
 
-Please note that the library is under development and unoptimized, and the author is not responsible for any software damage.
+  - Pong : https://github.com/David-Vandensteen/neogeo-cd-pong
+  - Flamble :
+    -  [https://twitter.com/i/status/1296434554526478336](https://twitter.com/i/status/1296434554526478336)
+    -  [https://www.youtube.com/embed/YjRmvMAfgbc](https://www.youtube.com/embed/YjRmvMAfgbc)
+    -  [http://azertyvortex.free.fr/flamble](http://azertyvortex.free.fr/flamble)
 
-## License
-
-Neocore is licensed under the MIT license.  
-Copyright 2019 by David Vandensteen.  
-Some graphics by **Grass**.    
-
-    
-## Build and run (with Mame) an included example
+## Init
 ```cmd
-cd samples\hello
+git clone git@github.com:David-Vandensteen/neocore.git
+```
+    
+## Build and run hello example
+```cmd
+cd .\neocore\samples\hello
 .\mak.bat run:mame
 ```
   
@@ -78,33 +71,6 @@ If you encounter any problems after using it, simply close and restart a new com
 ```cmd
 .\mak.bat dist:mame
 ```
-
-## Hot reload
-```cmd
-cd samples\hello
-.\mak.bat serve
-```
-  
-Wait for the emulator to run and edit `samples\hello\main.c`.  
-Now, remove `loggerInfo("DAVID VANDENSTEEN");` (for example).  
-Save the file.
-  
-The hot-reload process will rebuild & run your project automaticaly.
-  
-Some problems currently:  
-* The process is not a real watcher (the rebuild is triggered only if the folder size change)  
-* When you break this process, path is not restored in the current terminal (close & reopen a new terminal)  
-    
-## CDDA
-``` cmd
-cd samples\CDDA
-.\download-assets
-.\mak.bat run:mame
-```
-  
-In the emulator, use joypad right and left to change audio track.  
-See `.\samples\CDDA\project.xml` for understanding how to set the audio file.
-
 ## Create a project
 With powershell (you need to "be" in neocore folder root path)
 ```cmd
@@ -124,27 +90,75 @@ cd $project
 ```
 
 See `.\$project\project.xml`  
-for settings.
+for settings.  
 
+## Documentation of Neocore C lib
 
-## DATlib assets (in progress)
-For making your own graphics, see the DATlib ref available here: (you need to building a sample for init build folder)  
+  - Doxygen: [http://azertyvortex.free.fr/neocore-doxy/r6/neocore_8h.html](http://azertyvortex.free.fr/neocore-doxy/r6/neocore_8h.html)
+    
+## Note
+
+Please note that the library is under development and the author is not responsible for any software damage.  
+This project is mainly tested on Raine and MAME emulators.  
+  
+**There is no guarantee or obligation from the author that anything will work on the real Neo-Geo hardware.**  
+
+To test and improve compatibility with the hardware, I am searching for a Neo-Geo CD with an SD loader and HDMI capabilities.  
+You can contribute to this effort with a donation if you want.
+
+[Make a Paypal donation to help Neocore project](https://www.paypal.com/donate/?hosted_button_id=YAHAJGP58TYM4)
+
+Here are other ways to contribute:
+
+- If you own a Neo-Geo CD, you can test the examples and open or confirm issues on real hardware.  
+- If you are a developer, you can create tutorials or example code.
+
+Any help is welcome.  
+
+## Hot reload
+From `neocore\samples\hello` folder
 ```cmd
-.\build\neodev-sdk\doc\DATlib-LibraryReference.pdf
+.\mak.bat serve
 ```
   
-The DATlib Framer tool is available here:    
+Wait for the emulator to run and edit `main.c`.  
+Now, remove `loggerInfo("DAVID VANDENSTEEN");` (for example).  
+Save the file.
+  
+The hot-reload process will rebuild & run your project automaticaly.
+  
+Some problems currently:  
+* The process is not a real watcher (the rebuild is triggered only if the folder size change)  
+* When you break this process, path is not restored in the current terminal (close & reopen a new terminal)  
+    
+## CDDA
+From `neocore\samples\CDDA`
+``` cmd
+.\download-assets
+.\mak.bat run:mame
+```
+  
+In the emulator, use joypad right and left to change audio track.  
+See `neocore\s\CDDA\project.xml` for understanding how to set the audio file.
+
+## DATlib assets (in progress)
+For making your own graphics, see the DATlib ref available here: (you need to building a  for init build folder)  
 ```cmd
-.\build\neodev-sdk\m68k\bin\Framer.exe
+.\neocore\build\neodev-sdk\doc\DATlib-LibraryReference.pdf
+```
+  
+Launch the DATlib Framer application:    
+```cmd
+mak framer
 ```
 The DATlib Animator tool is available here:  
 ```cmd
-.\build\neodev-sdk\m68k\bin\Animator.exe
+.\neocore\build\neodev-sdk\m68k\bin\Animator.exe
 ```
 
 ## Compiling the lib (necessary if you develop Neocore lib)
 ```cmd
-cd src-lib
+cd neocore\src-lib
 .\build-neocore.bat -gccPath ..\build\gcc\gcc-2.95.2 -includePath ..\build\include -libraryPath ..\build\lib
 ```
 This script override path environment variable during the compilation.  
@@ -153,7 +167,7 @@ If sdk was not found, build a sample (with mak script) to initialize cache (sdk 
 
 
 ## Pull or checkout another branches
-**BE CAREFUL : You need to remove build folder `.\build` for supress cache files before compiling a project**  
+**BE CAREFUL : You need to remove build folder `.\neocore\build` for supress cache files before compiling a project**  
 
 ## Dependencies
 
@@ -170,3 +184,12 @@ If sdk was not found, build a sample (with mak script) to initialize cache (sdk 
   - GCC
   - mpg123
   - ffmpeg
+
+## [Changelog](CHANGELOG.md)
+
+## License
+
+Neocore is licensed under the MIT license.  
+Copyright 2019 by David Vandensteen.  
+Some graphics by **Grass**.    
+
