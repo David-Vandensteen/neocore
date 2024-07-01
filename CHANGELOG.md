@@ -1,3 +1,8 @@
+## 2.1.0
+
+  - add mak animator (to launch Animator application)
+  - add mak framer (to launch Framer application)
+
 ## 2.0.4
 
   - remove git ignore wav file for standalone project
