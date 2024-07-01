@@ -108,8 +108,10 @@ function Main {
 
   Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\runners\runner-mame.ps1"
   Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\runners\runner-raine.ps1"
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\runners\animator.ps1"
   Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\runners\framer.ps1"
 
+  if ($Rule -eq "animator") { RunnerAnimator }
   if ($Rule -eq "framer") { RunnerFramer }
   if ($Rule -eq "sprite") { BuilderSprite }
 
