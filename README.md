@@ -149,11 +149,11 @@ For making your own graphics, see the DATlib ref available here: (you need to bu
   
 Launch the DATlib Framer application:    
 ```cmd
-mak framer
+.\mak.bat framer
 ```
-The DATlib Animator tool is available here:  
+Launch the DATlib Animator application:  
 ```cmd
-.\neocore\build\neodev-sdk\m68k\bin\Animator.exe
+.\mak.bat animator
 ```
 
 ## Compiling the lib (necessary if you develop Neocore lib)
