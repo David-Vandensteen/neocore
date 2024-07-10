@@ -1,3 +1,7 @@
+## 2.1.1
+
+  - CDDA sample : call assets download from mak.ps1
+
 ## 2.1.0
 
   - add mak animator (to launch Animator application)
