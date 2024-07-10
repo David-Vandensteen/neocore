@@ -5,15 +5,9 @@
 
 
 Neocore is a library and toolchain for developing on Neo Geo CD.  
-It provides high-level functions over Neo Dev Kit and DATlib 0.2, and includes tools and code that can help with projects on this platform.  
-The library is compatible with ~~Windows 10 and~~ Windows 11 for building.
-  
-I share my tools and my code, these could possibly help your projects on this platform.  
-
-## Features
+It provides functions over Neo Dev Kit and DATlib 0.2, and includes tools and code that can help with projects on this platform.  
 
  - High abstraction level for Neo Geo CD development
- - Tools and code to assist with projects
  - Compatible with ~~Windows 10 and~~ Windows 11
 
 ### Game, demo, code learning using Neocore
