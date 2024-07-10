@@ -131,18 +131,8 @@ Some problems currently:
 * The process is not a real watcher (the rebuild is triggered only if the folder size change)  
 * When you break this process, path is not restored in the current terminal (close & reopen a new terminal)  
     
-## CDDA
-From `neocore\samples\CDDA`
-``` cmd
-.\download-assets
-.\mak.bat run:mame
-```
-  
-In the emulator, use joypad right and left to change audio track.  
-See `neocore\s\CDDA\project.xml` for understanding how to set the audio file.
-
 ## DATlib assets (in progress)
-For making your own graphics, see the DATlib ref available here: (you need to building a  for init build folder)  
+For making your own graphics, see the DATlib ref available here: (you need to building a sample for init build folder)  
 ```cmd
 .\neocore\build\neodev-sdk\doc\DATlib-LibraryReference.pdf
 ```
