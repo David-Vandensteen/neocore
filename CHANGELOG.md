@@ -1,5 +1,6 @@
 ## 2.2.0
 
+  - add nc wait vbl macro
   - improve toolchain log
   - add mak dist:exe for create a Windows standalone executable with embedded Mame emulator
 
