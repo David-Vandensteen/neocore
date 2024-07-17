@@ -78,7 +78,7 @@ function Write-Sprite {
   Remove-Item -Path char.bin -Force
 
   if ((Test-Path -Path "$OutputFile.$Format") -eq $true) {
-    Logger-Success -Message "builded sprites is available to $OutputFile.$Format"
+    Logger-Success -Message "builded sprites is available at $OutputFile.$Format"
     Write-Host ""
   } else {
     Write-Host ("error - {0}.{1} was not generated" -f $OutputFile, $Format) -ForegroundColor Red
