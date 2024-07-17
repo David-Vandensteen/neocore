@@ -9,7 +9,7 @@
 
 static void log_and_sound(char *message) {
   if (nc_get_adpcm_player()->state == IDLE) {
-    send_sound_command(ADPCM_STOP);
+    nc_stop_adpcm();
     send_sound_command(ADPCM_MIXKIT_GAME_CLICK_1114);
     nc_push_remaining_frame_adpcm_player(nc_second_to_frame(1));
   }
