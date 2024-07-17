@@ -105,11 +105,14 @@ function Main {
   Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\builders\builder-program.ps1"
   Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\builders\builder-iso.ps1"
   Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\builders\builder-mame.ps1"
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\builders\exe.ps1"
 
   Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\runners\runner-mame.ps1"
   Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\runners\runner-raine.ps1"
   Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\runners\animator.ps1"
   Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\runners\framer.ps1"
+
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\installers\nsis.ps1"
 
   if ($Rule -eq "animator") { RunnerAnimator }
   if ($Rule -eq "framer") { RunnerFramer }
@@ -165,7 +168,6 @@ function Main {
   }
 
   if ($Rule -eq "dist:iso" -or $Rule -eq "dist:raine") {
-
     if ((Test-Path -Path $Config.project.distPath) -eq $false) { New-Item -Path $Config.project.distPath -ItemType Directory -Force }
     BuilderSprite
     BuilderProgram
@@ -190,6 +192,15 @@ function Main {
       -HashFile "$($buildConfig.pathMame)\hash\neocd.xml"
   }
 
+  if ($Rule -eq "dist:exe") {
+    if ((Test-Path -Path "$($config.project.buildPath)\tools\nsis-3.08") -eq $false) { Install-NSIS }
+    BuilderSprite
+    BuilderProgram
+    BuilderISO
+    BuilderMame
+    BuilderEXE
+  }
+
   if ($Rule -eq "only:sprite") { BuilderSprite }
   if ($Rule -eq "only:program") { BuilderProgram }
   if ($Rule -eq "only:iso") { BuilderISO }
@@ -204,7 +215,7 @@ if ((Test-Path -Path $ConfigFile) -eq $false) {
   exit 1
 }
 
-Write-Host "informations" -ForegroundColor Yellow
+Write-Host "informations" -ForegroundColor Blue
 Write-Host "Config file : $ConfigFile"
 
 [xml]$config = (Get-Content -Path $ConfigFile)
