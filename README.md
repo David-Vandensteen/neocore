@@ -65,6 +65,10 @@ If you encounter any problems after using it, simply close and restart a new com
 ```cmd
 .\mak.bat dist:mame
 ```
+- Delivery EXE *(create a Windows standalone executable with the game project and Mame emulator embedded)*
+```cmd
+.\mak.bat dist:exe
+```
 ## Create a project
 With powershell (you need to "be" in neocore folder root path)
 ```cmd
@@ -168,6 +172,7 @@ If sdk was not found, build a sample (with mak script) to initialize cache (sdk 
   - GCC
   - mpg123
   - ffmpeg
+  - NSIS
 
 ## [Changelog](CHANGELOG.md)
 
