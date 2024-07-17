@@ -15,7 +15,7 @@ function Write-ISO {
   & mkisofs.exe -o $OutputFile -pad $PathISOBuildFolder
 
   if ((Test-Path -Path $OutputFile) -eq $true) {
-    Logger-Success -Message "builded ISO is available to $OutputFile"
+    Logger-Success -Message "builded ISO is available at $OutputFile"
     Write-Host ""
   } else { Logger-Error -Message "$OutputFile was not generated" }
 }
@@ -177,7 +177,7 @@ function Write-CUE {
   Remove-Item -Path "$OutputFile.spool" -Force
 
   if ((Test-Path -Path $OutputFile) -eq $true) {
-    Logger-Success -Message "builded CUE is available to $OutputFile"
+    Logger-Success -Message "builded CUE is available at $OutputFile"
     Write-Host ""
   } else { Logger-Error -Message "error - $OutputFile was not generated" }
 }
