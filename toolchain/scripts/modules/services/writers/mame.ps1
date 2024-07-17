@@ -64,7 +64,7 @@ function Write-Mame {
   if ((Test-Path -Path $OutputFile) -eq $false) {
     Logger-Error -Message "$OutputFile was not generated"
   } else {
-    Logger-Success -Message "builded CHD is available to $OutputFile"
+    Logger-Success -Message "builded CHD is available at $OutputFile"
     Write-Host ""
   }
   Write-MameHash -ProjectName $ProjectName -CHDFile $OutputFile -XMLFile "$(Resolve-Path -Path $PathMame)\hash\neocd.xml"
