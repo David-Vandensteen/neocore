@@ -2,8 +2,10 @@
 
   - add nc stop adpcm function
   - add nc wait vbl macro
-  - improve toolchain log
   - add mak dist:exe for create a Windows standalone executable with embedded Mame emulator
+  - improve toolchain log
+  - update sample sound fx to use nc stop adpcm
+  - update sample sound fx poly to use nc stop adpcm and nc wait vbl
 
 ## 2.1.1
 
