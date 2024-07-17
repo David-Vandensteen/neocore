@@ -8,7 +8,6 @@
 #include "assets/sounds/fx/sfx.h"
 
 // TODO patch neocore------------------------------------
-#define nc_wait_vbl() waitVBlank();
 #define nc_stop_adpcm() send_sound_command(ADPCM_STOP);
 //---------------------------------------------------------
 
