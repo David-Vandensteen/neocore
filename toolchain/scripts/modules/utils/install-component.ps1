@@ -10,5 +10,9 @@ function Install-Component {
   Logger-Info -Message "GET $fileName"
   Download -URL $URL -Path $PathDownload
   Expand-Archive -Path "$PathDownload\$fileName" -DestinationPath $PathInstall -Force -ErrorAction Stop
+
+  Write-Host "  expanded $filename in $PathInstall" -ForegroundColor Yellow
+  Write-Host ""
+
   Remove-Item -Path "$PathDownload\$fileName" -Force
 }
