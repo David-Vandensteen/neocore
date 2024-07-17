@@ -261,6 +261,7 @@ void nc_clear_vram();
  /* GPU VBL                      */
 /*------------------------------*/
 
+#define nc_wait_vbl() waitVBlank();
 void nc_update();
 DWORD nc_wait_vbl_max(WORD nb);
 
@@ -356,6 +357,7 @@ void nc_resize_box(Box *Box, short edge); // todo (minor) - deprecated ?
 //--------------------------------------------------------------------------//
 
 void nc_play_cdda(BYTE track);
+void nc_stop_adpcm();
 
   //----------------------------------------------------------------------------//
  //                                  JOYPAD                                    //
