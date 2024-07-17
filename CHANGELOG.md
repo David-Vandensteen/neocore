@@ -1,5 +1,6 @@
 ## 2.2.0
 
+  - add commands in readme for upgrade neocore
   - add nc stop adpcm function
   - add nc wait vbl macro
   - add mak dist:exe for create a Windows standalone executable with embedded Mame emulator
