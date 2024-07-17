@@ -1,5 +1,8 @@
 ## 2.2.0
 
+  - improve toolchain log
+  - add mak dist:exe for create a Windows standalone excutable with embeded Mame emulator
+
 ## 2.1.1
 
   - sanitize Makefile
