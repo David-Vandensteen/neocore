@@ -71,10 +71,12 @@ If you encounter any problems after using it, simply close and restart a new com
 ```
 ## Create a project
 With powershell (you need to "be" in neocore folder root path)
+
+* Replace `c:\my-git\myGame` with your real path. 
+
 ```cmd
 $project = "c:\my-git\myGame"
 ```
-* Replace `c:\my-git\myGame` with your real path. 
 
 ```cmd
 xcopy /E /I src-lib $project\neocore\src-lib; copy manifest.xml $project\neocore; copy bootstrap\.gitignore $project\.gitignore; xcopy /E /I toolchain $project\neocore\toolchain; xcopy /E /I bootstrap\standalone $project\src; notepad $project\src\project.xml
@@ -87,8 +89,18 @@ cd $project
 .\mak.bat run:mame
 ```
 
-See `.\$project\project.xml`  
-for settings.  
+## Upgrade a project
+With powershell (you need to "be" in neocore folder root path)
+
+* Replace `c:\my-git\myGame` with your real path. 
+
+```cmd
+$project = "c:\my-git\myGame"
+```
+
+```cmd
+robocopy /MIR src-lib $project\neocore\src-lib; copy manifest.xml $project\neocore; robocopy /MIR toolchain $project\neocore\toolchain
+```
 
 ## Documentation of Neocore C lib
 
