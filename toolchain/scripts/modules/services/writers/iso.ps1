@@ -107,12 +107,25 @@ function Write-CUE {
       }
     }
 
+    if ($Rule -eq "dist:exe" -and $ext -eq ".mp3") {
+      Write-WAV `
+        -mpg123 "$($buildConfig.pathNeocore)\bin\mpg123-1.31.3-static-x86-64\mpg123.exe" `
+        -WAVFile "$($buildConfig.pathBuild)\$path\$baseName.wav" `
+        -MP3File "$path\$baseName.mp3"
+      $File = "$path\$baseName.wav"
+    }
+
     if ($Rule -eq "dist:mame" -and $ext -eq ".mp3") {
       Write-WAV `
         -mpg123 "$($buildConfig.pathNeocore)\bin\mpg123-1.31.3-static-x86-64\mpg123.exe" `
         -WAVFile "$($buildConfig.pathBuild)\$path\$baseName.wav" `
         -MP3File "$path\$baseName.mp3"
       $File = "$path\$baseName.wav"
+    }
+
+    if ($Rule -eq "dist:exe" -and $ext -eq ".wav") {
+      Write-Host "copy $File" -ForegroundColor Blue
+      Copy-Item -Path "$($buildConfig.pathBuild)\$path\$baseName$ext" -Destination $path\$baseName$ext
     }
 
     if ($Rule -eq "dist:mame" -and $ext -eq ".wav") {
