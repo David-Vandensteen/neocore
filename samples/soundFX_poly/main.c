@@ -7,10 +7,6 @@
 #include "externs.h"
 #include "assets/sounds/fx/sfx.h"
 
-// TODO patch neocore------------------------------------
-#define nc_stop_adpcm() send_sound_command(ADPCM_STOP);
-//---------------------------------------------------------
-
 static void play_adpcm(adpcm) { send_sound_command(adpcm); }
 
 int main(void) {
