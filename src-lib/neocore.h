@@ -261,6 +261,7 @@ void nc_clear_vram();
  /* GPU VBL                      */
 /*------------------------------*/
 
+#define nc_wait_vbl() waitVBlank();
 void nc_update();
 DWORD nc_wait_vbl_max(WORD nb);
 
