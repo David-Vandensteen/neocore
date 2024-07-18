@@ -132,7 +132,7 @@ From `neocore\samples\hello` folder
 ```
   
 Wait for the emulator to run and edit `main.c`.  
-Now, remove `loggerInfo("DAVID VANDENSTEEN");` (for example).  
+Now, remove `nc_log_info("DAVID VANDENSTEEN");` line.  
 Save the file.
   
 The hot-reload process will rebuild & run your project automaticaly.
