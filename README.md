@@ -92,10 +92,15 @@ cd $project
 ## Upgrade a project
 With cmd (*not Powershell*) (you need to "be" in neocore folder root path)
 
-* Replace `c:\my-git\myGame` with your real path. 
+```cmd
+cmd
+```
+
+* Replace `c:\my-git\myGame` with your real path.
 
 ```cmd
 set project="c:\my-git\myGame"
+
 ```
 
 ```cmd
