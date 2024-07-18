@@ -99,7 +99,13 @@ set project="c:\my-git\myGame"
 ```
 
 ```cmd
-rd /S /Q %project%\build && robocopy /MIR src-lib %project%\neocore\src-lib && copy /Y manifest.xml %project%\neocore && robocopy /MIR toolchain %project%\neocore\toolchain
+if exist %project%\build (
+    rd /S /Q %project%\build
+)
+robocopy /MIR src-lib %project%\neocore\src-lib
+copy /Y manifest.xml %project%\neocore
+robocopy /MIR toolchain %project%\neocore\toolchain
+
 ```
 
 ## Documentation of Neocore C lib
