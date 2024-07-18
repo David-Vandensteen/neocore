@@ -90,16 +90,16 @@ cd $project
 ```
 
 ## Upgrade a project
-With powershell (you need to "be" in neocore folder root path)
+With cmd (*not Powershell*) (you need to "be" in neocore folder root path)
 
 * Replace `c:\my-git\myGame` with your real path. 
 
 ```cmd
-$project = "c:\my-git\myGame"
+set project="c:\my-git\myGame"
 ```
 
 ```cmd
-robocopy /MIR src-lib $project\neocore\src-lib; copy manifest.xml $project\neocore; robocopy /MIR toolchain $project\neocore\toolchain
+rd /S /Q %project%\build && robocopy /MIR src-lib %project%\neocore\src-lib && copy /Y manifest.xml %project%\neocore && robocopy /MIR toolchain %project%\neocore\toolchain
 ```
 
 ## Documentation of Neocore C lib
