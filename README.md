@@ -70,7 +70,7 @@ If you encounter any problems after using it, simply close and restart a new com
 .\mak.bat dist:exe
 ```
 ## Create a project
-With powershell (you need to "be" in neocore folder root path)
+With cmd (*not Powershell*) you need to "be" in neocore folder root path
 
 * Replace `c:\my-git\myGame` with your real path. 
 
@@ -79,7 +79,13 @@ $project = "c:\my-git\myGame"
 ```
 
 ```cmd
-xcopy /E /I src-lib $project\neocore\src-lib; copy manifest.xml $project\neocore; copy bootstrap\.gitignore $project\.gitignore; xcopy /E /I toolchain $project\neocore\toolchain; xcopy /E /I bootstrap\standalone $project\src; notepad $project\src\project.xml
+xcopy /E /I src-lib $project\neocore\src-lib
+copy manifest.xml $project\neocore
+copy bootstrap\.gitignore $project\.gitignore
+xcopy /E /I toolchain $project\neocore\toolchain
+xcopy /E /I bootstrap\standalone $project\src
+notepad $project\src\project.xml
+
 ```
 
 Compile and run it  
