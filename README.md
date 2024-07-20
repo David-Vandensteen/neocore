@@ -90,6 +90,10 @@ cd $project
 ```
 
 ## Upgrade the toolchain in an existing project
+* It is recommended to back up your project before starting
+* This process does not upgrade your code, XML project definition or assets. You must handle any breaking changes yourself
+* The files mak.bat and mak.ps1 will be overwritten
+
 With cmd (*not Powershell*) you need to "be" in neocore folder root path
 
 * Replace `c:\my-git\myGame` with your real path.
