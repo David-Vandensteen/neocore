@@ -215,6 +215,7 @@ If sdk was not found, build a sample (with mak script) to initialize cache (sdk 
   - NSIS
 
 ## [Changelog](CHANGELOG.md)
+  - [link](CHANGELOG.md)
 
 ## License
 
