@@ -89,27 +89,34 @@ cd $project
 .\mak.bat run:mame
 ```
 
-## Upgrade a project
-With cmd (*not Powershell*) (you need to "be" in neocore folder root path)
-
-```cmd
-cmd
-```
+## Upgrade the toolchain in an existing project
+With cmd (*not Powershell*) you need to "be" in neocore folder root path
 
 * Replace `c:\my-git\myGame` with your real path.
 
 ```cmd
 set project="c:\my-git\myGame"
+set project_build="%project%\build"
+set project_src="%project%\src"
+set project_neocore="%project%\neocore"
 
 ```
 
+* Remove `build` folder
+
 ```cmd
-if exist %project%\build (
-    rd /S /Q %project%\build
+if exist %project_build% (
+  rd /S /Q %project%\build
 )
-robocopy /MIR src-lib %project%\neocore\src-lib
-copy /Y manifest.xml %project%\neocore
-robocopy /MIR toolchain %project%\neocore\toolchain
+```
+
+* Upgrade toolchain
+```cmd
+robocopy /MIR src-lib %project_neocore%\src-lib
+copy /Y manifest.xml %project_neocore%
+copy /Y bootstrap\standalone\mak.bat %project_src%
+copy /Y bootstrap\standalone\mak.ps1 %project_src%
+robocopy /MIR toolchain %project_neocore%\toolchain
 
 ```
 
