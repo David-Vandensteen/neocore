@@ -184,6 +184,9 @@ Launch the DATlib Animator application:
 .\mak.bat animator
 ```
 
+## Pull or checkout another branches
+**BE CAREFUL : You need to remove build folder `.\neocore\build` for supress cache files before compiling a project**  
+
 ## Compiling the lib (necessary if you develop Neocore lib)
 ```cmd
 cd neocore\src-lib
@@ -192,10 +195,6 @@ cd neocore\src-lib
 This script override path environment variable during the compilation.  
 its avoid collisions with other bin, sdk, gcc...  
 If sdk was not found, build a sample (with mak script) to initialize cache (sdk will install in build folder).  
-
-
-## Pull or checkout another branches
-**BE CAREFUL : You need to remove build folder `.\neocore\build` for supress cache files before compiling a project**  
 
 ## Dependencies
 
