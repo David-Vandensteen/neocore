@@ -75,7 +75,7 @@ With cmd (*not Powershell*) you need to "be" in neocore folder root path
 * Replace `c:\my-git\myGame` with your real path. 
 
 ```cmd
-$project = "c:\my-git\myGame"
+set project="c:\my-git\myGame"
 ```
 
 ```cmd
