@@ -132,7 +132,7 @@ robocopy /MIR toolchain %project_neocore%\toolchain
 
 ## Documentation of Neocore C lib
 
-  - Doxygen: [http://azertyvortex.free.fr/neocore-doxy/r6/neocore_8h.html](http://azertyvortex.free.fr/neocore-doxy/r6/neocore_8h.html)
+  - Doxygen: [http://azertyvortex.free.fr/neocore-doxy/r6/neocore_8h.html](http://azertyvortex.free.fr/neocore-doxy/r7/neocore_8h.html)
     
 ## Note
 
