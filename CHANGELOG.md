@@ -1,8 +1,10 @@
 ## 2.2.0
 
+  - update commands in readme for create a project
   - add commands in readme for upgrade neocore
   - add nc stop adpcm function
   - add nc wait vbl macro
+  - update doxygen doc
   - add mak dist:exe for create a Windows standalone executable with embedded Mame emulator
   - improve toolchain log
   - update sample sound fx to use nc stop adpcm
