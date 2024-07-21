@@ -106,6 +106,9 @@ With cmd (*not Powershell*) you need to "be" in neocore folder root path
 
 ```cmd
 set project="c:\my-git\myGame"
+
+```
+```cmd
 set project_build="%project%\build"
 set project_src="%project%\src"
 set project_neocore="%project%\neocore"
@@ -118,15 +121,25 @@ set project_neocore="%project%\neocore"
 if exist %project_build% (
   rd /S /Q %project%\build
 )
+
 ```
 
 * Upgrade toolchain
 ```cmd
-robocopy /MIR src-lib %project_neocore%\src-lib
-copy /Y manifest.xml %project_neocore%
-copy /Y bootstrap\standalone\mak.bat %project_src%
-copy /Y bootstrap\standalone\mak.ps1 %project_src%
-robocopy /MIR toolchain %project_neocore%\toolchain
+if exist %project_neocore% (
+  robocopy /MIR src-lib %project_neocore%\src-lib
+  copy /Y manifest.xml %project_neocore%
+  robocopy /MIR toolchain %project_neocore%\toolchain
+) else (
+  echo %project_neocore% not found
+)
+
+if exist %project_src% (
+  copy /Y bootstrap\standalone\mak.bat %project_src%
+  copy /Y bootstrap\standalone\mak.ps1 %project_src%
+) else (
+  echo %project_src% not found
+)
 
 ```
 
