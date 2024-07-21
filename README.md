@@ -123,6 +123,16 @@ set project_neocore="%project%\neocore"
 
 ```
 
+* Check Neocore version
+```cmd
+type manifest.xml | find "<version>"
+```
+
+* Check Neocore version in your project
+```cmd
+type %project_neocore%\manifest.xml | find "<version>"
+```
+
 * Remove `build` folder
 
 ```cmd
