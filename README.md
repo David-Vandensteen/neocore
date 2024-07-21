@@ -190,17 +190,28 @@ Some problems currently:
 * The process is not a real watcher (the rebuild is triggered only if the folder size change)  
 * When you break this process, path is not restored in the current terminal (close & reopen a new terminal)  
     
-## DATlib assets (in progress)
-For making your own graphics, see the DATlib ref available here: (you need to building a sample for init build folder)  
-```cmd
-.\neocore\build\neodev-sdk\doc\DATlib-LibraryReference.pdf
+## DATlib assets
+For making graphics, see the DATlib ref available here: 
+[http://azertyvortex.free.fr/download/DATlib-LibraryReference.pdf](http://azertyvortex.free.fr/download/DATlib-LibraryReference.pdf)   
+
+Neocore embed the `chardata.xml` in `project.xml`   
+
+```xml
+<project>
+  <gfx>
+    <DAT>
+      <chardata>
+      </chardata>
+    </DAT>
+  </gfx>
 ```
+
   
-Launch the DATlib Framer application:    
+For launching the DATlib Framer application:    
 ```cmd
 .\mak.bat framer
 ```
-Launch the DATlib Animator application:  
+For launching the DATlib Animator application:  
 ```cmd
 .\mak.bat animator
 ```
