@@ -80,12 +80,18 @@ set project="%USERPROFILE%\myGame"
 ```
 
 ```cmd
-xcopy /E /I src-lib %project%\neocore\src-lib
-copy manifest.xml %project%\neocore
-copy bootstrap\.gitignore %project%\.gitignore
-xcopy /E /I toolchain %project%\neocore\toolchain
-xcopy /E /I bootstrap\standalone %project%\src
-notepad %project%\src\project.xml
+if not exist %project% (
+  xcopy /E /I src-lib %project%\neocore\src-lib
+  copy manifest.xml %project%\neocore
+  copy bootstrap\.gitignore %project%\.gitignore
+  xcopy /E /I toolchain %project%\neocore\toolchain
+  xcopy /E /I bootstrap\standalone %project%\src
+  pushd %project%
+  notepad src\project.xml
+  popd
+) else (
+  echo %project% already exist
+)
 
 ```
 
