@@ -78,7 +78,7 @@ wt cmd
 * Clone the lastest Neocore version repository by copying and paste the following commands in the terminal
 ```cmd
 if not exist %temp%\neocore (
-  git clone git@github.com:David-Vandensteen/neocore.git %temp%\neocore
+  git clone https://github.com/David-Vandensteen/neocore.git %temp%\neocore
   cd %temp%\neocore
 ) else (
   echo %temp%\neocore already exist
