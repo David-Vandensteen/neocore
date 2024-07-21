@@ -7,6 +7,7 @@
   - update doxygen doc
   - add mak dist:exe for create a Windows standalone executable with embedded Mame emulator
   - improve toolchain log
+  - update DATlib ref link in readme
   - update sample sound fx to use nc stop adpcm
   - update sample sound fx poly to use nc stop adpcm and nc wait vbl
 
