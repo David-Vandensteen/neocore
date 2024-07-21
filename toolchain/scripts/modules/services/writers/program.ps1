@@ -29,7 +29,7 @@ function Write-Program {
 
   & make -f $MakeFile
   if ((Test-Path -Path $PRGFile) -eq $true) {
-    Logger-Success "builded program is available to $PRGFile"
+    Logger-Success "builded program is available at $PRGFile"
     Write-Host ""
   } else { Logger-Error -Message "error - $PRGFile was not generated" }
 }

@@ -15,7 +15,7 @@ function Write-ISO {
   & mkisofs.exe -o $OutputFile -pad $PathISOBuildFolder
 
   if ((Test-Path -Path $OutputFile) -eq $true) {
-    Logger-Success -Message "builded ISO is available to $OutputFile"
+    Logger-Success -Message "builded ISO is available at $OutputFile"
     Write-Host ""
   } else { Logger-Error -Message "$OutputFile was not generated" }
 }
@@ -107,12 +107,25 @@ function Write-CUE {
       }
     }
 
+    if ($Rule -eq "dist:exe" -and $ext -eq ".mp3") {
+      Write-WAV `
+        -mpg123 "$($buildConfig.pathNeocore)\bin\mpg123-1.31.3-static-x86-64\mpg123.exe" `
+        -WAVFile "$($buildConfig.pathBuild)\$path\$baseName.wav" `
+        -MP3File "$path\$baseName.mp3"
+      $File = "$path\$baseName.wav"
+    }
+
     if ($Rule -eq "dist:mame" -and $ext -eq ".mp3") {
       Write-WAV `
         -mpg123 "$($buildConfig.pathNeocore)\bin\mpg123-1.31.3-static-x86-64\mpg123.exe" `
         -WAVFile "$($buildConfig.pathBuild)\$path\$baseName.wav" `
         -MP3File "$path\$baseName.mp3"
       $File = "$path\$baseName.wav"
+    }
+
+    if ($Rule -eq "dist:exe" -and $ext -eq ".wav") {
+      Write-Host "copy $File" -ForegroundColor Blue
+      Copy-Item -Path "$($buildConfig.pathBuild)\$path\$baseName$ext" -Destination $path\$baseName$ext
     }
 
     if ($Rule -eq "dist:mame" -and $ext -eq ".wav") {
@@ -177,7 +190,7 @@ function Write-CUE {
   Remove-Item -Path "$OutputFile.spool" -Force
 
   if ((Test-Path -Path $OutputFile) -eq $true) {
-    Logger-Success -Message "builded CUE is available to $OutputFile"
+    Logger-Success -Message "builded CUE is available at $OutputFile"
     Write-Host ""
   } else { Logger-Error -Message "error - $OutputFile was not generated" }
 }

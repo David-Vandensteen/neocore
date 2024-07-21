@@ -6,6 +6,7 @@ function Check-Rule {
   if ($Rule -eq "default") { return 0 }
   if ($Rule -eq "dist:iso") { return 0 }
   if ($Rule -eq "dist:mame") { return 0 }
+  if ($Rule -eq "dist:exe") { return 0 }
   if ($Rule -eq "iso") { return 0 }
   if ($Rule -eq "make") { return 0 }
   if ($Rule -eq "sprite") { return 0 }
@@ -30,6 +31,7 @@ function Check-Rule {
   Write-Host "default"
   Write-Host "dist:iso"
   Write-Host "dist:mame"
+  Write-Host "dist:exe"
   Write-Host "animator"
   Write-Host "framer"
   Write-Host "iso"
