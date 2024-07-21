@@ -72,10 +72,10 @@ If you encounter any problems after using it, simply close and restart a new com
 ## Create a project
 With cmd (*not Powershell*) you need to "be" in neocore folder root path
 
-* Replace `c:\my-git\myGame` with your real path. 
+* Replace `%USERPROFILE%\myGame` with your real path. 
 
 ```cmd
-set project="c:\my-git\myGame"
+set project="%USERPROFILE%\myGame"
 
 ```
 
@@ -103,10 +103,10 @@ cd %project%
 
 With cmd (*not Powershell*) you need to "be" in neocore folder root path
 
-* Replace `c:\my-git\myGame` with your real path.
+* Replace `%USERPROFILE%\myGame` with your real path.
 
 ```cmd
-set project="c:\my-git\myGame"
+set project="%USERPROFILE%\myGame"
 
 ```
 ```cmd
