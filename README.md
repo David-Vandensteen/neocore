@@ -23,7 +23,7 @@ It provides functions over Neo Dev Kit and DATlib 0.2, and includes tools and co
 git clone git@github.com:David-Vandensteen/neocore.git
 ```
     
-## Build and run hello example
+## Build and run the hello sample
 ```cmd
 cd .\neocore\samples\hello
 .\mak.bat run:mame
@@ -142,6 +142,7 @@ if not exist %temp%\neocore (
 set project="%USERPROFILE%\myGame"
 ```
 
+* Execute this next commands
 ```cmd
 set project_build="%project%\build"
 set project_src="%project%\src"
@@ -232,7 +233,7 @@ Some problems currently:
 For making graphics, see the DATlib ref available here: 
 [http://azertyvortex.free.fr/download/DATlib-LibraryReference.pdf](http://azertyvortex.free.fr/download/DATlib-LibraryReference.pdf)   
 
-Neocore embed the `chardata.xml` in `project.xml`   
+Neocore embed the content of `chardata.xml` in `project.xml`   
 
 ```xml
 <project>
@@ -242,9 +243,9 @@ Neocore embed the `chardata.xml` in `project.xml`
       </chardata>
     </DAT>
   </gfx>
+</project>
 ```
 
-  
 For launching the DATlib Framer application:    
 ```cmd
 .\mak.bat framer
