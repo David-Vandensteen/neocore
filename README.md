@@ -79,12 +79,12 @@ set project="c:\my-git\myGame"
 ```
 
 ```cmd
-xcopy /E /I src-lib $project\neocore\src-lib
-copy manifest.xml $project\neocore
-copy bootstrap\.gitignore $project\.gitignore
-xcopy /E /I toolchain $project\neocore\toolchain
-xcopy /E /I bootstrap\standalone $project\src
-notepad $project\src\project.xml
+xcopy /E /I src-lib %project%\neocore\src-lib
+copy manifest.xml %project%\neocore
+copy bootstrap\.gitignore %project%\.gitignore
+xcopy /E /I toolchain %project%\neocore\toolchain
+xcopy /E /I bootstrap\standalone %project%\src
+notepad %project%\src\project.xml
 
 ```
 
