@@ -70,7 +70,7 @@ If you encounter any problems after using it, simply close and restart a new com
 .\mak.bat dist:exe
 ```
 ## Create a project
-In Windows run prompt (shortcut windows + r) type :
+* In Windows run prompt (shortcut windows + r) type :
 ```cmd
 wt cmd
 ```
@@ -86,8 +86,7 @@ if not exist %temp%\neocore (
 
 ```
 
-* Now copy the next command and replace `%USERPROFILE%\myGame` with your real path. 
-
+* Now copy the next command and replace `%USERPROFILE%\myGame` with your real path
 ```cmd
 set project="%USERPROFILE%\myGame"
 
@@ -122,10 +121,23 @@ cd %project%\src
 * This process does not upgrade your code, XML project definition or assets. You must handle any breaking changes yourself
 * The files mak.bat and mak.ps1 will be overwritten
 
-With cmd (*not Powershell*) you need to "be" in neocore folder root path
+In Windows run prompt (shortcut windows + r) type :
+```cmd
+wt cmd
+```
 
-* Replace `%USERPROFILE%\myGame` with your real path.
+* Clone the lastest Neocore version repository by copying and paste the following commands in the terminal
+```cmd
+if not exist %temp%\neocore (
+  git clone https://github.com/David-Vandensteen/neocore.git %temp%\neocore
+  cd %temp%\neocore
+) else (
+  echo %temp%\neocore already exist
+)
 
+```
+
+* Now copy the next command and replace %USERPROFILE%\myGame with your real path
 ```cmd
 set project="%USERPROFILE%\myGame"
 
