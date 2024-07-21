@@ -100,6 +100,7 @@ Compile and run it
 ```cmd
 cd %project%
 .\mak.bat run:mame
+
 ```
 
 ## Upgrade the toolchain in an existing project
