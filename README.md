@@ -70,15 +70,27 @@ If you encounter any problems after using it, simply close and restart a new com
 .\mak.bat dist:exe
 ```
 ## Create a project
-With cmd (*not Powershell*) you need to "be" in neocore folder root path
+In Windows run prompt (shortcut windows + r) type :
+```cmd
+wt cmd
+```
 
-* Replace `%USERPROFILE%\myGame` with your real path. 
+* Clone the lastest Neocore repository by copying and paste the following commands in the terminal
+```cmd
+if not exist %temp%\neocore (
+  git clone git@github.com:David-Vandensteen/neocore.git %temp%\neocore
+) else (
+  echo %temp%\neocore already exist
+)
+```
+
+* Now copy the next command and replace `%USERPROFILE%\myGame` with your real path. 
 
 ```cmd
 set project="%USERPROFILE%\myGame"
 
 ```
-
+* Copy and paste the following for create the project
 ```cmd
 if not exist %project% (
   xcopy /E /I src-lib %project%\neocore\src-lib
@@ -95,7 +107,7 @@ if not exist %project% (
 
 ```
 
-Compile and run it  
+* Compile and run it  
 
 ```cmd
 cd %project%\src
