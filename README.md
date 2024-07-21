@@ -98,7 +98,7 @@ if not exist %project% (
 Compile and run it  
 
 ```cmd
-cd %project%
+cd %project%\src
 .\mak.bat run:mame
 
 ```
