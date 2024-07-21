@@ -76,6 +76,7 @@ With cmd (*not Powershell*) you need to "be" in neocore folder root path
 
 ```cmd
 set project="c:\my-git\myGame"
+
 ```
 
 ```cmd
@@ -91,7 +92,7 @@ notepad %project%\src\project.xml
 Compile and run it  
 
 ```cmd
-cd $project
+cd %project%
 .\mak.bat run:mame
 ```
 
