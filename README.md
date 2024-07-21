@@ -79,6 +79,7 @@ wt cmd
 ```cmd
 if not exist %temp%\neocore (
   git clone git@github.com:David-Vandensteen/neocore.git %temp%\neocore
+  cd %temp%\neocore
 ) else (
   echo %temp%\neocore already exist
 )
