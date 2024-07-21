@@ -89,8 +89,8 @@ if not exist %temp%\neocore (
 * Now copy the next command and replace `%USERPROFILE%\myGame` with your real path
 ```cmd
 set project="%USERPROFILE%\myGame"
-
 ```
+
 * Copy and paste the following for create the project
 ```cmd
 if not exist %project% (
@@ -140,8 +140,8 @@ if not exist %temp%\neocore (
 * Now copy the next command and replace %USERPROFILE%\myGame with your real path
 ```cmd
 set project="%USERPROFILE%\myGame"
-
 ```
+
 ```cmd
 set project_build="%project%\build"
 set project_src="%project%\src"
@@ -152,11 +152,13 @@ set project_neocore="%project%\neocore"
 * Check Neocore version
 ```cmd
 type manifest.xml | find "<version>"
+
 ```
 
 * Check Neocore version in your project
 ```cmd
 type %project_neocore%\manifest.xml | find "<version>"
+
 ```
 
 * Remove `build` folder
