@@ -70,9 +70,12 @@ If you encounter any problems after using it, simply close and restart a new com
 .\mak.bat dist:exe
 ```
 ## Create a project
-* In Windows run prompt (shortcut windows + r) type :
+* From run prompt (shortcut windows + r) type :   
+(replace `$env:USERPROFILE\myGame\`whith the real path of your project)
+
 ```cmd
-wt cmd
+powershell -Command "$project=\"$env:USERPROFILE\myGame\"; if (-not (Test-Path $env:TEMP\neocore)) { git clone https://github.com/David-Vandensteen/neocore.git $env:TEMP\neocore; cd $env:TEMP\neocore } else { Write-Host '$env:TEMP\neocore already exists' }; if (-not (Test-Path $project)) { xcopy /E /I $env:TEMP\neocore\src-lib $project\neocore\src-lib; Copy-Item \"$env:TEMP\neocore\manifest.xml\" \"$project\neocore\"; Copy-Item \"$env:TEMP\neocore\bootstrap\.gitignore\" \"$project\.gitignore\"; xcopy /E /I \"$env:TEMP\neocore\toolchain\" \"$project\neocore\toolchain\"; xcopy /E /I \"$env:TEMP\neocore\bootstrap\standalone\" \"$project\src\"; pushd \"$project\"; notepad src\project.xml; popd } else { Write-Host '$project already exists' }"
+
 ```
 
 * Clone the lastest Neocore version repository by copying and paste the following commands in the terminal
