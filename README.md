@@ -79,14 +79,7 @@ cd neocore\bootstrap\scripts\project
 * Replace `myGame` and `c:\temp\myGame` with your data
 
 ```cmd
-set name="myGame"
-```
-```cmd
-set projectPath="c:\temp\myGame"
-```
-
-```cmd
-.\create.bat -name %name% -projectPath %projectPath%
+.\create.bat -name myGame -projectPath c:\temp\myGame
 ```
 
 * Compile and run it  
