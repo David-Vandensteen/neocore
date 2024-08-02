@@ -72,53 +72,27 @@ If you encounter any problems after using it, simply close and restart a new com
 .\mak.bat dist:exe
 ```
 ## Create a project
-* From run prompt (shortcut windows + r) type :   
-(replace `$env:USERPROFILE\myGame\`whith the real path of your project)
-
 ```cmd
-powershell -Command "$project=\"$env:USERPROFILE\myGame\"; if (-not (Test-Path $env:TEMP\neocore)) { git clone https://github.com/David-Vandensteen/neocore.git $env:TEMP\neocore; cd $env:TEMP\neocore } else { Write-Host '$env:TEMP\neocore already exists' }; if (-not (Test-Path $project)) { xcopy /E /I $env:TEMP\neocore\src-lib $project\neocore\src-lib; Copy-Item \"$env:TEMP\neocore\manifest.xml\" \"$project\neocore\"; Copy-Item \"$env:TEMP\neocore\bootstrap\.gitignore\" \"$project\.gitignore\"; xcopy /E /I \"$env:TEMP\neocore\toolchain\" \"$project\neocore\toolchain\"; xcopy /E /I \"$env:TEMP\neocore\bootstrap\standalone\" \"$project\src\"; pushd \"$project\"; notepad src\project.xml; popd } else { Write-Host '$project already exists' }"
-
+cd neocore\bootstrap\scripts\project
 ```
 
-* Clone the lastest Neocore version repository by copying and paste the following commands in the terminal
-```cmd
-if not exist %temp%\neocore (
-  git clone https://github.com/David-Vandensteen/neocore.git %temp%\neocore
-  cd %temp%\neocore
-) else (
-  echo %temp%\neocore already exist
-)
+* Replace `myGame` and `c:\temp\myGame` with your data
 
+```cmd
+set name="myGame" && set projectPath="c:\temp\myGame"
 ```
 
-* Now copy the next command and replace `%USERPROFILE%\myGame` with your real path
 ```cmd
-set project="%USERPROFILE%\myGame"
-```
-
-* Copy and paste the following for create the project
-```cmd
-if not exist %project% (
-  xcopy /E /I src-lib %project%\neocore\src-lib
-  copy manifest.xml %project%\neocore
-  copy bootstrap\.gitignore %project%\.gitignore
-  xcopy /E /I toolchain %project%\neocore\toolchain
-  xcopy /E /I bootstrap\standalone %project%\src
-  pushd %project%
-  notepad src\project.xml
-  popd
-) else (
-  echo %project% already exist
-)
-
+.\create.bat -name %name% -projectPath %projectPath%
 ```
 
 * Compile and run it  
 
 ```cmd
-cd %project%\src
+cd %projectPath%\src
+```
+```cmd
 .\mak.bat run:mame
-
 ```
 
 ## Upgrade the toolchain in an existing project
@@ -131,7 +105,7 @@ In Windows run prompt (shortcut windows + r) type :
 wt cmd
 ```
 
-* Clone the lastest Neocore version repository by copying and paste the following commands in the terminal
+* Clone the latest Neocore version repository by copying and paste the following commands in the terminal
 ```cmd
 if not exist %temp%\neocore (
   git clone https://github.com/David-Vandensteen/neocore.git %temp%\neocore
@@ -266,6 +240,8 @@ For launching the DATlib Animator application:
 ## Compiling the lib (necessary if you develop Neocore lib)
 ```cmd
 cd neocore\src-lib
+```
+```cmd
 .\build-neocore.bat -gccPath ..\build\gcc\gcc-2.95.2 -includePath ..\build\include -libraryPath ..\build\lib
 ```
 This script override path environment variable during the compilation.  
