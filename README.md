@@ -79,7 +79,10 @@ cd neocore\bootstrap\scripts\project
 * Replace `myGame` and `c:\temp\myGame` with your data
 
 ```cmd
-set name="myGame" && set projectPath="c:\temp\myGame"
+set name="myGame"
+```
+```cmd
+set projectPath="c:\temp\myGame"
 ```
 
 ```cmd
