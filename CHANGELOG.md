@@ -1,5 +1,6 @@
 ## 2.2.1
 
+  - sanitize build neocore script
   - add bootstrap create project script
 
 ## 2.2.0
