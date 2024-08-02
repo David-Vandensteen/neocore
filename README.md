@@ -20,12 +20,14 @@ It provides functions over Neo Dev Kit and DATlib 0.2, and includes tools and co
 
 ## Init
 ```cmd
-git clone git@github.com:David-Vandensteen/neocore.git
+git clone https://github.com/David-Vandensteen/neocore.git
 ```
     
 ## Build and run the hello sample
 ```cmd
 cd .\neocore\samples\hello
+```
+```cmd
 .\mak.bat run:mame
 ```
   
