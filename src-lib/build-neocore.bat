@@ -2,10 +2,6 @@
 set backupPath=%path%
 set NEODEV=build\neodev-sdk
 
-@REM set gccPath="..\build\gcc\gcc-2.95.2"
-@REM set includePath="..\build\include"
-@REM set libraryPath="..\build\lib"
-
 set gccPath="undefined"
 set includePath="undefined"
 set libraryPath="undefined"
@@ -31,9 +27,6 @@ echo %libraryPath%
 if %gccPath%=="undefined" goto arguments_error
 if %includePath%=="undefined" goto arguments_error
 if %libraryPath%=="undefined" goto arguments_erro
-
-rem gccPath=..\build\gcc\gcc-2.95.2
-rem gccPath=..\build\gcc\MinGW-m68k-elf-13.1.0\bin
 
 set INCLUDE_PATH=%includePath%
 set LIBRARY_PATH=%libraryPath%
