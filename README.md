@@ -100,7 +100,7 @@ cd %projectPath%\src
 * This process does not upgrade your code, XML project definition or assets. You must handle any breaking changes yourself
 * The files mak.bat and mak.ps1 will be overwritten
 
-In Windows run prompt (shortcut windows + r) type :
+In Windows run prompt (shortcut `windows + r`) type :
 ```cmd
 wt cmd
 ```
@@ -116,7 +116,7 @@ if not exist %temp%\neocore (
 
 ```
 
-* Now copy the next command and replace %USERPROFILE%\myGame with your real path
+* Now copy the next command and replace `%USERPROFILE%\myGame` with your real path
 ```cmd
 set project="%USERPROFILE%\myGame"
 ```
