@@ -193,7 +193,9 @@ Here are other ways to contribute:
 Any help is welcome.  
 
 ## Hot reload
-From `neocore\samples\hello` folder
+```cmd
+cd neocore\samples\hello
+```
 ```cmd
 .\mak.bat serve
 ```
