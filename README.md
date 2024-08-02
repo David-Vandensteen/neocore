@@ -20,12 +20,14 @@ It provides functions over Neo Dev Kit and DATlib 0.2, and includes tools and co
 
 ## Init
 ```cmd
-git clone git@github.com:David-Vandensteen/neocore.git
+git clone https://github.com/David-Vandensteen/neocore.git
 ```
     
 ## Build and run the hello sample
 ```cmd
 cd .\neocore\samples\hello
+```
+```cmd
 .\mak.bat run:mame
 ```
   
@@ -70,12 +72,36 @@ If you encounter any problems after using it, simply close and restart a new com
 .\mak.bat dist:exe
 ```
 ## Create a project
-* In Windows run prompt (shortcut windows + r) type :
+```cmd
+cd neocore\bootstrap\scripts\project
+```
+
+* Replace `myGame` and `c:\temp\myGame` with your data
+
+```cmd
+.\create.bat -name myGame -projectPath c:\temp\myGame
+```
+
+* Compile and run it  
+
+```cmd
+cd c:\temp\myGame\src
+```
+```cmd
+.\mak.bat run:mame
+```
+
+## Upgrade the toolchain in an existing project
+* It is recommended to back up your project before starting
+* This process does not upgrade your code, XML project definition or assets. You must handle any breaking changes yourself
+* The files mak.bat and mak.ps1 will be overwritten
+
+In Windows run prompt (shortcut `windows + r`) type :
 ```cmd
 wt cmd
 ```
 
-* Clone the lastest Neocore version repository by copying and paste the following commands in the terminal
+* Clone the latest Neocore version repository by copying and paste the following commands in the terminal
 ```cmd
 if not exist %temp%\neocore (
   git clone https://github.com/David-Vandensteen/neocore.git %temp%\neocore
@@ -87,57 +113,6 @@ if not exist %temp%\neocore (
 ```
 
 * Now copy the next command and replace `%USERPROFILE%\myGame` with your real path
-```cmd
-set project="%USERPROFILE%\myGame"
-```
-
-* Copy and paste the following for create the project
-```cmd
-if not exist %project% (
-  xcopy /E /I src-lib %project%\neocore\src-lib
-  copy manifest.xml %project%\neocore
-  copy bootstrap\.gitignore %project%\.gitignore
-  xcopy /E /I toolchain %project%\neocore\toolchain
-  xcopy /E /I bootstrap\standalone %project%\src
-  pushd %project%
-  notepad src\project.xml
-  popd
-) else (
-  echo %project% already exist
-)
-
-```
-
-* Compile and run it  
-
-```cmd
-cd %project%\src
-.\mak.bat run:mame
-
-```
-
-## Upgrade the toolchain in an existing project
-* It is recommended to back up your project before starting
-* This process does not upgrade your code, XML project definition or assets. You must handle any breaking changes yourself
-* The files mak.bat and mak.ps1 will be overwritten
-
-In Windows run prompt (shortcut windows + r) type :
-```cmd
-wt cmd
-```
-
-* Clone the lastest Neocore version repository by copying and paste the following commands in the terminal
-```cmd
-if not exist %temp%\neocore (
-  git clone https://github.com/David-Vandensteen/neocore.git %temp%\neocore
-  cd %temp%\neocore
-) else (
-  echo %temp%\neocore already exist
-)
-
-```
-
-* Now copy the next command and replace %USERPROFILE%\myGame with your real path
 ```cmd
 set project="%USERPROFILE%\myGame"
 ```
@@ -214,7 +189,9 @@ Here are other ways to contribute:
 Any help is welcome.  
 
 ## Hot reload
-From `neocore\samples\hello` folder
+```cmd
+cd neocore\samples\hello
+```
 ```cmd
 .\mak.bat serve
 ```
@@ -261,6 +238,8 @@ For launching the DATlib Animator application:
 ## Compiling the lib (necessary if you develop Neocore lib)
 ```cmd
 cd neocore\src-lib
+```
+```cmd
 .\build-neocore.bat -gccPath ..\build\gcc\gcc-2.95.2 -includePath ..\build\include -libraryPath ..\build\lib
 ```
 This script override path environment variable during the compilation.  
