@@ -1,5 +1,7 @@
 ## 2.2.1
 
+  - add bootstrap create project script
+
 ## 2.2.0
 
   - update commands in readme for create a project
