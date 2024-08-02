@@ -85,7 +85,7 @@ cd neocore\bootstrap\scripts\project
 * Compile and run it  
 
 ```cmd
-cd %projectPath%\src
+cd c:\temp\myGame\src
 ```
 ```cmd
 .\mak.bat run:mame
