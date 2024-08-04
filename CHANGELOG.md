@@ -1,3 +1,7 @@
+## 2.3.0
+
+  - add mak --version
+
 ## 2.2.1
 
   - sanitize build neocore script

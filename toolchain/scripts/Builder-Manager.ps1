@@ -95,6 +95,7 @@ function Main {
 
   Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-raine.ps1"
   Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\utils\watcher.ps1"
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\utils\show-version.ps1"
 
   Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\writers\iso.ps1"
   Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\writers\dist.ps1"
@@ -199,6 +200,10 @@ function Main {
     BuilderISO
     BuilderMame
     BuilderEXE
+  }
+
+  if ($Rule -eq "--version") {
+    Show-Version
   }
 
   if ($Rule -eq "only:sprite") { BuilderSprite }

@@ -59,6 +59,10 @@ If you encounter any problems after using it, simply close and restart a new com
 ```cmd
 .\mak.bat run:mame
 ```
+- Display version information
+```cmd
+.\mak.bat --version
+```
 - Delivery ISO
 ```cmd
 .\mak.bat dist:iso
