@@ -23,6 +23,7 @@ function Check-Rule {
   if ($Rule -eq "run:raine") { return 0 }
   if ($Rule -eq "mame") { return 0 }
   if ($Rule -eq "raine") { return 0 }
+  if ($Rule -eq "--version") { return 0 }
 
   Write-Host "error : unknow parameter $Rule" -ForegroundColor Red
   Write-Host "parameter list :"
@@ -50,6 +51,7 @@ function Check-Rule {
   Write-Host "run:raine"
   Write-Host "mame"
   Write-Host "raine"
+  Write-Host "--version"
 
   exit 1
 }
