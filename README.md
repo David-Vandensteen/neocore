@@ -117,7 +117,7 @@ cd <neocore>\bootstrap\scripts\project
 
 * For upgrading your project, replace `c:\temp\myGame\src` and `c:\temp\myGame\neocore` with your data on this next command
 ```cmd
-upgrade.bat -projectSrcPath c:\temp\myGame\src -projectNeocorePath c:\temp\myGame\neocore
+.\upgrade.bat -projectSrcPath c:\temp\myGame\src -projectNeocorePath c:\temp\myGame\neocore
 ```
 
 ## Documentation of Neocore C lib
