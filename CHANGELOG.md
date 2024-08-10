@@ -1,5 +1,6 @@
 ## 2.3.0
 
+  - add bootstrap upgrade project script
   - add mak --version
 
 ## 2.2.1
