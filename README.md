@@ -76,97 +76,48 @@ If you encounter any problems after using it, simply close and restart a new com
 .\mak.bat dist:exe
 ```
 ## Create a project
+* Go to the folder where you've cloned this Neocore repository (*replace `<neocore>` with your path in the following command*)
 ```cmd
-cd neocore\bootstrap\scripts\project
+cd <neocore>\bootstrap\scripts\project
 ```
 
-* Replace `myGame` and `c:\temp\myGame` with your data
+* Replace `myGame` and `c:\temp\myGame` with your data in the following command
 
 ```cmd
 .\create.bat -name myGame -projectPath c:\temp\myGame
 ```
 
-* Compile and run it  
-
+* Go to the `src` folder project (*replace `c:\temp\myGame\src` with your path in the following command*)
 ```cmd
 cd c:\temp\myGame\src
 ```
+
+* Compile and run it
 ```cmd
 .\mak.bat run:mame
 ```
 
-## Upgrade the toolchain in an existing project
-* It is recommended to back up your project before starting
-* This process does not upgrade your code, XML project definition or assets. You must handle any breaking changes yourself
-* The files mak.bat and mak.ps1 will be overwritten
+## Upgrade an existing project
+*It's recommended to back up your project folder before starting.*   
+*This process does not upgrade your code, XML project definition, or assets and you must handle any breaking changes yourself.*   
+*The files mak.bat and mak.ps1 will be overwritten.*   
+*Neocore Toolchain will be replaced.*   
+*Neocore Lib C will be replaced.*   
 
-In Windows run prompt (shortcut `windows + r`) type :
+* Remove the `build` folder in your project (*replace `c:\temp\myGame\build` with your path in the following command*)
+
 ```cmd
-wt cmd
+rd /S /Q c:\temp\myGame\build
 ```
 
-* Clone the latest Neocore version repository by copying and paste the following commands in the terminal
+* Go to the folder where you've cloned this Neocore repository (*replace `<neocore>` with your path in the following command*)
 ```cmd
-if not exist %temp%\neocore (
-  git clone https://github.com/David-Vandensteen/neocore.git %temp%\neocore
-  cd %temp%\neocore
-) else (
-  echo %temp%\neocore already exist
-)
-
+cd <neocore>\bootstrap\scripts\project
 ```
 
-* Now copy the next command and replace `%USERPROFILE%\myGame` with your real path
+* For upgrading your project, replace `c:\temp\myGame\src` and `c:\temp\myGame\neocore` with your data in the following command
 ```cmd
-set project="%USERPROFILE%\myGame"
-```
-
-* Execute this next commands
-```cmd
-set project_build="%project%\build"
-set project_src="%project%\src"
-set project_neocore="%project%\neocore"
-
-```
-
-* Check Neocore version
-```cmd
-type manifest.xml | find "<version>"
-
-```
-
-* Check Neocore version in your project
-```cmd
-type %project_neocore%\manifest.xml | find "<version>"
-
-```
-
-* Remove `build` folder
-
-```cmd
-if exist %project_build% (
-  rd /S /Q %project%\build
-)
-
-```
-
-* Upgrade toolchain
-```cmd
-if exist %project_neocore% (
-  robocopy /MIR src-lib %project_neocore%\src-lib
-  copy /Y manifest.xml %project_neocore%
-  robocopy /MIR toolchain %project_neocore%\toolchain
-) else (
-  echo %project_neocore% not found
-)
-
-if exist %project_src% (
-  copy /Y bootstrap\standalone\mak.bat %project_src%
-  copy /Y bootstrap\standalone\mak.ps1 %project_src%
-) else (
-  echo %project_src% not found
-)
-
+.\upgrade.bat -projectSrcPath c:\temp\myGame\src -projectNeocorePath c:\temp\myGame\neocore
 ```
 
 ## Documentation of Neocore C lib
