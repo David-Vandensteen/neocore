@@ -1,5 +1,6 @@
 ## 2.3.0
 
+  - add "Updagrade a project" in readme
   - add bootstrap upgrade project script
   - add mak --version
 
