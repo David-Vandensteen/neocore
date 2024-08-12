@@ -109,7 +109,7 @@ cd <neocore>\bootstrap\scripts\project
 ```
 
 ## Release a project
-* Got to your src folder project (*replace `c:\temp\myGame\src` with your path in the followong command*)
+* Go to your src folder project (*replace `c:\temp\myGame\src` with your path in the following command*)
 ```cmd
 cd c:\temp\myGame\src
 ```
@@ -126,7 +126,6 @@ cd c:\temp\myGame\src
 ```cmd
 .\mak.bat dist:exe
 ```
-
 
 ## Documentation of Neocore C lib
 
@@ -150,24 +149,6 @@ Here are other ways to contribute:
 - If you are a developer, you can create tutorials or example code.
 
 Any help is welcome.  
-
-## Hot reload
-```cmd
-cd neocore\samples\hello
-```
-```cmd
-.\mak.bat serve
-```
-  
-Wait for the emulator to run and edit `main.c`.  
-Now, remove `nc_log_info("DAVID VANDENSTEEN");` line.  
-Save the file.
-  
-The hot-reload process will rebuild & run your project automaticaly.
-  
-Some problems currently:  
-* The process is not a real watcher (the rebuild is triggered only if the folder size change)  
-* When you break this process, path is not restored in the current terminal (close & reopen a new terminal)  
     
 ## DATlib assets
 For making graphics, see the DATlib ref available here: 
@@ -198,9 +179,30 @@ For launching the DATlib Animator application:
 ## Pull or checkout another branches
 **BE CAREFUL : You need to remove build folder `.\neocore\build` for supress cache files before compiling a project**  
 
-## Compiling the lib (necessary if you develop Neocore lib)
+## Hot reload
+* Go to the folder where you've cloned this Neocore repository (*replace `<neocore>` with your path in the following command*)
 ```cmd
-cd neocore\src-lib
+cd <neocore>\samples\hello
+```
+```cmd
+.\mak.bat serve
+```
+  
+Wait for the emulator to run and edit `main.c`.  
+Now, remove `nc_log_info("DAVID VANDENSTEEN");` line.  
+Save the file.
+  
+The hot-reload process will rebuild & run your project automaticaly.
+  
+Some problems currently:  
+* The process is not a real watcher (the rebuild is triggered only if the folder size change)  
+* When you break this process, path is not restored in the current terminal (close & reopen a new terminal)  
+
+## Compiling the lib (necessary if you develop Neocore lib)
+
+* Go to the folder where you've cloned this Neocore repository (*replace `<neocore>` with your path in the following command*)
+```cmd
+cd <neocore>\src-lib
 ```
 ```cmd
 .\build-neocore.bat -gccPath ..\build\gcc\gcc-2.95.2 -includePath ..\build\include -libraryPath ..\build\lib
