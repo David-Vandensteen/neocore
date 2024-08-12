@@ -59,110 +59,72 @@ If you encounter any problems after using it, simply close and restart a new com
 ```cmd
 .\mak.bat run:mame
 ```
-- Delivery ISO
+- Display version information
 ```cmd
-.\mak.bat dist:iso
-```
-- Delivery MAME
-```cmd
-.\mak.bat dist:mame
-```
-- Delivery EXE *(create a Windows standalone executable with the game project and Mame emulator embedded)*
-```cmd
-.\mak.bat dist:exe
+.\mak.bat --version
 ```
 ## Create a project
+* Go to the folder where you've cloned this Neocore repository (*replace `<neocore>` with your path in the following command*)
 ```cmd
-cd neocore\bootstrap\scripts\project
+cd <neocore>\bootstrap\scripts\project
 ```
 
-* Replace `myGame` and `c:\temp\myGame` with your data
+* Replace `myGame` and `c:\temp\myGame` with your data in the following command
 
 ```cmd
 .\create.bat -name myGame -projectPath c:\temp\myGame
 ```
 
-* Compile and run it  
-
+* Go to the `src` folder project (*replace `c:\temp\myGame\src` with your path in the following command*)
 ```cmd
 cd c:\temp\myGame\src
 ```
+
+* Compile and run it
 ```cmd
 .\mak.bat run:mame
 ```
 
-## Upgrade the toolchain in an existing project
-* It is recommended to back up your project before starting
-* This process does not upgrade your code, XML project definition or assets. You must handle any breaking changes yourself
-* The files mak.bat and mak.ps1 will be overwritten
+## Upgrade an existing project
+*It's recommended to back up your project folder before starting.*   
+*This process does not upgrade your code, XML project definition, or assets and you must handle any breaking changes yourself.*   
+*The files mak.bat and mak.ps1 will be overwritten.*   
+*Neocore Toolchain will be replaced.*   
+*Neocore Lib C will be replaced.*   
 
-In Windows run prompt (shortcut `windows + r`) type :
+* Remove the `build` folder in your project (*replace `c:\temp\myGame\build` with your path in the following command*)
+
 ```cmd
-wt cmd
+rd /S /Q c:\temp\myGame\build
 ```
 
-* Clone the latest Neocore version repository by copying and paste the following commands in the terminal
+* Go to the folder where you've cloned this Neocore repository (*replace `<neocore>` with your path in the following command*)
 ```cmd
-if not exist %temp%\neocore (
-  git clone https://github.com/David-Vandensteen/neocore.git %temp%\neocore
-  cd %temp%\neocore
-) else (
-  echo %temp%\neocore already exist
-)
-
+cd <neocore>\bootstrap\scripts\project
 ```
 
-* Now copy the next command and replace `%USERPROFILE%\myGame` with your real path
+* For upgrading your project, replace `c:\temp\myGame\src` and `c:\temp\myGame\neocore` with your data in the following command
 ```cmd
-set project="%USERPROFILE%\myGame"
+.\upgrade.bat -projectSrcPath c:\temp\myGame\src -projectNeocorePath c:\temp\myGame\neocore
 ```
 
-* Execute this next commands
+## Release a project
+* Go to your src folder project (*replace `c:\temp\myGame\src` with your path in the following command*)
 ```cmd
-set project_build="%project%\build"
-set project_src="%project%\src"
-set project_neocore="%project%\neocore"
-
+cd c:\temp\myGame\src
 ```
 
-* Check Neocore version
+- ISO
 ```cmd
-type manifest.xml | find "<version>"
-
+.\mak.bat dist:iso
 ```
-
-* Check Neocore version in your project
+- MAME
 ```cmd
-type %project_neocore%\manifest.xml | find "<version>"
-
+.\mak.bat dist:mame
 ```
-
-* Remove `build` folder
-
+- EXE *(create a Windows standalone executable with the game project and Mame emulator embedded)*
 ```cmd
-if exist %project_build% (
-  rd /S /Q %project%\build
-)
-
-```
-
-* Upgrade toolchain
-```cmd
-if exist %project_neocore% (
-  robocopy /MIR src-lib %project_neocore%\src-lib
-  copy /Y manifest.xml %project_neocore%
-  robocopy /MIR toolchain %project_neocore%\toolchain
-) else (
-  echo %project_neocore% not found
-)
-
-if exist %project_src% (
-  copy /Y bootstrap\standalone\mak.bat %project_src%
-  copy /Y bootstrap\standalone\mak.ps1 %project_src%
-) else (
-  echo %project_src% not found
-)
-
+.\mak.bat dist:exe
 ```
 
 ## Documentation of Neocore C lib
@@ -187,24 +149,6 @@ Here are other ways to contribute:
 - If you are a developer, you can create tutorials or example code.
 
 Any help is welcome.  
-
-## Hot reload
-```cmd
-cd neocore\samples\hello
-```
-```cmd
-.\mak.bat serve
-```
-  
-Wait for the emulator to run and edit `main.c`.  
-Now, remove `nc_log_info("DAVID VANDENSTEEN");` line.  
-Save the file.
-  
-The hot-reload process will rebuild & run your project automaticaly.
-  
-Some problems currently:  
-* The process is not a real watcher (the rebuild is triggered only if the folder size change)  
-* When you break this process, path is not restored in the current terminal (close & reopen a new terminal)  
     
 ## DATlib assets
 For making graphics, see the DATlib ref available here: 
@@ -235,9 +179,30 @@ For launching the DATlib Animator application:
 ## Pull or checkout another branches
 **BE CAREFUL : You need to remove build folder `.\neocore\build` for supress cache files before compiling a project**  
 
-## Compiling the lib (necessary if you develop Neocore lib)
+## Hot reload
+* Go to the folder where you've cloned this Neocore repository (*replace `<neocore>` with your path in the following command*)
 ```cmd
-cd neocore\src-lib
+cd <neocore>\samples\hello
+```
+```cmd
+.\mak.bat serve
+```
+  
+Wait for the emulator to run and edit `main.c`.  
+Now, remove `nc_log_info("DAVID VANDENSTEEN");` line.  
+Save the file.
+  
+The hot-reload process will rebuild & run your project automaticaly.
+  
+Some problems currently:  
+* The process is not a real watcher (the rebuild is triggered only if the folder size change)  
+* When you break this process, path is not restored in the current terminal (close & reopen a new terminal)  
+
+## Compiling the lib (necessary if you develop Neocore lib)
+
+* Go to the folder where you've cloned this Neocore repository (*replace `<neocore>` with your path in the following command*)
+```cmd
+cd <neocore>\src-lib
 ```
 ```cmd
 .\build-neocore.bat -gccPath ..\build\gcc\gcc-2.95.2 -includePath ..\build\include -libraryPath ..\build\lib

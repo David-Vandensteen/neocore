@@ -1,3 +1,9 @@
+## 2.3.0
+
+  - add "Release a project" in readme
+  - add bootstrap upgrade project script
+  - add mak --version
+
 ## 2.2.1
 
   - sanitize build neocore script
