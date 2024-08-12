@@ -76,18 +76,18 @@ If you encounter any problems after using it, simply close and restart a new com
 .\mak.bat dist:exe
 ```
 ## Create a project
-* Go to the folder where you've cloning this Neocore repository (*replace `<neocore>` with your path on this next command*)
+* Go to the folder where you've cloned this Neocore repository (*replace `<neocore>` with your path in the following command*)
 ```cmd
 cd <neocore>\bootstrap\scripts\project
 ```
 
-* Replace `myGame` and `c:\temp\myGame` with your data on this next command
+* Replace `myGame` and `c:\temp\myGame` with your data in the following command
 
 ```cmd
 .\create.bat -name myGame -projectPath c:\temp\myGame
 ```
 
-* Go to the `src` folder project (*replace `c:\temp\myGame\src` with your path on this next command*)
+* Go to the `src` folder project (*replace `c:\temp\myGame\src` with your path in the following command*)
 ```cmd
 cd c:\temp\myGame\src
 ```
@@ -110,7 +110,7 @@ cd c:\temp\myGame\src
 rd /S /Q c:\temp\myGame\build
 ```
 
-* Go to the folder where you've cloning this Neocore repository (*replace `<neocore>` with your path in the following command*)
+* Go to the folder where you've cloned this Neocore repository (*replace `<neocore>` with your path in the following command*)
 ```cmd
 cd <neocore>\bootstrap\scripts\project
 ```
