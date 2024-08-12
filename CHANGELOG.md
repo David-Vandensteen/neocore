@@ -1,3 +1,7 @@
+## 2.3.1
+
+  - add "Requirements" in readme
+
 ## 2.3.0
 
   - add "Release a project" in readme
