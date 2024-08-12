@@ -63,18 +63,6 @@ If you encounter any problems after using it, simply close and restart a new com
 ```cmd
 .\mak.bat --version
 ```
-- Delivery ISO
-```cmd
-.\mak.bat dist:iso
-```
-- Delivery MAME
-```cmd
-.\mak.bat dist:mame
-```
-- Delivery EXE *(create a Windows standalone executable with the game project and Mame emulator embedded)*
-```cmd
-.\mak.bat dist:exe
-```
 ## Create a project
 * Go to the folder where you've cloned this Neocore repository (*replace `<neocore>` with your path in the following command*)
 ```cmd
@@ -119,6 +107,26 @@ cd <neocore>\bootstrap\scripts\project
 ```cmd
 .\upgrade.bat -projectSrcPath c:\temp\myGame\src -projectNeocorePath c:\temp\myGame\neocore
 ```
+
+## Release a project
+* Got to your src folder project (*replace `c:\temp\myGame\src` with your path in the followong command*)
+```cmd
+cd c:\temp\myGame\src
+```
+
+- ISO
+```cmd
+.\mak.bat dist:iso
+```
+- MAME
+```cmd
+.\mak.bat dist:mame
+```
+- EXE *(create a Windows standalone executable with the game project and Mame emulator embedded)*
+```cmd
+.\mak.bat dist:exe
+```
+
 
 ## Documentation of Neocore C lib
 
