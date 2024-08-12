@@ -99,23 +99,23 @@ cd c:\temp\myGame\src
 
 ## Upgrade an existing project
 *It's recommended to back up your project folder before starting.*   
-*This process does not upgrade your code, XML project definition or assets and you must handle any breaking changes yourself.*   
+*This process does not upgrade your code, XML project definition, or assets and you must handle any breaking changes yourself.*   
 *The files mak.bat and mak.ps1 will be overwritten.*   
 *Neocore Toolchain will be replaced.*   
 *Neocore Lib C will be replaced.*   
 
-* Remove the `build` folder in your project (*replace `c:\temp\myGame\build` with your path on this next command*)
+* Remove the `build` folder in your project (*replace `c:\temp\myGame\build` with your path in the following command*)
 
 ```cmd
 rd /S /Q c:\temp\myGame\build
 ```
 
-* Go to the folder where you've cloning this Neocore repository (*replace `<neocore>` with your path on this next command*)
+* Go to the folder where you've cloning this Neocore repository (*replace `<neocore>` with your path in the following command*)
 ```cmd
 cd <neocore>\bootstrap\scripts\project
 ```
 
-* For upgrading your project, replace `c:\temp\myGame\src` and `c:\temp\myGame\neocore` with your data on this next command
+* For upgrading your project, replace `c:\temp\myGame\src` and `c:\temp\myGame\neocore` with your data in the following command
 ```cmd
 .\upgrade.bat -projectSrcPath c:\temp\myGame\src -projectNeocorePath c:\temp\myGame\neocore
 ```
