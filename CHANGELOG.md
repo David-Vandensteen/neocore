@@ -1,5 +1,6 @@
 ## 2.3.1
 
+  - make doxygen install as optional
   - add "Requirements" in readme
 
 ## 2.3.0
