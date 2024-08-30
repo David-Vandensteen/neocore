@@ -1,0 +1,1 @@
+powershell -ExecutionPolicy Bypass -File _install-doxygen.ps1

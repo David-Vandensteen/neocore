@@ -18,6 +18,11 @@ It provides functions over Neo Dev Kit and DATlib 0.2, and includes tools and co
     -  [https://www.youtube.com/embed/YjRmvMAfgbc](https://www.youtube.com/embed/YjRmvMAfgbc)
     -  [http://azertyvortex.free.fr/flamble](http://azertyvortex.free.fr/flamble)
 
+## Requirements
+* Up to date Windows 11
+* Git [https://git-scm.com/download/win](https://git-scm.com/download/win)
+* Windows Terminal with cmd instance (shortcut win + r and type `wt cmd`)
+
 ## Init
 ```cmd
 git clone https://github.com/David-Vandensteen/neocore.git
@@ -133,8 +138,8 @@ cd c:\temp\myGame\src
     
 ## Note
 
-Please note that the library is under development and the author is not responsible for any software damage.  
-This project is mainly tested on Raine and MAME emulators.  
+Please note that the project is under development and the author is not responsible for any software damage.  
+This library is mainly tested on Raine and MAME emulators.  
   
 **There is no guarantee or obligation from the author that anything will work on the real Neo-Geo hardware.**  
 
