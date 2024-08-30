@@ -1,5 +1,6 @@
 ## 2.3.2
 
+  - move check project name toolchain code
   - move check rule toolchain code
 
 ## 2.3.1
