@@ -138,8 +138,8 @@ cd c:\temp\myGame\src
     
 ## Note
 
-Please note that the library is under development and the author is not responsible for any software damage.  
-This project is mainly tested on Raine and MAME emulators.  
+Please note that the project is under development and the author is not responsible for any software damage.  
+This library is mainly tested on Raine and MAME emulators.  
   
 **There is no guarantee or obligation from the author that anything will work on the real Neo-Geo hardware.**  
 
