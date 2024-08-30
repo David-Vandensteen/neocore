@@ -1,3 +1,5 @@
+## 2.3.2
+
 ## 2.3.1
 
   - make doxygen install as optional
