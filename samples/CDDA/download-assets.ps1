@@ -4,11 +4,11 @@ function Download {
     [Parameter(Mandatory=$true)][String] $Path
   )
   Write-Host "Download - $URL $Path"
-  Import-Module BitsTransfer
+  $fileName = Split-Path $URL -leaf
 
   $start_time = Get-Date
-  Start-BitsTransfer -Source $URL -Destination $Path
-  Write-Output "Time taken - $((Get-Date).Subtract($start_time).Seconds) second(s)"
+  Invoke-WebRequest -URI $URL -Outfile $Path"\"$fileName
+  Write-Host "Time taken - $((Get-Date).Subtract($start_time).Seconds) second(s)"
 }
 
 if ((Test-Path -Path "assets\sounds\cdda") -eq $false) {
