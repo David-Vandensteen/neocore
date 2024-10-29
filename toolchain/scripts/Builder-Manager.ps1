@@ -57,14 +57,16 @@ function Main {
   Write-Host "--------------------------------------------"
   Write-Host ""
 
-  Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\services\check-rule.ps1"
+  Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\models\project-name.ps1"
+  Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\models\rule.ps1"
   Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\utils\logger.ps1"
   Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\services\installers\sdk.ps1"
   Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\utils\emulators.ps1"
   Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\utils\set-env-path.ps1"
   Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\utils\remove-project.ps1"
 
-  Check-Rule
+  Model-Rule -Rule $($buildConfig.rule)
+  Model-Project-Name -Name $($Config.project.name)
 
   $raineProcessName = [System.IO.Path]::GetFileNameWithoutExtension($Config.project.emulator.raine.exeFile)
   $mameProcessName = [System.IO.Path]::GetFileNameWithoutExtension($Config.project.emulator.mame.exeFile)
