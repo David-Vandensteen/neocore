@@ -10,6 +10,7 @@ It provides functions over Neo Dev Kit and DATlib 0.2, and includes tools and co
  - High abstraction level for Neo Geo CD development
  - Compatible with ~~Windows 10 and~~ Windows 11
 
+https://discord.gg/9armYnYv
 ### Game, demo, code learning using Neocore
 
   - Pong : https://github.com/David-Vandensteen/neogeo-cd-pong
