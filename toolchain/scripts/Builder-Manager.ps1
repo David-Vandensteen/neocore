@@ -14,9 +14,9 @@ function Main {
     [Parameter(Mandatory=$true)][xml] $Config
   )
 
-  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\check.ps1"
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\assert\config.ps1"
 
-  Check -Config $Config
+  Assert-Config -Config $Config
 
   $buildConfig = [PSCustomObject]@{
     pathMame = "$($Config.project.buildPath)\mame"
@@ -28,13 +28,11 @@ function Main {
     pathNeodevBin = "$($Config.project.buildPath)\neodev-sdk\m68k\bin"
     pathNeocoreBin = "$($Config.project.buildPath)\bin"
     pathNeodev = "$($Config.project.buildPath)\neodev-sdk"
-    pathToolchain = $Config.project.toolchainPath
     projectName = $Config.project.name
     version = $Config.project.version
     makefile = $Config.project.makefile
     PRGFile = "$($Config.project.buildPath)\$($Config.project.name)\$($Config.project.name).prg"
     rule = $Rule
-    XMLDATFile = $Config.project.XMLDATFile
     baseURL = $BaseURL
   }
 
@@ -57,21 +55,17 @@ function Main {
   Write-Host "--------------------------------------------"
   Write-Host ""
 
-  Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\models\project-name.ps1"
-  Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\models\rule.ps1"
-  Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\utils\logger.ps1"
-  Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\services\installers\sdk.ps1"
-  Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\utils\emulators.ps1"
-  Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\utils\set-env-path.ps1"
-  Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\utils\remove-project.ps1"
+  Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\assert\project-name.ps1"
+  Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\assert\rule.ps1"
+  Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\logger.ps1"
+  Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\install\sdk.ps1"
+  Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\stop\emulators.ps1"
+  Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\set\env-path.ps1"
+  Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\remove\project.ps1"
 
-  Model-Rule -Rule $($buildConfig.rule)
-  Model-Project-Name -Name $($Config.project.name)
-
-  $raineProcessName = [System.IO.Path]::GetFileNameWithoutExtension($Config.project.emulator.raine.exeFile)
-  $mameProcessName = [System.IO.Path]::GetFileNameWithoutExtension($Config.project.emulator.mame.exeFile)
-
-  Stop-Emulators -RaineProcessName $raineProcessName -MameProcessName $mameProcessName
+  Assert-Rule -Rule $($buildConfig.rule)
+  Assert-ProjectName -Name $($Config.project.name)
+  Stop-Emulators
 
   if ((Test-Path -Path $buildConfig.pathSpool) -eq $false) { New-Item -Path $buildConfig.pathSpool -ItemType Directory -Force }
 
@@ -87,94 +81,85 @@ function Main {
   if ((Test-Path -Path $buildConfig.pathNeocoreBin) -eq $false) { Install-SDK }
   if ((Test-Path -Path $buildConfig.pathNeodev) -eq $false) { Install-SDK }
 
-  # TODO : if ((Test-Path -Path "$($buildConfig.pathNeodev)\m68k\include\neocore.h") -eq $false) { Install-SDK }
-  # TODO : if ((Test-Path -Path "$($buildConfig.pathNeodev)\m68k\lib\libneocore.a") -eq $false) { Install-SDK }
-
   if ($Rule -notmatch "^only:") { Remove-Project }
   if ((Test-Path -Path $buildConfig.pathBuild) -eq $false) { New-Item -Path $buildConfig.pathBuild -ItemType Directory -Force }
-
   if ($Rule -eq "clean") { exit 0 }
 
-  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\module-raine.ps1"
-  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\utils\watcher.ps1"
-  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\utils\show-version.ps1"
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\build\sprite.ps1"
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\build\program.ps1"
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\build\iso.ps1"
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\build\mame.ps1"
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\build\exe.ps1"
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\install\nsis.ps1"
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\show\version.ps1"
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\start\mame.ps1"
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\start\raine.ps1"
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\start\animator.ps1"
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\start\framer.ps1"
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\watch\folder.ps1"
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\write\iso.ps1"
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\write\dist.ps1"
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\write\program.ps1"
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\write\sprite.ps1"
 
-  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\writers\iso.ps1"
-  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\writers\dist.ps1"
-  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\writers\program.ps1"
-  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\writers\sprite.ps1"
-
-  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\builders\builder-sprite.ps1"
-  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\builders\builder-program.ps1"
-  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\builders\builder-iso.ps1"
-  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\builders\builder-mame.ps1"
-  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\builders\exe.ps1"
-
-  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\runners\runner-mame.ps1"
-  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\runners\runner-raine.ps1"
-  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\runners\animator.ps1"
-  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\runners\framer.ps1"
-
-  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\services\installers\nsis.ps1"
-
-  if ($Rule -eq "animator") { RunnerAnimator }
-  if ($Rule -eq "framer") { RunnerFramer }
-  if ($Rule -eq "sprite") { BuilderSprite }
+  if ($Rule -eq "animator") { Start-Animator }
+  if ($Rule -eq "framer") { Start-Framer }
+  if ($Rule -eq "sprite") { Build-Sprite }
 
   if (($Rule -eq "make") -or ($Rule -eq "") -or (!$Rule) -or ($Rule -eq "default") ) {
-    BuilderSprite
-    BuilderProgram
+    Build-Sprite
+    Build-Program
   }
 
   if ($Rule -eq "iso") {
-    BuilderSprite
-    BuilderProgram
-    BuilderISO
+    Build-Sprite
+    Build-Program
+    Build-ISO
   }
 
   if ($Rule -eq "run:raine" -or $Rule -eq "raine") {
-    BuilderSprite
-    BuilderProgram
-    BuilderISO
-    RunnerRaine
+    Build-Sprite
+    Build-Program
+    Build-ISO
+    Start-Raine
   }
 
   if ($Rule -eq "run:mame" -or $Rule -eq "mame" -or $Rule -eq "run") {
-    BuilderSprite
-    BuilderProgram
-    BuilderISO
-    BuilderMame
-    RunnerMame
+    Build-Sprite
+    Build-Program
+    Build-ISO
+    Build-Mame
+    Start-Mame
   }
 
   if ($Rule -eq "serve:raine") {
     While ($true) {
-      BuilderSprite
-      BuilderProgram
-      BuilderISO
-      RunnerRaine
+      Build-Sprite
+      Build-Program
+      Build-ISO
+      Start-Raine
       Watch-Folder -Path "."
-      Stop-Emulators -RaineProcessName $raineProcessName -MameProcessName $mameProcessName
+      Stop-Emulators
     }
   }
 
   if ($Rule -eq "serve:mame" -or $Rule -eq "serve") {
     While ($true) {
-      BuilderSprite
-      BuilderProgram
-      BuilderISO
-      BuilderMame
-      RunnerMame
+      Build-Sprite
+      Build-Program
+      Build-ISO
+      Build-Mame
+      Start-Mame
       Watch-Folder -Path "."
-      Stop-Emulators -RaineProcessName $raineProcessName -MameProcessName $mameProcessName
+      Stop-Emulators
     }
   }
 
   if ($Rule -eq "dist:iso" -or $Rule -eq "dist:raine") {
     if ((Test-Path -Path $Config.project.distPath) -eq $false) { New-Item -Path $Config.project.distPath -ItemType Directory -Force }
-    BuilderSprite
-    BuilderProgram
-    BuilderISO
+    Build-Sprite
+    Build-Program
+    Build-ISO
     Write-Dist `
       -ProjectName $buildConfig.projectName `
       -PathDestination "$($Config.project.distPath)\$($buildConfig.projectName)\$($buildConfig.projectName)-$($buildConfig.version)" `
@@ -184,10 +169,10 @@ function Main {
 
   if ($Rule -eq "dist:mame" -or $Rule -eq "dist:chd") {
     if ((Test-Path -Path $Config.project.distPath) -eq $false) { New-Item -Path $Config.project.distPath -ItemType Directory -Force }
-    BuilderSprite
-    BuilderProgram
-    BuilderISO
-    BuilderMame
+    Build-Sprite
+    Build-Program
+    Build-ISO
+    Build-Mame
     Write-Dist `
       -ProjectName $buildConfig.projectName `
       -PathDestination "$($Config.project.distPath)\$($buildConfig.projectName)\$($buildConfig.projectName)-$($buildConfig.version)" `
@@ -197,24 +182,24 @@ function Main {
 
   if ($Rule -eq "dist:exe") {
     if ((Test-Path -Path "$($config.project.buildPath)\tools\nsis-3.08") -eq $false) { Install-NSIS }
-    BuilderSprite
-    BuilderProgram
-    BuilderISO
-    BuilderMame
-    BuilderEXE
+    Build-Sprite
+    Build-Program
+    Build-ISO
+    Build-Mame
+    Build-EXE
   }
 
   if ($Rule -eq "--version") {
     Show-Version
   }
 
-  if ($Rule -eq "only:sprite") { BuilderSprite }
-  if ($Rule -eq "only:program") { BuilderProgram }
-  if ($Rule -eq "only:iso") { BuilderISO }
-  if ($Rule -eq "only:mame") { BuilderMame }
-  if ($Rule -eq "only:run") { RunnerMame }
-  if ($Rule -eq "only:run:mame") { RunnerMame }
-  if ($Rule -eq "only:run:raine") { RunnerRaine }
+  if ($Rule -eq "only:sprite") { Build-Sprite }
+  if ($Rule -eq "only:program") { Build-Program }
+  if ($Rule -eq "only:iso") { Build-ISO }
+  if ($Rule -eq "only:mame") { Build-Mame }
+  if ($Rule -eq "only:run") { Start-Mame }
+  if ($Rule -eq "only:run:mame") { Start-Mame }
+  if ($Rule -eq "only:run:raine") { Start-Mame }
 }
 
 if ((Test-Path -Path $ConfigFile) -eq $false) {
