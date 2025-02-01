@@ -8,11 +8,13 @@ param (
 
 function Show-Error {
   param ($message)
-  Write-Host "ERROR: $message" -ForegroundColor Red
+  Write-Host "error : $message" -ForegroundColor Red
   exit 1
 }
 
 if (-not (Test-Path $Path)) {
+  Import-Module "..\..\..\toolchain\scripts\modules\assert\project-name.ps1"
+  Assert-ProjectName -Name $Name
   try {
     New-Item -ItemType Directory -Path $Path -Force | Out-Null
 
@@ -35,6 +37,9 @@ if (-not (Test-Path $Path)) {
     [xml]$xml = Get-Content -Path $xmlPath
     $xml.project.name = $Name
     $xml.Save($xmlPath)
+
+    $crt0cdContent = [System.IO.File]::ReadAllText("..\..\..\bootstrap\standalone\crt0_cd.s").Replace("/*project_name*/", $Name.PadRight(16))
+    [System.IO.File]::WriteAllText("$Path\src\crt0_cd.s", $crt0cdContent)
   } catch {
     Show-Error $_.Exception.Message
   }
