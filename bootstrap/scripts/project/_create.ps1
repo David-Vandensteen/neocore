@@ -8,11 +8,13 @@ param (
 
 function Show-Error {
   param ($message)
-  Write-Host "ERROR: $message" -ForegroundColor Red
+  Write-Host "error : $message" -ForegroundColor Red
   exit 1
 }
 
 if (-not (Test-Path $Path)) {
+  Import-Module "..\..\..\toolchain\scripts\modules\assert\project-name.ps1"
+  Assert-ProjectName -Name $Name
   try {
     New-Item -ItemType Directory -Path $Path -Force | Out-Null
 
