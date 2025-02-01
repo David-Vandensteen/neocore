@@ -1,5 +1,8 @@
 ## 2.3.4
 
+  - project name assert (16 char max)
+  - add project name assert in project create script
+
 ## 2.3.3
 
   - toolchain refactor
