@@ -1,5 +1,6 @@
 ## 2.3.4
 
+  - add project name header in Neo Geo program (for new project scaffolded with the create script)
   - project name assert (16 char max)
   - add project name assert in project create script
 
