@@ -6,6 +6,8 @@
     - nc_init_display_gfx_picture
     - nc_init_display_gfx_picture_physic
     - nc_init_display_gfx_scroller
+  - update gitignore in bootstrap (/build/)
+  - shadow init system on play cdda
 
 ## 2.3.4
 
