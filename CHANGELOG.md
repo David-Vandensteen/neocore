@@ -1,3 +1,5 @@
+## 2.4.0
+
 ## 2.3.4
 
   - add project name header in Neo Geo program (for new project scaffolded with the create script)
