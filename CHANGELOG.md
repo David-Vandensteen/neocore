@@ -1,5 +1,12 @@
 ## 2.4.0
 
+  - add gfx init display combo functions :
+    - nc_init_display_gfx_animated_sprite
+    - nc_init_display_gfx_animated_sprite_physic
+    - nc_init_display_gfx_picture
+    - nc_init_display_gfx_picture_physic
+    - nc_init_display_gfx_scroller
+
 ## 2.3.4
 
   - add project name header in Neo Geo program (for new project scaffolded with the create script)
