@@ -9,12 +9,33 @@ static Box *asteroids_box[ASTEROID_MAX];
 
 int main(void) {
   BYTE i = 0;
-  nc_init_gfx_animated_sprite_physic(&player, &player_sprite, &player_sprite_Palettes, 48, 16, 0, 0);
-  nc_display_gfx_animated_sprite_physic(&player, 10, 10, PLAYER_SPRITE_ANIM_IDLE);
+
+  nc_init_display_gfx_animated_sprite_physic(
+    &player,
+    &player_sprite,
+    &player_sprite_Palettes,
+    48,
+    16,
+    0,
+    0,
+    0,
+    0,
+    PLAYER_SPRITE_ANIM_IDLE
+  );
 
   for (i = 0; i < ASTEROID_MAX; i++) {
-    nc_init_gfx_picture_physic(&asteroids[i], &asteroid_sprite, &asteroid_sprite_Palettes, 8, 8, 0, 0, AUTOBOX);
-    nc_display_gfx_picture_physic(&asteroids[i], nc_random(300), nc_random(200));
+    nc_init_display_gfx_picture_physic(
+      &asteroids[i],
+      &asteroid_sprite,
+      &asteroid_sprite_Palettes,
+      nc_random(300),
+      nc_random(200),
+      8,
+      8,
+      0,
+      0,
+      AUTOBOX
+    );
     asteroids_box[i] = &asteroids[i].box;
   }
 
