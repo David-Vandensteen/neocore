@@ -1015,6 +1015,7 @@ void nc_update_mask(short x, short y, Vec2short vec[], Vec2short offset[], BYTE 
 //--------------------------------------------------------------------------//
 
 void nc_play_cdda(unsigned char track) {
+  nc_shadow_init_system();
   disableIRQ();
   asm(
     "loop_track_%=:              \n\t"
