@@ -51,3 +51,18 @@ if (Test-Path -Path $ProjectSrcPath) {
   Show-Error "$ProjectSrcPath not found"
   exit 1
 }
+
+$gitignorePath = "$ProjectSrcPath\..\.gitignore"
+
+if (Test-Path -Path $gitignorePath) {
+  $gitignoreContent = Get-Content -Path $gitignorePath
+  if ($gitignoreContent -notcontains "build/") {
+  } else {
+    Write-Host ""
+    Write-Host "warning : the $gitignorePath file contains 'build/'" -ForegroundColor Yellow
+    Write-Host "please change it to '/build/'" -ForegroundColor Yellow
+  }
+} else {
+  Show-Error "$gitignorePath not found"
+  exit 1
+}
