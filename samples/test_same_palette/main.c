@@ -7,13 +7,30 @@ static GFX_Animated_Sprite player;
 static GFX_Scroller backgroung;
 
 int main(void) {
-  nc_init_gfx_scroller(&backgroung, &background_sprite, &background_sprite_Palettes);
-  nc_init_gfx_picture(&planet, &planet04_sprite, &background_sprite_Palettes);
-  nc_init_gfx_animated_sprite(&player, &player_sprite, &background_sprite_Palettes);
+  nc_init_display_gfx_scroller(
+    &backgroung,
+    &background_sprite,
+    &background_sprite_Palettes,
+    0,
+    0
+  );
 
-  nc_display_gfx_scroller(&backgroung, 0, 0);
-  nc_display_gfx_picture(&planet, 100, 150);
-  nc_display_gfx_animated_sprite(&player, 150, 10, PLAYER_SPRITE_ANIM_IDLE);
+  nc_init_display_gfx_picture(
+    &planet,
+    &planet04_sprite,
+    &background_sprite_Palettes,
+    100,
+    150
+  );
+
+  nc_init_display_gfx_animated_sprite(
+    &player,
+    &player_sprite,
+    &background_sprite_Palettes,
+    150,
+    10,
+    PLAYER_SPRITE_ANIM_IDLE
+  );
 
   while(1) {
     nc_update();

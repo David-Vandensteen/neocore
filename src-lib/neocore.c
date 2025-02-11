@@ -442,6 +442,93 @@ void nc_debug_paletteInfo(paletteInfo *palette, BOOL palCount, BOOL data) {
   }
 }
 
+  /*-----------------------*/
+ /*  GFX INIT DISPLAY     */
+/*-----------------------*/
+
+void nc_init_display_gfx_animated_sprite(
+  GFX_Animated_Sprite *gfx_animated_sprite,
+  spriteInfo *spriteInfo,
+  paletteInfo *paletteInfo,
+  short x,
+  short y,
+  WORD anim
+) {
+  nc_init_gfx_animated_sprite(gfx_animated_sprite, spriteInfo, paletteInfo);
+  nc_display_gfx_animated_sprite(gfx_animated_sprite, x, y, anim);
+}
+
+void nc_init_display_gfx_animated_sprite_physic(
+  GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic,
+  spriteInfo *spriteInfo,
+  paletteInfo *paletteInfo,
+  short x,
+  short y,
+  short box_witdh,
+  short box_height,
+  short box_width_offset,
+  short box_height_offset,
+  WORD anim
+) {
+  nc_init_gfx_animated_sprite_physic(
+    gfx_animated_sprite_physic,
+    spriteInfo,
+    paletteInfo,
+    box_witdh,
+    box_height,
+    box_width_offset,
+    box_height_offset
+  );
+  nc_display_gfx_animated_sprite_physic(gfx_animated_sprite_physic, x, y, anim);
+}
+
+void nc_init_display_gfx_picture(
+  GFX_Picture *gfx_picture,
+  pictureInfo *pictureInfo,
+  paletteInfo *paletteInfo,
+  short x,
+  short y
+) {
+  nc_init_gfx_picture(gfx_picture, pictureInfo, paletteInfo);
+  nc_display_gfx_picture(gfx_picture, x, y);
+}
+
+void nc_init_display_gfx_picture_physic(
+  GFX_Picture_Physic *gfx_picture_physic,
+  pictureInfo *pictureInfo,
+  paletteInfo *paletteInfo,
+  short x,
+  short y,
+  short box_witdh,
+  short box_height,
+  short box_width_offset,
+  short box_height_offset,
+  BOOL autobox_enabled
+) {
+  nc_init_gfx_picture_physic(
+    gfx_picture_physic,
+    pictureInfo,
+    paletteInfo,
+    box_witdh,
+    box_height,
+    box_width_offset,
+    box_height_offset,
+    autobox_enabled
+  );
+  nc_display_gfx_picture_physic(gfx_picture_physic, x, y);
+}
+
+void nc_init_display_gfx_scroller(
+  GFX_Scroller *gfx_scroller,
+  scrollerInfo *scrollerInfo,
+  paletteInfo *paletteInfo,
+  short x,
+  short y
+) {
+  nc_init_gfx_scroller(gfx_scroller, scrollerInfo, paletteInfo);
+  nc_display_gfx_scroller(gfx_scroller, x, y);
+}
+
   /*------------------*/
  /*  GFX VISIBILITY  */
 /*------------------*/
@@ -928,6 +1015,7 @@ void nc_update_mask(short x, short y, Vec2short vec[], Vec2short offset[], BYTE 
 //--------------------------------------------------------------------------//
 
 void nc_play_cdda(unsigned char track) {
+  nc_shadow_init_system();
   disableIRQ();
   asm(
     "loop_track_%=:              \n\t"

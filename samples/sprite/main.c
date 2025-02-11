@@ -6,13 +6,30 @@ int main(void) {
   GFX_Scroller background;
   GFX_Picture planet;
 
-  nc_init_gfx_picture(&planet, &planet04_sprite, &planet04_sprite_Palettes);
-  nc_init_gfx_animated_sprite(&player, &player_sprite, &player_sprite_Palettes);
-  nc_init_gfx_scroller(&background, &background_sprite, &background_sprite_Palettes);
+  nc_init_display_gfx_picture(
+    &planet,
+    &planet04_sprite,
+    &planet04_sprite_Palettes,
+    20,
+    100
+  );
 
-  nc_display_gfx_scroller(&background, 0, 0);
-  nc_display_gfx_picture(&planet, 20, 100);
-  nc_display_gfx_animated_sprite(&player, 10, 10, PLAYER_SPRITE_ANIM_IDLE);
+  nc_init_display_gfx_animated_sprite(
+    &player,
+    &player_sprite,
+    &player_sprite_Palettes,
+    10,
+    10,
+    PLAYER_SPRITE_ANIM_IDLE
+  );
+
+  nc_init_display_gfx_scroller(
+    &background,
+    &background_sprite,
+    &background_sprite_Palettes,
+    0,
+    0
+  );
 
   while(1) {
     Vec2short position;
