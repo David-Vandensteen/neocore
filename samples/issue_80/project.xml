@@ -8,6 +8,14 @@
   <distPath>..\..\dist</distPath>
   <gfx>
     <DAT>
+      <chardata>
+        <setup>
+          <starting_tile>256</starting_tile>
+        </setup>
+        <pict id="background">
+          <file>assets\gfx\background.png</file>
+        </pict>
+      </chardata>
     </DAT>
   </gfx>
   <emulator>

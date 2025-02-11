@@ -6,8 +6,8 @@ int main(void) {
   static GFX_Picture logo;
   static paletteInfo logo_swap_palette;
   BYTE i = 0;
-  nc_init_gfx_picture(&logo, &logo_sprite, &logo_sprite_Palettes);
-  nc_display_gfx_picture(&logo, 50, 100);
+
+  nc_init_display_gfx_picture(&logo, &logo_sprite, &logo_sprite_Palettes, 50, 100);
   logo_swap_palette.palCount = logo.paletteInfoDAT->palCount;
 
   for (i = 0; i < nc_bitwise_multiplication_16(logo.paletteInfoDAT->palCount); i++) { logo_swap_palette.data[i] = nc_random(0xFFFF); }

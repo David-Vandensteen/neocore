@@ -85,25 +85,6 @@ typedef struct Adpcm_player {
   /*------------------*/
  /*  GFX INIT        */
 /*------------------*/
-
-void nc_init_gfx_scroller(
-  GFX_Scroller *gfx_scroller,
-  scrollerInfo *scrollerInfo,
-  paletteInfo *paletteInfo
-);
-
-void nc_init_gfx_picture(GFX_Picture *gfx_picture, pictureInfo *pictureInfo, paletteInfo *paletteInfo);
-void nc_init_gfx_picture_physic(
-  GFX_Picture_Physic *gfx_picture_physic,
-  pictureInfo *pi,
-  paletteInfo *pali,
-  short box_witdh,
-  short box_height,
-  short box_width_offset,
-  short box_height_offset,
-  BOOL autobox_enabled
-);
-
 void nc_init_gfx_animated_sprite(
   GFX_Animated_Sprite *gfx_animated_sprite,
   spriteInfo *spriteInfo,
@@ -120,13 +101,32 @@ void nc_init_gfx_animated_sprite_physic(
   short box_height_offset
 );
 
+void nc_init_gfx_picture(
+  GFX_Picture *gfx_picture,
+  pictureInfo *pictureInfo,
+  paletteInfo *paletteInfo
+);
+
+void nc_init_gfx_picture_physic(
+  GFX_Picture_Physic *gfx_picture_physic,
+  pictureInfo *pi,
+  paletteInfo *pali,
+  short box_witdh,
+  short box_height,
+  short box_width_offset,
+  short box_height_offset,
+  BOOL autobox_enabled
+);
+
+void nc_init_gfx_scroller(
+  GFX_Scroller *gfx_scroller,
+  scrollerInfo *scrollerInfo,
+  paletteInfo *paletteInfo
+);
+
   /*------------------*/
  /*  GFX DISPLAY     */
 /*------------------*/
-
-void nc_display_gfx_scroller(GFX_Scroller *gfx_scroller, short x, short y);
-void nc_display_gfx_picture(GFX_Picture *gfx_picture, short x, short y);
-void nc_display_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic, short x, short y);
 
 void nc_display_gfx_animated_sprite(
   GFX_Animated_Sprite *gfx_animated_sprite,
@@ -142,7 +142,66 @@ void nc_display_gfx_animated_sprite_physic(
   WORD anim
 );
 
+void nc_display_gfx_picture(GFX_Picture *gfx_picture, short x, short y);
+void nc_display_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic, short x, short y);
+void nc_display_gfx_scroller(GFX_Scroller *gfx_scroller, short x, short y);
+
 void nc_debug_paletteInfo(paletteInfo *palette, BOOL palCount, BOOL data);
+
+  /*-----------------------*/
+ /*  GFX INIT DISPLAY     */
+/*-----------------------*/
+
+void nc_init_display_gfx_animated_sprite(
+  GFX_Animated_Sprite *gfx_animated_sprite,
+  spriteInfo *spriteInfo,
+  paletteInfo *paletteInfo,
+  short x,
+  short y,
+  WORD anim
+);
+
+void nc_init_display_gfx_animated_sprite_physic(
+  GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic,
+  spriteInfo *spriteInfo,
+  paletteInfo *paletteInfo,
+  short x,
+  short y,
+  short box_witdh,
+  short box_height,
+  short box_width_offset,
+  short box_height_offset,
+  WORD anim
+);
+
+void nc_init_display_gfx_picture(
+  GFX_Picture *gfx_picture,
+  pictureInfo *pictureInfo,
+  paletteInfo *paletteInfo,
+  short x,
+  short y
+);
+
+void nc_init_display_gfx_picture_physic(
+  GFX_Picture_Physic *gfx_picture_physic,
+  pictureInfo *pictureInfo,
+  paletteInfo *paletteInfo,
+  short x,
+  short y,
+  short box_witdh,
+  short box_height,
+  short box_width_offset,
+  short box_height_offset,
+  BOOL autobox_enabled
+);
+
+void nc_init_display_gfx_scroller(
+  GFX_Scroller *gfx_scroller,
+  scrollerInfo *scrollerInfo,
+  paletteInfo *paletteInfo,
+  short x,
+  short y
+);
 
   /*------------------*/
  /*  GFX VISIBILITY  */
