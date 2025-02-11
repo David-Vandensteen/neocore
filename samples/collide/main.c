@@ -5,27 +5,31 @@ static GFX_Animated_Sprite_Physic player;
 static GFX_Picture_Physic asteroid;
 
 int main(void) {
-  nc_init_gfx_animated_sprite_physic(
+  nc_init_display_gfx_animated_sprite_physic(
     &player,
     &player_sprite,
     &player_sprite_Palettes,
     10,
     10,
+    10,
+    10,
     0,
-    0
+    0,
+    PLAYER_SPRITE_ANIM_IDLE
   );
-  nc_init_gfx_picture_physic(
+
+  nc_init_display_gfx_picture_physic(
     &asteroid,
     &asteroid_sprite,
     &asteroid_sprite_Palettes,
-    nc_bitwise_multiplication_8(asteroid_sprite.tileWidth),
+    100,
+    100,
+    32,
     32,
     0,
     0,
     AUTOBOX
   );
-  nc_display_gfx_animated_sprite_physic(&player, 10, 10, PLAYER_SPRITE_ANIM_IDLE);
-  nc_display_gfx_picture_physic(&asteroid, 100, 100);
 
   while(1) {
     Vec2short position;

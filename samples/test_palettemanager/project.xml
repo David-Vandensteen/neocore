@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
-  <name>test_palettemanager</name>
+  <name>test_palettemana</name>
   <version>1.0.0</version>
   <makefile>..\Makefile</makefile>
   <neocorePath>..\..\</neocorePath>
