@@ -1,5 +1,7 @@
 ## 2.5.0
 
+  - add mak lib rule to build neocore c lib
+
 ## 2.4.0
 
   - add gfx init display combo functions :
