@@ -1014,6 +1014,23 @@ void nc_update_mask(short x, short y, Vec2short vec[], Vec2short offset[], BYTE 
  //                                SOUND                                     //
 //--------------------------------------------------------------------------//
 
+  //---------
+ //    CDDA
+//-----------
+
+// 0x0: read track (loop ? Or keep playing next tracks ?)
+// 0x1: read track (pause once played once)
+// 0x2: pause (ignores track parameter)
+// 0x3: resume (ignores track parameter)
+
+// https://wiki.neogeodev.org/index.php?title=CDDA
+
+// asm("loop_track_02:");
+// asm(" move.w #0x0002,%d0");
+// asm(" tst.b  0x10F6D9");
+// asm(" beq.s  loop_track_02");
+// asm(" jsr  0xC0056A");
+
 void nc_play_cdda(unsigned char track) {
   nc_shadow_init_system();
   disableIRQ();
@@ -1029,6 +1046,29 @@ void nc_play_cdda(unsigned char track) {
   );
   enableIRQ();
 }
+
+void nc_pause_cdda() {
+  // disableIRQ();
+  // asm(
+  //   "pause:                          \n\t"
+  //   "move.w  #0x2000,%d0         \n\t"
+  //   "tst.b   0x10F6D9            \n\t"
+  //   "beq.s   pause                   \n\t"
+  //   "jsr     0xC0056A"
+  // );
+  // enableIRQ();
+  disableIRQ();
+  asm("pause_command:");
+  asm(" move.b #0x2,%d0");  // Charge la commande "pause" dans D0
+  asm(" tst.b  0x10F6D9");     // Teste si la condition est remplie (à adapter selon le contexte)
+  asm(" beq.s  pause_command"); // Boucle si nécessaire
+  asm(" jsr  0xC0056A");       // Appel de la fonction gérant la commande
+  enableIRQ();
+}
+
+  //--------
+ //  ADPCM
+//----------
 
 void nc_stop_adpcm() {
   #define Z80_ADPCM_STOP (0x18)

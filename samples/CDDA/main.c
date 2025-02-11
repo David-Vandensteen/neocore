@@ -48,6 +48,7 @@ static void update() {
   if (position_k7.x < 40) k7_direction = true;
   if (nc_joypad_is_left(0) && track_num > 2) nc_play_cdda(--track_num);
   if (nc_joypad_is_right(0) && track_num < 5) nc_play_cdda(++track_num);
+  if (nc_joypad_is_a(0)) nc_pause_cdda();
 }
 
 int main(void) {
