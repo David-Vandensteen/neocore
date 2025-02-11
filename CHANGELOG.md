@@ -1,3 +1,5 @@
+## 2.5.0
+
 ## 2.4.0
 
   - add gfx init display combo functions :
