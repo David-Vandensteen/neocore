@@ -89,6 +89,7 @@ function Main {
   Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\build\program.ps1"
   Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\build\iso.ps1"
   Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\build\mame.ps1"
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\build\neocore-lib.ps1"
   Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\build\exe.ps1"
   Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\install\nsis.ps1"
   Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\show\version.ps1"
@@ -104,6 +105,7 @@ function Main {
 
   if ($Rule -eq "animator") { Start-Animator }
   if ($Rule -eq "framer") { Start-Framer }
+  if ($Rule -eq "lib") { Build-NeocoreLib }
   if ($Rule -eq "sprite") { Build-Sprite }
 
   if (($Rule -eq "make") -or ($Rule -eq "") -or (!$Rule) -or ($Rule -eq "default") ) {
