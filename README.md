@@ -135,7 +135,7 @@ cd c:\temp\myGame\src
 
 ## Documentation of Neocore C lib
 
-  - Doxygen: [http://azertyvortex.free.fr/neocore-doxy/r8/neocore_8h.html](http://azertyvortex.free.fr/neocore-doxy/r8/neocore_8h.html)
+  - Doxygen: [http://azertyvortex.free.fr/neocore-doxy/r9/neocore_8h.html](http://azertyvortex.free.fr/neocore-doxy/r9/neocore_8h.html)
     
 ## Note
 
@@ -204,18 +204,11 @@ Some problems currently:
 * The process is not a real watcher (the rebuild is triggered only if the folder size change)  
 * When you break this process, path is not restored in the current terminal (close & reopen a new terminal)  
 
-## Compiling the lib (necessary if you develop Neocore lib)
+## Compiling the lib (necessary if you develop or modify Neocore C lib)
 
-* Go to the folder where you've cloned this Neocore repository (*replace `<neocore>` with your path in the following command*)
 ```cmd
-cd <neocore>\src-lib
+.\mak.bat lib
 ```
-```cmd
-.\build-neocore.bat -gccPath ..\build\gcc\gcc-2.95.2 -includePath ..\build\include -libraryPath ..\build\lib
-```
-This script override path environment variable during the compilation.  
-its avoid collisions with other bin, sdk, gcc...  
-If sdk was not found, build a sample (with mak script) to initialize cache (sdk will install in build folder).  
 
 ## Dependencies
 

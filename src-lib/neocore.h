@@ -415,7 +415,19 @@ void nc_resize_box(Box *Box, short edge); // todo (minor) - deprecated ?
  //                                SOUND                                     //
 //--------------------------------------------------------------------------//
 
+  //---------
+ //    CDDA
+//-----------
+
 void nc_play_cdda(BYTE track);
+void nc_pause_cdda();
+void nc_resume_cdda();
+#define nc_stop_cdda() nc_pause_cdda()
+
+  //--------
+ //  ADPCM
+//----------
+
 void nc_stop_adpcm();
 
   //----------------------------------------------------------------------------//

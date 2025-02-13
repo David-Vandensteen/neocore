@@ -1014,6 +1014,10 @@ void nc_update_mask(short x, short y, Vec2short vec[], Vec2short offset[], BYTE 
  //                                SOUND                                     //
 //--------------------------------------------------------------------------//
 
+  //---------
+ //    CDDA
+//-----------
+
 void nc_play_cdda(unsigned char track) {
   nc_shadow_init_system();
   disableIRQ();
@@ -1029,6 +1033,24 @@ void nc_play_cdda(unsigned char track) {
   );
   enableIRQ();
 }
+
+void nc_pause_cdda() {
+  disableIRQ();
+  asm(" move.w #0x200,%d0");
+  asm(" jsr  0xC0056A");
+  enableIRQ();
+}
+
+void nc_resume_cdda() {
+  disableIRQ();
+  asm(" move.w #0x300,%d0");
+  asm(" jsr  0xC0056A");
+  enableIRQ();
+}
+
+  //--------
+ //  ADPCM
+//----------
 
 void nc_stop_adpcm() {
   #define Z80_ADPCM_STOP (0x18)
