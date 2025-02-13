@@ -1,5 +1,9 @@
 ## 2.5.0
 
+  - add functions :
+    - nc_pause_cdda
+    - nc_resume_cdda
+    - nc_stop_cdda
   - add mak lib rule to build neocore c lib
   - use chd compression only with mak dist:mame & dist:exe rules
 
