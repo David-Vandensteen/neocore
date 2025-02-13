@@ -60,7 +60,7 @@ function Write-Mame {
   if ((Test-Path -Path "$PathMame\mame64.exe") -eq $false) { Write-Host "error - mame64.exe is not found in $PathMame" -ForegroundColor Red; exit 1 }
 
   Logger-Step -Message "compiling CHD"
-  Start-Process -NoNewWindow -FilePath "chdman.exe" -ArgumentList "createcd -i $CUEFile -o $OutputFile --force" -Wait
+  Start-Process -NoNewWindow -FilePath "chdman.exe" -ArgumentList "createcd -i $CUEFile -o $OutputFile --force --compression none" -Wait
   if ((Test-Path -Path $OutputFile) -eq $false) {
     Logger-Error -Message "$OutputFile was not generated"
   } else {
