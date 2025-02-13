@@ -1,6 +1,7 @@
 ## 2.5.0
 
   - add mak lib rule to build neocore c lib
+  - use chd compression only with mak dist:mame & dist:exe rules
 
 ## 2.4.0
 
