@@ -135,7 +135,7 @@ cd c:\temp\myGame\src
 
 ## Documentation of Neocore C lib
 
-  - Doxygen: [http://azertyvortex.free.fr/neocore-doxy/r8/neocore_8h.html](http://azertyvortex.free.fr/neocore-doxy/r8/neocore_8h.html)
+  - Doxygen: [http://azertyvortex.free.fr/neocore-doxy/r9/neocore_8h.html](http://azertyvortex.free.fr/neocore-doxy/r9/neocore_8h.html)
     
 ## Note
 
