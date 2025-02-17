@@ -49,7 +49,7 @@ static Adpcm_player adpcm_player;
 static BOOL is_init = false;
 static BOOL joypad_edge_mode = false;
 
-static void nc_init_adpcm_player() {
+static void init_adpcm_player() {
   adpcm_player.state = IDLE;
   adpcm_player.remaining_frame = 0;
 }
@@ -57,7 +57,7 @@ static void nc_init_adpcm_player() {
 static BOOL sprite_index_manager_status[SPRITE_INDEX_MANAGER_MAX];
 static paletteInfo *palette_index_manager_status[PALETTE_INDEX_MANAGER_MAX];
 
-static BOOL nc_collide_point(short x, short y, Vec2short vec[], BYTE vector_max);
+static BOOL collide_point(short x, short y, Vec2short vec[], BYTE vector_max);
 
 static const WORD shrunk_table_prop[] = {
   0x000, 0x001, 0x002, 0x003, 0x004, 0x005, 0x006, 0x007, 0x008, 0x009,
@@ -99,7 +99,7 @@ static const char sin_table[] = {
   9,11,12,13,14,16,17,18,20,21,23,24,26,27,29,30
 };
 
-static BOOL nc_collide_point(short x, short y, Vec2short vec[], BYTE vector_max) {
+static BOOL collide_point(short x, short y, Vec2short vec[], BYTE vector_max) {
   BYTE i = 0, j = 0;
   for (i = 0; i < vector_max; i++) {
     j = i + 1;
@@ -115,7 +115,7 @@ static BOOL nc_collide_point(short x, short y, Vec2short vec[], BYTE vector_max)
   return true;
 }
 
-static void nc_shadow_init_system() {
+static void init_shadow_system() {
   if (is_init == false) {
     nc_init_system();
     is_init = true;
@@ -142,23 +142,23 @@ void static nc_setPosDefault() {
   y = LOGGER_Y_INIT;
 }
 
-static void nc_sprite_index_manager_init() {
+static void init_sprite_manager_index() {
   WORD i = 0;
   sprite_index_manager_status[0] = true;
   for (i = 1; i < SPRITE_INDEX_MANAGER_MAX; i++) sprite_index_manager_status[i] = false;
 }
 
-static void nc_sprite_index_manager_set(WORD index, WORD max) {
+static void set_sprite_manager_index(WORD index, WORD max) {
   WORD i = index;
   for (i = index; i < index + max; i++) sprite_index_manager_status[i] = true;
 }
 
-static void nc_sprite_index_manager_set_free(WORD index, WORD max) {
+static void set_free_sprite_manager_index(WORD index, WORD max) {
   WORD i = index;
   for (i = index; i < index + max; i++) sprite_index_manager_status[i] = false;
 }
 
-static WORD nc_sprite_index_manager_use(WORD max) {
+static WORD use_sprite_manager_index(WORD max) {
   WORD i, j = 0;
   WORD found = 0;
   for( i = 0; i < SPRITE_INDEX_MANAGER_MAX; i++) {
@@ -167,7 +167,7 @@ static WORD nc_sprite_index_manager_use(WORD max) {
         if (!sprite_index_manager_status[j]) {
           found++;
           if (found >= max) {
-            nc_sprite_index_manager_set(i, max);
+            set_sprite_manager_index(i, max);
             return i;
           }
         } else {
@@ -179,17 +179,17 @@ static WORD nc_sprite_index_manager_use(WORD max) {
   return 0; // TODO : no zero return
 }
 
-static void nc_palette_index_manager_init() {
+static void init_palette_manager_index() {
   WORD i = 0;
   for (i = 0; i <= 16; i++) palette_index_manager_status[i] = (paletteInfo*) 1;
 }
 
-static void nc_palette_index_manager_set(paletteInfo *pi, WORD index) {
+static void set_palette_manager_index(paletteInfo *pi, WORD index) {
   WORD i = index;
   for (i = index; i < index + pi->palCount; i++) palette_index_manager_status[i] = pi;
 }
 
-static void nc_palette_index_manager_set_free(paletteInfo *pi) {
+static void set_free_palette_index_manager(paletteInfo *pi) {
   WORD i = 0;
   for (i = 0; i <PALETTE_INDEX_MANAGER_MAX; i++) {
     if (palette_index_manager_status[i] == pi) {
@@ -198,7 +198,7 @@ static void nc_palette_index_manager_set_free(paletteInfo *pi) {
   }
 }
 
-static WORD nc_palette_index_manager_use(paletteInfo *pi) {
+static WORD use_palette_manager_index(paletteInfo *pi) {
   WORD i, j = 0;
   WORD found = 0;
   for (i = 0; i < PALETTE_INDEX_MANAGER_MAX; i++) {
@@ -210,7 +210,7 @@ static WORD nc_palette_index_manager_use(paletteInfo *pi) {
           if (!palette_index_manager_status[j]) {
             found++;
             if (found >= pi->palCount) {
-              nc_palette_index_manager_set(pi, i);
+              set_palette_manager_index(pi, i);
               return i;
             }
           }
@@ -266,7 +266,7 @@ void nc_shrunk_centroid_gfx_picture(
 }
 
 void nc_destroy_gfx_scroller(GFX_Scroller *gfx_scroller) {
-  nc_sprite_index_manager_set_free(gfx_scroller->scrollerDAT.baseSprite, 21);
+  set_free_sprite_manager_index(gfx_scroller->scrollerDAT.baseSprite, 21);
   clearSprites(gfx_scroller->scrollerDAT.baseSprite, 21);
 }
 
@@ -283,7 +283,7 @@ void nc_init_gfx_picture_physic(
   short box_height_offset,
   BOOL autobox_enabled
 ) {
-  nc_shadow_init_system();
+  init_shadow_system();
   nc_init_gfx_picture(&gfx_picture_physic->gfx_picture, pi, pali);
   gfx_picture_physic->autobox_enabled = autobox_enabled;
   if (gfx_picture_physic->autobox_enabled) {
@@ -296,7 +296,7 @@ void nc_init_gfx_picture(
   pictureInfo *pictureInfo,
   paletteInfo *paletteInfo
   ) {
-  nc_shadow_init_system();
+  init_shadow_system();
   gfx_picture->paletteInfoDAT = paletteInfo;
   gfx_picture->pictureInfoDAT = pictureInfo;
   gfx_picture->pixel_height = pictureInfo->tileHeight * 32;
@@ -308,7 +308,7 @@ void nc_init_gfx_animated_sprite(
   spriteInfo *spriteInfo,
   paletteInfo *paletteInfo
   ) {
-  nc_shadow_init_system();
+  init_shadow_system();
   gfx_animated_sprite->spriteInfoDAT = spriteInfo;
   gfx_animated_sprite->paletteInfoDAT = paletteInfo;
 };
@@ -322,7 +322,7 @@ void nc_init_gfx_animated_sprite_physic(
     short box_width_offset,
     short box_height_offset
   ) {
-  nc_shadow_init_system();
+  init_shadow_system();
   nc_init_box(
     &gfx_animated_sprite_physic->box,
     box_witdh,
@@ -343,7 +343,7 @@ void nc_init_gfx_scroller(
   scrollerInfo *scrollerInfo,
   paletteInfo *paletteInfo
   ) {
-  nc_shadow_init_system();
+  init_shadow_system();
   gfx_scroller->scrollerInfoDAT = scrollerInfo;
   gfx_scroller->paletteInfoDAT = paletteInfo;
 }
@@ -360,11 +360,11 @@ void nc_display_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic, short
 }
 
 void nc_display_gfx_picture(GFX_Picture *gfx_picture, short x, short y) {
-  WORD palette_index = nc_palette_index_manager_use(gfx_picture->paletteInfoDAT);
+  WORD palette_index = use_palette_manager_index(gfx_picture->paletteInfoDAT);
   pictureInit(
     &gfx_picture->pictureDAT,
     gfx_picture->pictureInfoDAT,
-    nc_sprite_index_manager_use(gfx_picture->pictureInfoDAT->tileWidth),
+    use_sprite_manager_index(gfx_picture->pictureInfoDAT->tileWidth),
     palette_index,
     x,
     y,
@@ -383,11 +383,11 @@ void nc_display_gfx_animated_sprite(
   short y,
   WORD anim
   ) {
-  WORD palette_index = nc_palette_index_manager_use(animated_sprite->paletteInfoDAT);
+  WORD palette_index = use_palette_manager_index(animated_sprite->paletteInfoDAT);
   aSpriteInit(
     &animated_sprite->aSpriteDAT,
     animated_sprite->spriteInfoDAT,
-    nc_sprite_index_manager_use(animated_sprite->spriteInfoDAT->maxWidth),
+    use_sprite_manager_index(animated_sprite->spriteInfoDAT->maxWidth),
     palette_index,
     x,
     y,
@@ -418,11 +418,11 @@ void nc_display_gfx_animated_sprite_physic(
 }
 
 void nc_display_gfx_scroller(GFX_Scroller *gfx_scroller, short x, short y) {
-  WORD palette_index = nc_palette_index_manager_use(gfx_scroller->paletteInfoDAT);
+  WORD palette_index = use_palette_manager_index(gfx_scroller->paletteInfoDAT);
   scrollerInit(
     &gfx_scroller->scrollerDAT,
     gfx_scroller->scrollerInfoDAT,
-    nc_sprite_index_manager_use(21),
+    use_sprite_manager_index(21),
     palette_index,
     x,
     y
@@ -739,7 +739,7 @@ void nc_destroy_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic *gfx_anima
 
 void nc_destroy_gfx_picture(GFX_Picture *gfx_picture) {
   pictureHide(&gfx_picture->pictureDAT);
-  nc_sprite_index_manager_set_free(
+  set_free_sprite_manager_index(
     gfx_picture->pictureDAT.baseSprite,
     gfx_picture->pictureInfoDAT->tileWidth
   );
@@ -748,7 +748,7 @@ void nc_destroy_gfx_picture(GFX_Picture *gfx_picture) {
 
 void nc_destroy_gfx_animated_sprite(GFX_Animated_Sprite *animated_sprite) {
   aSpriteHide(&animated_sprite->aSpriteDAT);
-  nc_sprite_index_manager_set_free(
+  set_free_sprite_manager_index(
     animated_sprite->aSpriteDAT.baseSprite,
     animated_sprite->spriteInfoDAT->maxWidth
   );
@@ -765,8 +765,8 @@ void nc_init_gpu() {
   initGfx();
   volMEMWORD(0x400002) = 0xffff;  // debug text white
   LSPCmode = 0x1c00;              // autoanim speed
-  nc_sprite_index_manager_init();
-  nc_palette_index_manager_init();
+  init_sprite_manager_index();
+  init_palette_manager_index();
 }
 
 void nc_clear_vram() {
@@ -788,7 +788,7 @@ void nc_clear_vram() {
 /*------------------------------*/
 
 void nc_update() {
-  nc_shadow_init_system();
+  init_shadow_system();
   SCClose();
   waitVBlank();
   nc_update_adpcm_player();
@@ -805,7 +805,7 @@ DWORD nc_wait_vbl_max(WORD nb) {
  /* GPU SPRITE INDEX MANAGEMENT  */
 /*------------------------------*/
 
-void nc_clear_sprite_index_table() { nc_sprite_index_manager_init(); }
+void nc_clear_sprite_index_table() { init_sprite_manager_index(); }
 
 WORD nc_get_max_free_sprite_index() {
   WORD i, max = 0;
@@ -827,8 +827,8 @@ WORD nc_get_max_sprite_index_used() {
  /* GPU PALETTE   */
 /*---------------*/
 
-void nc_clear_palette_index_table() { nc_palette_index_manager_init(); }
-void nc_destroy_palette(paletteInfo* paletteInfo) { nc_palette_index_manager_set_free(paletteInfo); }
+void nc_clear_palette_index_table() { init_palette_manager_index(); }
+void nc_destroy_palette(paletteInfo* paletteInfo) { set_free_palette_index_manager(paletteInfo); }
 
 WORD nc_get_max_free_palette_index() {
   WORD i, max = 0;
@@ -1019,7 +1019,7 @@ void nc_update_mask(short x, short y, Vec2short vec[], Vec2short offset[], BYTE 
 //-----------
 
 void nc_play_cdda(unsigned char track) {
-  nc_shadow_init_system();
+  init_shadow_system();
   disableIRQ();
   asm(
     "loop_track_%=:              \n\t"
@@ -1164,7 +1164,7 @@ WORD nc_free_ram_info() {
 /*---------------*/
 
 void nc_init_log() {
-  nc_shadow_init_system();
+  init_shadow_system();
   x = LOGGER_X_INIT;
   y = LOGGER_Y_INIT;
   x_default = LOGGER_X_INIT;
@@ -1281,7 +1281,7 @@ void nc_log_vec2short(char *label, Vec2short vec2short) {
 /*---------------*/
 
 void nc_init_adpcm() {
-  nc_init_adpcm_player();
+  init_adpcm_player();
 }
 
 Adpcm_player *nc_get_adpcm_player() {
@@ -1323,10 +1323,10 @@ BOOL nc_vector_is_left(short x, short y, short v1x, short v1y, short v2x, short 
 
 BOOL nc_vectors_collide(Box *box, Vec2short vec[], BYTE vector_max) {
   BOOL p0 = false, p1 = false, p2 = false, p3 = false, p4 = false;
-  p0 = nc_collide_point(box->p0.x, box->p0.y, vec, vector_max);
-  p1 = nc_collide_point(box->p1.x, box->p1.y, vec, vector_max);
-  p2 = nc_collide_point(box->p2.x, box->p2.y, vec, vector_max);
-  p3 = nc_collide_point(box->p3.x, box->p3.y, vec, vector_max);
-  p4 = nc_collide_point(box->p4.x, box->p4.y, vec, vector_max);
+  p0 = collide_point(box->p0.x, box->p0.y, vec, vector_max);
+  p1 = collide_point(box->p1.x, box->p1.y, vec, vector_max);
+  p2 = collide_point(box->p2.x, box->p2.y, vec, vector_max);
+  p3 = collide_point(box->p3.x, box->p3.y, vec, vector_max);
+  p4 = collide_point(box->p4.x, box->p4.y, vec, vector_max);
   return (p0 || p1 || p2 || p3 || p4);
 }
