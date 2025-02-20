@@ -24,9 +24,20 @@ function Assert-Rule {
     if ($Rule -eq "serve:mame") { return 0 }
     if ($Rule -eq "run") { return 0 }
     if ($Rule -eq "run:mame") { return 0 }
-    if ($Rule -eq "run:raine") { return 0 }
-    if ($Rule -eq "mame") { return 0 }
-    if ($Rule -eq "raine") { return 0 }
+    if ($Rule -eq "run:raine") {return 0 }
+
+    if ($Rule -eq "mame") { # TODO : remove at v3
+      Write-Host "warning : mame rule is deprecated, use run:mame instead" -ForegroundColor Yellow
+      pause
+      return 0
+    }
+
+    if ($Rule -eq "raine") { # TODO : remove at v3
+      Write-Host "warning : raine rule is deprecated, use run:raine instead" -ForegroundColor Yellow
+      pause
+      return 0
+    }
+
     if ($Rule -eq "--version") { return 0 }
 
     Write-Host "error : unknow parameter $Rule" -ForegroundColor Red
@@ -53,8 +64,6 @@ function Assert-Rule {
     Write-Host "run"
     Write-Host "run:mame"
     Write-Host "run:raine"
-    Write-Host "mame"
-    Write-Host "raine"
     Write-Host "--version"
 
     exit 1
