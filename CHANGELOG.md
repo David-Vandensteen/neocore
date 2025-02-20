@@ -1,3 +1,8 @@
+## 2.5.1
+
+  - rename few static functions
+  - deprecated mak mame and raine (use run:mame and run:raine)
+
 ## 2.5.0
 
   - add functions :
