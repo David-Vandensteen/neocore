@@ -1,5 +1,6 @@
 ## 2.6.0
 
+  - add mame profiles in project.xml
   - deprecated mak run (use run:mame instead)
 
 ## 2.5.1

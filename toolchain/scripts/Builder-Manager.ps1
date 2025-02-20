@@ -126,7 +126,7 @@ function Main {
     Start-Raine
   }
 
-  if ($Rule -eq "run:mame" -or $Rule -eq "mame" -or $Rule -eq "run") {
+  if ($Rule -like "run:mame*" -or $Rule -eq "mame" -or $Rule -eq "run") {
     Build-Sprite
     Build-Program
     Build-ISO

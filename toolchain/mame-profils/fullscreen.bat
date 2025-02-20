@@ -1,3 +1,4 @@
+rem TODO : remove at v3
 @echo off
 if exist ..\..\..\build set OUTFILE=..\..\..\build\mame-args.xml
 if exist ..\..\build set OUTFILE=..\..\build\mame-args.xml
