@@ -22,9 +22,14 @@ function Assert-Rule {
     if ($Rule -eq "sprite") { return 0 }
     if ($Rule -eq "serve:raine") { return 0 }
     if ($Rule -eq "serve:mame") { return 0 }
-    if ($Rule -eq "run") { return 0 }
-    if ($Rule -eq "run:mame") { return 0 }
+    if ($Rule -like "run:mame*") { return 0 }
     if ($Rule -eq "run:raine") {return 0 }
+
+    if ($Rule -eq "run") { # TODO : remove at v3
+      Write-Host "warning : run rule is deprecated, use run:mame instead" -ForegroundColor Yellow
+      pause
+      return 0
+    }
 
     if ($Rule -eq "mame") { # TODO : remove at v3
       Write-Host "warning : mame rule is deprecated, use run:mame instead" -ForegroundColor Yellow
