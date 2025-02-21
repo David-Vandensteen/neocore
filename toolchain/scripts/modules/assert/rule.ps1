@@ -45,9 +45,12 @@ function Assert-Rule {
 
     if ($Rule -eq "--version") { return 0 }
 
-    Write-Host "error : unknow parameter $Rule" -ForegroundColor Red
-    Write-Host "parameter list :"
+    if (-Not($Rule -eq "--help")) {
+      Write-Host "error : unknow parameter $Rule" -ForegroundColor Red
+    }
 
+    Write-Host "parameter list :"
+    Write-Host ""
     Write-Host "clean"
     Write-Host "default"
     Write-Host "dist:iso"
@@ -56,6 +59,7 @@ function Assert-Rule {
     Write-Host "animator"
     Write-Host "framer"
     Write-Host "iso"
+    Write-Host "lib"
     Write-Host "make"
     Write-Host "sprite"
     Write-Host "serve:raine"
@@ -70,6 +74,16 @@ function Assert-Rule {
     Write-Host "run:mame"
     Write-Host "run:raine"
     Write-Host "--version"
+    Write-Host "--help"
+    Write-Host ""
+
+    if ($Config.project.emulator.mame.profile) {
+      Write-Host "mame profiles for the project $($Config.project.name) :"
+
+      $Config.project.emulator.mame.profile.ChildNodes | ForEach-Object {
+        Write-Host "run:mame:$($_.Name)"
+      }
+    }
 
     exit 1
 }
