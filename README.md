@@ -182,6 +182,32 @@ For launching the DATlib Animator application:
 .\mak.bat animator
 ```
 
+## Mame profiles
+
+```xml
+<project>
+  <emulator>
+    <mame>
+      <profile>
+        <default>-window -skip_gameinfo neocdz</default>
+        <full>-nowindow -skip_gameinfo neocdz</full>
+        <nosound>-sound none -window -skip_gameinfo neocdz</nosound>
+        <debug>-debug -window -skip_gameinfo neocdz</debug>
+      </profile>
+    </mame>
+  </emulator>
+</project>
+```
+
+To use a named profile, launch mak run:mame:profileName   
+Example:
+- To run MAME in fullscreen.   
+```cmd
+.\mak.bat run:mame:full
+```
+
+You can add more custom profiles.
+
 ## Pull or checkout another branches
 **BE CAREFUL : You need to remove build folder `.\neocore\build` for supress cache files before compiling a project**  
 
