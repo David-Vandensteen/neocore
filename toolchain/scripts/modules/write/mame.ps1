@@ -76,6 +76,7 @@ function Write-Mame {
   Write-MameHash -ProjectName $ProjectName -CHDFile $OutputFile -XMLFile "$(Resolve-Path -Path $PathMame)\hash\neocd.xml"
 }
 
+# TODO : remove at v3
 function Mame {
   param (
     [Parameter(Mandatory=$true)][String] $ExeName,
@@ -83,7 +84,6 @@ function Mame {
     [Parameter(Mandatory=$true)][String] $PathMame,
     [Parameter(Mandatory=$true)][String] $XMLArgsFile
   )
-  Write-Host "DEBUG : pathMame $PathMame"
   $defaultMameArgs = "-rompath `"$PathMame\roms`" -hashpath `"$PathMame\hash`" -cfg_directory $env:TEMP -nvram_directory $env:TEMP -skip_gameinfo neocdz $GameName"
 
   $mameArgs = "-window"
@@ -92,6 +92,30 @@ function Mame {
   if ((Test-Path -Path $PathMame) -eq $false) { Logger-Error -Message "$PathMame not found" }
   if ((Test-Path -Path "$PathMame\$ExeName") -eq $false) { Write-Host ("error - {0}\ not found" -f $PathMame) -ForegroundColor Red; exit 1 }
   Logger-Step -Message "launching mame $GameName"
+  Write-Host "$PathMame\$ExeName $mameArgs $defaultMameArgs"
+  Start-Process -NoNewWindow -FilePath "$PathMame\$ExeName" -ArgumentList "$mameArgs $defaultMameArgs"
+}
+
+function Mame-WithProfile {
+  param (
+    [Parameter(Mandatory=$true)][String] $ExeName,
+    [Parameter(Mandatory=$true)][String] $GameName,
+    [Parameter(Mandatory=$true)][String] $PathMame
+  )
+  $profileName = $Rule.Split(":")[2]
+  if ($Rule -eq "run:mame") { $profileName = "default" }
+  if (-Not($Config.project.emulator.mame.profile.$profileName)) {
+    Write-Host "error : mame profile $profileName not found" -ForegroundColor Red
+    exit 1
+  }
+
+  Write-Host "start mame with profile : $profileName" -ForegroundColor Yellow
+  Write-Host "extra parameters : $($Config.project.emulator.mame.profile.$profileName)" -ForegroundColor Yellow
+  Write-Host ""
+
+  $mameArgs = $Config.project.emulator.mame.profile.$profileName
+  $defaultMameArgs = "-rompath `"$PathMame\roms`" -hashpath `"$PathMame\hash`" -cfg_directory $env:TEMP -nvram_directory $env:TEMP $GameName"
+
   Write-Host "$PathMame\$ExeName $mameArgs $defaultMameArgs"
   Start-Process -NoNewWindow -FilePath "$PathMame\$ExeName" -ArgumentList "$mameArgs $defaultMameArgs"
 }
