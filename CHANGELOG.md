@@ -1,3 +1,9 @@
+## 2.6.0
+
+  - add mame profiles in project.xml
+  - deprecated mak run (use run:mame instead)
+  - add mak --help
+
 ## 2.5.1
 
   - rename few static functions

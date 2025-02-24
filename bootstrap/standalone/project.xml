@@ -24,6 +24,15 @@
     </raine>
     <mame>
       <exeFile>..\build\mame\mame64.exe</exeFile>
+        <!-- To use a named profile, use mak run:mame:<profileName>.
+        Example: mak run:mame:full to run MAME in fullscreen.
+        You can add more custom profiles. -->
+      <profile>
+        <default>-window -skip_gameinfo neocdz</default>
+        <full>-nowindow -skip_gameinfo neocdz</full>
+        <nosound>-sound none -window -skip_gameinfo neocdz</nosound>
+        <debug>-debug -window -skip_gameinfo neocdz</debug>
+      </profile>
     </mame>
   </emulator>
   <compiler>
@@ -34,8 +43,8 @@
     <libraryPath>..\build\lib</libraryPath>
     <systemFile>..\build\system\neocd.x</systemFile>
   </compiler>
-  <!-- for using cdda audio tracks, uncomment & set up your files
-  Warning: track id 1 is reserved for the binary program
+  <!-- To use CDDA audio tracks, uncomment and set up your files.
+  Warning: Track ID 1 is reserved for the binary program.
   <sound>
     <sfx>
       <pcm>assets\sounds\sfx\click.V1</pcm>
