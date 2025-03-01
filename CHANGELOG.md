@@ -1,5 +1,7 @@
 ## 2.6.1
 
+  - update sh get headers script
+
 ## 2.6.0
 
   - add mame profiles in project.xml
