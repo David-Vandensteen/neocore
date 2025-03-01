@@ -1,3 +1,5 @@
+## 2.6.1
+
 ## 2.6.0
 
   - add mame profiles in project.xml
