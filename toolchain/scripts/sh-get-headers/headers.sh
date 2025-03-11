@@ -1,9 +1,14 @@
 #!/bin/bash
 
-build_folder="../../../build"
+build_folder="$1"
 header_folder="$build_folder/header"
 neodev_url="http://azertyvortex.free.fr/download/neodev-header.zip"
 datlib_url="http://azertyvortex.free.fr/download/DATlib-header.zip"
+
+if [ $# -ne 1 ]; then
+    echo "Usage: $0 <build_folder>"
+    exit 1
+fi
 
 if [ ! -d "$build_folder" ]; then
     echo "Error: The folder $build_folder does not exist."
