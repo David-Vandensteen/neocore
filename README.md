@@ -80,6 +80,11 @@ cd <neocore>\bootstrap\scripts\project
 ```cmd
 .\create.bat -name myGame -projectPath c:\temp\myGame
 ```
+This script allow the -force parameter.   
+Be aware that in this case, existing resources will be overwritten.   
+```cmd
+.\create.bat -name myGame -projectPath c:\temp\myGame -force
+```
 
 * Go to the `src` folder project (*replace `c:\temp\myGame\src` with your path in the following command*)
 ```cmd

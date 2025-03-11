@@ -1,3 +1,8 @@
+## 2.6.1
+
+  - update sh get headers script
+  - add force parameter on create project script
+
 ## 2.6.0
 
   - add mame profiles in project.xml
