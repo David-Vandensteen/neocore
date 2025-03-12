@@ -1,3 +1,5 @@
+## 2.7.0
+
 ## 2.6.1
 
   - update sh get headers script
