@@ -69,6 +69,8 @@ function Main {
 
   if ((Test-Path -Path $buildConfig.pathSpool) -eq $false) { New-Item -Path $buildConfig.pathSpool -ItemType Directory -Force }
 
+  Start-Transcript -Path "$($buildConfig.pathNeocore)\mak.log" -Force
+
   $gccPath = "..\..\build\gcc\gcc-2.95.2"
   Write-Host $gccPath
 

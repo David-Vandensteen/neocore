@@ -1,5 +1,8 @@
 ## 2.7.0
 
+  - add mak.log in build folder
+  - add gcc.log in build\project.name folder
+
 ## 2.6.1
 
   - update sh get headers script

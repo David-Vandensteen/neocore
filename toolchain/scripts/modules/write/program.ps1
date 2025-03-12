@@ -27,9 +27,12 @@ function Write-Program {
 
   Write-Host $env:path
 
-  & make -f $MakeFile
+  & make -f $MakeFile > "$($Config.project.buildPath)\$($Config.project.name)\gcc.log" 2>&1
+  & type "$($Config.project.buildPath)\$($Config.project.name)\gcc.log"
   if ((Test-Path -Path $PRGFile) -eq $true) {
     Logger-Success "builded program $PRGFile"
     Write-Host ""
-  } else { Logger-Error -Message "error - $PRGFile was not generated" }
+  } else {
+    Logger-Error -Message "error - $PRGFile was not generated"
+  }
 }
