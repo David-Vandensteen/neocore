@@ -53,7 +53,14 @@ function Write-Mame {
     [Parameter(Mandatory=$true)][String] $OutputFile
   )
   if ((Test-Path -Path $PathMame) -eq $false) {
-    Install-Component -URL "$($buildConfig.baseURL)/neocore-mame.zip" -PathDownload $buildConfig.pathSpool -PathInstall $buildConfig.pathNeocore
+    if ($Config.project.dependencies.mame.url) {
+      Install-Component `
+        -URL $Config.project.dependencies.mame.url `
+        -PathDownload $buildConfig.pathSpool `
+        -PathInstall $Config.project.dependencies.mame.path
+    } else {
+      Install-Component -URL "$($buildConfig.baseURL)/neocore-mame.zip" -PathDownload $buildConfig.pathSpool -PathInstall $buildConfig.pathNeocore
+    }
   }
   if ((Test-Path -Path $PathMame) -eq $false) { Write-Host "error - $PathMame not found" -ForegroundColor Red; exit 1 }
   if ((Test-Path -Path $CUEFile) -eq $false) { Write-Host "error - $CUEFile not found" -ForegroundColor Red; exit 1 }

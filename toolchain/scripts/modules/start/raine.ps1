@@ -19,7 +19,15 @@ function Invoke-Raine {
   )
   if ((Test-Path -Path "$PathISO\$FileName") -eq $false) { Logger-Error -Message "$FileName not found" }
   if ((Test-Path -Path $PathRaine) -eq $false) {
-    Install-Component -URL "$($buildConfig.baseURL)/neobuild-raine.zip" -PathDownload $buildConfig.pathSpool -PathInstall $buildConfig.pathNeocore
+    if ($Config.project.dependencies.raine.url) {
+      Install-Component `
+        -URL $Config.project.dependencies.raine.url `
+        -PathDownload $buildConfig.pathSpool `
+        -PathInstall $Config.project.dependencies.raine.path
+    } else {
+      Install-Component -URL "$($buildConfig.baseURL)/neobuild-raine.zip" -PathDownload $buildConfig.pathSpool -PathInstall $buildConfig.pathNeocore
+    }
+
     Install-RaineConfig -Path $PathRaine
   }
   Logger-Step -Message "launching raine $FileName"
