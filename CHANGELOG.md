@@ -1,5 +1,6 @@
 ## 2.7.0
 
+  - improve toolchain scripts
   - add mak.log in build folder
   - add gcc.log in build\project.name folder
 
