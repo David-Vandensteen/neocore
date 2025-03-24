@@ -9,6 +9,10 @@ function Install-Component {
   $fileName = Split-Path -Path $URL -Leaf
   Logger-Info -Message "GET $fileName"
   Start-Download -URL $URL -Path $PathDownload
+  if (-not($(Test-Path -Path "$PathDownload\$fileName"))) {
+    Write-Host "  error : download failed" -ForegroundColor Red
+    exit 1
+  }
   Expand-Archive -Path "$PathDownload\$fileName" -DestinationPath $PathInstall -Force -ErrorAction Stop
 
   Write-Host "  expanded $filename in $PathInstall" -ForegroundColor Yellow

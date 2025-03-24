@@ -8,7 +8,7 @@ param (
   [switch]$Force = $false
 )
 
-Import-Module "..\..\..\toolchain\scripts\modules\assert\project-name.ps1"
+Import-Module "..\..\..\toolchain\scripts\modules\assert\project\name.ps1"
 
 if ((-not $Force) -and (Test-Path $Path)) {
   Write-Host "error : $Path already exists" -ForegroundColor Red

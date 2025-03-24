@@ -14,9 +14,9 @@ function Main {
     [Parameter(Mandatory=$true)][xml] $Config
   )
 
-  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\assert\config.ps1"
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\assert\project.ps1"
 
-  Assert-Config -Config $Config
+  Assert-Project -Config $Config
 
   $buildConfig = [PSCustomObject]@{
     pathMame = "$($Config.project.buildPath)\mame"
@@ -55,7 +55,7 @@ function Main {
   Write-Host "--------------------------------------------"
   Write-Host ""
 
-  Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\assert\project-name.ps1"
+  Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\assert\project\name.ps1"
   Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\assert\rule.ps1"
   Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\logger.ps1"
   Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\install\sdk.ps1"
