@@ -1,7 +1,11 @@
 function Remove-Project {
-  Write-Host "clean $($buildConfig.pathBuild)" -ForegroundColor Yellow
+  Write-Host "cleaning $($buildConfig.pathBuild)" -ForegroundColor Yellow
+
   if (Test-Path -Path $buildConfig.pathBuild) {
-    Get-ChildItem -Path $buildConfig.pathBuild -Recurse -ErrorAction SilentlyContinue | Remove-Item -force -Recurse -ErrorAction SilentlyContinue
+    try {
+      Get-ChildItem -Path $buildConfig.pathBuild -Recurse -ErrorAction Stop | Remove-Item -Force -Recurse -ErrorAction Stop
+    } catch {
+      Write-Host "Failed to remove items: $_" -ForegroundColor Red
+    }
   }
-  if (Test-Path -Path $buildConfig.pathBuild) { Remove-Item $buildConfig.pathBuild -Force -ErrorAction SilentlyContinue }
 }
