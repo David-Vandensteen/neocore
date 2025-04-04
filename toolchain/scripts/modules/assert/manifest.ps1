@@ -1,4 +1,5 @@
 Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\compare\filehash.ps1"
+Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\assert\manifest\dependencies.ps1"
 
 function Assert-Manifest {
   param (
@@ -25,5 +26,7 @@ function Assert-Manifest {
     Write-Host "Please, remove $(Resolve-Path -Path $Config.project.buildPath) to rebuild neocore"
     exit 1
   }
+
+  Assert-ManifestDependencies
   Write-Host "manifest is compliant" -ForegroundColor Green
 }

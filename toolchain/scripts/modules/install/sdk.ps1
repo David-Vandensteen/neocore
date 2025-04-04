@@ -19,83 +19,83 @@ function Install-SDK {
   $downloadPath = $(Resolve-Path $buildConfig.pathSpool)
   $buildConfig
 
-  if ($Config.project.dependencies) { # TODO : make it mandatory in neocore v3
+  if ($Manifest.manifest.dependencies) { # TODO : make it mandatory in neocore v3
     Install-Component `
-        -URL $Config.project.dependencies.neocoreBin.url `
+        -URL $Manifest.manifest.dependencies.neocoreBin.url `
         -PathDownload $downloadPath `
-        -PathInstall $Config.project.dependencies.neocoreBin.path
+        -PathInstall $Manifest.manifest.dependencies.neocoreBin.path
     Install-Component `
-      -URL $Config.project.dependencies.msys2Runtime.url `
+      -URL $Manifest.manifest.dependencies.msys2Runtime.url `
       -PathDownload $downloadPath `
-      -PathInstall $Config.project.dependencies.msys2Runtime.path
+      -PathInstall $Manifest.manifest.dependencies.msys2Runtime.path
     Install-Component `
-      -URL $Config.project.dependencies.findCommand.url `
+      -URL $Manifest.manifest.dependencies.findCommand.url `
       -PathDownload $downloadPath `
-      -PathInstall $Config.project.dependencies.findCommand.path
+      -PathInstall $Manifest.manifest.dependencies.findCommand.path
     Install-Component `
-      -URL $Config.project.dependencies.trCommand.url `
+      -URL $Manifest.manifest.dependencies.trCommand.url `
       -PathDownload $downloadPath `
-      -PathInstall $Config.project.dependencies.trCommand.path
+      -PathInstall $Manifest.manifest.dependencies.trCommand.path
     Install-Component `
-      -URL $Config.project.dependencies.datImage.url `
+      -URL $Manifest.manifest.dependencies.datImage.url `
       -PathDownload $downloadPath `
-      -PathInstall $Config.project.dependencies.datImage.path
+      -PathInstall $Manifest.manifest.dependencies.datImage.path
     Install-Component `
-      -URL $Config.project.dependencies.ngfxSoundBuilder.url `
+      -URL $Manifest.manifest.dependencies.ngfxSoundBuilder.url `
       -PathDownload $downloadPath `
-      -PathInstall $Config.project.dependencies.ngfxSoundBuilder.path
+      -PathInstall $Manifest.manifest.dependencies.ngfxSoundBuilder.path
     Install-Component `
-      -URL $Config.project.dependencies.animator.url `
+      -URL $Manifest.manifest.dependencies.animator.url `
       -PathDownload $downloadPath `
-      -PathInstall $Config.project.dependencies.animator.path
+      -PathInstall $Manifest.manifest.dependencies.animator.path
     Install-Component `
-      -URL $Config.project.dependencies.framer.url `
+      -URL $Manifest.manifest.dependencies.framer.url `
       -PathDownload $downloadPath `
-      -PathInstall $Config.project.dependencies.framer.path
+      -PathInstall $Manifest.manifest.dependencies.framer.path
     Install-Component `
-      -URL $Config.project.dependencies.neoTools.url `
+      -URL $Manifest.manifest.dependencies.neoTools.url `
       -PathDownload $downloadPath `
-      -PathInstall $Config.project.dependencies.neoTools.path
+      -PathInstall $Manifest.manifest.dependencies.neoTools.path
     Install-Component `
-      -URL $Config.project.dependencies.buildChar.url `
+      -URL $Manifest.manifest.dependencies.buildChar.url `
       -PathDownload $downloadPath `
-      -PathInstall $Config.project.dependencies.buildChar.path
+      -PathInstall $Manifest.manifest.dependencies.buildChar.path
     Install-Component `
-      -URL $Config.project.dependencies.charSplit.url `
+      -URL $Manifest.manifest.dependencies.charSplit.url `
       -PathDownload $downloadPath `
-      -PathInstall $Config.project.dependencies.charSplit.path
+      -PathInstall $Manifest.manifest.dependencies.charSplit.path
     Install-Component `
-      -URL $Config.project.dependencies.chdman.url `
+      -URL $Manifest.manifest.dependencies.chdman.url `
       -PathDownload $downloadPath `
-      -PathInstall $Config.project.dependencies.chdman.path
+      -PathInstall $Manifest.manifest.dependencies.chdman.path
     Install-Component `
-      -URL $Config.project.dependencies.neodevSDK.url `
+      -URL $Manifest.manifest.dependencies.neodevSDK.url `
       -PathDownload $downloadPath `
-      -PathInstall $Config.project.dependencies.neodevSDK.path
+      -PathInstall $Manifest.manifest.dependencies.neodevSDK.path
     Install-Component `
-      -URL $Config.project.dependencies.neodevLib.url `
+      -URL $Manifest.manifest.dependencies.neodevLib.url `
       -PathDownload $downloadPath `
-      -PathInstall $Config.project.dependencies.neodevLib.path
+      -PathInstall $Manifest.manifest.dependencies.neodevLib.path
     Install-Component `
-      -URL $Config.project.dependencies.datLib.url `
+      -URL $Manifest.manifest.dependencies.datLib.url `
       -PathDownload $downloadPath `
-      -PathInstall $Config.project.dependencies.datLib.path
+      -PathInstall $Manifest.manifest.dependencies.datLib.path
     Install-Component `
-      -URL $Config.project.dependencies.neodevHeader.url `
+      -URL $Manifest.manifest.dependencies.neodevHeader.url `
       -PathDownload $downloadPath `
-      -PathInstall $Config.project.dependencies.neodevHeader.path
+      -PathInstall $Manifest.manifest.dependencies.neodevHeader.path
     Install-Component `
-      -URL $Config.project.dependencies.datLibHeader.url `
+      -URL $Manifest.manifest.dependencies.datLibHeader.url `
       -PathDownload $downloadPath `
-      -PathInstall $Config.project.dependencies.datLibHeader.path
+      -PathInstall $Manifest.manifest.dependencies.datLibHeader.path
     Install-Component `
-      -URL $Config.project.dependencies.system.url `
+      -URL $Manifest.manifest.dependencies.system.url `
       -PathDownload $downloadPath `
-      -PathInstall $Config.project.dependencies.system.path
-
-    Install-GCC `
-      -URL $Config.project.dependencies.gcc.url `
-      -Destination $Config.project.dependencies.gcc.path
+      -PathInstall $Manifest.manifest.dependencies.system.path
+    Install-Component `
+      -URL $Manifest.manifest.dependencies.gcc.url `
+      -PathDownload $downloadPath `
+      -PathInstall $Manifest.manifest.dependencies.gcc.path
   } else {
     Install-Component -URL "$($buildConfig.baseURL)/neocore-bin.zip" -PathDownload $downloadPath -PathInstall $installPath
     Install-Component -URL "$($buildConfig.baseURL)/msys2-runtime.zip" -PathDownload $downloadPath -PathInstall "$installPath\bin"

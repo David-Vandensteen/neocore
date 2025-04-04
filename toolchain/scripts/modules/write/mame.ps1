@@ -1,5 +1,3 @@
-Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\install\component.ps1"
-
 function Write-MameHash {
   param (
     [Parameter(Mandatory=$true)][String] $ProjectName,
@@ -53,11 +51,11 @@ function Write-Mame {
     [Parameter(Mandatory=$true)][String] $OutputFile
   )
   if ((Test-Path -Path $PathMame) -eq $false) {
-    if ($Config.project.dependencies.mame.url) {
+    if ($Manifest.manifest.dependencies.mame.url) {
       Install-Component `
-        -URL $Config.project.dependencies.mame.url `
+        -URL $Manifest.manifest.dependencies.mame.url `
         -PathDownload $buildConfig.pathSpool `
-        -PathInstall $Config.project.dependencies.mame.path
+        -PathInstall $Manifest.manifest.dependencies.mame.path
     } else {
       Install-Component -URL "$($buildConfig.baseURL)/neocore-mame.zip" -PathDownload $buildConfig.pathSpool -PathInstall $buildConfig.pathNeocore
     }

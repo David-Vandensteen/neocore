@@ -30,11 +30,11 @@ function Write-Cache {
   )
 
   if ((Test-Path -Path $PathCDTemplate) -eq $false) {
-    if ($Config.project.dependencies.cdTemplate.url) {
+    if ($Manifest.manifest.dependencies.cdTemplate.url) {
       Install-Component `
-        -URL $Config.project.dependencies.cdTemplate.url `
+        -URL $Manifest.manifest.dependencies.cdTemplate.url `
         -PathDownload $buildConfig.pathSpool `
-        -PathInstall $Config.project.dependencies.cdTemplate.path
+        -PathInstall $Manifest.manifest.dependencies.cdTemplate.path
     } else {
       Install-Component -URL "$($buildConfig.baseURL)/neobuild-cd_template.zip" -PathDownload $buildConfig.pathSpool -PathInstall $buildConfig.pathNeocore
     }
@@ -93,11 +93,11 @@ function Write-CUE {
 
     if ($ext -eq ".mp3" -or ($ext -eq ".wav" -and $ConfigCDDA.dist.iso.format -eq ".mp3")) {
       if ((Test-Path -Path "$($buildConfig.pathNeocore)\bin\mpg123-1.31.3-static-x86-64") -eq $false) {
-        if ($Config.project.dependencies.mpg123.url) {
+        if ($Manifest.manifest.dependencies.mpg123.url) {
           Install-Component `
-          -URL $Config.project.dependencies.mpg123.url `
+          -URL $Manifest.manifest.dependencies.mpg123.url `
           -PathDownload $buildConfig.pathSpool `
-          -PathInstall $Config.project.dependencies.mpg123.path
+          -PathInstall $Manifest.manifest.dependencies.mpg123.path
         } else {
           Install-Component `
           -URL "$($buildConfig.baseURL)/mpg123-1.31.3-static-x86-64.zip" `
@@ -164,11 +164,11 @@ function Write-CUE {
 
       if ($ext -eq ".wav" -and $ConfigCDDA.dist.iso.format -eq "mp3") {
         if ((Test-Path -Path "$($buildConfig.pathNeocore)\bin\ffmpeg.exe") -eq $false) {
-          if ($Config.project.dependencies.ffmpeg.url) {
+          if ($Manifest.manifest.dependencies.ffmpeg.url) {
               Install-Component `
-                -URL $Config.project.dependencies.ffmpeg.url `
+                -URL $Manifest.manifest.dependencies.ffmpeg.url `
                 -PathDownload $buildConfig.pathSpool `
-                -PathInstall $Config.project.dependencies.ffmpeg.url
+                -PathInstall $Manifest.manifest.dependencies.ffmpeg.url
             } else {
               Install-Component `
                 -URL "$($buildConfig.baseURL)/ffmpeg-23-12-18.zip" `

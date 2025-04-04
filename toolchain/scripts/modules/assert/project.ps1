@@ -1,18 +1,12 @@
 Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\assert\path.ps1"
-Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\assert\manifest.ps1"
-Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\assert\project\dependencies.ps1"
+Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\assert\project\name.ps1"
 
 function Assert-Project {
   param ([Parameter(Mandatory=$true)][xml] $Config)
 
   Write-Host "assert project config" -ForegroundColor Yellow
   Assert-Path
-
-  if (Test-Path -Path "$($Config.project.buildPath)\manifest.xml") {
-    Assert-Manifest `
-      -ManifestSource "$($Config.project.neocorePath)\manifest.xml" `
-      -ManifestCache "$($Config.project.buildPath)\manifest.xml"
-  }
+  Assert-ProjectName -Name $($Config.project.name)
 
   if (-Not($Config.project.name)) {
     Write-Host "error : project.name not found" -ForegroundColor Red

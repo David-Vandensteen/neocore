@@ -7,9 +7,11 @@ function Install-Component {
     [Parameter(Mandatory=$true)][String] $PathInstall
   )
 
-  if (-not($(Test-Path -Path $PathInstall))) {
-    Write-Host "  create $PathInstall" -ForegroundColor Yellow
-    New-Item -ItemType Directory -Path $PathInstall
+  $pathInstall = $PathInstall.Replace("{{build}}", $Config.project.buildPath)
+
+  if (-not($(Test-Path -Path $pathInstall))) {
+    Write-Host "  create $pathInstall" -ForegroundColor Yellow
+    New-Item -ItemType Directory -Path $pathInstall -Force
   }
 
   $fileName = Split-Path -Path $URL -Leaf

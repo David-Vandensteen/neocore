@@ -4,11 +4,11 @@ function Install-NSIS {
   $installPath = $(Resolve-Path $buildConfig.pathNeocore)
   $downloadPath = $(Resolve-Path $buildConfig.pathSpool)
 
-  if ($Config.project.dependencies.nsis.url) {
+  if ($Manifest.manifest.dependencies.nsis.url) {
     Install-Component `
-      -URL $Config.project.dependencies.nsis.url `
+      -URL $Manifest.manifest.dependencies.nsis.url `
       -PathDownload $downloadPath `
-      -PathInstall $Config.project.dependencies.nsis.path
+      -PathInstall $Manifest.manifest.dependencies.nsis.path
   } else {
     Install-Component -URL "$($buildConfig.baseURL)/retro-game-winpacker/nsis-3.08.zip" -PathDownload $downloadPath -PathInstall "$installPath\tools"
   }
