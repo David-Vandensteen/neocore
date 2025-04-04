@@ -1,5 +1,6 @@
 ## 2.7.0
 
+  - externalize dependencies into manifest.xml
   - add mak clean:build
   - improve toolchain scripts
   - add mak.log in build folder
