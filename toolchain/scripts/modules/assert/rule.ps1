@@ -5,6 +5,7 @@ function Assert-Rule {
     if ($Rule -eq "") { return 0 }
     if ($Rule -eq "animator") { return 0 }
     if ($Rule -eq "clean") { return 0 }
+    if ($Rule -eq "clean:build") { return 0 }
     if ($Rule -eq "default") { return 0 }
     if ($Rule -eq "dist:iso") { return 0 }
     if ($Rule -eq "dist:mame") { return 0 }
@@ -52,6 +53,7 @@ function Assert-Rule {
     Write-Host "parameter list :"
     Write-Host ""
     Write-Host "clean"
+    Write-Host "clean:build"
     Write-Host "default"
     Write-Host "dist:iso"
     Write-Host "dist:mame"
