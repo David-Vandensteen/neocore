@@ -41,10 +41,14 @@ cd .\neocore\samples\hello
 ___***Warning: The mak script overrides the path environment variable during compilation.  
 If you encounter any problems after using it, simply close and restart a new command terminal.***___
 
-- Clean the builded resources
+- Remove the builded resources
 ```cmd
 .\mak.bat clean
 ```
+- Remove the build folder
+```cmd
+.\mak.bat clean:build
+```  
 - Build sprites
 ```cmd
 .\mak.bat sprite
