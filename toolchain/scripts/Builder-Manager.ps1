@@ -61,7 +61,8 @@ function Main {
   Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\install\sdk.ps1"
   Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\stop\emulators.ps1"
   Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\set\env-path.ps1"
-  Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\remove\project.ps1"
+  Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\mak\clean.ps1"
+  Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\mak\clean\build.ps1"
 
   [xml]$Manifest = (Get-Content -Path "$($Config.project.neocorePath)\manifest.xml")
   if (Test-Path -Path "$($Config.project.buildPath)\manifest.xml") {
@@ -73,13 +74,8 @@ function Main {
   Assert-Rule -Rule $($buildConfig.rule)
   Stop-Emulators
 
+  if ($Rule -eq "clean:build") { MakCleanBuild}
   if ((Test-Path -Path $buildConfig.pathSpool) -eq $false) { New-Item -Path $buildConfig.pathSpool -ItemType Directory -Force }
-
-  if ($Rule -eq "clean:build") {
-    Write-Host "Removing build folder $($Config.project.buildPath)" -ForegroundColor Yellow
-    if ((Test-Path -Path $Config.project.buildPath) -eq $true) { Remove-Item -Path $Config.project.buildPath -Recurse -Force }
-    exit 0
-  }
 
   Start-Transcript -Path "$($buildConfig.pathNeocore)\mak.log" -Force
 
@@ -94,7 +90,7 @@ function Main {
   if ((Test-Path -Path $buildConfig.pathNeoDevBin) -eq $false) { Install-SDK }
   if ((Test-Path -Path $buildConfig.pathNeocoreBin) -eq $false) { Install-SDK }
   if ((Test-Path -Path $buildConfig.pathNeodev) -eq $false) { Install-SDK }
-  if ($Rule -notmatch "^only:") { Remove-Project }
+  if ($Rule -notmatch "^only:") { MakClean }
 
   if ((Test-Path -Path $buildConfig.pathBuild) -eq $false) { New-Item -Path $buildConfig.pathBuild -ItemType Directory -Force }
   if ($Rule -eq "clean") { exit 0 }

@@ -1,4 +1,4 @@
-function Remove-Project {
+function MakClean {
   Write-Host "cleaning $($buildConfig.pathBuild)" -ForegroundColor Yellow
 
   if (Test-Path -Path $buildConfig.pathBuild) {
