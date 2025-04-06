@@ -1,13 +1,33 @@
 Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\install\component.ps1"
+Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\install\raine\config.ps1"
+Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\assert\raine\config.ps1"
 
-function Install-RaineConfig {
-  param (
-    [Parameter(Mandatory=$true)][String] $Path
-  )
-  Write-Host "Configure Raine"
-  $pathAbs = (Resolve-Path -Path $Path).Path
-  $content = [System.IO.File]::ReadAllText("$Path\config\raine32_sdl.cfg").Replace("/*neocd_bios*/","neocd_bios = $pathAbs\roms\NEOCD.BIN")
-  [System.IO.File]::WriteAllText("$Path\config\raine32_sdl.cfg", $content)
+function Update-RaineConfigSwitch {
+  Write-Host "Switching Raine config" -ForegroundColor Yellow
+  if ($Rule -like "run:raine:*") {
+    $raineConfigName = $Rule.Split(":")[2]
+  } else {
+    $raineConfigName = "default"
+  }
+
+  Write-Host "Using $raineConfigName config" -ForegroundColor Yellow
+  if ($Rule -like "run:raine:*") {
+    if (-Not($Config.project.emulator.raine.config.$raineConfigName)) {
+      Write-Host "Error - $raineConfigName not found in project.emulator.raine.config" -ForegroundColor Red
+      exit 1
+    }
+    $raineConfig = Resolve-TemplatePath -Path $Config.project.emulator.raine.config.$raineConfigName
+  } else {
+    $raineConfig = Resolve-TemplatePath -Path "$($Config.project.buildPath)\raine\config\default.cfg"
+  }
+
+  if (-Not(Test-Path -Path $raineConfig)) {
+    Write-Host "Error - $raineConfig not found" -ForegroundColor Red
+    exit 1
+  }
+
+  Write-Host "Copying $raineConfig to $rainePath\config\raine32_sdl.cfg"
+  Copy-Item $raineConfig $rainePath\config\raine32_sdl.cfg -Force
 }
 
 function Invoke-Raine {
@@ -27,10 +47,11 @@ function Invoke-Raine {
     } else {
       Install-Component -URL "$($buildConfig.baseURL)/neobuild-raine.zip" -PathDownload $buildConfig.pathSpool -PathInstall $buildConfig.pathNeocore
     }
-
     Install-RaineConfig -Path $PathRaine
   }
-  Logger-Step -Message "launching raine $FileName"
+  Assert-RaineConfig
+  Update-RaineConfigSwitch
+  Write-Host "Launching raine $FileName" -ForegroundColor Yellow
   $pathRaineAbs = (Resolve-Path -Path $PathRaine).Path
   Push-Location -Path $PathISO
   & "$pathRaineAbs\$ExeName" $FileName
@@ -40,6 +61,7 @@ function Invoke-Raine {
 function Start-Raine {
   $exeName = [System.IO.Path]::GetFileName($Config.project.emulator.raine.exeFile)
   $rainePath = Split-Path $Config.project.emulator.raine.exeFile
+  $rainePath = Get-TemplatePath -Path $rainePath
 
   Invoke-Raine `
     -FileName "$($buildConfig.projectName).cue" `

@@ -1,5 +1,6 @@
 ## 2.7.0
 
+  - add raine config switcher
   - externalize dependencies into manifest.xml
   - add mak clean:build
   - improve toolchain scripts

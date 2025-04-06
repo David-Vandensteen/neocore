@@ -14,6 +14,8 @@ function Main {
     [Parameter(Mandatory=$true)][xml] $Config
   )
 
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\get\template-path.ps1"
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\resolve\template-path.ps1"
   Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\assert\project.ps1"
 
   Assert-Project -Config $Config
@@ -129,7 +131,7 @@ function Main {
     Build-ISO
   }
 
-  if ($Rule -eq "run:raine" -or $Rule -eq "raine") {
+  if ($Rule -eq "run:raine" -or $Rule -eq "raine" -or $Rule -like "run:raine:*") {
     Build-Sprite
     Build-Program
     Build-ISO
