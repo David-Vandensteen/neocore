@@ -41,10 +41,14 @@ cd .\neocore\samples\hello
 ___***Warning: The mak script overrides the path environment variable during compilation.  
 If you encounter any problems after using it, simply close and restart a new command terminal.***___
 
-- Clean the builded resources
+- Remove the builded resources
 ```cmd
 .\mak.bat clean
 ```
+- Remove the build folder
+```cmd
+.\mak.bat clean:build
+```  
 - Build sprites
 ```cmd
 .\mak.bat sprite
@@ -212,6 +216,30 @@ Example:
 ```
 
 You can add more custom profiles.
+
+## Raine configs
+```xml
+<project>
+  <emulator>
+    <raine>
+      <config>
+        <default>{{build}}\raine\config\default.cfg</default>
+        <full>{{build}}\raine\config\fullscreen.cfg</full>
+        <yuv>{{build}}\raine\config\yuv.cfg</yuv>
+      </config>
+    </raine>
+  </emulator>
+</project>
+```
+
+To use a named config, launch mak run:raine:configName   
+Example:
+- To run RAINE in fullscreen.   
+```cmd
+.\mak.bat run:raine:full
+```
+
+You can add more custom configs.
 
 ## Pull or checkout another branches
 **BE CAREFUL : You need to remove build folder `.\neocore\build` for supress cache files before compiling a project**  

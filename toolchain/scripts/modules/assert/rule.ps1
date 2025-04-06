@@ -5,6 +5,7 @@ function Assert-Rule {
     if ($Rule -eq "") { return 0 }
     if ($Rule -eq "animator") { return 0 }
     if ($Rule -eq "clean") { return 0 }
+    if ($Rule -eq "clean:build") { return 0 }
     if ($Rule -eq "default") { return 0 }
     if ($Rule -eq "dist:iso") { return 0 }
     if ($Rule -eq "dist:mame") { return 0 }
@@ -24,6 +25,7 @@ function Assert-Rule {
     if ($Rule -eq "serve:mame") { return 0 }
     if ($Rule -like "run:mame*") { return 0 }
     if ($Rule -eq "run:raine") {return 0 }
+    if ($Rule -like "run:raine:*") { return 0 }
 
     if ($Rule -eq "run") { # TODO : remove at v3
       Write-Host "warning : run rule is deprecated, use run:mame instead" -ForegroundColor Yellow
@@ -52,6 +54,7 @@ function Assert-Rule {
     Write-Host "parameter list :"
     Write-Host ""
     Write-Host "clean"
+    Write-Host "clean:build"
     Write-Host "default"
     Write-Host "dist:iso"
     Write-Host "dist:mame"
@@ -73,8 +76,6 @@ function Assert-Rule {
     Write-Host "run"
     Write-Host "run:mame"
     Write-Host "run:raine"
-    Write-Host "--version"
-    Write-Host "--help"
     Write-Host ""
 
     if ($Config.project.emulator.mame.profile) {
@@ -84,6 +85,16 @@ function Assert-Rule {
         Write-Host "run:mame:$($_.Name)"
       }
     }
+    Write-Host ""
+    if ($Config.project.emulator.raine.config) {
+      Write-Host "raine configs for the project $($Config.project.name) :"
 
+      $Config.project.emulator.raine.config.ChildNodes | ForEach-Object {
+        Write-Host "run:raine:$($_.Name)"
+      }
+    }
+    Write-Host ""
+    Write-Host "--version"
+    Write-Host "--help"
     exit 1
 }

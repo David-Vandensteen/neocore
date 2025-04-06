@@ -14,9 +14,11 @@ function Main {
     [Parameter(Mandatory=$true)][xml] $Config
   )
 
-  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\assert\config.ps1"
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\get\template-path.ps1"
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\resolve\template-path.ps1"
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\assert\project.ps1"
 
-  Assert-Config -Config $Config
+  Assert-Project -Config $Config
 
   $buildConfig = [PSCustomObject]@{
     pathMame = "$($Config.project.buildPath)\mame"
@@ -55,19 +57,29 @@ function Main {
   Write-Host "--------------------------------------------"
   Write-Host ""
 
-  Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\assert\project-name.ps1"
+  Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\assert\manifest.ps1"
   Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\assert\rule.ps1"
   Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\logger.ps1"
   Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\install\sdk.ps1"
   Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\stop\emulators.ps1"
   Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\set\env-path.ps1"
-  Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\remove\project.ps1"
+  Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\mak\clean.ps1"
+  Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\mak\clean\build.ps1"
+
+  [xml]$Manifest = (Get-Content -Path "$($Config.project.neocorePath)\manifest.xml")
+  if (Test-Path -Path "$($Config.project.buildPath)\manifest.xml") {
+    Assert-Manifest `
+      -ManifestSource "$($Config.project.neocorePath)\manifest.xml" `
+      -ManifestCache "$($Config.project.buildPath)\manifest.xml"
+  }
 
   Assert-Rule -Rule $($buildConfig.rule)
-  Assert-ProjectName -Name $($Config.project.name)
   Stop-Emulators
 
+  if ($Rule -eq "clean:build") { MakCleanBuild}
   if ((Test-Path -Path $buildConfig.pathSpool) -eq $false) { New-Item -Path $buildConfig.pathSpool -ItemType Directory -Force }
+
+  Start-Transcript -Path "$($buildConfig.pathNeocore)\mak.log" -Force
 
   $gccPath = "..\..\build\gcc\gcc-2.95.2"
   Write-Host $gccPath
@@ -80,8 +92,8 @@ function Main {
   if ((Test-Path -Path $buildConfig.pathNeoDevBin) -eq $false) { Install-SDK }
   if ((Test-Path -Path $buildConfig.pathNeocoreBin) -eq $false) { Install-SDK }
   if ((Test-Path -Path $buildConfig.pathNeodev) -eq $false) { Install-SDK }
+  if ($Rule -notmatch "^only:") { MakClean }
 
-  if ($Rule -notmatch "^only:") { Remove-Project }
   if ((Test-Path -Path $buildConfig.pathBuild) -eq $false) { New-Item -Path $buildConfig.pathBuild -ItemType Directory -Force }
   if ($Rule -eq "clean") { exit 0 }
 
@@ -119,7 +131,7 @@ function Main {
     Build-ISO
   }
 
-  if ($Rule -eq "run:raine" -or $Rule -eq "raine") {
+  if ($Rule -eq "run:raine" -or $Rule -eq "raine" -or $Rule -like "run:raine:*") {
     Build-Sprite
     Build-Program
     Build-ISO

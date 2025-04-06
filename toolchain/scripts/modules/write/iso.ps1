@@ -30,7 +30,14 @@ function Write-Cache {
   )
 
   if ((Test-Path -Path $PathCDTemplate) -eq $false) {
-    Install-Component -URL "$($buildConfig.baseURL)/neobuild-cd_template.zip" -PathDownload $buildConfig.pathSpool -PathInstall $buildConfig.pathNeocore
+    if ($Manifest.manifest.dependencies.cdTemplate.url) {
+      Install-Component `
+        -URL $Manifest.manifest.dependencies.cdTemplate.url `
+        -PathDownload $buildConfig.pathSpool `
+        -PathInstall $Manifest.manifest.dependencies.cdTemplate.path
+    } else {
+      Install-Component -URL "$($buildConfig.baseURL)/neobuild-cd_template.zip" -PathDownload $buildConfig.pathSpool -PathInstall $buildConfig.pathNeocore
+    }
   }
 
   if (Test-Path -Path $PathISOBuildFolder) { Remove-Item $PathISOBuildFolder -Recurse -Force }
@@ -67,7 +74,7 @@ function Write-CUE {
     [Parameter(Mandatory=$true)][String] $Rule,
     [Parameter(Mandatory=$true)][String] $OutputFile,
     [Parameter(Mandatory=$true)][String] $ISOName,
-    [System.Xml.XmlElement] $Config
+    [System.Xml.XmlElement] $ConfigCDDA
   )
 
   function Get-CUETrack {
@@ -84,12 +91,19 @@ function Write-CUE {
 
     Copy-Item -Path $File -Destination "$($buildConfig.pathBuild)\$path"
 
-    if ($ext -eq ".mp3" -or ($ext -eq ".wav" -and $Config.dist.iso.format -eq ".mp3")) {
+    if ($ext -eq ".mp3" -or ($ext -eq ".wav" -and $ConfigCDDA.dist.iso.format -eq ".mp3")) {
       if ((Test-Path -Path "$($buildConfig.pathNeocore)\bin\mpg123-1.31.3-static-x86-64") -eq $false) {
-        Install-Component `
+        if ($Manifest.manifest.dependencies.mpg123.url) {
+          Install-Component `
+          -URL $Manifest.manifest.dependencies.mpg123.url `
+          -PathDownload $buildConfig.pathSpool `
+          -PathInstall $Manifest.manifest.dependencies.mpg123.path
+        } else {
+          Install-Component `
           -URL "$($buildConfig.baseURL)/mpg123-1.31.3-static-x86-64.zip" `
           -PathDownload $buildConfig.pathSpool `
           -PathInstall "$($buildConfig.pathNeocore)\bin"
+        }
       }
     }
 
@@ -135,7 +149,7 @@ function Write-CUE {
     }
 
     if ($Rule -like "dist:iso") {
-      if ($ext -eq ".mp3" -and $Config.dist.iso.format -eq "wav") {
+      if ($ext -eq ".mp3" -and $ConfigCDDA.dist.iso.format -eq "wav") {
         Write-WAV `
           -mpg123 "$($buildConfig.pathNeocore)\bin\mpg123-1.31.3-static-x86-64\mpg123.exe" `
           -WAVFile "$($buildConfig.pathBuild)\$path\$baseName.wav" `
@@ -143,17 +157,24 @@ function Write-CUE {
         $File = "$path\$baseName.wav"
       }
 
-      if ($ext -eq ".wav" -and $Config.dist.iso.format -eq "wav") {
+      if ($ext -eq ".wav" -and $ConfigCDDA.dist.iso.format -eq "wav") {
         Write-Host "copy $File" -ForegroundColor Blue
         Copy-Item -Path "$($buildConfig.pathBuild)\$path\$baseName$ext" -Destination $path\$baseName$ext
       }
 
-      if ($ext -eq ".wav" -and $Config.dist.iso.format -eq "mp3") {
+      if ($ext -eq ".wav" -and $ConfigCDDA.dist.iso.format -eq "mp3") {
         if ((Test-Path -Path "$($buildConfig.pathNeocore)\bin\ffmpeg.exe") -eq $false) {
-          Install-Component `
-            -URL "$($buildConfig.baseURL)/ffmpeg-23-12-18.zip" `
-            -PathDownload $buildConfig.pathSpool `
-            -PathInstall "$($buildConfig.pathNeocore)\bin"
+          if ($Manifest.manifest.dependencies.ffmpeg.url) {
+              Install-Component `
+                -URL $Manifest.manifest.dependencies.ffmpeg.url `
+                -PathDownload $buildConfig.pathSpool `
+                -PathInstall $Manifest.manifest.dependencies.ffmpeg.url
+            } else {
+              Install-Component `
+                -URL "$($buildConfig.baseURL)/ffmpeg-23-12-18.zip" `
+                -PathDownload $buildConfig.pathSpool `
+                -PathInstall "$($buildConfig.pathNeocore)\bin"
+            }
         }
 
         Write-MP3 `
@@ -175,8 +196,8 @@ function Write-CUE {
   "  TRACK 01 MODE1/2048 " | Out-File -Encoding utf8 -FilePath $OutputFile -Append -Force
   "    INDEX 01 00:00:00 " | Out-File -Encoding utf8 -FilePath $OutputFile -Append -Force
 
-  if ($Config) {
-    $tracks = $Config.tracks.track
+  if ($ConfigCDDA) {
+    $tracks = $ConfigCDDA.tracks.track
     $tracks | ForEach-Object {
       Get-CUETrack `
         -Rule $Rule `
