@@ -59,7 +59,6 @@ function Main {
 
   Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\assert\manifest.ps1"
   Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\assert\rule.ps1"
-  Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\logger.ps1"
   Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\install\sdk.ps1"
   Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\stop\emulators.ps1"
   Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\set\env-path.ps1"
