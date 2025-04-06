@@ -37,7 +37,10 @@ function Invoke-Raine {
     [Parameter(Mandatory=$true)][String] $PathRaine,
     [Parameter(Mandatory=$true)][String] $ExeName
   )
-  if ((Test-Path -Path "$PathISO\$FileName") -eq $false) { Logger-Error -Message "$FileName not found" }
+  if ((Test-Path -Path "$PathISO\$FileName") -eq $false) {
+    Write-Host "$FileName not found" -ForegroundColor Red
+    exit 1
+  }
   if ((Test-Path -Path $PathRaine) -eq $false) {
     if ($Manifest.manifest.dependencies.raine.url) {
       Install-Component `

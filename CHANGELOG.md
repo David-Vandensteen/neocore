@@ -1,5 +1,7 @@
 ## 2.7.1
 
+  - improve toolchain log
+
 ## 2.7.0
 
   - add raine config switcher

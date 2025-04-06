@@ -11,14 +11,17 @@ function Write-ISO {
     [Parameter(Mandatory=$true)][String] $PathCDTemplate
   )
 
-  Logger-Step -Message "compiling ISO"
+  Write-Host "Compiling ISO $OutputFile" -ForegroundColor Yellow
 
   & mkisofs.exe -o $OutputFile -pad $PathISOBuildFolder
 
   if ((Test-Path -Path $OutputFile) -eq $true) {
-    Logger-Success -Message "builded ISO $OutputFile"
+    Write-Host "Builded ISO $OutputFile" -ForegroundColor Green
     Write-Host ""
-  } else { Logger-Error -Message "$OutputFile was not generated" }
+  } else {
+    Write-Host "$OutputFile was not generated" -ForegroundColor Red
+    exit 1
+  }
 }
 
 function Write-Cache {
@@ -42,9 +45,18 @@ function Write-Cache {
 
   if (Test-Path -Path $PathISOBuildFolder) { Remove-Item $PathISOBuildFolder -Recurse -Force }
   if (-Not(Test-Path -Path $PathISOBuildFolder)) { mkdir -Path $PathISOBuildFolder | Out-Null }
-  if (-Not(Test-Path -Path $PathCDTemplate)) { Logger-Error -Message "$PathCDTemplate not found" }
-  if (-Not(Test-Path -Path $PRGFile)) { Logger-Error -Message "$PRGFile not found" }
-  if (-Not(Test-Path -Path $SpriteFile)) { Logger-Error -Message "$SpriteFile not found" }
+  if (-Not(Test-Path -Path $PathCDTemplate)) {
+    Write-Host "$PathCDTemplate not found" -ForegroundColor Red
+    exit 1
+  }
+  if (-Not(Test-Path -Path $PRGFile)) {
+    Write-Host "$PRGFile not found" -ForegroundColor Red
+    exit 1
+  }
+  if (-Not(Test-Path -Path $SpriteFile)) {
+    Write-Host "$SpriteFile not found" -ForegroundColor Red
+    exit 1
+  }
 
   Copy-Item -Path "$PathCDTemplate\*" -Destination $PathISOBuildFolder -Recurse -Force -ErrorAction Stop
   Copy-Item -Path $PRGFile -Destination "$PathISOBuildFolder\DEMO.PRG" -Force -ErrorAction Stop
@@ -58,12 +70,12 @@ function Write-SFX {
     [String] $Z80File
   )
 
-  Logger-Step -Message "soundFX"
+  Write-Host "SoundFX" -ForegroundColor Yellow
 
-  if ($PCMFile) { Logger-Info -Message $PCMFile }
-  if ($Z80File) { Logger-Info -Message $Z80File }
+  if ($PCMFile) { Write-Host $PCMFile -ForegroundColor Blue }
+  if ($Z80File) { Write-Host $Z80File -ForegroundColor Blue }
 
-  Logger-Info -Message "Destination folder $PathISOBuildFolder"
+  Write-Host "Destination folder $PathISOBuildFolder" -ForegroundColor Blue
 
   if ($PCMFile) { Copy-Item -Path $PCMFile -Destination "$PathISOBuildFolder\DEMO.PCM" -Force -ErrorAction Stop }
   if ($Z80File) { Copy-Item -Path $Z80File -Destination "$PathISOBuildFolder\DEMO.Z80" -Force -ErrorAction Stop }
@@ -212,7 +224,10 @@ function Write-CUE {
   Remove-Item -Path "$OutputFile.spool" -Force
 
   if ((Test-Path -Path $OutputFile) -eq $true) {
-    Logger-Success -Message "builded CUE $OutputFile"
+    Write-Host "Builded CUE $OutputFile" -ForegroundColor Green
     Write-Host ""
-  } else { Logger-Error -Message "error - $OutputFile was not generated" }
+  } else {
+    Write-Host "$OutputFile was not generated" -ForegroundColor Red
+    exit 1
+  }
 }
