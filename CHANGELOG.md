@@ -1,3 +1,5 @@
+## 2.7.1
+
 ## 2.7.0
 
   - add raine config switcher
