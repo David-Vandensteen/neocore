@@ -17,7 +17,7 @@ function Write-Program {
   $env:GCC_PATH = $GCCPath
 
   $env:FILEPRG = $PRGFile
-  $env:PATHBUILD = $buildConfig.pathBuild
+  $env:PATHBUILD = "$($Config.project.buildPath)\$($Config.project.name)"
 
   $Config.project.compiler
 

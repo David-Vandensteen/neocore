@@ -1,5 +1,5 @@
 function Build-NeocoreLib {
-  $buildPath = $(Resolve-Path $buildConfig.pathNeocore)
+  $buildPath = $(Resolve-Path -Path $Config.project.buildPath)
  pushd "$($Config.project.neocorePath)\src-lib"
  .\build-neocore.bat `
   -gccPath $buildPath\gcc\gcc-2.95.2 `

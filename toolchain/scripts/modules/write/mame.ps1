@@ -54,10 +54,10 @@ function Write-Mame {
     if ($Manifest.manifest.dependencies.mame.url) {
       Install-Component `
         -URL $Manifest.manifest.dependencies.mame.url `
-        -PathDownload $buildConfig.pathSpool `
+        -PathDownload "$($Config.project.buildPath)\spool" `
         -PathInstall $Manifest.manifest.dependencies.mame.path
     } else {
-      Install-Component -URL "$($buildConfig.baseURL)/neocore-mame.zip" -PathDownload $buildConfig.pathSpool -PathInstall $buildConfig.pathNeocore
+      Install-Component -URL "$BaseURL/neocore-mame.zip" -PathDownload "$($Config.project.buildPath)\spool" -PathInstall $Config.project.buildPath
     }
   }
   if ((Test-Path -Path $PathMame) -eq $false) { Write-Host "error - $PathMame not found" -ForegroundColor Red; exit 1 }

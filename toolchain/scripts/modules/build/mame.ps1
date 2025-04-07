@@ -3,9 +3,10 @@ Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\write\ma
 function Build-Mame {
   $mamePath = Split-Path $Config.project.emulator.mame.exeFile
   $name = $Config.project.name
+
   Write-Mame `
     -ProjectName $name `
     -PathMame $mamePath `
-    -CUEFile "$($buildConfig.pathBuild)\$name.cue" `
+    -CUEFile "$($Config.project.buildPath)\$name\$name.cue" `
     -OutputFile "$mamePath\roms\neocdz\$name.chd"
 }
