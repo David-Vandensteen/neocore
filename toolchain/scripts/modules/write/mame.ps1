@@ -54,17 +54,17 @@ function Write-Mame {
     if ($Manifest.manifest.dependencies.mame.url) {
       Install-Component `
         -URL $Manifest.manifest.dependencies.mame.url `
-        -PathDownload $buildConfig.pathSpool `
+        -PathDownload "$($Config.project.buildPath)\spool" `
         -PathInstall $Manifest.manifest.dependencies.mame.path
     } else {
-      Install-Component -URL "$($buildConfig.baseURL)/neocore-mame.zip" -PathDownload $buildConfig.pathSpool -PathInstall $buildConfig.pathNeocore
+      Install-Component -URL "$BaseURL/neocore-mame.zip" -PathDownload "$($Config.project.buildPath)\spool" -PathInstall $Config.project.buildPath
     }
   }
   if ((Test-Path -Path $PathMame) -eq $false) { Write-Host "error - $PathMame not found" -ForegroundColor Red; exit 1 }
   if ((Test-Path -Path $CUEFile) -eq $false) { Write-Host "error - $CUEFile not found" -ForegroundColor Red; exit 1 }
   if ((Test-Path -Path "$PathMame\mame64.exe") -eq $false) { Write-Host "error - mame64.exe is not found in $PathMame" -ForegroundColor Red; exit 1 }
 
-  Logger-Step -Message "compiling CHD"
+  Write-Host "Compiling CHD" -ForegroundColor Yellow
 
   if ($Rule -eq "dist:mame" -or $Rule -eq "dist:exe") {
     Start-Process -NoNewWindow -FilePath "chdman.exe" -ArgumentList "createcd -i $CUEFile -o $OutputFile --force" -Wait
@@ -73,9 +73,10 @@ function Write-Mame {
   }
 
   if ((Test-Path -Path $OutputFile) -eq $false) {
-    Logger-Error -Message "$OutputFile was not generated"
+    Write-Host "$OutputFile was not generated" -ForegroundColor Red
+    exit 1
   } else {
-    Logger-Success -Message "builded CHD $OutputFile"
+    Write-Host "Builded CHD $OutputFile" -ForegroundColor Green
     Write-Host ""
   }
   Write-MameHash -ProjectName $ProjectName -CHDFile $OutputFile -XMLFile "$(Resolve-Path -Path $PathMame)\hash\neocd.xml"
@@ -94,9 +95,12 @@ function Mame {
   $mameArgs = "-window"
   if (Test-Path -Path $XMLArgsFile) { $mameArgs = (Select-Xml -Path $XMLArgsFile -XPath '/mame/args').Node.InnerXML }
 
-  if ((Test-Path -Path $PathMame) -eq $false) { Logger-Error -Message "$PathMame not found" }
+  if ((Test-Path -Path $PathMame) -eq $false) {
+    Write-Host "$PathMame not found" -ForegroundColor Red
+    exit 1
+  }
   if ((Test-Path -Path "$PathMame\$ExeName") -eq $false) { Write-Host ("error - {0}\ not found" -f $PathMame) -ForegroundColor Red; exit 1 }
-  Logger-Step -Message "launching mame $GameName"
+  Write-Host "Launching mame $GameName" -ForegroundColor Yellow
   Write-Host "$PathMame\$ExeName $mameArgs $defaultMameArgs"
   Start-Process -NoNewWindow -FilePath "$PathMame\$ExeName" -ArgumentList "$mameArgs $defaultMameArgs"
 }

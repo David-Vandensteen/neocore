@@ -1,13 +1,20 @@
 function Watch-Error {
-  Get-Content -Path "$($buildConfig.pathBuild)\sprite.log" -Force
-
-  if (Select-String -Path "$($buildConfig.pathBuild)\sprite.log" -Pattern "Invalid dimension") { Logger-Error -Message "Invalid dimension" }
-  if (Select-String -Path "$($buildConfig.pathBuild)\sprite.log" -Pattern "est pas valide") { Logger-Error -Message "Invalid parameter" }
+  $buildPathProject = "$($Config.project.buildPath)\$($Config.project.name)"
+  Get-Content -Path "$buildPathProject\sprite.log" -Force
+  if (Select-String -Path "$buildPathProject\sprite.log" -Pattern "Invalid dimension") {
+    Write-Host "Invalid dimension" -ForegroundColor Red
+    exit 1
+  }
+  if (Select-String -Path "$buildPathProject\sprite.log" -Pattern "est pas valide") {
+    Write-Host "Invalid parameter" -ForegroundColor Red
+    exit 1
+  }
 
   if ((Get-ChildItem -Path "." -Filter "*.*_reject.*" -Recurse -ErrorAction SilentlyContinue -Force).Length -ne 0) {
     Write-Host "Open reject *_reject file(s)" -ForegroundColor Red
     Write-Host "Fix asset and remove *_reject file(s) in your project before launch a new build ..." -ForegroundColor Red
-    Logger-Error -Message "Sprite reject..."
+    Write-Host "Sprite reject..." -ForegroundColor Red
+    exit 1
   }
 }
 
@@ -36,12 +43,20 @@ function Write-Sprite {
     [Parameter(Mandatory=$true)][String] $OutputFile,
     [Parameter(Mandatory=$true)][String] $XMLFile
   )
-  Logger-Step -Message "compiling sprites"
-  if ((Test-Path -Path $XMLFile) -eq $false) { Logger-Error -Message "$XMLFile not found" }
+  $buildPathProject = "$($Config.project.buildPath)\$($Config.project.name)"
+  Write-Host "Compiling sprites" -ForegroundColor Yellow
+  if ((Test-Path -Path $XMLFile) -eq $false) {
+    Write-Host "$XMLFile not found" -ForegroundColor Red
+    exit 1
+  }
 
   # TODO : timeout managment
-  # Start-Process -File BuildChar.exe -NoNewWindow -ArgumentList($XMLFile) -Wait -RedirectStandardOutput "$($buildConfig.pathBuild)\sprite.log"
-  $process = Start-Process -File "BuildChar.exe" -NoNewWindow -ArgumentList $XMLFile -PassThru -RedirectStandardOutput "$($buildConfig.pathBuild)\sprite.log"
+  $process = Start-Process `
+    -File "BuildChar.exe" `
+    -NoNewWindow `
+    -ArgumentList $XMLFile `
+    -PassThru `
+    -RedirectStandardOutput "$buildPathProject\sprite.log"
 
   $timeout = 120
   $timer = [System.Diagnostics.Stopwatch]::StartNew()
@@ -62,7 +77,8 @@ function Write-Sprite {
 
   if (-not $process.HasExited) {
       $process.Kill()
-      Logger-Error -Message "Timeout : compiling sprite exceed timeout ..."
+      Write-Host "Timeout : compiling sprite exceed timeout ..." -ForegroundColor Red
+      exit 1
       Watch-Error
   } else {
       Write-Host "Compiled"
@@ -76,7 +92,7 @@ function Write-Sprite {
   Remove-Item -Path char.bin -Force
 
   if ((Test-Path -Path "$OutputFile.$Format") -eq $true) {
-    Logger-Success -Message "builded sprites $OutputFile.$Format"
+    Write-Host "Builded sprites $OutputFile.$Format" -ForegroundColor Green
     Write-Host ""
   } else {
     Write-Host ("error - {0}.{1} was not generated" -f $OutputFile, $Format) -ForegroundColor Red

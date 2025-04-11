@@ -37,15 +37,18 @@ function Invoke-Raine {
     [Parameter(Mandatory=$true)][String] $PathRaine,
     [Parameter(Mandatory=$true)][String] $ExeName
   )
-  if ((Test-Path -Path "$PathISO\$FileName") -eq $false) { Logger-Error -Message "$FileName not found" }
+  if ((Test-Path -Path "$PathISO\$FileName") -eq $false) {
+    Write-Host "$FileName not found" -ForegroundColor Red
+    exit 1
+  }
   if ((Test-Path -Path $PathRaine) -eq $false) {
     if ($Manifest.manifest.dependencies.raine.url) {
       Install-Component `
         -URL $Manifest.manifest.dependencies.raine.url `
-        -PathDownload $buildConfig.pathSpool `
+        -PathDownload "$($Config.project.buildPath)\spool" `
         -PathInstall $Manifest.manifest.dependencies.raine.path
     } else {
-      Install-Component -URL "$($buildConfig.baseURL)/neobuild-raine.zip" -PathDownload $buildConfig.pathSpool -PathInstall $buildConfig.pathNeocore
+      Install-Component -URL "$BaseURL/neobuild-raine.zip" -PathDownload "$($Config.project.buildPath)\spool" -PathInstall $Config.project.buildPath
     }
     Install-RaineConfig -Path $PathRaine
   }
@@ -64,8 +67,8 @@ function Start-Raine {
   $rainePath = Get-TemplatePath -Path $rainePath
 
   Invoke-Raine `
-    -FileName "$($buildConfig.projectName).cue" `
+    -FileName "$($Config.project.name).cue" `
     -PathRaine $rainePath `
-    -PathISO $buildConfig.pathBuild `
+    -PathISO "$($Config.project.buildPath)\$($Config.project.name)" `
     -ExeName $exeName
 }
