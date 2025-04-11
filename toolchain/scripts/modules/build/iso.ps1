@@ -1,3 +1,4 @@
+Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\assert\build\iso.ps1"
 Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\write\iso.ps1"
 
 function Build-ISO {
@@ -7,6 +8,8 @@ function Build-ISO {
   $pathCDTemplate = "$($Config.project.buildPath)\cd_template"
   $outputISOFile = "$($Config.project.buildPath)\$($Config.project.name)\$($Config.project.name).iso"
   $outputCUEFile = "$($Config.project.buildPath)\$($Config.project.name)\$($Config.project.name).cue"
+
+  Assert-BuildISO
 
   Write-Cache `
     -PRGFile $prgFile `
