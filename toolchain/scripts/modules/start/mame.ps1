@@ -8,14 +8,14 @@ function Start-Mame {
   if ($Rule -eq "only:run:mame" -or $Rule -eq "run:mame" -and -Not($Config.project.emulator.mame.profile)) {
     Mame `
     -ExeName $exeName `
-    -GameName $buildConfig.projectName `
+    -GameName $Config.project.name `
     -PathMame $mamePath `
-    -XMLArgsFile "$($buildConfig.pathNeocore)\mame-args.xml"
+    -XMLArgsFile "$($Config.project.buildPath)\mame-args.xml"
   } else {
     if ($Rule -like "run:mame*") {
       Mame-WithProfile `
       -ExeName $exeName `
-      -GameName $buildConfig.projectName `
+      -GameName $Config.project.name `
       -PathMame $mamePath
     }
   }

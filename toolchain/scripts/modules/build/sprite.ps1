@@ -1,6 +1,12 @@
+Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\assert\build\sprite.ps1"
 Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\write\sprite.ps1"
 
 function Build-Sprite {
-  Write-DATXML -InputFile $ConfigFile -OutputFile "$($buildConfig.pathBuild)\chardata.xml"
-  Write-Sprite -XMLFile "$($buildConfig.pathBuild)\chardata.xml" -Format "cd" -OutputFile "$($buildConfig.pathBuild)\$($buildConfig.projectName)"
+  Assert-BuildSprite
+
+  $outputFile = "$($Config.project.buildPath)\$($Config.project.name)\$($Config.project.name)"
+  $charDataFile = "$($Config.project.buildPath)\$($Config.project.name)\chardata.xml"
+
+  Write-DATXML -InputFile $ConfigFile -OutputFile $charDataFile
+  Write-Sprite -XMLFile $charDataFile -Format "cd" -OutputFile $outputFile
 }

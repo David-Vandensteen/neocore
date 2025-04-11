@@ -1,3 +1,4 @@
+Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\assert\build\exe.ps1"
 Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\write\nsi.ps1"
 
 function Build-EXE {
@@ -11,6 +12,15 @@ function Build-EXE {
   $excludeChdFile = "$($Config.project.name).chd"
   $chdFiles = Get-ChildItem -Path $mameRomPath -Filter *.chd
 
+  $packageName = $Config.project.name
+  $distPath = $Config.project.distPath
+  $version = $Config.project.version
+
+  $NSIFile = "$($Config.project.buildPath)\$packageName\$packageName.nsi"
+  $makeNSISexe = "$($Config.project.buildPath)\tools\nsis-3.08\makensis.exe"
+
+  Assert-BuildEXE
+
   foreach ($file in $chdFiles) {
     if ($file.Name -ne $excludeChdFile) {
       Remove-Item -Path $file.FullName -Force
@@ -21,13 +31,6 @@ function Build-EXE {
 
   Write-Host "building the exe file, be patient ..." -ForegroundColor Yellow
   Write-Host ""
-
-  $packageName = $Config.project.name
-  $distPath = $Config.project.distPath
-  $version = $Config.project.version
-
-  $NSIFile = "$($Config.project.buildPath)\$packageName\$packageName.nsi"
-  $makeNSISexe = "$($Config.project.buildPath)\tools\nsis-3.08\makensis.exe"
 
   if ((Test-Path -Path $NSIFile) -eq $false) {
     Write-Host "$NSIFile not found" -ForegroundColor Red
