@@ -67,7 +67,7 @@ function Write-Dist {
       $filePath = Split-Path -Path $file
       $fileExt = [System.IO.Path]::GetExtension($File)
 
-      if ($buildConfig.rule -eq "dist:iso" ) {
+      if ($Rule -eq "dist:iso" ) {
         $ext = $Config.project.sound.cdda.dist.iso.format
       } else {
         $ext = "wav"

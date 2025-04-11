@@ -45,10 +45,10 @@ function Invoke-Raine {
     if ($Manifest.manifest.dependencies.raine.url) {
       Install-Component `
         -URL $Manifest.manifest.dependencies.raine.url `
-        -PathDownload $buildConfig.pathSpool `
+        -PathDownload "$($Config.project.buildPath)\spool" `
         -PathInstall $Manifest.manifest.dependencies.raine.path
     } else {
-      Install-Component -URL "$($buildConfig.baseURL)/neobuild-raine.zip" -PathDownload $buildConfig.pathSpool -PathInstall $buildConfig.pathNeocore
+      Install-Component -URL "$BaseURL/neobuild-raine.zip" -PathDownload "$($Config.project.buildPath)\spool" -PathInstall $Config.project.buildPath
     }
     Install-RaineConfig -Path $PathRaine
   }
@@ -67,8 +67,8 @@ function Start-Raine {
   $rainePath = Get-TemplatePath -Path $rainePath
 
   Invoke-Raine `
-    -FileName "$($buildConfig.projectName).cue" `
+    -FileName "$($Config.project.name).cue" `
     -PathRaine $rainePath `
-    -PathISO $buildConfig.pathBuild `
+    -PathISO "$($Config.project.buildPath)\$($Config.project.name)" `
     -ExeName $exeName
 }
