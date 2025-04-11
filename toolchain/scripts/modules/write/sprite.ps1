@@ -1,11 +1,11 @@
 function Watch-Error {
-  Get-Content -Path "$($buildConfig.pathBuild)\sprite.log" -Force
-
-  if (Select-String -Path "$($buildConfig.pathBuild)\sprite.log" -Pattern "Invalid dimension") {
+  $buildPathProject = "$($Config.project.buildPath)\$($Config.project.name)"
+  Get-Content -Path "$buildPathProject\sprite.log" -Force
+  if (Select-String -Path "$buildPathProject\sprite.log" -Pattern "Invalid dimension") {
     Write-Host "Invalid dimension" -ForegroundColor Red
     exit 1
   }
-  if (Select-String -Path "$($buildConfig.pathBuild)\sprite.log" -Pattern "est pas valide") {
+  if (Select-String -Path "$buildPathProject\sprite.log" -Pattern "est pas valide") {
     Write-Host "Invalid parameter" -ForegroundColor Red
     exit 1
   }
@@ -43,6 +43,7 @@ function Write-Sprite {
     [Parameter(Mandatory=$true)][String] $OutputFile,
     [Parameter(Mandatory=$true)][String] $XMLFile
   )
+  $buildPathProject = "$($Config.project.buildPath)\$($Config.project.name)"
   Write-Host "Compiling sprites" -ForegroundColor Yellow
   if ((Test-Path -Path $XMLFile) -eq $false) {
     Write-Host "$XMLFile not found" -ForegroundColor Red
@@ -50,8 +51,12 @@ function Write-Sprite {
   }
 
   # TODO : timeout managment
-  # Start-Process -File BuildChar.exe -NoNewWindow -ArgumentList($XMLFile) -Wait -RedirectStandardOutput "$($buildConfig.pathBuild)\sprite.log"
-  $process = Start-Process -File "BuildChar.exe" -NoNewWindow -ArgumentList $XMLFile -PassThru -RedirectStandardOutput "$($buildConfig.pathBuild)\sprite.log"
+  $process = Start-Process `
+    -File "BuildChar.exe" `
+    -NoNewWindow `
+    -ArgumentList $XMLFile `
+    -PassThru `
+    -RedirectStandardOutput "$buildPathProject\sprite.log"
 
   $timeout = 120
   $timer = [System.Diagnostics.Stopwatch]::StartNew()

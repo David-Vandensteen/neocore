@@ -20,24 +20,6 @@ function Main {
 
   Assert-Project -Config $Config
 
-  $buildConfig = [PSCustomObject]@{
-    pathMame = "$($Config.project.buildPath)\mame"
-    pathRaine = "$($Config.project.buildPath)\raine"
-    pathSpool = "$($Config.project.buildPath)\spool"
-    pathNeocore = $Config.project.buildPath
-    pathBuild = "$($Config.project.buildPath)\$($Config.project.name)"
-    pathDist = $Config.project.distPath
-    pathNeodevBin = "$($Config.project.buildPath)\neodev-sdk\m68k\bin"
-    pathNeocoreBin = "$($Config.project.buildPath)\bin"
-    pathNeodev = "$($Config.project.buildPath)\neodev-sdk"
-    projectName = $Config.project.name
-    version = $Config.project.version
-    makefile = $Config.project.makefile
-    PRGFile = "$($Config.project.buildPath)\$($Config.project.name)\$($Config.project.name).prg"
-    rule = $Rule
-    baseURL = $BaseURL
-  }
-
   Write-Host ""
   Write-Host "Name : $($Config.project.name)"
   Write-Host "Version : $($Config.project.version)"
