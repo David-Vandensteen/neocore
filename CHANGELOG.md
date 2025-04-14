@@ -1,3 +1,9 @@
+## 2.7.1
+
+  - fix mak serve:mame
+  - refactor toolchain scripts
+  - improve toolchain log
+
 ## 2.7.0
 
   - add raine config switcher

@@ -7,7 +7,7 @@ function Install-GCC {
     [Parameter(Mandatory=$true)][String] $Destination
   )
 
-  $downloadPath = $(Resolve-Path $buildConfig.pathSpool)
+  $downloadPath = $(Resolve-Path -Path "$($Config.project.buildPath)\spool")
   if (-not $(Test-Path -Path $Destination)) {
     New-Item -Path $Destination -ItemType Directory -Force
     Install-Component -URL $URL -PathDownload $downloadPath -PathInstall $Destination
@@ -15,8 +15,8 @@ function Install-GCC {
 }
 
 function Install-SDK {
-  $installPath = $(Resolve-Path $buildConfig.pathNeocore)
-  $downloadPath = $(Resolve-Path $buildConfig.pathSpool)
+  $installPath = $(Resolve-Path -Path $Config.project.buildPath)
+  $downloadPath = $(Resolve-Path -Path "$($Config.project.buildPath)\spool")
   $buildConfig
 
   if ($Manifest.manifest.dependencies) { # TODO : make it mandatory in neocore v3
@@ -97,32 +97,32 @@ function Install-SDK {
       -PathDownload $downloadPath `
       -PathInstall $Manifest.manifest.dependencies.gcc.path
   } else {
-    Install-Component -URL "$($buildConfig.baseURL)/neocore-bin.zip" -PathDownload $downloadPath -PathInstall $installPath
-    Install-Component -URL "$($buildConfig.baseURL)/msys2-runtime.zip" -PathDownload $downloadPath -PathInstall "$installPath\bin"
-    Install-Component -URL "$($buildConfig.baseURL)/find-command.zip" -PathDownload $downloadPath -PathInstall "$installPath\bin"
-    Install-Component -URL "$($buildConfig.baseURL)/tr-command.zip" -PathDownload $downloadPath -PathInstall "$installPath\bin"
-    Install-Component -URL "$($buildConfig.baseURL)/DATimage.zip" -PathDownload $downloadPath -PathInstall "$($installPath)\tools"
-    Install-Component -URL "$($buildConfig.baseURL)/NGFX_SoundBuilder_210808.zip" -PathDownload $downloadPath -PathInstall "$($installPath)\tools"
-    Install-Component -URL "$($buildConfig.baseURL)/animator.zip" -PathDownload $downloadPath -PathInstall "$($installPath)\tools"
-    Install-Component -URL "$($buildConfig.baseURL)/framer.zip" -PathDownload $downloadPath -PathInstall "$($installPath)\tools"
-    Install-Component -URL "$($buildConfig.baseURL)/NeoTools.zip" -PathDownload $downloadPath -PathInstall "$($installPath)\bin"
-    Install-Component -URL "$($buildConfig.baseURL)/buildchar.zip" -PathDownload $downloadPath -PathInstall "$($installPath)\bin"
-    Install-Component -URL "$($buildConfig.baseURL)/charSplit.zip" -PathDownload $downloadPath -PathInstall "$($installPath)\bin"
-    Install-Component -URL "$($buildConfig.baseURL)/chdman.zip" -PathDownload $downloadPath -PathInstall "$($installPath)\bin"
-    Install-Component -URL "$($buildConfig.baseURL)/neodev-sdk.zip" -PathDownload $downloadPath -PathInstall $installPath
-    Install-Component -URL "$($buildConfig.baseURL)/neodev-lib.zip" -PathDownload $downloadPath -PathInstall "$($installPath)\lib"
-    Install-Component -URL "$($buildConfig.baseURL)/libDATlib.zip" -PathDownload $downloadPath -PathInstall "$($installPath)\lib"
-    Install-Component -URL "$($buildConfig.baseURL)/neodev-header.zip" -PathDownload $downloadPath -PathInstall "$($installPath)\include"
-    Install-Component -URL "$($buildConfig.baseURL)/DATlib-header.zip" -PathDownload $downloadPath -PathInstall "$($installPath)\include"
-    Install-Component -URL "$($buildConfig.baseURL)/system.zip" -PathDownload $downloadPath -PathInstall "$($installPath)\system"
+    Install-Component -URL "$($BaseURL)/neocore-bin.zip" -PathDownload $downloadPath -PathInstall $installPath
+    Install-Component -URL "$($BaseURL)/msys2-runtime.zip" -PathDownload $downloadPath -PathInstall "$installPath\bin"
+    Install-Component -URL "$($BaseURL)/find-command.zip" -PathDownload $downloadPath -PathInstall "$installPath\bin"
+    Install-Component -URL "$($BaseURL)/tr-command.zip" -PathDownload $downloadPath -PathInstall "$installPath\bin"
+    Install-Component -URL "$($BaseURL)/DATimage.zip" -PathDownload $downloadPath -PathInstall "$($installPath)\tools"
+    Install-Component -URL "$($BaseURL)/NGFX_SoundBuilder_210808.zip" -PathDownload $downloadPath -PathInstall "$($installPath)\tools"
+    Install-Component -URL "$($BaseURL)/animator.zip" -PathDownload $downloadPath -PathInstall "$($installPath)\tools"
+    Install-Component -URL "$($BaseURL)/framer.zip" -PathDownload $downloadPath -PathInstall "$($installPath)\tools"
+    Install-Component -URL "$($BaseURL)/NeoTools.zip" -PathDownload $downloadPath -PathInstall "$($installPath)\bin"
+    Install-Component -URL "$($BaseURL)/buildchar.zip" -PathDownload $downloadPath -PathInstall "$($installPath)\bin"
+    Install-Component -URL "$($BaseURL)/charSplit.zip" -PathDownload $downloadPath -PathInstall "$($installPath)\bin"
+    Install-Component -URL "$($BaseURL)/chdman.zip" -PathDownload $downloadPath -PathInstall "$($installPath)\bin"
+    Install-Component -URL "$($BaseURL)/neodev-sdk.zip" -PathDownload $downloadPath -PathInstall $installPath
+    Install-Component -URL "$($BaseURL)/neodev-lib.zip" -PathDownload $downloadPath -PathInstall "$($installPath)\lib"
+    Install-Component -URL "$($BaseURL)/libDATlib.zip" -PathDownload $downloadPath -PathInstall "$($installPath)\lib"
+    Install-Component -URL "$($BaseURL)/neodev-header.zip" -PathDownload $downloadPath -PathInstall "$($installPath)\include"
+    Install-Component -URL "$($BaseURL)/DATlib-header.zip" -PathDownload $downloadPath -PathInstall "$($installPath)\include"
+    Install-Component -URL "$($BaseURL)/system.zip" -PathDownload $downloadPath -PathInstall "$($installPath)\system"
 
-    Install-GCC -URL "$($buildConfig.baseURL)/gcc-2.95.2.zip" -Destination "$($installPath)\gcc\gcc-2.95.2"
+    Install-GCC -URL "$($BaseURL)/gcc-2.95.2.zip" -Destination "$($installPath)\gcc\gcc-2.95.2"
   }
 
-  #Install-Component -URL "$($buildConfig.baseURL)/MinGW-m68k-elf-13.1.0.zip" -PathDownload $downloadPath -PathInstall "$($installPath)\gcc"
+  #Install-Component -URL "$($BaseURL)/MinGW-m68k-elf-13.1.0.zip" -PathDownload $downloadPath -PathInstall "$($installPath)\gcc"
 
   Build-NeocoreLib
   $manifestFile = "$($Config.project.neocorePath)\manifest.xml"
   Copy-Item -Path $manifestFile $installPath -Force -ErrorAction Stop
-  Copy-Item -Path "$($Config.project.neocorePath)\manifest.xml" $buildConfig.pathNeocore -Force -ErrorAction Stop
+  Copy-Item -Path "$($Config.project.neocorePath)\manifest.xml" $Config.project.buildPath -Force -ErrorAction Stop
 }
