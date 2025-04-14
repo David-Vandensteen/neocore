@@ -1,6 +1,6 @@
 .DS_Store
 *.png_reject.png
-dist/
+/dist/
 /build/
 .vscode
 SPR.cd
