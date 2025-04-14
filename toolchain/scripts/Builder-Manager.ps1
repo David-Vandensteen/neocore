@@ -93,98 +93,50 @@ function Main {
   Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\write\program.ps1"
   Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\write\sprite.ps1"
 
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\mak\default.ps1"
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\mak\iso.ps1"
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\mak\run\raine.ps1"
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\mak\run\mame.ps1"
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\mak\serve\raine.ps1"
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\mak\serve\mame.ps1"
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\mak\dist\iso.ps1"
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\mak\dist\mame.ps1"
+  Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\mak\dist\exe.ps1"
+
   if ($Rule -eq "animator") { Start-Animator }
   if ($Rule -eq "framer") { Start-Framer }
   if ($Rule -eq "lib") { Build-NeocoreLib }
   if ($Rule -eq "sprite") { Build-Sprite }
 
   if (($Rule -eq "make") -or ($Rule -eq "") -or (!$Rule) -or ($Rule -eq "default") ) {
-    Build-Sprite
-    Build-Program
+    MakDefault
   }
-
   if ($Rule -eq "iso") {
-    Build-Sprite
-    Build-Program
-    Build-ISO
+    MakISO
   }
-
   if ($Rule -eq "run:raine" -or $Rule -eq "raine" -or $Rule -like "run:raine:*") {
-    Build-Sprite
-    Build-Program
-    Build-ISO
-    Start-Raine
+    MakRunRaine
   }
-
   if ($Rule -like "run:mame*" -or $Rule -eq "mame" -or $Rule -eq "run") {
-    Build-Sprite
-    Build-Program
-    Build-ISO
-    Build-Mame
-    Start-Mame
+    MakRunMame
   }
-
   if ($Rule -eq "serve:raine") {
-    While ($true) {
-      Build-Sprite
-      Build-Program
-      Build-ISO
-      Start-Raine
-      Watch-Folder -Path "."
-      Stop-Emulators
-    }
+    MakServeRaine
   }
-
   if ($Rule -eq "serve:mame" -or $Rule -eq "serve") {
-    While ($true) {
-      Build-Sprite
-      Build-Program
-      Build-ISO
-      Build-Mame
-      Start-Mame
-      Watch-Folder -Path "."
-      Stop-Emulators
-    }
+    MakServeMame
   }
 
   if ($Rule -eq "dist:iso" -or $Rule -eq "dist:raine") {
-    $ISOFile = "$($Config.project.buildPath)\$($Config.project.name)\$($Config.project.name).iso"
-    $CUEFile = "$($Config.project.buildPath)\$($Config.project.name)\$($Config.project.name).cue"
-    $pathDestination = "$($Config.project.distPath)\$($Config.project.name)\$($Config.project.name)-$($Config.project.version)"
-    if ((Test-Path -Path $Config.project.distPath) -eq $false) { New-Item -Path $Config.project.distPath -ItemType Directory -Force }
-    Build-Sprite
-    Build-Program
-    Build-ISO
-    Write-Dist `
-      -ProjectName $Config.project.name `
-      -PathDestination $pathDestination `
-      -ISOFile $ISOFile `
-      -CUEFile $CUEFile
+    MakDistISO
   }
 
   if ($Rule -eq "dist:mame" -or $Rule -eq "dist:chd") {
-    $pathDestination = "$($Config.project.distPath)\$($Config.project.name)\$($Config.project.name)-$($Config.project.version)"
-    $CHDFile = "$($Config.project.buildPath)\mame\roms\neocdz\$($Config.project.name).chd"
-    $hashFile = "$($Config.project.buildPath)\mame\hash\neocd.xml"
-    if ((Test-Path -Path $Config.project.distPath) -eq $false) { New-Item -Path $Config.project.distPath -ItemType Directory -Force }
-    Build-Sprite
-    Build-Program
-    Build-ISO
-    Build-Mame
-    Write-Dist `
-      -ProjectName $Config.project.name `
-      -PathDestination $pathDestination `
-      -CHDFile  $CHDFile`
-      -HashFile $hashFile
+    MakDistMame
   }
 
   if ($Rule -eq "dist:exe") {
-    if ((Test-Path -Path "$($Config.project.buildPath)\tools\nsis-3.08") -eq $false) { Install-NSIS }
-    Build-Sprite
-    Build-Program
-    Build-ISO
-    Build-Mame
-    Build-EXE
+    MakDistExe
   }
 
   if ($Rule -eq "--version") {
