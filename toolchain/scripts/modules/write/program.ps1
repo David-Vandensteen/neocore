@@ -7,14 +7,17 @@ function Write-Program {
     [Parameter(Mandatory=$true)][String] $ProjectName,
     [Parameter(Mandatory=$true)][String] $BinPath
   )
-  Logger-Step -Message "compiling program"
-  if ((Test-Path -Path $MakeFile) -eq $false) { Logger-Error -Message "$MakeFile not found" }
+  Write-Host "Compiling program $PRGFile" -ForegroundColor Yellow
+  if ((Test-Path -Path $MakeFile) -eq $false) {
+    Write-Host "$MakeFile not found" -ForegroundColor Red
+    exit 1
+  }
 
   $env:PROJECT = $ProjectName
   $env:GCC_PATH = $GCCPath
 
   $env:FILEPRG = $PRGFile
-  $env:PATHBUILD = $buildConfig.pathBuild
+  $env:PATHBUILD = "$($Config.project.buildPath)\$($Config.project.name)"
 
   $Config.project.compiler
 
@@ -30,9 +33,10 @@ function Write-Program {
   & make -f $MakeFile > "$($Config.project.buildPath)\$($Config.project.name)\gcc.log" 2>&1
   & type "$($Config.project.buildPath)\$($Config.project.name)\gcc.log"
   if ((Test-Path -Path $PRGFile) -eq $true) {
-    Logger-Success "builded program $PRGFile"
+    Write-Host "Builded program $PRGFile" -ForegroundColor Green
     Write-Host ""
   } else {
-    Logger-Error -Message "error - $PRGFile was not generated"
+    Write-Host "$PRGFile was not generated" -ForegroundColor Red
+    exit 1
   }
 }

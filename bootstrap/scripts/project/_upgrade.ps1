@@ -62,6 +62,12 @@ if (Test-Path -Path $gitignorePath) {
     Write-Host "warning : the $gitignorePath file contains 'build/'" -ForegroundColor Yellow
     Write-Host "please change it to '/build/'" -ForegroundColor Yellow
   }
+  if ($gitignoreContent -notcontains "dist/") {
+  } else {
+    Write-Host ""
+    Write-Host "warning : the $gitignorePath file contains 'dist/'" -ForegroundColor Yellow
+    Write-Host "please change it to '/dist/'" -ForegroundColor Yellow
+  }
 } else {
   Show-Error "$gitignorePath not found"
   exit 1
