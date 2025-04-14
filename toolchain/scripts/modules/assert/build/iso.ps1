@@ -7,8 +7,4 @@ function Assert-BuildISO {
     Write-Host "error : $spriteFile not found" -ForegroundColor Red
     exit 1
   }
-  if (-Not(Test-Path -path $pathCDTemplate)) {
-    Write-Host "error : $pathCDTemplate not found" -ForegroundColor Red
-    exit 1
-  }
 }
