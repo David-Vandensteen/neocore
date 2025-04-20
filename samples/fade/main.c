@@ -7,10 +7,14 @@ typedef struct RGBColor {
     BYTE r, g, b;
 } RGBColor;
 
+BOOL joypad_is_start() {
+  return nc_joypad_is_start(0) || nc_joypad_is_start(1);
+}
+
 void debug_rgb_color(RGBColor color) {
-  log_word("R", color.r);
-  log_word("G", color.g);
-  log_word("B", color.b);
+  nc_log_word("R", color.r);
+  nc_log_word("G", color.g);
+  nc_log_word("B", color.b);
 }
 
 WORD get_rgb_from_color(RGBColor color) {
@@ -50,18 +54,19 @@ static void init() {
     playfield_fading_palette[i] = get_rgb_from_color(color);
   }
 
-  init_gpu();
-  init_gfx_picture(&playfield, &playfield_asset, &playfield_asset_Palettes);
+  // init_gpu();
+  nc_init_gfx_picture(&playfield, &playfield_asset, &playfield_asset_Palettes);
+  nc_set_joypad_edge_mode(1);
 }
 
 static void display() {
-  display_gfx_picture(&playfield, 0, 0);
+  nc_display_gfx_picture(&playfield, 0, 0);
 }
 
 static void update() {
-  if (each_frame(60)) {
+  if (nc_each_frame(60)) {
     WORD i = 0;
-    init_log();
+    nc_init_log();
 
 
     // log_dword("frame", get_frame_counter());
@@ -83,34 +88,35 @@ for (i = 0; i < 16; i++) {
     RGBColor current_color = get_color_from_rgb(playfield_fading_palette[i]);
     RGBColor destination_color = get_color_from_rgb(playfield_asset_Palettes.data[i]);
 
-    log_info("CUR");
+    nc_log_info("CUR");
     debug_rgb_color(current_color);
-    log_info("");
+    nc_log_info("");
 
-    log_info("DST");
+    nc_log_info("DST");
     debug_rgb_color(destination_color);
-    log_info("");
+    nc_log_info("");
 
     if (current_color.r < destination_color.r) current_color.r += 1;
     if (current_color.g < destination_color.g) current_color.g += 1;
     if (current_color.b < destination_color.b) current_color.b += 1;
 
-    log_info("TO APPLY");
+    nc_log_info("TO APPLY");
     debug_rgb_color(current_color);
-    log_info("");
+    nc_log_info("");
 
-    log_info("TO APPLY");
-    log_word("RGB", get_rgb_from_color(current_color));
-    log_info("");
+    nc_log_info("TO APPLY");
+    nc_log_word("RGB", get_rgb_from_color(current_color));
+    nc_log_info("");
 
     playfield_fading_palette[i] = get_rgb_from_color(current_color);
 
-    log_info("APPLYIED");
+    nc_log_info("APPLYIED");
     debug_rgb_color(get_color_from_rgb(playfield_fading_palette[i]));
-    log_info("");
+    nc_log_info("");
 
-    wait_vbl();
-    pause(&joypad_0_is_start);
+    nc_wait_vbl();
+    nc_pause(&joypad_is_start);
+    nc_init_log();
   }
     palJobPut(playfield.pictureDAT.basePalette, playfield_asset_Palettes.palCount, playfield_fading_palette);
   }
@@ -120,10 +126,8 @@ int main(void) {
   init();
   display();
   while(1) {
-    wait_vbl();
+    nc_update();
     update();
-    close_vbl();
   };
-  close_vbl();
   return 0;
 }
