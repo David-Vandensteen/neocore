@@ -1,7 +1,3 @@
-Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\install\component.ps1"
-Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\write\mp3.ps1"
-Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\write\wav.ps1"
-
 function Write-ISO {
   param (
     [Parameter(Mandatory=$true)][String] $PRGFile,

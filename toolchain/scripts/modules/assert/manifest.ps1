@@ -1,6 +1,3 @@
-Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\compare\filehash.ps1"
-Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\assert\manifest\dependencies.ps1"
-
 function Assert-Manifest {
   param (
     [Parameter(Mandatory = $true)]

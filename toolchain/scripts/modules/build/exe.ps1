@@ -1,6 +1,3 @@
-Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\assert\build\exe.ps1"
-Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\write\nsi.ps1"
-
 function Build-EXE {
   Write-NSI
   Write-Host "cleaning chd files in Mame to prepare standalone exe building " -ForegroundColor Yellow

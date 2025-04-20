@@ -1,6 +1,3 @@
-Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\assert\build\iso.ps1"
-Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\write\iso.ps1"
-
 function Build-ISO {
   $prgFile = "$($Config.project.buildPath)\$($Config.project.name)\$($Config.project.name).prg"
   $spriteFile = "$($Config.project.buildPath)\$($Config.project.name)\$($Config.project.name).cd"

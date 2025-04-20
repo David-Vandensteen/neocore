@@ -1,6 +1,3 @@
-Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\assert\build\program.ps1"
-Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\write\program.ps1"
-
 function Build-Program {
   Assert-BuildProgram
   $prgFile = "$($Config.project.buildPath)\$($Config.project.name)\$($Config.project.name).prg"

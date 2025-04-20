@@ -1,7 +1,3 @@
-Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\install\component.ps1"
-Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\install\raine\config.ps1"
-Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\assert\raine\config.ps1"
-
 function Update-RaineConfigSwitch {
   Write-Host "Switching Raine config" -ForegroundColor Yellow
   if ($Rule -like "run:raine:*") {

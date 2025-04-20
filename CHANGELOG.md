@@ -1,3 +1,7 @@
+## 2.7.2
+
+  - centralize toolchain import modules
+
 ## 2.7.1
 
   - fix mak serve:mame
