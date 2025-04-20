@@ -1,6 +1,7 @@
 function Start-Mame {
   $exeName = [System.IO.Path]::GetFileName($Config.project.emulator.mame.exeFile)
   $mamePath = Split-Path $Config.project.emulator.mame.exeFile
+  $mamePath = Get-TemplatePath -Path $mamePath
 
   # TODO : remove at v3
 

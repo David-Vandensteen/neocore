@@ -1,5 +1,6 @@
 ## 2.7.2
 
+  - build templated path
   - centralize toolchain import modules
 
 ## 2.7.1

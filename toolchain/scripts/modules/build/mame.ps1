@@ -1,5 +1,6 @@
 function Build-Mame {
   $mamePath = Split-Path $Config.project.emulator.mame.exeFile
+  $mamePath = Get-TemplatePath -Path $mamePath
   $name = $Config.project.name
   $cueFile = "$($Config.project.buildPath)\$name\$name.cue"
 
