@@ -13,30 +13,41 @@ function Write-Program {
     exit 1
   }
 
-  $env:PROJECT = $ProjectName
-  $env:GCC_PATH = $GCCPath
+  $gccPath = Get-TemplatePath -Path $GCCPath
+  $binPath = Get-TemplatePath -Path $BinPath
+  $makeFile = Get-TemplatePath -Path $MakeFile
+  $prgFile = Get-TemplatePath -Path $PRGFile
+  $pathNeoDev = Get-TemplatePath -Path $PathNeoDev
+  $projectName = Get-TemplatePath -Path $ProjectName
+  $pathBuildName = Get-TemplatePath -Path "$($Config.project.buildPath)\$($Config.project.name)"
+  $includePath = Resolve-TemplatePath -Path $Config.project.compiler.includePath
+  $libraryPath = Resolve-TemplatePath -Path $Config.project.compiler.libraryPath
+  $systemFile = Resolve-TemplatePath -Path $Config.project.compiler.systemFile
 
-  $env:FILEPRG = $PRGFile
-  $env:PATHBUILD = "$($Config.project.buildPath)\$($Config.project.name)"
+  $env:PROJECT = $ProjectName
+  $env:GCC_PATH = $gccPath
+
+  $env:FILEPRG = $prgFile
+  $env:PATHBUILD = $pathBuildName
 
   $Config.project.compiler
 
   $env:PROJECT_PATH = $(Resolve-Path -Path .)
-  $env:INCLUDE_PATH = $(Resolve-Path -Path $Config.project.compiler.includePath)
-  $env:LIBRARY_PATH = $(Resolve-Path -Path $Config.project.compiler.libraryPath)
-  $env:NEO_GEO_SYSTEM = $(Resolve-Path -Path $Config.project.compiler.systemFile)
+  $env:INCLUDE_PATH = $includePath
+  $env:LIBRARY_PATH = $libraryPath
+  $env:NEO_GEO_SYSTEM = $systemFile
 
-  $env:path = "$GCCPath;$BinPath;$env:windir\System32;$env:windir\System32\WindowsPowerShell\v1.0\"
+  $env:path = "$gccPath;$binPath;$env:windir\System32;$env:windir\System32\WindowsPowerShell\v1.0\"
 
   Write-Host $env:path
 
-  & make -f $MakeFile > "$($Config.project.buildPath)\$($Config.project.name)\gcc.log" 2>&1
-  & type "$($Config.project.buildPath)\$($Config.project.name)\gcc.log"
-  if ((Test-Path -Path $PRGFile) -eq $true) {
-    Write-Host "Builded program $PRGFile" -ForegroundColor Green
+  & make -f $MakeFile > "$pathBuildName\gcc.log" 2>&1
+  & type "$pathBuildName\gcc.log"
+  if ((Test-Path -Path $prgFile) -eq $true) {
+    Write-Host "Builded program $prgFile" -ForegroundColor Green
     Write-Host ""
   } else {
-    Write-Host "$PRGFile was not generated" -ForegroundColor Red
+    Write-Host "$prgFile was not generated" -ForegroundColor Red
     exit 1
   }
 }

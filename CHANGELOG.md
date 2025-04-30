@@ -1,3 +1,8 @@
+## 2.7.2
+
+  - build templated path (see bootstrap/standalone/project.xml)
+  - centralize toolchain import modules
+
 ## 2.7.1
 
   - fix mak serve:mame

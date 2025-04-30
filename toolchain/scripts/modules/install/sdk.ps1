@@ -1,6 +1,3 @@
-Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\install\component.ps1"
-Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\build\neocore-lib.ps1"
-
 function Install-GCC {
   Param(
     [Parameter(Mandatory=$true)][String] $URL,

@@ -1,6 +1,3 @@
-Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\assert\build\sprite.ps1"
-Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\write\sprite.ps1"
-
 function Build-Sprite {
   Assert-BuildSprite
 
