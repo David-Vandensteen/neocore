@@ -7,6 +7,8 @@ static GFX_Animated_Sprite_Physic player;
 static GFX_Picture_Physic asteroids[ASTEROID_MAX];
 static Box *asteroids_box[ASTEROID_MAX];
 
+int main(void);
+
 int main(void) {
   BYTE i = 0;
 

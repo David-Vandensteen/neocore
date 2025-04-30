@@ -1,5 +1,3 @@
-Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\install\component.ps1"
-
 function Install-NSIS {
   $installPath = $(Resolve-Path -Path $Config.project.buildPath)
   $downloadPath = $(Resolve-Path -Path "$($Config.project.buildPath)\spool")

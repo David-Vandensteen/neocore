@@ -1,5 +1,3 @@
-Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\start\download.ps1"
-
 function Install-Component {
   param (
     [Parameter(Mandatory=$true)][String] $URL,

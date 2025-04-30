@@ -1,5 +1,3 @@
-Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\assert\build\neocore-lib.ps1"
-
 function Build-NeocoreLib {
   $buildPath = $(Resolve-Path -Path $Config.project.buildPath)
   $srcLibPath = "$($Config.project.neocorePath)\src-lib"

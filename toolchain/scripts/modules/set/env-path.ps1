@@ -4,7 +4,9 @@ function Set-EnvPath {
     [Parameter(Mandatory=$true)][String] $Bin
   )
 
-  $env:path = "$GCCPath;$Bin;$env:windir\System32;$env:windir\System32\WindowsPowerShell\v1.0\"
+  $gccPath = Get-TemplatePath -Path $GCCPath
+  $binPath = Get-TemplatePath -Path $Bin
+  $env:path = "$gccPath;$binPath;$env:windir\System32;$env:windir\System32\WindowsPowerShell\v1.0\"
 
   Write-Host "Env Path: $env:path"
   Write-Host "--------------------------------------------"

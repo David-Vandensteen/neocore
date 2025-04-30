@@ -93,16 +93,18 @@ function Mame {
   $defaultMameArgs = "-rompath `"$PathMame\roms`" -hashpath `"$PathMame\hash`" -cfg_directory $env:TEMP -nvram_directory $env:TEMP -skip_gameinfo neocdz $GameName"
 
   $mameArgs = "-window"
+  $pathMame = Resolve-TemplatePath -Path $PathMame
+
   if (Test-Path -Path $XMLArgsFile) { $mameArgs = (Select-Xml -Path $XMLArgsFile -XPath '/mame/args').Node.InnerXML }
 
-  if ((Test-Path -Path $PathMame) -eq $false) {
-    Write-Host "$PathMame not found" -ForegroundColor Red
+  if ((Test-Path -Path $pathMame) -eq $false) {
+    Write-Host "$pathMame not found" -ForegroundColor Red
     exit 1
   }
-  if ((Test-Path -Path "$PathMame\$ExeName") -eq $false) { Write-Host ("error - {0}\ not found" -f $PathMame) -ForegroundColor Red; exit 1 }
+  if ((Test-Path -Path "$pathMame\$ExeName") -eq $false) { Write-Host ("error - {0}\ not found" -f $PathMame) -ForegroundColor Red; exit 1 }
   Write-Host "Launching mame $GameName" -ForegroundColor Yellow
-  Write-Host "$PathMame\$ExeName $mameArgs $defaultMameArgs"
-  Start-Process -NoNewWindow -FilePath "$PathMame\$ExeName" -ArgumentList "$mameArgs $defaultMameArgs"
+  Write-Host "$pathMame\$ExeName $mameArgs $defaultMameArgs"
+  Start-Process -NoNewWindow -FilePath "$pathMame\$ExeName" -ArgumentList "$mameArgs $defaultMameArgs"
 }
 
 function Mame-WithProfile {
@@ -111,6 +113,7 @@ function Mame-WithProfile {
     [Parameter(Mandatory=$true)][String] $GameName,
     [Parameter(Mandatory=$true)][String] $PathMame
   )
+  $pathMame = Resolve-TemplatePath -Path $PathMame
   $profileName = $Rule.Split(":")[2]
   if ($Rule -eq "run:mame") { $profileName = "default" }
   if (-Not($Config.project.emulator.mame.profile.$profileName)) {
@@ -123,8 +126,8 @@ function Mame-WithProfile {
   Write-Host ""
 
   $mameArgs = $Config.project.emulator.mame.profile.$profileName
-  $defaultMameArgs = "-rompath `"$PathMame\roms`" -hashpath `"$PathMame\hash`" -cfg_directory $env:TEMP -nvram_directory $env:TEMP $GameName"
+  $defaultMameArgs = "-rompath `"$pathMame\roms`" -hashpath `"$pathMame\hash`" -cfg_directory $env:TEMP -nvram_directory $env:TEMP $GameName"
 
-  Write-Host "$PathMame\$ExeName $mameArgs $defaultMameArgs"
-  Start-Process -NoNewWindow -FilePath "$PathMame\$ExeName" -ArgumentList "$mameArgs $defaultMameArgs"
+  Write-Host "$pathMame\$ExeName $mameArgs $defaultMameArgs"
+  Start-Process -NoNewWindow -FilePath "$pathMame\$ExeName" -ArgumentList "$mameArgs $defaultMameArgs"
 }
