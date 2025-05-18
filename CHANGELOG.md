@@ -11,6 +11,7 @@
     - nc_read_palette_rgb_color
     - nc_set_palette_backdrop_by_packed_color
     - nc_set_palette_backdrop_by_rgb_color
+  - add sample pal backdrop
 
 ## 2.7.2
 
