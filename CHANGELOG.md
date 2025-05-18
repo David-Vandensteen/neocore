@@ -1,3 +1,5 @@
+## 2.8.0
+
 ## 2.7.2
 
   - build templated path (see bootstrap/standalone/project.xml)
