@@ -1,7 +1,7 @@
 #include <neocore.h>
 #include "externs.h"
 
-RGB_Color backdropColor = {0x00, 0x00, 0xFF};
+static RGB_Color backdropColor = {0x00, 0x00, 0xFF};
 
 static void init();
 static void update();
