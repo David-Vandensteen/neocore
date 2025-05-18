@@ -78,6 +78,10 @@ typedef struct Adpcm_player {
   DWORD remaining_frame;
 } Adpcm_player;
 
+typedef struct RGB_Color {
+  BYTE r, g, b;
+} RGB_Color;
+
   //--------------------------------------------------------------------------//
  //                                   GFX                                    //
 //--------------------------------------------------------------------------//
@@ -340,6 +344,51 @@ void nc_destroy_palette(paletteInfo* paletteInfo);
 void nc_clear_palette_index_table();
 WORD nc_get_max_free_palette_index();
 WORD nc_get_max_palette_index_used();
+#define nc_rgb_to_packed_color(color) \
+  ((((color.r) >> 3) << 11) | (((color.g) >> 2) << 5) | ((color.b) >> 3))
+
+#define nc_packet_color_to_rgb(packedColor, rgbColor) \
+  do { \
+    (rgbColor).r = (((packedColor) >> 11) & 0x1F) << 3; \
+    (rgbColor).g = (((packedColor) >> 5) & 0x3F) << 2; \
+    (rgbColor).b = ((packedColor) & 0x1F) << 3; \
+  } while (0)
+
+#define nc_set_palette_packed_color(paletteNumber, paletteIndex, color) \
+  do { \
+    int address = 0x400000 | ((paletteNumber) << 5) | ((paletteIndex) << 1); \
+    volMEMWORD(address) = (color); \
+  } while (0)
+
+#define nc_set_palette_rgb_color(paletteNumber, paletteIndex, color) \
+  do { \
+    WORD packedColor = nc_rgb_to_packed_color(color); \
+    nc_set_palette_packed_color(paletteNumber, paletteIndex, packedColor); \
+  } while (0)
+
+#define nc_get_palette_packed_color(paletteNumber, paletteIndex) \
+  ({ \
+    int address = 0x400000 | ((paletteNumber) << 5) | ((paletteIndex) << 1); \
+    volMEMWORD(address); \
+  })
+
+#define nc_read_palette_rgb_color(paletteNumber, paletteIndex, rgbColor) \
+  do { \
+    WORD packedColor = nc_get_palette_packed_color(paletteNumber, paletteIndex); \
+    nc_packet_color_to_rgb(packedColor, rgbColor); \
+  } while (0)
+
+#define nc_set_palette_backdrop_by_packed_color(packedColor) \
+  do { \
+    int address = 0x401FFE; \
+    volMEMWORD(address) = (packedColor); \
+  } while (0)
+
+#define nc_set_palette_backdrop_by_rgb_color(color) \
+  do { \
+    WORD packedColor = nc_rgb_to_packed_color(color); \
+    nc_set_palette_backdrop_by_packed_color(packedColor); \
+  } while (0)
 
   /*--------------*/
  /* GPU shrunk   */
@@ -486,6 +535,7 @@ void nc_log_spriteInfo(char *label, spriteInfo *si);
 void nc_log_box(char *label, Box *b);
 void nc_log_pictureInfo(char *label, pictureInfo *pi);
 void nc_log_vec2short(char *label, Vec2short vec2short);
+void nc_log_palette_info(paletteInfo *paletteInfo);
 
   /*---------------*/
  /* SOUND         */

@@ -846,6 +846,13 @@ WORD nc_get_max_palette_index_used() {
   return max;
 }
 
+RGB_Color nc_get_palette_rgb_color(paletteNumber, paletteIndex) {
+  RGB_Color rgbColor;
+  WORD packedColor = nc_get_palette_packed_color(paletteNumber, paletteIndex);
+  nc_packet_color_to_rgb(packedColor, rgbColor);
+  return rgbColor;
+}
+
   /*--------------*/
  /* GPU shrunk   */
 /*--------------*/
@@ -1274,6 +1281,13 @@ void nc_log_vec2short(char *label, Vec2short vec2short) {
   nc_log_info(label);
   nc_log_short("X", vec2short.x);
   nc_log_short("Y", vec2short.y);
+}
+
+void nc_log_palette_info(paletteInfo *paletteInfo) {
+  WORD i = 0;
+  for (i = 0; i < 16; i++) {
+    nc_log_word("", (WORD*)&paletteInfo[i]);
+  }
 }
 
   /*---------------*/

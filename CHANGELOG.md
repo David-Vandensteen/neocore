@@ -1,5 +1,17 @@
 ## 2.8.0
 
+  - add RGB color handlers :
+    - RGB color struct
+    - nc_rgb_to_packed_color
+    - nc_packet_color_to_rgb
+    - nc_log_palette_info
+    - nc_set_palette_packed_color
+    - nc_set_palette_rgb_color
+    - nc_get_palette_packed_color
+    - nc_read_palette_rgb_color
+    - nc_set_palette_backdrop_by_packed_color
+    - nc_set_palette_backdrop_by_rgb_color
+
 ## 2.7.2
 
   - build templated path (see bootstrap/standalone/project.xml)
