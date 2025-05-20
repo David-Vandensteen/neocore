@@ -443,6 +443,9 @@ WORD nc_shrunk_range(WORD addr_start, WORD addr_end, WORD shrunk_value);
 #define nc_fix_mul(num1, num2) fmul(num1, num2)
 #define nc_cos(num) fcos(num)
 #define nc_tan(num) ftan(num)
+#define nc_byte_to_hex(value, hexchar) sprintf(hexchar, "%02X", value)
+#define nc_word_to_hex(value, hexchar) sprintf(hexchar, "%04X", value)
+
 
 char nc_sin(WORD index);
 
