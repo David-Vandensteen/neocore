@@ -27,6 +27,8 @@ enum Sound_state { IDLE, PLAYING };
 typedef struct Vec2int { int x; int y; } Vec2int;
 typedef struct Vec2short { short x; short y; } Vec2short;
 typedef struct Vec2byte { BYTE x; BYTE y; } Vec2byte;
+typedef char Hex_Color[3];
+typedef char Hex_Packed_Color[5];
 
 typedef struct Box {
   Vec2short p0;
