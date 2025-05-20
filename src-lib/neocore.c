@@ -1286,7 +1286,7 @@ void nc_log_vec2short(char *label, Vec2short vec2short) {
 void nc_log_palette_info(paletteInfo *paletteInfo) {
   WORD i = 0;
   for (i = 0; i < 16; i++) {
-    nc_log_word("", (WORD*)&paletteInfo[i]);
+    nc_log_word("", *paletteInfo[i].data);
   }
 }
 
