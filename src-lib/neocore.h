@@ -79,7 +79,7 @@ typedef struct Adpcm_player {
 } Adpcm_player;
 
 typedef struct RGB_Color {
-  BYTE r, g, b;
+  BYTE r : 4, g : 4, b : 4;
 } RGB_Color;
 
   //--------------------------------------------------------------------------//
@@ -344,15 +344,16 @@ void nc_destroy_palette(paletteInfo* paletteInfo);
 void nc_clear_palette_index_table();
 WORD nc_get_max_free_palette_index();
 WORD nc_get_max_palette_index_used();
+
 #define nc_rgb_to_packed_color(color) \
-  ((((color.r) >> 3) << 11) | (((color.g) >> 2) << 5) | ((color.b) >> 3))
+  ((((color.r) & 0xF) << 8) | (((color.g) & 0xF) << 4) | ((color.b) & 0xF))
 
 #define nc_packet_color_to_rgb(packedColor, rgbColor) \
   do { \
-    (rgbColor).r = (((packedColor) >> 11) & 0x1F) << 3; \
-    (rgbColor).g = (((packedColor) >> 5) & 0x3F) << 2; \
-    (rgbColor).b = ((packedColor) & 0x1F) << 3; \
-  } while (0)
+    (rgbColor).r = ((packedColor) >> 8) & 0xF; \
+    (rgbColor).g = ((packedColor) >> 4) & 0xF; \
+    (rgbColor).b = (packedColor) & 0xF; \
+  } while(0)
 
 #define nc_set_palette_packed_color(paletteNumber, paletteIndex, color) \
   do { \
