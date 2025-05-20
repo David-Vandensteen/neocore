@@ -16,6 +16,7 @@
     - nc_set_palette_backdrop_by_packed_color
     - nc_set_palette_backdrop_by_rgb_color
   - add sample pal backdrop
+  - add sample pal rgb mixer
 
 ## 2.7.2
 
