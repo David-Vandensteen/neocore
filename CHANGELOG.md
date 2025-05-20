@@ -1,7 +1,11 @@
 ## 2.8.0
 
+  - add nc_byte_to_hex macro
+  - add nc_word_to_hex macro
   - add RGB color handlers :
     - RGB color struct
+    - Hex_Color type
+    - Hex_Packed_Color type
     - nc_rgb_to_packed_color
     - nc_packet_color_to_rgb
     - nc_log_palette_info
