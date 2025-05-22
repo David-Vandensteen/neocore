@@ -367,7 +367,7 @@ void nc_read_palette_rgb_color(BYTE palette_number, BYTE palette_index, RGB_Colo
 #define nc_set_palette_by_rgb_color(palette_number, palette_index, color) \
   do { \
     WORD packed_color = nc_rgb_to_packed_color(color); \
-    nc_set_palette_packed_color(palette_number, palette_index, packed_color); \
+    nc_set_palette_by_packed_color(palette_number, palette_index, packed_color); \
   } while (0)
 
 #define nc_get_palette_packed_color(palette_number, palette_index) \
