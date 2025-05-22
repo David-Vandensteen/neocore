@@ -846,11 +846,9 @@ WORD nc_get_max_palette_index_used() {
   return max;
 }
 
-RGB_Color nc_get_palette_rgb_color(paletteNumber, paletteIndex) {
-  RGB_Color rgbColor;
-  WORD packedColor = nc_get_palette_packed_color(paletteNumber, paletteIndex);
-  nc_packet_color_to_rgb(packedColor, rgbColor);
-  return rgbColor;
+void nc_read_palette_rgb_color(BYTE palette_number, BYTE palette_index, RGB_Color *rgb_color) {
+  WORD packed_color = nc_get_palette_packed_color(palette_number, palette_index);
+  nc_packet_color_to_rgb(packed_color, *rgb_color);
 }
 
   /*--------------*/
@@ -900,6 +898,14 @@ int nc_shrunk_centroid_get_translated_y(short centerPosY, WORD tileHeight, BYTE 
 //--------------------------------------------------------------------------//
 
 char nc_sin(WORD index) { return sin_table[index]; }
+
+void nc_byte_to_hex(BYTE value, char *hexchar) {
+  sprintf(hexchar, "%02X", value);
+}
+
+void nc_word_to_hex(WORD value, char *hexchar) {
+  sprintf(hexchar, "%04X", value);
+}
 
   //--------------------------------------------------------------------------//
  //                                PHYSIC                                    //

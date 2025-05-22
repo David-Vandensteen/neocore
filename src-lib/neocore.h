@@ -346,51 +346,53 @@ void nc_destroy_palette(paletteInfo* paletteInfo);
 void nc_clear_palette_index_table();
 WORD nc_get_max_free_palette_index();
 WORD nc_get_max_palette_index_used();
+void nc_read_palette_rgb_color(BYTE palette_number, BYTE palette_index, RGB_Color *rgb_color);
 
 #define nc_rgb_to_packed_color(color) \
   ((((color.r) & 0xF) << 8) | (((color.g) & 0xF) << 4) | ((color.b) & 0xF))
 
-#define nc_packet_color_to_rgb(packedColor, rgbColor) \
+#define nc_packet_color_to_rgb(packed_color, rgb_color) \
   do { \
-    (rgbColor).r = ((packedColor) >> 8) & 0xF; \
-    (rgbColor).g = ((packedColor) >> 4) & 0xF; \
-    (rgbColor).b = (packedColor) & 0xF; \
+    (rgb_color).r = ((packed_color) >> 8) & 0xF; \
+    (rgb_color).g = ((packed_color) >> 4) & 0xF; \
+    (rgb_color).b = (packed_color) & 0xF; \
   } while(0)
 
-#define nc_set_palette_packed_color(paletteNumber, paletteIndex, color) \
+#define nc_set_palette_by_packed_color(palette_number, palette_index, color) \
   do { \
-    int address = 0x400000 | ((paletteNumber) << 5) | ((paletteIndex) << 1); \
+    int address = 0x400000 | ((palette_number) << 5) | ((palette_index) << 1); \
     volMEMWORD(address) = (color); \
   } while (0)
 
-#define nc_set_palette_rgb_color(paletteNumber, paletteIndex, color) \
+#define nc_set_palette_by_rgb_color(palette_number, palette_index, color) \
   do { \
-    WORD packedColor = nc_rgb_to_packed_color(color); \
-    nc_set_palette_packed_color(paletteNumber, paletteIndex, packedColor); \
+    WORD packed_color = nc_rgb_to_packed_color(color); \
+    nc_set_palette_packed_color(palette_number, palette_index, packed_color); \
   } while (0)
 
-#define nc_get_palette_packed_color(paletteNumber, paletteIndex) \
+#define nc_get_palette_packed_color(palette_number, palette_index) \
   ({ \
-    int address = 0x400000 | ((paletteNumber) << 5) | ((paletteIndex) << 1); \
+    int address = 0x400000 | ((palette_number) << 5) | ((palette_index) << 1); \
     volMEMWORD(address); \
   })
 
-#define nc_read_palette_rgb_color(paletteNumber, paletteIndex, rgbColor) \
-  do { \
-    WORD packedColor = nc_get_palette_packed_color(paletteNumber, paletteIndex); \
-    nc_packet_color_to_rgb(packedColor, rgbColor); \
-  } while (0)
+// #define nc_read_palette_rgb_color(palette_number, palette_index, rgb_color) \
+//   do { \
+//     WORD packed_color = nc_get_palette_packed_color(palette_number, palette_index); \
+//     nc_packet_color_to_rgb(packed_color, rgb_color); \
+//   } while (0)
 
-#define nc_set_palette_backdrop_by_packed_color(packedColor) \
+
+#define nc_set_palette_backdrop_by_packed_color(packed_color) \
   do { \
     int address = 0x401FFE; \
-    volMEMWORD(address) = (packedColor); \
+    volMEMWORD(address) = (packed_color); \
   } while (0)
 
 #define nc_set_palette_backdrop_by_rgb_color(color) \
   do { \
-    WORD packedColor = nc_rgb_to_packed_color(color); \
-    nc_set_palette_backdrop_by_packed_color(packedColor); \
+    WORD packed_color = nc_rgb_to_packed_color(color); \
+    nc_set_palette_backdrop_by_packed_color(packed_color); \
   } while (0)
 
   /*--------------*/
@@ -443,10 +445,9 @@ WORD nc_shrunk_range(WORD addr_start, WORD addr_end, WORD shrunk_value);
 #define nc_fix_mul(num1, num2) fmul(num1, num2)
 #define nc_cos(num) fcos(num)
 #define nc_tan(num) ftan(num)
-#define nc_byte_to_hex(value, hexchar) sprintf(hexchar, "%02X", value)
-#define nc_word_to_hex(value, hexchar) sprintf(hexchar, "%04X", value)
 
-
+void nc_byte_to_hex(BYTE value, char *hexchar);
+void nc_word_to_hex(WORD value, char *hexchar);
 char nc_sin(WORD index);
 
   //--------------------------------------------------------------------------//
