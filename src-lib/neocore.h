@@ -376,13 +376,6 @@ void nc_read_palette_rgb_color(BYTE palette_number, BYTE palette_index, RGB_Colo
     volMEMWORD(address); \
   })
 
-// #define nc_read_palette_rgb_color(palette_number, palette_index, rgb_color) \
-//   do { \
-//     WORD packed_color = nc_get_palette_packed_color(palette_number, palette_index); \
-//     nc_packet_color_to_rgb(packed_color, rgb_color); \
-//   } while (0)
-
-
 #define nc_set_palette_backdrop_by_packed_color(packed_color) \
   do { \
     int address = 0x401FFE; \
