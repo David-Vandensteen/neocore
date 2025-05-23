@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
-  <name>fade</name>
+  <name>pal_rgb_mixer</name>
   <version>1.0.0</version>
   <makefile>..\Makefile</makefile>
   <neocorePath>..\..\</neocorePath>
