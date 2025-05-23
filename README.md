@@ -24,6 +24,20 @@ https://discord.gg/9armYnYv
 * Git [https://git-scm.com/download/win](https://git-scm.com/download/win)
 * Windows Terminal with cmd instance (shortcut win + r and type `wt cmd`)
 
+## Roadmap
+#### Soon
+* RGB palette handlers (wip)
+* Custom HUB\Fix layer
+* Improve sound fx management
+
+#### Later
+* Palette bank switcher
+* DRAM management (unload, load from CDRom)
+
+#### Maybe
+* Cartridge support (AES/MVS)
+* cli asset management (add, update, remove assets from commands)
+
 ## Init
 ```cmd
 git clone https://github.com/David-Vandensteen/neocore.git
