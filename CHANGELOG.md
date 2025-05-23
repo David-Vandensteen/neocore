@@ -3,20 +3,24 @@
   - add nc_byte_to_hex macro
   - add nc_word_to_hex macro
   - add RGB color handlers :
-    - RGB color struct
+    - RGB16 struct
     - Hex_Color type
     - Hex_Packed_Color type
-    - nc_rgb_to_packed_color
-    - nc_packet_color_to_rgb
+    - nc_rgb16_to_packed_color16
+    - nc_packet_color16_to_rgb16
     - nc_log_palette_info
-    - nc_set_palette_packed_color
-    - nc_set_palette_rgb_color
-    - nc_get_palette_packed_color
-    - nc_read_palette_rgb_color
-    - nc_set_palette_backdrop_by_packed_color
-    - nc_set_palette_backdrop_by_rgb_color
-  - add sample pal backdrop
-  - add sample pal rgb mixer
+    - nc_set_palette_by_packed_color16
+    - nc_set_palette_by_rgb16
+    - nc_get_palette_packed_color16
+    - nc_read_palette_rgb16
+    - nc_set_palette_backdrop_by_packed_color16
+    - nc_set_palette_backdrop_by_rgb16
+    - nc_log_packed_color16
+    - nc_log_rgb16
+  - add samples :
+    - pal rgb
+    - pal backdrop
+    - pal rgb mixer
 
 ## 2.7.2
 
