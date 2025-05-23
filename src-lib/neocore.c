@@ -846,9 +846,9 @@ WORD nc_get_max_palette_index_used() {
   return max;
 }
 
-void nc_read_palette_rgb_color(BYTE palette_number, BYTE palette_index, RGB_Color *rgb_color) {
+void nc_read_palette_rgb12_color(BYTE palette_number, BYTE palette_index, RGB12 *rgb_color) {
   WORD packed_color = nc_get_palette_packed_color(palette_number, palette_index);
-  nc_packet_color_to_rgb(packed_color, *rgb_color);
+  nc_packet_color_to_rgb12(packed_color, *rgb_color);
 }
 
   /*--------------*/

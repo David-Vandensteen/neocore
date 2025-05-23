@@ -80,9 +80,9 @@ typedef struct Adpcm_player {
   DWORD remaining_frame;
 } Adpcm_player;
 
-typedef struct RGB_Color {
+typedef struct RGB12 {
   BYTE r : 4, g : 4, b : 4;
-} RGB_Color;
+} RGB12;
 
   //--------------------------------------------------------------------------//
  //                                   GFX                                    //
@@ -346,12 +346,12 @@ void nc_destroy_palette(paletteInfo* paletteInfo);
 void nc_clear_palette_index_table();
 WORD nc_get_max_free_palette_index();
 WORD nc_get_max_palette_index_used();
-void nc_read_palette_rgb_color(BYTE palette_number, BYTE palette_index, RGB_Color *rgb_color);
+void nc_read_palette_rgb12_color(BYTE palette_number, BYTE palette_index, RGB12 *rgb_color);
 
-#define nc_rgb_to_packed_color(color) \
+#define nc_rgb12_to_packed_color(color) \
   ((((color.r) & 0xF) << 8) | (((color.g) & 0xF) << 4) | ((color.b) & 0xF))
 
-#define nc_packet_color_to_rgb(packed_color, rgb_color) \
+#define nc_packet_color_to_rgb12(packed_color, rgb_color) \
   do { \
     (rgb_color).r = ((packed_color) >> 8) & 0xF; \
     (rgb_color).g = ((packed_color) >> 4) & 0xF; \
@@ -364,9 +364,9 @@ void nc_read_palette_rgb_color(BYTE palette_number, BYTE palette_index, RGB_Colo
     volMEMWORD(address) = (color); \
   } while (0)
 
-#define nc_set_palette_by_rgb_color(palette_number, palette_index, color) \
+#define nc_set_palette_by_rgb12_color(palette_number, palette_index, color) \
   do { \
-    WORD packed_color = nc_rgb_to_packed_color(color); \
+    WORD packed_color = nc_rgb12_to_packed_color(color); \
     nc_set_palette_by_packed_color(palette_number, palette_index, packed_color); \
   } while (0)
 
@@ -382,9 +382,9 @@ void nc_read_palette_rgb_color(BYTE palette_number, BYTE palette_index, RGB_Colo
     volMEMWORD(address) = (packed_color); \
   } while (0)
 
-#define nc_set_palette_backdrop_by_rgb_color(color) \
+#define nc_set_palette_backdrop_by_rgb12_color(color) \
   do { \
-    WORD packed_color = nc_rgb_to_packed_color(color); \
+    WORD packed_color = nc_rgb12_to_packed_color(color); \
     nc_set_palette_backdrop_by_packed_color(packed_color); \
   } while (0)
 
