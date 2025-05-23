@@ -846,9 +846,16 @@ WORD nc_get_max_palette_index_used() {
   return max;
 }
 
-void nc_read_palette_rgb12_color(BYTE palette_number, BYTE palette_index, RGB12 *rgb_color) {
-  WORD packed_color = nc_get_palette_packed_color(palette_number, palette_index);
-  nc_packet_color_to_rgb12(packed_color, *rgb_color);
+void nc_read_palette_rgb16(BYTE palette_number, BYTE palette_index, RGB16 *rgb_color) {
+  WORD packed_color = nc_get_palette_packed_color16(palette_number, palette_index);
+  nc_packet_color16_to_rgb16(packed_color, rgb_color);
+}
+
+void nc_packet_color16_to_rgb16(WORD packed_color, RGB16 *rgb_color) {
+  rgb_color->dark = (packed_color >> 12) & 0xF;
+  rgb_color->r = (packed_color >> 8) & 0xF;
+  rgb_color->g = (packed_color >> 4) & 0xF;
+  rgb_color->b = packed_color & 0xF;
 }
 
   /*--------------*/
@@ -1294,6 +1301,26 @@ void nc_log_palette_info(paletteInfo *paletteInfo) {
   for (i = 0; i < 16; i++) {
     nc_log_word("", *paletteInfo[i].data);
   }
+}
+
+void nc_log_packed_color16(WORD packed_color) {
+  Hex_Packed_Color hexPackedColor;
+  char buffer[50];
+  nc_word_to_hex(packed_color, hexPackedColor);
+  sprintf(buffer, "PACKED COLOR 0x%04X", packed_color);
+  nc_log_info(buffer);
+}
+
+
+void nc_log_rgb16(RGB16 *color) {
+  Hex_Color dark, r, g, b;
+  char buffer[50];
+  nc_byte_to_hex(color->dark, dark);
+  nc_byte_to_hex(color->r, r);
+  nc_byte_to_hex(color->g, g);
+  nc_byte_to_hex(color->b, b);
+  sprintf(buffer, "RGB DARK: %1X, R: %1X, G: %1X, B: %1X", color->dark, color->r, color->g, color->b);
+  nc_log_info(buffer);
 }
 
   /*---------------*/
