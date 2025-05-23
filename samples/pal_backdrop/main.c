@@ -1,18 +1,18 @@
 #include <neocore.h>
 #include "externs.h"
 
-static RGB_Color backdropColor = {0x00, 0x00, 0xFF};
+static RGB16 backdrop_color = {0x0, 0x0, 0x0, 0xF};
 
 static void init();
 static void update();
 
 static void init() {
-  nc_set_palette_backdrop_by_rgb_color(backdropColor);
+  nc_set_palette_backdrop_by_rgb16(backdrop_color);
 }
 
 static void update() {
-  backdropColor.b = --backdropColor.b;
-  nc_set_palette_backdrop_by_rgb_color(backdropColor);
+  backdrop_color.b--;
+  nc_set_palette_backdrop_by_rgb16(backdrop_color);
 }
 
 int main(void) {

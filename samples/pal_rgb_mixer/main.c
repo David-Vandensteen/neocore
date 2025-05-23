@@ -2,14 +2,15 @@
 #include "externs.h"
 
 #define MENU_X          10
-#define MENU_Y_RED      10
+#define MENU_Y_DARK     10
+#define MENU_Y_RED      MENU_Y_DARK + 2
 #define MENU_Y_GREEN    MENU_Y_RED + 2
 #define MENU_Y_BLUE     MENU_Y_GREEN + 2
 
 
 #define cursorX MENU_X - 2
 static WORD cursorY = MENU_Y_RED;
-static RGB_Color backdrop_color = {0x7, 0x7, 0x7};
+static RGB16 backdrop_color = {0x0, 0x7, 0x7, 0x7};
 
 static void init();
 static void display();
@@ -18,14 +19,16 @@ static void display_cursor();
 static void display_rgb_values();
 
 static void display_menu() {
-  Hex_Packed_Color packed_color_text;
+  Hex_Packed_Color hex_packed_color;
   WORD packed_color;
 
-  packed_color = nc_rgb_to_packed_color(backdrop_color);
-  nc_word_to_hex(packed_color, packed_color_text);
+  packed_color = nc_rgb16_to_packed_color16(backdrop_color);
+  nc_word_to_hex(packed_color, hex_packed_color);
 
   nc_set_position_log(5, 5);
   nc_log_info("RGB COLOR MIXER");
+  nc_set_position_log(MENU_X, MENU_Y_DARK);
+  nc_log_info("DARK :");
   nc_set_position_log(MENU_X, MENU_Y_RED);
   nc_log_info("RED :");
   nc_set_position_log(MENU_X, MENU_Y_GREEN);
@@ -33,10 +36,8 @@ static void display_menu() {
   nc_set_position_log(MENU_X, MENU_Y_BLUE);
   nc_log_info("BLUE :");
   nc_log_info("");
-  nc_log_info("PACKED COLOR : 0x");
-  nc_log_info(packed_color_text);
+  nc_log_packed_color16(packed_color);
   nc_log_info("");
-  nc_log_word("PACKED COLOR :", nc_rgb_to_packed_color(backdrop_color));
 }
 
 static void display_cursor() {
@@ -45,20 +46,22 @@ static void display_cursor() {
 }
 
 static void display_rgb_values() {
-  Hex_Color r, g, b;
-
-  nc_byte_to_hex(backdrop_color.r, r);
-  nc_byte_to_hex(backdrop_color.g, g);
-  nc_byte_to_hex(backdrop_color.b, b);
+  char buffer[10];
+  nc_set_position_log(MENU_X + 10, MENU_Y_DARK);
+  sprintf(buffer, "%1X", backdrop_color.dark);
+  nc_log_info(buffer);
 
   nc_set_position_log(MENU_X + 10, MENU_Y_RED);
-  nc_log_info(r);
+  sprintf(buffer, "%1X", backdrop_color.r);
+  nc_log_info(buffer);
 
   nc_set_position_log(MENU_X + 10, MENU_Y_GREEN);
-  nc_log_info(g);
+  sprintf(buffer, "%1X", backdrop_color.g);
+  nc_log_info(buffer);
 
   nc_set_position_log(MENU_X + 10, MENU_Y_BLUE);
-  nc_log_info(b);
+  sprintf(buffer, "%1X", backdrop_color.b);
+  nc_log_info(buffer);
 }
 
 static void init() {
@@ -70,7 +73,7 @@ static void display() {
   display_menu();
   display_cursor();
   display_rgb_values();
-  nc_set_palette_backdrop_by_rgb_color(backdrop_color);
+  nc_set_palette_backdrop_by_rgb16(backdrop_color);
 }
 
 int main(void) {
@@ -81,25 +84,29 @@ int main(void) {
     if (nc_joypad_is_down(0) && cursorY < MENU_Y_BLUE) {
       cursorY += 2;
       display();
-    } else if (nc_joypad_is_up(0) && cursorY > MENU_Y_RED) {
+    } else if (nc_joypad_is_up(0) && cursorY > MENU_Y_DARK) {
       cursorY -= 2;
       display();
     } else if (nc_joypad_is_right(0)) {
-      if (cursorY == MENU_Y_RED) {
-        backdrop_color.r += 1;
+      if (cursorY == MENU_Y_DARK) {
+        backdrop_color.dark++;
+      } else if (cursorY == MENU_Y_RED) {
+        backdrop_color.r++;
       } else if (cursorY == MENU_Y_GREEN) {
-        backdrop_color.g += 1;
+        backdrop_color.g--;
       } else if (cursorY == MENU_Y_BLUE) {
-        backdrop_color.b += 1;
+        backdrop_color.b++;
       }
       display();
     } else if (nc_joypad_is_left(0)) {
-      if (cursorY == MENU_Y_RED) {
-        backdrop_color.r -= 1;
+      if (cursorY == MENU_Y_DARK) {
+        backdrop_color.dark--;
+      } else if (cursorY == MENU_Y_RED) {
+        backdrop_color.r--;
       } else if (cursorY == MENU_Y_GREEN) {
-        backdrop_color.g -= 1;
+        backdrop_color.g--;
       } else if (cursorY == MENU_Y_BLUE) {
-        backdrop_color.b -= 1;
+        backdrop_color.b--;
       }
       display();
     }
