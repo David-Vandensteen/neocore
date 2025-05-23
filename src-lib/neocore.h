@@ -27,6 +27,8 @@ enum Sound_state { IDLE, PLAYING };
 typedef struct Vec2int { int x; int y; } Vec2int;
 typedef struct Vec2short { short x; short y; } Vec2short;
 typedef struct Vec2byte { BYTE x; BYTE y; } Vec2byte;
+typedef char Hex_Color[3];
+typedef char Hex_Packed_Color[5];
 
 typedef struct Box {
   Vec2short p0;
@@ -77,6 +79,10 @@ typedef struct Adpcm_player {
   enum Sound_state state;
   DWORD remaining_frame;
 } Adpcm_player;
+
+typedef struct RGB16 {
+  BYTE dark : 4, r : 4, g : 4, b : 4;
+} RGB16;
 
   //--------------------------------------------------------------------------//
  //                                   GFX                                    //
@@ -145,7 +151,6 @@ void nc_display_gfx_animated_sprite_physic(
 void nc_display_gfx_picture(GFX_Picture *gfx_picture, short x, short y);
 void nc_display_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic, short x, short y);
 void nc_display_gfx_scroller(GFX_Scroller *gfx_scroller, short x, short y);
-
 void nc_debug_paletteInfo(paletteInfo *palette, BOOL palCount, BOOL data);
 
   /*-----------------------*/
@@ -340,6 +345,41 @@ void nc_destroy_palette(paletteInfo* paletteInfo);
 void nc_clear_palette_index_table();
 WORD nc_get_max_free_palette_index();
 WORD nc_get_max_palette_index_used();
+void nc_read_palette_rgb16(BYTE palette_number, BYTE palette_index, RGB16 *rgb_color);
+void nc_packet_color16_to_rgb16(WORD packed_color, RGB16 *rgb_color);
+
+#define nc_rgb16_to_packed_color16(color) \
+  ((((color.dark) & 0xF) << 12) | (((color.r) & 0xF) << 8) | (((color.g) & 0xF) << 4) | ((color.b) & 0xF))
+
+#define nc_set_palette_by_packed_color16(palette_number, palette_index, color) \
+  do { \
+    int address = 0x400000 | ((palette_number) << 5) | ((palette_index) << 1); \
+    volMEMWORD(address) = (color); \
+  } while (0)
+
+#define nc_set_palette_by_rgb16(palette_number, palette_index, color) \
+  do { \
+    WORD packed_color = nc_rgb16_to_packed_color16(color); \
+    nc_set_palette_by_packed_color16(palette_number, palette_index, packed_color); \
+  } while (0)
+
+#define nc_get_palette_packed_color16(palette_number, palette_index) \
+  ({ \
+    int address = 0x400000 | ((palette_number) << 5) | ((palette_index) << 1); \
+    volMEMWORD(address); \
+  })
+
+#define nc_set_palette_backdrop_by_packed_color16(packed_color) \
+  do { \
+    int address = 0x401FFE; \
+    volMEMWORD(address) = (packed_color); \
+  } while (0)
+
+#define nc_set_palette_backdrop_by_rgb16(color) \
+  do { \
+    WORD packed_color = nc_rgb16_to_packed_color16(color); \
+    nc_set_palette_backdrop_by_packed_color16(packed_color); \
+  } while (0)
 
   /*--------------*/
  /* GPU shrunk   */
@@ -392,6 +432,8 @@ WORD nc_shrunk_range(WORD addr_start, WORD addr_end, WORD shrunk_value);
 #define nc_cos(num) fcos(num)
 #define nc_tan(num) ftan(num)
 
+void nc_byte_to_hex(BYTE value, char *hexchar);
+void nc_word_to_hex(WORD value, char *hexchar);
 char nc_sin(WORD index);
 
   //--------------------------------------------------------------------------//
@@ -486,6 +528,9 @@ void nc_log_spriteInfo(char *label, spriteInfo *si);
 void nc_log_box(char *label, Box *b);
 void nc_log_pictureInfo(char *label, pictureInfo *pi);
 void nc_log_vec2short(char *label, Vec2short vec2short);
+void nc_log_palette_info(paletteInfo *paletteInfo);
+void nc_log_packed_color16(WORD packed_color);
+void nc_log_rgb16(RGB16 *color);
 
   /*---------------*/
  /* SOUND         */
