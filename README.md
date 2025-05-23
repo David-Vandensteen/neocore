@@ -27,7 +27,7 @@ https://discord.gg/9armYnYv
 ## Roadmap
 #### Soon
 * RGB palette handlers (wip)
-* Custom HUB\Fix layer
+* Custom HUD\Fix layer
 * Improve sound fx management
 
 #### Later
