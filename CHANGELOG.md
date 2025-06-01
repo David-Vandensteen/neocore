@@ -3,6 +3,7 @@
   - optimize char buffer in nc log rgb16
   - optimize char buffer in nc log packed color16
   - change nc log palette info to display values with hex format
+  - remove usless nc debug paletteInfo
 
 ## 2.8.0
 
