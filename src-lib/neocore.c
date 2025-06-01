@@ -1297,20 +1297,21 @@ void nc_log_vec2short(char *label, Vec2short vec2short) {
 }
 
 void nc_log_palette_info(paletteInfo *paletteInfo) {
-  WORD i = 0;
+  char buffer[16];
+  BYTE i = 0;
   for (i = 0; i < 16; i++) {
-    nc_log_word("", *paletteInfo[i].data);
+    sprintf(buffer, "0x%01X : 0x%04X", i, (unsigned int)paletteInfo[i].data);
+    nc_log_info(buffer);
   }
 }
 
 void nc_log_packed_color16(WORD packed_color) {
-  Hex_Packed_Color hexPackedColor;
+  Hex_Packed_Color hexpacket_color;
   char buffer[50];
-  nc_word_to_hex(packed_color, hexPackedColor);
+  nc_word_to_hex(packed_color, hexpacket_color);
   sprintf(buffer, "PACKED COLOR 0x%04X", packed_color);
   nc_log_info(buffer);
 }
-
 
 void nc_log_rgb16(RGB16 *color) {
   Hex_Color dark, r, g, b;
