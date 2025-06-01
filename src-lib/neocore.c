@@ -1315,7 +1315,7 @@ void nc_log_packed_color16(WORD packed_color) {
 
 void nc_log_rgb16(RGB16 *color) {
   Hex_Color dark, r, g, b;
-  char buffer[50];
+  char buffer[32];
   nc_byte_to_hex(color->dark, dark);
   nc_byte_to_hex(color->r, r);
   nc_byte_to_hex(color->g, g);
