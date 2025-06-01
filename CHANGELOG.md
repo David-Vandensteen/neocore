@@ -1,3 +1,5 @@
+## 2.8.1
+
 ## 2.8.0
 
   - add nc_byte_to_hex macro
