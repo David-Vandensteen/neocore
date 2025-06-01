@@ -26,8 +26,9 @@ https://discord.gg/9armYnYv
 
 ## Roadmap
 #### Soon
-* RGB palette handlers (wip)
+* RGB palette handlers (in progress)
 * Custom HUD\Fix layer
+* Joypad 2 support
 * Improve sound fx management
 
 #### Later
@@ -35,8 +36,10 @@ https://discord.gg/9armYnYv
 * DRAM management (unload, load from CDRom)
 
 #### Maybe
+* wysiwyg project.xml editor
+* Memory card support
 * Cartridge support (AES/MVS)
-* cli asset management (add, update, remove assets from commands)
+* CLI asset management (add, update, remove assets from commands)
 
 ## Init
 ```cmd

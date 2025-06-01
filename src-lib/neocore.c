@@ -35,8 +35,8 @@
 #define X 0
 #define Y 1
 
-#define LOGGER_X_INIT   1
-#define LOGGER_Y_INIT   2
+#define LOG_X_INIT   1
+#define LOG_Y_INIT   2
 
 #define SPRITE_INDEX_MANAGER_MAX  384
 #define PALETTE_INDEX_MANAGER_MAX 256
@@ -122,25 +122,22 @@ static void init_shadow_system() {
   }
 }
 
-static int x = LOGGER_X_INIT;
-static int y = LOGGER_Y_INIT;
+static int log_x = LOG_X_INIT;
+static int log_y = LOG_Y_INIT;
 
-static int x_default = LOGGER_X_INIT;
-static int y_default = LOGGER_Y_INIT;
+static int log_x_default = LOG_X_INIT;
+static int log_y_default = LOG_Y_INIT;
 
-void static nc_setX(WORD _x);
-void static nc_setY(WORD _y);
-void static nc_setPosDefault();
-WORD static nc_countChar(char *txt);
-void static nc_autoInc(); // todo (minor) - logger_auto ... ?
+WORD static count_char(char *txt);
 
-void static nc_setX(WORD _x) { x = _x; }
-void static nc_setY(WORD _y) { y = _y; }
-
-void static nc_setPosDefault() {
-  x = LOGGER_X_INIT;
-  y = LOGGER_Y_INIT;
-}
+#define next_line_log() log_y++;
+#define set_log_x(x) (log_x = (x))
+#define set_log_y(y) (log_y = (y))
+#define reset_log_position() \
+  do { \
+    log_x = LOG_X_INIT; \
+    log_y = LOG_Y_INIT; \
+  } while(0)
 
 static void init_sprite_manager_index() {
   WORD i = 0;
@@ -223,15 +220,13 @@ static WORD use_palette_manager_index(paletteInfo *pi) {
   return 0; // TODO : no zero return
 }
 
-WORD static nc_countChar(char *txt) {
+WORD static count_char(char *txt) {
   WORD i = 0;
     while (txt[i] != '\0') {
     i++;
   }
   return i;
 }
-
-void static nc_autoInc() { y++; }
 
 NEOCORE_INIT
 JOYPAD_INIT_P1
@@ -432,14 +427,6 @@ void nc_display_gfx_scroller(GFX_Scroller *gfx_scroller, short x, short y) {
     gfx_scroller->paletteInfoDAT->palCount,
     gfx_scroller->paletteInfoDAT->data
   );
-}
-
-void nc_debug_paletteInfo(paletteInfo *palette, BOOL palCount, BOOL data) {
-  BYTE i = 0;
-  if (palCount) nc_log_word("PALCOUNT", palette->palCount);
-  if (data) {
-    for(i = 0; i < (nc_bitwise_multiplication_16(palette->palCount)); i++) nc_log_word("DATA", palette->data[i]);
-  }
 }
 
   /*-----------------------*/
@@ -1185,24 +1172,24 @@ WORD nc_free_ram_info() {
 
 void nc_init_log() {
   init_shadow_system();
-  x = LOGGER_X_INIT;
-  y = LOGGER_Y_INIT;
-  x_default = LOGGER_X_INIT;
-  y_default = LOGGER_Y_INIT;
+  log_x = LOG_X_INIT;
+  log_y = LOG_Y_INIT;
+  log_x_default = LOG_X_INIT;
+  log_y_default = LOG_Y_INIT;
   clearFixLayer();
 }
 
 void nc_set_position_log(WORD _x, WORD _y) {
-  x = _x;
-  y = _y;
-  x_default = x;
-  y_default = y;
+  log_x = _x;
+  log_y = _y;
+  log_x_default = log_x;
+  log_y_default = log_y;
 }
 
-WORD nc_log_info(char *label){
-  fixPrintf(x, y , 0, 0 , label);
-  nc_autoInc();
-  return nc_countChar(label);
+WORD nc_log_info(char *text){
+  fixPrintf(log_x, log_y , 0, 0 , text);
+  next_line_log();
+  return count_char(text);
 }
 
 void nc_log(char *message) {
@@ -1210,45 +1197,45 @@ void nc_log(char *message) {
 }
 
 void nc_log_word(char *label, WORD value){
-  WORD yc = y;
-  x = x_default + nc_log_info(label) + 2;
-  fixPrintf(x , yc, 0, 0, "%04d", value);
-  x = x_default;
+  WORD yc = log_y;
+  log_x = log_x_default + nc_log_info(label) + 2;
+  fixPrintf(log_x , yc, 0, 0, "%04d", value);
+  log_x = log_x_default;
 }
 
 void nc_log_int(char *label, int value){
-  WORD yc = y;
-  x = x_default + nc_log_info(label) + 2;
-  fixPrintf(x , yc, 0, 0, "%08d", value);
-  x = x_default;
+  WORD yc = log_y;
+  log_x = log_x_default + nc_log_info(label) + 2;
+  fixPrintf(log_x , yc, 0, 0, "%08d", value);
+  log_x = log_x_default;
 }
 
 void nc_log_dword(char *label, DWORD value){
-  WORD yc = y;
-  x = x_default + nc_log_info(label) + 2;
-  fixPrintf(x , yc, 0, 0, "%08d", value);
-  x = x_default;
+  WORD yc = log_y;
+  log_x = log_x_default + nc_log_info(label) + 2;
+  fixPrintf(log_x , yc, 0, 0, "%08d", value);
+  log_x = log_x_default;
 }
 
 void nc_log_short(char *label, short value) {
-  WORD yc = y;
-  x = x_default + nc_log_info(label) + 2;
-  fixPrintf(x , yc, 0, 0, "%02d", value);
-  x = x_default;
+  WORD yc = log_y;
+  log_x = log_x_default + nc_log_info(label) + 2;
+  fixPrintf(log_x , yc, 0, 0, "%02d", value);
+  log_x = log_x_default;
 }
 
 void nc_log_byte(char *label, BYTE value) {
-  WORD yc = y;
-  x = x_default + nc_log_info(label) + 2;
-  fixPrintf(x , yc, 0, 0, "%02d", value);
-  x = x_default;
+  WORD yc = log_y;
+  log_x = log_x_default + nc_log_info(label) + 2;
+  fixPrintf(log_x , yc, 0, 0, "%02d", value);
+  log_x = log_x_default;
 }
 
 void nc_log_bool(char *label, BOOL value) {
-  WORD yc = y;
-  x = x_default + nc_log_info(label) + 2;
-  fixPrintf(x , yc, 0, 0, "%01d", value);
-  x = x_default;
+  WORD yc = log_y;
+  log_x = log_x_default + nc_log_info(label) + 2;
+  fixPrintf(log_x , yc, 0, 0, "%01d", value);
+  log_x = log_x_default;
 }
 
 void nc_log_spriteInfo(char *label, spriteInfo *si) {
@@ -1297,24 +1284,25 @@ void nc_log_vec2short(char *label, Vec2short vec2short) {
 }
 
 void nc_log_palette_info(paletteInfo *paletteInfo) {
-  WORD i = 0;
+  char buffer[16];
+  BYTE i = 0;
   for (i = 0; i < 16; i++) {
-    nc_log_word("", *paletteInfo[i].data);
+    sprintf(buffer, "0x%01X : 0x%04X", i, (unsigned int)paletteInfo[i].data);
+    nc_log_info(buffer);
   }
 }
 
 void nc_log_packed_color16(WORD packed_color) {
-  Hex_Packed_Color hexPackedColor;
-  char buffer[50];
-  nc_word_to_hex(packed_color, hexPackedColor);
+  Hex_Packed_Color hexpacket_color;
+  char buffer[24];
+  nc_word_to_hex(packed_color, hexpacket_color);
   sprintf(buffer, "PACKED COLOR 0x%04X", packed_color);
   nc_log_info(buffer);
 }
 
-
 void nc_log_rgb16(RGB16 *color) {
   Hex_Color dark, r, g, b;
-  char buffer[50];
+  char buffer[32];
   nc_byte_to_hex(color->dark, dark);
   nc_byte_to_hex(color->r, r);
   nc_byte_to_hex(color->g, g);
@@ -1353,7 +1341,6 @@ void nc_update_adpcm_player() {
 
   if (adpcm_player.remaining_frame == 0) adpcm_player.state = IDLE;
 }
-
 
   /*---------------*/
  /* UTIL VECTOR   */

@@ -151,7 +151,6 @@ void nc_display_gfx_animated_sprite_physic(
 void nc_display_gfx_picture(GFX_Picture *gfx_picture, short x, short y);
 void nc_display_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic, short x, short y);
 void nc_display_gfx_scroller(GFX_Scroller *gfx_scroller, short x, short y);
-void nc_debug_paletteInfo(paletteInfo *palette, BOOL palCount, BOOL data);
 
   /*-----------------------*/
  /*  GFX INIT DISPLAY     */
