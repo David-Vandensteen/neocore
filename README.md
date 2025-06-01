@@ -28,6 +28,7 @@ https://discord.gg/9armYnYv
 #### Soon
 * RGB palette handlers (in progress)
 * Custom HUD\Fix layer
+* Joypad 2 support
 * Improve sound fx management
 
 #### Later
