@@ -14,6 +14,7 @@ function Assert-Manifest {
       if (Test-Path -Path $Config.project.buildPath) {
         Write-Host "manifest not found : remove build cache" -ForegroundColor Blue
         Write-Host "Please, remove $(Resolve-Path -Path $Config.project.buildPath) to rebuild neocore"
+        Write-Host "You can use mak clean:build"
         exit 1
       }
     }
@@ -22,6 +23,7 @@ function Assert-Manifest {
     if ((Compare-FileHash -SrcFile $ManifestSource -DestFile $ManifestCache) -eq $false) {
       Write-Host "manifest has changed : remove build cache" -ForegroundColor Blue
       Write-Host "Please, remove $(Resolve-Path -Path $Config.project.buildPath) to rebuild neocore"
+      Write-Host "You can use mak clean:build"
       exit 1
     }
 
