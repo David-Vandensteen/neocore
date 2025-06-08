@@ -512,9 +512,17 @@ WORD nc_free_ram_info();
 /*---------------*/
 
 void nc_init_log();
+WORD nc_get_position_x_log();
+WORD nc_get_position_y_log();
 void nc_set_position_log(WORD _x, WORD _y);
+void nc_set_auto_next_line_log(BOOL auto_next_line);
+void nc_next_line_log();
 
-WORD nc_log_info(char *txt);
+WORD nc_log_info(char *txt, ...);
+
+/**
+ * @deprecated nc_log is deprecated use nc_log_info instead
+ */
 void nc_log(char *message);
 
 void nc_log_word(char *label, WORD value);

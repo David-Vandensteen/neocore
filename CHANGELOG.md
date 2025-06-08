@@ -1,3 +1,16 @@
+## 2.9.0
+
+  - add formatting arguments support in nc log info (check out samples\hello)
+  - add some log functions :
+    - nc_get_position_x_log
+    - nc_get_position_y_log
+    - nc_next_line_log
+    - nc_set_auto_next_line_log
+  - improve pal rgb mixer sample
+  - improve install doxygen script
+  - update doxygen doc
+  - update roadmap in readme
+
 ## 2.8.1
 
   - optimize char buffer in nc log rgb16

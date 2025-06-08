@@ -26,8 +26,9 @@ https://discord.gg/9armYnYv
 
 ## Roadmap
 #### Soon
-* RGB palette handlers (in progress)
-* Custom HUD\Fix layer
+* RGB palette handlers (**60% completed**)
+  * Check out samples pal_backdrop, pal_rgb & pal_rgb_mixer
+* Custom HUD\Fix layer (**starting imminently**)
 * Joypad 2 support
 * Improve sound fx management
 
@@ -62,7 +63,7 @@ If you encounter any problems after using it, simply close and restart a new com
 ```cmd
 .\mak.bat clean
 ```
-- Remove the build folder
+- Remove the build folder (remove tools, emulators, builded resources ...)
 ```cmd
 .\mak.bat clean:build
 ```  
@@ -161,7 +162,7 @@ cd c:\temp\myGame\src
 
 ## Documentation of Neocore C lib
 
-  - Doxygen: [http://azertyvortex.free.fr/neocore-doxy/r10/neocore_8h.html](http://azertyvortex.free.fr/neocore-doxy/r10/neocore_8h.html)
+  - Doxygen: [http://azertyvortex.free.fr/neocore-doxy/r11/neocore_8h.html](http://azertyvortex.free.fr/neocore-doxy/r11/neocore_8h.html)
     
 ## Note
 
@@ -267,7 +268,7 @@ You can add more custom configs.
 cd <neocore>\samples\hello
 ```
 ```cmd
-.\mak.bat serve
+.\mak.bat serve:mame
 ```
   
 Wait for the emulator to run and edit `main.c`.  
