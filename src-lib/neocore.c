@@ -130,7 +130,6 @@ static int log_y_default = LOG_Y_INIT;
 
 WORD static count_char(char *txt);
 
-#define next_line_log() log_y++;
 #define set_log_x(x) (log_x = (x))
 #define set_log_y(y) (log_y = (y))
 #define reset_log_position() \
@@ -1179,6 +1178,14 @@ void nc_init_log() {
   clearFixLayer();
 }
 
+WORD nc_get_position_x_log() {
+  return log_x;
+}
+
+WORD nc_get_position_y_log() {
+  return log_y;
+}
+
 void nc_set_position_log(WORD _x, WORD _y) {
   log_x = _x;
   log_y = _y;
@@ -1186,14 +1193,23 @@ void nc_set_position_log(WORD _x, WORD _y) {
   log_y_default = log_y;
 }
 
-WORD nc_log_info(char *text){
-  fixPrintf(log_x, log_y , 0, 0 , text);
-  next_line_log();
-  return count_char(text);
+void nc_next_line_log() {
+  log_y++;
 }
 
-void nc_log(char *message) {
+void nc_log(char *message) { // deprecated
   nc_log_info(message);
+}
+
+WORD nc_log_info(char *text, ...) {
+  char buffer[256];
+  va_list args;
+  va_start(args, text);
+  vsprintf(buffer, text, args);
+  va_end(args);
+  fixPrintf(log_x, log_y, 0, 0, "%s", buffer);
+  nc_next_line_log();
+  return count_char(text);
 }
 
 void nc_log_word(char *label, WORD value){
