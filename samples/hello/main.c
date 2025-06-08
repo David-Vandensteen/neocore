@@ -32,6 +32,10 @@ int main(void) {
     nc_log_info(" WITHOUT");
     nc_log_info(" NEXT LINE");
 
+    /* manual next line */
+    nc_next_line_log();
+    nc_log_info("NEXT LINE MANUAL");
+
     /* force a position */
     nc_set_position_log(7, 20);
     nc_log_info("DAVID VANDENSTEEN");

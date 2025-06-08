@@ -1185,7 +1185,11 @@ void nc_set_auto_next_line_log(BOOL auto_next_line) {
   log_auto_next_line = auto_next_line;
 }
 
-void nc_next_line_log() { log_y++; }
+void nc_next_line_log() {
+  log_y++;
+  log_x = log_x_default;
+}
+
 void nc_log(char *message) { nc_log_info(message);}
 
 WORD nc_log_info(char *text, ...) {
