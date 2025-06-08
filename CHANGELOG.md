@@ -1,3 +1,5 @@
+## 2.9.0
+
 ## 2.8.1
 
   - optimize char buffer in nc log rgb16
