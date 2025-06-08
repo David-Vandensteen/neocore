@@ -62,7 +62,7 @@ If you encounter any problems after using it, simply close and restart a new com
 ```cmd
 .\mak.bat clean
 ```
-- Remove the build folder
+- Remove the build folder (remove tools, emulators, builded resources ...)
 ```cmd
 .\mak.bat clean:build
 ```  
@@ -161,7 +161,7 @@ cd c:\temp\myGame\src
 
 ## Documentation of Neocore C lib
 
-  - Doxygen: [http://azertyvortex.free.fr/neocore-doxy/r10/neocore_8h.html](http://azertyvortex.free.fr/neocore-doxy/r10/neocore_8h.html)
+  - Doxygen: [http://azertyvortex.free.fr/neocore-doxy/r11/neocore_8h.html](http://azertyvortex.free.fr/neocore-doxy/r11/neocore_8h.html)
     
 ## Note
 
