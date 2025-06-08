@@ -26,8 +26,9 @@ https://discord.gg/9armYnYv
 
 ## Roadmap
 #### Soon
-* RGB palette handlers (in progress)
-* Custom HUD\Fix layer
+* RGB palette handlers (**60% completed**)
+  * Check out samples pal_backdrop, pal_rgb & pal_rgb_mixer
+* Custom HUD\Fix layer (**starting imminently**)
 * Joypad 2 support
 * Improve sound fx management
 
