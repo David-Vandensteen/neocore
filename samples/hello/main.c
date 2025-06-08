@@ -23,6 +23,14 @@ int main(void) {
     nc_next_line_log();
     nc_log_info("DEC %d %d %d", 1, 2, 3);
     nc_log_info("HEX 0x%04X 0x%04X 0x%04X", 0x1234, 0x5678, 0x9abc);
+    nc_next_line_log();
+    nc_next_line_log();
+
+    /* disable auto next line */
+    nc_set_auto_next_line_log(false);
+    nc_log_info("TEXT");
+    nc_log_info(" WITHOUT");
+    nc_log_info(" NEXT LINE");
 
     /* force a position */
     nc_set_position_log(7, 20);

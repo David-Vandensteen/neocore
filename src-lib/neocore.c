@@ -128,7 +128,7 @@ static int log_y = LOG_Y_INIT;
 static int log_x_default = LOG_X_INIT;
 static int log_y_default = LOG_Y_INIT;
 
-WORD static count_char(char *txt);
+static BOOL log_auto_next_line = true;
 
 #define set_log_x(x) (log_x = (x))
 #define set_log_y(y) (log_y = (y))
@@ -217,14 +217,6 @@ static WORD use_palette_manager_index(paletteInfo *pi) {
     }
   }
   return 0; // TODO : no zero return
-}
-
-WORD static count_char(char *txt) {
-  WORD i = 0;
-    while (txt[i] != '\0') {
-    i++;
-  }
-  return i;
 }
 
 NEOCORE_INIT
@@ -1175,16 +1167,12 @@ void nc_init_log() {
   log_y = LOG_Y_INIT;
   log_x_default = LOG_X_INIT;
   log_y_default = LOG_Y_INIT;
+  log_auto_next_line = true;
   clearFixLayer();
 }
 
-WORD nc_get_position_x_log() {
-  return log_x;
-}
-
-WORD nc_get_position_y_log() {
-  return log_y;
-}
+WORD nc_get_position_x_log() { return log_x; }
+WORD nc_get_position_y_log() { return log_y; }
 
 void nc_set_position_log(WORD _x, WORD _y) {
   log_x = _x;
@@ -1193,9 +1181,11 @@ void nc_set_position_log(WORD _x, WORD _y) {
   log_y_default = log_y;
 }
 
-void nc_next_line_log() {
-  log_y++;
+void nc_set_auto_next_line_log(BOOL auto_next_line) {
+  log_auto_next_line = auto_next_line;
 }
+
+void nc_next_line_log() { log_y++; }
 
 void nc_log(char *message) { // deprecated
   nc_log_info(message);
@@ -1208,8 +1198,12 @@ WORD nc_log_info(char *text, ...) {
   vsprintf(buffer, text, args);
   va_end(args);
   fixPrintf(log_x, log_y, 0, 0, "%s", buffer);
-  nc_next_line_log();
-  return count_char(text);
+  if (log_auto_next_line) {
+    nc_next_line_log();
+  } else {
+    log_x += strlen(text);
+  }
+  return strlen(text);
 }
 
 void nc_log_word(char *label, WORD value){

@@ -515,6 +515,7 @@ void nc_init_log();
 WORD nc_get_position_x_log();
 WORD nc_get_position_y_log();
 void nc_set_position_log(WORD _x, WORD _y);
+void nc_set_auto_next_line_log(BOOL auto_next_line);
 void nc_next_line_log();
 
 WORD nc_log_info(char *txt, ...);
