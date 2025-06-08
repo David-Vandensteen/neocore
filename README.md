@@ -62,7 +62,7 @@ If you encounter any problems after using it, simply close and restart a new com
 ```cmd
 .\mak.bat clean
 ```
-- Remove the build folder
+- Remove the build folder (remove tools, emulators, builded resources ...)
 ```cmd
 .\mak.bat clean:build
 ```  
