@@ -7,6 +7,7 @@
     - nc_next_line_log
     - nc_set_auto_next_line_log
   - improve pal rgb mixer sample
+  - improve install doxygen script
 
 ## 2.8.1
 
