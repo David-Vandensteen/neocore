@@ -1,5 +1,12 @@
 ## 2.9.0
 
+  - add formatting arguments support in nc log info
+  - add :
+    - nc_get_position_x_log
+    - nc_get_position_y_log
+    - nc_next_line_log
+  - improve pal rgb mixer sample
+
 ## 2.8.1
 
   - optimize char buffer in nc log rgb16
