@@ -19,11 +19,8 @@ static void display_cursor();
 static void display_rgb_values();
 
 static void display_menu() {
-  Hex_Packed_Color hex_packed_color;
   WORD packed_color;
-
   packed_color = nc_rgb16_to_packed_color16(backdrop_color);
-  nc_word_to_hex(packed_color, hex_packed_color);
 
   nc_set_position_log(5, 5);
   nc_log_info("RGB COLOR MIXER");
@@ -35,9 +32,9 @@ static void display_menu() {
   nc_log_info("GREEN :");
   nc_set_position_log(MENU_X, MENU_Y_BLUE);
   nc_log_info("BLUE :");
-  nc_log_info("");
+  nc_next_line_log();
   nc_log_packed_color16(packed_color);
-  nc_log_info("");
+  nc_next_line_log();
 }
 
 static void display_cursor() {
@@ -46,22 +43,17 @@ static void display_cursor() {
 }
 
 static void display_rgb_values() {
-  char buffer[10];
   nc_set_position_log(MENU_X + 10, MENU_Y_DARK);
-  sprintf(buffer, "%1X", backdrop_color.dark);
-  nc_log_info(buffer);
+  nc_log_info("%1X", backdrop_color.dark);
 
   nc_set_position_log(MENU_X + 10, MENU_Y_RED);
-  sprintf(buffer, "%1X", backdrop_color.r);
-  nc_log_info(buffer);
+  nc_log_info("%1X", backdrop_color.r);
 
   nc_set_position_log(MENU_X + 10, MENU_Y_GREEN);
-  sprintf(buffer, "%1X", backdrop_color.g);
-  nc_log_info(buffer);
+  nc_log_info("%1X", backdrop_color.g);
 
   nc_set_position_log(MENU_X + 10, MENU_Y_BLUE);
-  sprintf(buffer, "%1X", backdrop_color.b);
-  nc_log_info(buffer);
+  nc_log_info("%1X", backdrop_color.b);
 }
 
 static void init() {
