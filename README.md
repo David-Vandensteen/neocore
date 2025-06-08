@@ -267,7 +267,7 @@ You can add more custom configs.
 cd <neocore>\samples\hello
 ```
 ```cmd
-.\mak.bat serve
+.\mak.bat serve:mame
 ```
   
 Wait for the emulator to run and edit `main.c`.  
