@@ -512,10 +512,13 @@ WORD nc_free_ram_info();
 /*---------------*/
 
 void nc_init_log();
+WORD nc_get_position_x_log();
+WORD nc_get_position_y_log();
 void nc_set_position_log(WORD _x, WORD _y);
+void nc_next_line_log();
 
-WORD nc_log_info(char *txt);
-void nc_log(char *message);
+WORD nc_log_info(char *txt, ...);
+void nc_log(char *message); // deprecated
 
 void nc_log_word(char *label, WORD value);
 void nc_log_int(char *label, int value);
