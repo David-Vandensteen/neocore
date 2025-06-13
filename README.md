@@ -11,6 +11,10 @@ It provides functions over Neo Dev Kit and DATlib 0.2, and includes tools and co
  - Compatible with ~~Windows 10 and~~ Windows 11
 
 [discord](https://discord.com/channels/1330066799445676093/1330089958798790686)
+
+## 📚 Table of Contents
+- [Roadmap](#roadmap)
+
 ### Game, demo, code learning using Neocore
 
   - Pong : https://github.com/David-Vandensteen/neogeo-cd-pong
