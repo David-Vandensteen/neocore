@@ -13,6 +13,7 @@ It provides functions over Neo Dev Kit and DATlib 0.2, and includes tools and co
 [discord](https://discord.com/channels/1330066799445676093/1330089958798790686)
 
 ## 📚 Table of Contents
+- [Game, demo, code learning using Neocore](#Game, demo, code learning using Neocore)
 - [Requirements](#requirements)
 - [Roadmap](#roadmap)
 - [Init](#Init)
