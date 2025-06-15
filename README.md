@@ -16,7 +16,8 @@ It provides functions over Neo Dev Kit and DATlib 0.2, and includes tools and co
 - [Game, demo, code learning using Neocore](#examples)
 - [Requirements](#requirements)
 - [Roadmap](#roadmap)
-- [Init](#Init)
+- [Init](#init)
+- [Build and run the hello sample](#build-and-run-the-hello-sample)
 
 ### Game, demo, code learning using Neocore<a name="examples"></a>
 
