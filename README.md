@@ -23,7 +23,7 @@ It provides functions over Neo Dev Kit and DATlib 0.2, and includes tools and co
 - [Upgrade an existing project](#upgrade-an-existing-project)
 - [Release a project](#release-a-project)
 - [Documentation of Neocore C lib](#documentation-of-neocore-c-lib)
-- [Note](#note)
+- [Contribute](#contribute)
 - [DATlib assets](#datlib-assets)
 - [Mame profiles](#mame-profiles)
 - [Raine configs](#raine-configs)
@@ -186,7 +186,7 @@ cd c:\temp\myGame\src
 
   - Doxygen: [http://azertyvortex.free.fr/neocore-doxy/r11/neocore_8h.html](http://azertyvortex.free.fr/neocore-doxy/r11/neocore_8h.html)
     
-## Note
+## Contribute
 
 Please note that the project is under development and the author is not responsible for any software damage.  
 This library is mainly tested on Raine and MAME emulators.  
