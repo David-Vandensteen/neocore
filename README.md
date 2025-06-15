@@ -18,6 +18,20 @@ It provides functions over Neo Dev Kit and DATlib 0.2, and includes tools and co
 - [Roadmap](#roadmap)
 - [Init](#init)
 - [Build and run the hello sample](#build-and-run-the-hello-sample)
+- [Mak rules](#mak-rules)
+- [Create a project](#create-a-project)
+- [Upgrade an existing project](#upgrade-an-existing-project)
+- [Release a project](#release-a-project)
+- [Documentation of Neocore C lib](#documentation-of-neocore-c-lib)
+- [Note](#note)
+- [DATlib assets](#datlib-assets)
+- [Mame profiles](#mame-profiles)
+- [Raine configs](#raine-configs)
+- [Pull or checkout another branches](#pull-or-checkout-another-branches)
+- [Hot reload](#hot-reload)
+- [Compiling the lib (necessary if you develop or modify Neocore C lib)](#compiling-the-lib)
+- [Dependencies](#dependencies)
+- [Changelog](#changelog)
 
 ### Game, demo, code learning using Neocore<a name="examples"></a>
 
@@ -289,7 +303,7 @@ Some problems currently:
 * The process is not a real watcher (the rebuild is triggered only if the folder size change)  
 * When you break this process, path is not restored in the current terminal (close & reopen a new terminal)  
 
-## Compiling the lib (necessary if you develop or modify Neocore C lib)
+## Compiling the lib (necessary if you develop or modify Neocore C lib)<a name="compiling-the-lib"></a>
 
 ```cmd
 .\mak.bat lib
