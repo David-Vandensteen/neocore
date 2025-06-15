@@ -18,7 +18,7 @@ It provides functions over Neo Dev Kit and DATlib 0.2, and includes tools and co
 - [📅 Roadmap](#roadmap)
 - [🚀 Init](#init)
 - [▶️ Build and run the hello sample](#build-and-run-the-hello-sample)
-- [Mak rules](#mak-rules)
+- [⚙️ Mak rules](#mak-rules)
 - [Create a project](#create-a-project)
 - [Upgrade an existing project](#upgrade-an-existing-project)
 - [Release a project](#release-a-project)
