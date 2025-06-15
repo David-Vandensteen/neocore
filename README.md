@@ -47,22 +47,23 @@ It provides functions over Neo Dev Kit and DATlib 0.2, and includes tools and co
 * Windows Terminal with cmd instance (shortcut win + r and type `wt cmd`)
 
 ## 📅 Roadmap<a name="roadmap"></a>
-#### Soon
-* [ ] RGB palette handlers (**60% completed**)
-  * Check out samples pal_backdrop, pal_rgb & pal_rgb_mixer
-* [ ] Custom HUD\Fix layer (**starting imminently**)
-* [ ] Joypad 2 support
-* [ ] Improve sound fx management
 
-#### Later
-* [ ] Palette bank switcher
-* [ ] DRAM management (unload, load from CDRom)
+### 🟡 Soon
+- [ ] RGB palette handlers (**60% completed**)
+  - Samples: `pal_backdrop`, `pal_rgb`, `pal_rgb_mixer`
+- [ ] Custom HUD / Fix layer (**starting soon**)
+- [ ] Joypad 2 support
+- [ ] Improve sound FX management
 
-#### Maybe
-* [ ] wysiwyg project.xml editor
-* [ ] Memory card support
-* [ ] Cartridge support (AES/MVS)
-* [ ] CLI asset management (add, update, remove assets from commands)
+### 🕓 Later
+- [ ] Palette bank switcher
+- [ ] DRAM asset management (unload/load from CD-ROM)
+
+### 🧐 Maybe
+- [ ] XML WYSIWYG editor
+- [ ] Memory card support
+- [ ] AES / MVS support (limited)
+- [ ] CLI-based asset packager
 
 ## Init
 ```cmd
