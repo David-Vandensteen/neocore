@@ -46,23 +46,23 @@ It provides functions over Neo Dev Kit and DATlib 0.2, and includes tools and co
 * Git [https://git-scm.com/download/win](https://git-scm.com/download/win)
 * Windows Terminal with cmd instance (shortcut win + r and type `wt cmd`)
 
-## Roadmap
+## 📅 Roadmap<a name="roadmap"></a>
 #### Soon
-* RGB palette handlers (**60% completed**)
+* [ ] RGB palette handlers (**60% completed**)
   * Check out samples pal_backdrop, pal_rgb & pal_rgb_mixer
-* Custom HUD\Fix layer (**starting imminently**)
-* Joypad 2 support
-* Improve sound fx management
+* [ ] Custom HUD\Fix layer (**starting imminently**)
+* [ ] Joypad 2 support
+* [ ] Improve sound fx management
 
 #### Later
-* Palette bank switcher
-* DRAM management (unload, load from CDRom)
+* [ ] Palette bank switcher
+* [ ] DRAM management (unload, load from CDRom)
 
 #### Maybe
-* wysiwyg project.xml editor
-* Memory card support
-* Cartridge support (AES/MVS)
-* CLI asset management (add, update, remove assets from commands)
+* [ ] wysiwyg project.xml editor
+* [ ] Memory card support
+* [ ] Cartridge support (AES/MVS)
+* [ ] CLI asset management (add, update, remove assets from commands)
 
 ## Init
 ```cmd
