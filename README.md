@@ -13,11 +13,11 @@ It provides functions over Neo Dev Kit and DATlib 0.2, and includes tools and co
 [discord](https://discord.com/channels/1330066799445676093/1330089958798790686)
 
 ## 📚 Table of Contents
-- [Game, demo, code learning using Neocore](#examples)
-- [Requirements](#requirements)
-- [Roadmap](#roadmap)
-- [Init](#init)
-- [Build and run the hello sample](#build-and-run-the-hello-sample)
+- [🎮 Game, demo, code learning using Neocore](#examples)
+- [📋 Requirements](#requirements)
+- [📅 Roadmap](#roadmap)
+- [🚀 Init](#init)
+- [▶️ Build and run the hello sample](#build-and-run-the-hello-sample)
 - [Mak rules](#mak-rules)
 - [Create a project](#create-a-project)
 - [Upgrade an existing project](#upgrade-an-existing-project)
