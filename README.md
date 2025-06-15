@@ -1,6 +1,6 @@
 # Neocore
-![Platform](https://img.shields.io/badge/platform-%20%7C%20windows-lightgrey) ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)  
-  
+![Platform](https://img.shields.io/badge/platform-%20%7C%20windows-lightgrey) ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg) ![GitHub last commit](https://img.shields.io/github/last-commit/David-Vandensteen/neocore) ![GitHub repo size](https://img.shields.io/github/repo-size/David-Vandensteen/neocore) ![NeoGeo-CD](https://img.shields.io/badge/target-NeoGeo%20CD-red) ![Uses Doxygen](https://img.shields.io/badge/docs-Doxygen-blue)
+
 ![](https://media.giphy.com/media/TLfbmyW3523z24WONz/giphy.gif) ![](https://media.giphy.com/media/iFUh5AEPD4XfvpsvJh/giphy.gif) ![](https://media.giphy.com/media/iJObJsdx6ud4zI7cS1/giphy.gif)
 
 
@@ -11,7 +11,29 @@ It provides functions over Neo Dev Kit and DATlib 0.2, and includes tools and co
  - Compatible with ~~Windows 10 and~~ Windows 11
 
 [discord](https://discord.com/channels/1330066799445676093/1330089958798790686)
-### Game, demo, code learning using Neocore
+
+## 📚 Table of Contents
+- [🎮 Game, demo, code learning using Neocore](#examples)
+- [📋 Requirements](#requirements)
+- [📅 Roadmap](#roadmap)
+- [🚀 Init](#init)
+- [▶️ Build and run the hello sample](#build-and-run-the-hello-sample)
+- [⚙️ Mak rules](#mak-rules)
+- [📦 Create a project](#create-a-project)
+- [🆙 Upgrade an existing project](#upgrade-an-existing-project)
+- [📤 Release a project](#release-a-project)
+- [📖 Documentation of Neocore C lib](#documentation-of-neocore-c-lib)
+- [🤝 Contribute](#contribute)
+- [🎨 DATlib assets](#datlib-assets)
+- [🕹 Mame profiles](#mame-profiles)
+- [🧪 Raine configs](#raine-configs)
+- [🌿 Pull or checkout another branches](#pull-or-checkout-another-branches)
+- [♻️ Hot reload](#hot-reload)
+- [🔧 Compiling the lib (necessary if you develop or modify Neocore C lib)](#compiling-the-lib)
+- [📚 Dependencies](#dependencies)
+- [📝 Changelog](#changelog)
+
+### Game, demo, code learning using Neocore<a name="examples"></a>
 
   - Pong : https://github.com/David-Vandensteen/neogeo-cd-pong
   - Flamble :
@@ -24,23 +46,24 @@ It provides functions over Neo Dev Kit and DATlib 0.2, and includes tools and co
 * Git [https://git-scm.com/download/win](https://git-scm.com/download/win)
 * Windows Terminal with cmd instance (shortcut win + r and type `wt cmd`)
 
-## Roadmap
-#### Soon
-* RGB palette handlers (**60% completed**)
-  * Check out samples pal_backdrop, pal_rgb & pal_rgb_mixer
-* Custom HUD\Fix layer (**starting imminently**)
-* Joypad 2 support
-* Improve sound fx management
+## 📅 Roadmap<a name="roadmap"></a>
 
-#### Later
-* Palette bank switcher
-* DRAM management (unload, load from CDRom)
+### 🟡 Soon
+- [ ] RGB palette handlers (**60% completed**)
+  - Samples: `pal_backdrop`, `pal_rgb`, `pal_rgb_mixer`
+- [ ] Custom HUD / Fix layer (**starting soon**)
+- [ ] Joypad 2 support
+- [ ] Improve sound FX management
 
-#### Maybe
-* wysiwyg project.xml editor
-* Memory card support
-* Cartridge support (AES/MVS)
-* CLI asset management (add, update, remove assets from commands)
+### 🕓 Later
+- [ ] Palette bank switcher
+- [ ] DRAM asset management (unload/load from CD-ROM)
+
+### 🧐 Maybe
+- [ ] XML WYSIWYG editor
+- [ ] Memory card support
+- [ ] AES / MVS support (limited)
+- [ ] CLI-based asset packager
 
 ## Init
 ```cmd
@@ -56,7 +79,7 @@ cd .\neocore\samples\hello
 ```
   
 ## Mak rules
-___***Warning: The mak script overrides the path environment variable during compilation.  
+⚠️ ___***Warning: The mak script overrides the path environment variable during compilation.  
 If you encounter any problems after using it, simply close and restart a new command terminal.***___
 
 - Remove the builded resources
@@ -164,7 +187,7 @@ cd c:\temp\myGame\src
 
   - Doxygen: [http://azertyvortex.free.fr/neocore-doxy/r11/neocore_8h.html](http://azertyvortex.free.fr/neocore-doxy/r11/neocore_8h.html)
     
-## Note
+## Contribute
 
 Please note that the project is under development and the author is not responsible for any software damage.  
 This library is mainly tested on Raine and MAME emulators.  
@@ -281,7 +304,7 @@ Some problems currently:
 * The process is not a real watcher (the rebuild is triggered only if the folder size change)  
 * When you break this process, path is not restored in the current terminal (close & reopen a new terminal)  
 
-## Compiling the lib (necessary if you develop or modify Neocore C lib)
+## Compiling the lib (necessary if you develop or modify Neocore C lib)<a name="compiling-the-lib"></a>
 
 ```cmd
 .\mak.bat lib
