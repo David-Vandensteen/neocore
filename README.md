@@ -80,7 +80,7 @@ cd .\neocore\samples\hello
 ```
   
 ## Mak rules
-___***Warning: The mak script overrides the path environment variable during compilation.  
+⚠️ ___***Warning: The mak script overrides the path environment variable during compilation.  
 If you encounter any problems after using it, simply close and restart a new command terminal.***___
 
 - Remove the builded resources
