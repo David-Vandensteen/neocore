@@ -49,13 +49,14 @@ It provides functions over Neo Dev Kit and DATlib 0.2, and includes tools and co
 ## 📅 Roadmap<a name="roadmap"></a>
 
 ### 🟡 Soon
-- [ ] RGB palette handlers (**60% completed**)
-  - Samples: `pal_backdrop`, `pal_rgb`, `pal_rgb_mixer`
-- [ ] Custom HUD / Fix layer (**starting soon**)
-- [ ] Joypad 2 support
-- [ ] Improve sound FX management
+- [ ] Custom HUD / Fix layer
+  - [ ] Upgrade to Neocore v3 with DATlib 0.3 (**in progress**)
 
 ### 🕓 Later
+- [ ] RGB palette handlers (**60% completed**)
+  - Samples: `pal_backdrop`, `pal_rgb`, `pal_rgb_mixer`
+- [ ] Joypad 2 support
+- [ ] Improve sound FX management
 - [ ] Palette bank switcher
 - [ ] DRAM asset management (unload/load from CD-ROM)
 
