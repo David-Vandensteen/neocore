@@ -182,7 +182,7 @@ static void init_palette_manager_index() {
 
 static void set_palette_manager_index(paletteInfo *pi, WORD index) {
   WORD i = index;
-  for (i = index; i < index + pi->palCount; i++) palette_index_manager_status[i] = pi;
+  for (i = index; i < index + pi->count; i++) palette_index_manager_status[i] = pi;
 }
 
 static void set_free_palette_index_manager(paletteInfo *pi) {
@@ -202,10 +202,10 @@ static WORD use_palette_manager_index(paletteInfo *pi) {
       return i;
     } else {
       if (!palette_index_manager_status[i]) {
-        for (j = i; j < i + pi->palCount; j++) {
+        for (j = i; j < i + pi->count; j++) {
           if (!palette_index_manager_status[j]) {
             found++;
-            if (found >= pi->palCount) {
+            if (found >= pi->count) {
               set_palette_manager_index(pi, i);
               return i;
             }
@@ -358,7 +358,7 @@ void nc_display_gfx_picture(GFX_Picture *gfx_picture, short x, short y) {
   );
   palJobPut(
     palette_index,
-    gfx_picture->paletteInfoDAT->palCount,
+    gfx_picture->paletteInfoDAT->count,
     gfx_picture->paletteInfoDAT->data
   );
 }
@@ -378,11 +378,12 @@ void nc_display_gfx_animated_sprite(
     x,
     y,
     anim,
-    FLIP_NONE
+    FLIP_NONE,
+    0
   );
   palJobPut(
     palette_index,
-    animated_sprite->paletteInfoDAT->palCount,
+    animated_sprite->paletteInfoDAT->count,
     animated_sprite->paletteInfoDAT->data
   );
   aSpriteSetAnim(&animated_sprite->aSpriteDAT, anim);
@@ -415,7 +416,7 @@ void nc_display_gfx_scroller(GFX_Scroller *gfx_scroller, short x, short y) {
   );
   palJobPut(
     palette_index,
-    gfx_scroller->paletteInfoDAT->palCount,
+    gfx_scroller->paletteInfoDAT->count,
     gfx_scroller->paletteInfoDAT->data
   );
 }
@@ -1251,7 +1252,7 @@ void nc_log_bool(char *label, BOOL value) {
 
 void nc_log_spriteInfo(char *label, spriteInfo *si) {
   nc_log_info(label);
-  nc_log_word("PALCOUNT : ", si->palCount);
+  nc_log_word("PALCOUNT : ", si->palInfo->count);
   nc_log_word("FRAMECOUNT : ", si->frameCount);
   nc_log_word("MAXWIDTH : ", si->maxWidth);
 }
@@ -1282,8 +1283,6 @@ void nc_log_box(char *label, Box *b) {
 
 void nc_log_pictureInfo(char *label, pictureInfo *pi) {
   nc_log_info(label);
-  nc_log_word("COLSIZE : ", (WORD)pi->colSize);
-  nc_log_word("UNUSED HEIGHT : ", (WORD)pi->unused__height);
   nc_log_word("TILEWIDTH : ", (WORD)pi->tileWidth);
   nc_log_word("TILEHEIGHT : ", (WORD)pi->tileHeight);
 }
