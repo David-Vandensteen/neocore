@@ -111,7 +111,6 @@ function Install-SDK {
     Install-NeodevHeader
     Install-DATlibHeader
     Install-System
-    pause
     Install-Component `
       -URL $Manifest.manifest.dependencies.gcc.url `
       -PathDownload $downloadPath `
