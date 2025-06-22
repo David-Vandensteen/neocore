@@ -6,11 +6,11 @@
   <projectLink>https://github.com/David-Vandensteen/neocore</projectLink>
   <dependencies>
     <animator>
-      <url>http://azertyvortex.free.fr/download/neocore/current/animator.zip</url>
+      <url>http://azertyvortex.free.fr/download/neocore/animator-r1.zip</url>
       <path>{{build}}\tools</path>
     </animator>
     <buildchar>
-      <url>http://azertyvortex.free.fr/download/neocore/current/buildchar.zip</url>
+      <url>http://azertyvortex.free.fr/download/neocore/buildchar-r1.zip</url>
       <path>{{build}}\bin</path>
     </buildchar>
     <cdTemplate>
@@ -22,27 +22,23 @@
       <path>{{build}}\bin</path>
     </chdman>
     <charSplit>
-      <url>http://azertyvortex.free.fr/download/neocore/current/charSplit.zip</url>
+      <url>http://azertyvortex.free.fr/download/neocore/charsplit-r1.zip</url>
       <path>{{build}}\bin</path>
     </charSplit>
     <datLib>
-      <url>http://azertyvortex.free.fr/download/neocore/current/libDATlib.zip</url>
+      <url>http://azertyvortex.free.fr/download/neocore/libDATlib-0-3-r0.zip</url>
       <path>{{build}}\lib</path>
     </datLib>
     <datImage>
       <url>http://azertyvortex.free.fr/download/neocore/current/DATimage.zip</url>
       <path>{{build}}\tools</path>
     </datImage>
-    <datLibHeader>
-      <url>http://azertyvortex.free.fr/download/neocore/current/DATlib-header.zip</url>
-      <path>{{build}}\include</path>
-    </datLibHeader>
     <findCommand>
       <url>http://azertyvortex.free.fr/download/neocore/current/find-command.zip</url>
       <path>{{build}}\bin</path>
     </findCommand>
     <framer>
-      <url>http://azertyvortex.free.fr/download/neocore/current/framer.zip</url>
+      <url>http://azertyvortex.free.fr/download/neocore/framer-r1.zip</url>
       <path>{{build}}\tools</path>
     </framer>
     <gcc>
@@ -69,10 +65,6 @@
       <url>http://azertyvortex.free.fr/download/neocore/current/NeoTools.zip</url>
       <path>{{build}}\bin</path>
     </neoTools>
-    <neodevHeader>
-      <url>http://azertyvortex.free.fr/download/neocore/current/neodev-header.zip</url>
-      <path>{{build}}\include</path>
-    </neodevHeader>
     <neodevSDK>
       <url>http://azertyvortex.free.fr/download/neocore/current/neodev-sdk.zip</url>
       <path>{{build}}</path>
@@ -97,10 +89,6 @@
       <url>http://azertyvortex.free.fr/download/neocore/current/raine.zip</url>
       <path>{{build}}</path>
     </raine>
-    <system>
-      <url>http://azertyvortex.free.fr/download/neocore/current/system.zip</url>
-      <path>{{build}}\system</path>
-    </system>
     <trCommand>
       <url>http://azertyvortex.free.fr/download/neocore/current/tr-command.zip</url>
       <path>{{build}}\bin</path>

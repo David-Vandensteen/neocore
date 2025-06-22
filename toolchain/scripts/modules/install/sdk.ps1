@@ -11,6 +11,37 @@ function Install-GCC {
   }
 }
 
+function Install-NeodevHeader {
+  $installPath = $(Resolve-Path -Path $Config.project.buildPath)
+  $necorePath = $(Resolve-Path -Path $Config.project.neocorePath)
+  Write-Host "Installing neodev header files..." -ForegroundColor Yellow
+  if (-not (Test-Path -Path $installPath\include)) {
+    New-Item -Path $installPath\include -ItemType Directory -Force
+  }
+  Copy-Item -Path "$necorePath\src-lib\neodev\*" -Destination "$installPath\include\" -Recurse -Force
+}
+
+function Install-DATlibHeader {
+  $installPath = $(Resolve-Path -Path $Config.project.buildPath)
+  $necorePath = $(Resolve-Path -Path $Config.project.neocorePath)
+  Write-Host "Installing DATlib header files..." -ForegroundColor Yellow
+  if (-not (Test-Path -Path $installPath\include)) {
+    New-Item -Path $installPath\include -ItemType Directory -Force
+  }
+  Copy-Item -Path "$necorePath\src-lib\datlib\*" -Destination "$installPath\include\" -Recurse -Force
+}
+
+function Install-System {
+  $installPath = $(Resolve-Path -Path $Config.project.buildPath)
+  $necorePath = $(Resolve-Path -Path $Config.project.neocorePath)
+  Write-Host "Installing system files..." -ForegroundColor Yellow
+  if (-not (Test-Path -Path $installPath\system)) {
+    New-Item -Path $installPath\system -ItemType Directory -Force
+  }
+  Copy-Item -Path "$necorePath\src-lib\system\*" -Destination "$installPath\system\" -Recurse -Force
+}
+
+
 function Install-SDK {
   $installPath = $(Resolve-Path -Path $Config.project.buildPath)
   $downloadPath = $(Resolve-Path -Path "$($Config.project.buildPath)\spool")
@@ -77,18 +108,10 @@ function Install-SDK {
       -URL $Manifest.manifest.dependencies.datLib.url `
       -PathDownload $downloadPath `
       -PathInstall $Manifest.manifest.dependencies.datLib.path
-    Install-Component `
-      -URL $Manifest.manifest.dependencies.neodevHeader.url `
-      -PathDownload $downloadPath `
-      -PathInstall $Manifest.manifest.dependencies.neodevHeader.path
-    Install-Component `
-      -URL $Manifest.manifest.dependencies.datLibHeader.url `
-      -PathDownload $downloadPath `
-      -PathInstall $Manifest.manifest.dependencies.datLibHeader.path
-    Install-Component `
-      -URL $Manifest.manifest.dependencies.system.url `
-      -PathDownload $downloadPath `
-      -PathInstall $Manifest.manifest.dependencies.system.path
+    Install-NeodevHeader
+    Install-DATlibHeader
+    Install-System
+    pause
     Install-Component `
       -URL $Manifest.manifest.dependencies.gcc.url `
       -PathDownload $downloadPath `
