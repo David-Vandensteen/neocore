@@ -379,7 +379,7 @@ void nc_display_gfx_animated_sprite(
     y,
     anim,
     FLIP_NONE,
-    0
+    AS_FLAG_DISPLAY
   );
   palJobPut(
     palette_index,
