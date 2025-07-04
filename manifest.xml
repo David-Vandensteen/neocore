@@ -62,6 +62,7 @@
       <path>{{build}}\bin</path>
     </msys2Runtime>
     <neoTools>
+    <!-- TODO : upgrade NeoTools -->
       <url>http://azertyvortex.free.fr/download/neocore/current/NeoTools.zip</url>
       <path>{{build}}\bin</path>
     </neoTools>
