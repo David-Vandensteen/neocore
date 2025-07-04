@@ -57,7 +57,6 @@ function Main {
   if ((Test-Path -Path "$($Config.project.buildPath)\bin") -eq $false) { Install-SDK }
   if ((Test-Path -Path "$($Config.project.buildPath)\neodev-sdk") -eq $false) { Install-SDK }
 
-  if ($Rule -notmatch "^only:") { MakClean }
 
   if ((Test-Path -Path "$($Config.project.buildPath)\$($Config.project.name)") -eq $false) {
     New-Item -Path "$($Config.project.buildPath)\$($Config.project.name)" -ItemType Directory -Force
