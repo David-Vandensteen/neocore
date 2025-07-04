@@ -58,7 +58,7 @@ function Write-Sprite {
     -PassThru `
     -RedirectStandardOutput "$buildPathProject\sprite.log"
 
-  $timeout = 120
+  $timeout = 5 * 60
   $timer = [System.Diagnostics.Stopwatch]::StartNew()
 
   $progressUpdateInterval = 5
@@ -88,8 +88,13 @@ function Write-Sprite {
 
   Watch-Error
 
-  & CharSplit.exe char.bin "-$Format" $OutputFile
-  Remove-Item -Path char.bin -Force
+  $charfile = $Config.project.gfx.DAT.chardata.setup.charfile
+  if ($charfile -eq "") {
+    $charfile = "char.bin"
+  }
+
+  & CharSplit.exe $charfile "-$Format" $OutputFile
+  Remove-Item -Path $charfile -Force
 
   if ((Test-Path -Path "$OutputFile.$Format") -eq $true) {
     Write-Host "Builded sprites $OutputFile.$Format" -ForegroundColor Green
