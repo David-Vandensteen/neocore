@@ -74,7 +74,7 @@
       <path>{{build}}\include</path>
     </neodevHeader>
     <neodevSDK>
-      <url>http://azertyvortex.free.fr/download/neocore/current/neodev-sdk.zip</url>
+      <url>http://azertyvortex.free.fr/download/neocore/neodev-sdk-r1.zip</url>
       <path>{{build}}</path>
     </neodevSDK>
     <neodevLib>
