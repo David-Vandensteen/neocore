@@ -1,33 +1,43 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <chardata>
   <setup>
     <starting_tile>256</starting_tile>
+	<charfile>out\char.bin</charfile>
+    <mapfile>out\charMaps.s</mapfile>
+    <palfile>out\charPals.s</palfile>
+    <incfile>out\charInclude.h</incfile>
+	<incprefix>../</incprefix>
   </setup>
-
+  <scrl id="streamScroll" colorStream="horizontal">
+    <file>gfx\streamTest.png</file>
+  </scrl>
+  <scrl id="SNKLogoStrip" colorStream="vertical">
+    <file>gfx\SNK_logoStrip.png</file>
+  </scrl>
   <scrl id="ffbg_a">
-    <file>assets\gfx\ffbg_a.png</file>
+    <file>gfx\ffbg_a.png</file>
   </scrl>
-
   <scrl id="ffbg_b">
-    <file>assets\gfx\ffbg_b0.png</file>
-    <auto1>assets\gfx\ffbg_b1.png</auto1>
-    <auto2>assets\gfx\ffbg_b2.png</auto2>
-    <auto3>assets\gfx\ffbg_b3.png</auto3>
+    <file>gfx\ffbg_b0.png</file>
+    <auto1>gfx\ffbg_b1.png</auto1>
+    <auto2>gfx\ffbg_b2.png</auto2>
+    <auto3>gfx\ffbg_b3.png</auto3>
   </scrl>
-
   <pict id="ffbg_c">
-    <file>assets\gfx\ffbg_c.png</file>
+    <file>gfx\ffbg_c.png</file>
   </pict>
-
   <pict id="terrypict">
-    <file>assets\gfx\terry_portrait.png</file>
+    <file>gfx\terry_portrait.png</file>
     <flips>xyz</flips>
   </pict>
-
+  <pict id="desert">
+    <file>gfx\desert.png</file>
+  </pict>
   <sprt id="bmary_spr">
-    <file>assets\gfx\bmary.png</file>
+    <file>gfx\bmary.png</file>
     <flips>xyz</flips>
     <!-- idle frames -->
+    <!-- walking frames -->
     <frame>0,0:4,7</frame>
     <frame>4,0:4,7</frame>
     <frame>8,0:4,7</frame>
@@ -40,7 +50,6 @@
     <frame>36,0:4,7</frame>
     <frame>40,0:4,7</frame>
     <frame>44,0:4,7</frame>
-    <!-- walking frames -->
     <frame>0,7:4,7</frame>
     <frame>4,7:4,7</frame>
     <frame>8,7:4,7</frame>
@@ -50,26 +59,23 @@
     <frame>24,7:4,7</frame>
     <frame>28,7:4,7</frame>
   </sprt>
-
   <pict id="topleft">
-    <file>assets\gfx\topleft.png</file>
+    <file>gfx\topleft.png</file>
     <flips>xyz</flips>
   </pict>
-
   <pict id="pointer">
-    <file>assets\gfx\pointer.png</file>
+    <file>gfx\pointer.png</file>
   </pict>
-
+  <pict id="dbgTags">
+	<file>gfx\debugtags.png</file>
+  </pict>
   <scrl id="wohd">
-    <file>assets\gfx\wohd.png</file>
+    <file>gfx\wohd.png</file>
   </scrl>
-
   <pict id="gradient">
-    <file>assets\gfx\colorbars.png</file>
+    <file>gfx\colorbars.png</file>
   </pict>
-
   <pict id="tf4layers">
-    <file>assets\gfx\tf4layers.png</file>
+    <file>gfx\tf4layers.png</file>
   </pict>
-
 </chardata>

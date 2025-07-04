@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<chardata>
+	<setup fileType="fix">
+		<charfile>out\fix.bin</charfile>
+		<palfile>out\fixPals.s</palfile>
+		<incfile>out\fixData.h</incfile>
+	</setup>
+	
+	<import bank="0">
+		<file>gfx\fix\systemFont.bin</file>
+	</import>
+
+	<fix bank="3" id="fix_sfz3font0">
+		<file>gfx\fix\font0.png</file>
+	</fix>
+
+	<fix bank="3" id="fix_bars">
+		<file>gfx\fix\bars.png</file>
+	</fix>
+	
+	<fix bank="5" id="logo95">
+		<file>gfx\fix\logo95.png</file>
+	</fix>
+	<fix bank="5" id="logo96">
+		<file>gfx\fix\logo96.png</file>
+	</fix>
+	<fix bank="5" id="logo97">
+		<file>gfx\fix\logo97.png</file>
+	</fix>
+	<fix bank="5" id="logo98">
+		<file>gfx\fix\logo98.png</file>
+	</fix>
+	
+</chardata>
