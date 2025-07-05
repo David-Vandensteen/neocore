@@ -88,8 +88,9 @@ function Write-Sprite {
 
   Watch-Error
 
-  $charfile = $Config.project.gfx.DAT.chardata.setup.charfile
-  if ($charfile -eq "") {
+  if ($Config.project.gfx.DAT.chardata.setup.PSObject.Properties.Name -contains "charfile" -and $Config.project.gfx.DAT.chardata.setup.charfile) {
+    $charfile = $Config.project.gfx.DAT.chardata.setup.charfile
+  } else {
     $charfile = "char.bin"
   }
 
