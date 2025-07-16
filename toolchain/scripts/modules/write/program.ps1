@@ -7,11 +7,10 @@ function Write-Program {
     [Parameter(Mandatory=$true)][String] $ProjectName,
     [Parameter(Mandatory=$true)][String] $BinPath
   )
+  Write-Host "Asserting program requierments before compiling" -ForegroundColor Yellow
+  Assert-Program
+
   Write-Host "Compiling program $PRGFile" -ForegroundColor Yellow
-  if ((Test-Path -Path $MakeFile) -eq $false) {
-    Write-Host "$MakeFile not found" -ForegroundColor Red
-    exit 1
-  }
 
   $gccPath = Get-TemplatePath -Path $GCCPath
   $binPath = Get-TemplatePath -Path $BinPath
