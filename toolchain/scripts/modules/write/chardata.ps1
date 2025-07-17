@@ -1,4 +1,4 @@
-function Watch-Error {
+function Parse-Error {
   $buildPathProject = "$($Config.project.buildPath)\$($Config.project.name)"
   Get-Content -Path "$buildPathProject\sprite.log" -Force
   if (Select-String -Path "$buildPathProject\sprite.log" -Pattern "Invalid dimension") {
@@ -18,7 +18,7 @@ function Watch-Error {
   }
 }
 
-function Write-DATXML {
+function Write-ChardataXML {
   param(
     [Parameter(Mandatory=$true)][String] $InputFile,
     [Parameter(Mandatory=$true)][String] $OutputFile
@@ -50,43 +50,9 @@ function Write-Sprite {
     exit 1
   }
 
-  # TODO : timeout managment
-  $process = Start-Process `
-    -File "BuildChar.exe" `
-    -NoNewWindow `
-    -ArgumentList $XMLFile `
-    -PassThru `
-    -RedirectStandardOutput "$buildPathProject\sprite.log"
 
-  $timeout = 5 * 60
-  $timer = [System.Diagnostics.Stopwatch]::StartNew()
-
-  $progressUpdateInterval = 5
-  $lastProgressUpdate = 0
-
-  while (-not $process.HasExited -and $timer.Elapsed.TotalSeconds -lt $timeout) {
-      $currentTime = $timer.Elapsed.TotalSeconds
-
-      if ($currentTime - $lastProgressUpdate -ge $progressUpdateInterval) {
-          Write-Host "in progress, elapsed time : $($currentTime.toString("N0")) seconds"
-          Watch-Error
-          $lastProgressUpdate = $currentTime
-      }
-      Start-Sleep -Milliseconds 500
-  }
-
-  if (-not $process.HasExited) {
-      $process.Kill()
-      Write-Host "Timeout : compiling sprite exceed timeout ..." -ForegroundColor Red
-      exit 1
-      Watch-Error
-  } else {
-      Write-Host "Compiled"
-  }
-
-  $timer.Stop()
-
-  Watch-Error
+  & BuildChar.exe $XMLFile | Tee-Object -FilePath "$buildPathProject\sprite.log"
+  Parse-Error
 
   if ($Config.project.gfx.DAT.chardata.setup.PSObject.Properties.Name -contains "charfile" -and $Config.project.gfx.DAT.chardata.setup.charfile) {
     $charfile = $Config.project.gfx.DAT.chardata.setup.charfile
@@ -94,8 +60,17 @@ function Write-Sprite {
     $charfile = "char.bin"
   }
 
+  $projectBuildPath = "$($Config.project.buildPath)\$($Config.project.name)"
+  $projectName = $Config.project.name
+
+  if (Test-Path -Path "$projectBuildPath\$($projectName).cd") {
+    Remove-Item -Path "$projectBuildPath\$($projectName).cd" -Force
+  }
+
   & CharSplit.exe $charfile "-$Format" $OutputFile
   Remove-Item -Path $charfile -Force
+  Rename-Item -Path "$projectBuildPath\$($projectName).SPR" `
+    -NewName "$($projectName).cd" -Force
 
   if ((Test-Path -Path "$OutputFile.$Format") -eq $true) {
     Write-Host "Builded sprites $OutputFile.$Format" -ForegroundColor Green
