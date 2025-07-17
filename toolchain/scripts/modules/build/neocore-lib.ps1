@@ -1,13 +1,14 @@
 function Build-NeocoreLib {
   $buildPath = $(Resolve-Path -Path $Config.project.buildPath)
-  $srcLibPath = "$($Config.project.neocorePath)\src-lib"
+  $srcLibPath = $(Resolve-Path -Path "$($Config.project.neocorePath)\src-lib")
+  $includePath = $(Resolve-Path -Path "$($Config.project.neocorePath)\src-lib\include")
 
   Assert-BuildNeocoreLib
 
   pushd $srcLibPath
   .\build-neocore.bat `
     -gccPath $buildPath\gcc\gcc-2.95.2 `
-    -includePath $buildPath\include `
+    -includePath $includePath `
     -libraryPath $buildPath\lib
   if ($LASTEXITCODE -ne 0) {
     popd
