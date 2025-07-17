@@ -40,8 +40,14 @@ function Write-Program {
 
   Write-Host $env:path
 
-  & make -f $MakeFile > "$pathBuildName\gcc.log" 2>&1
-  & type "$pathBuildName\gcc.log"
+  & make -f $MakeFile 2>&1 | Tee-Object -FilePath "$pathBuildName\gcc.log"
+  $makeExitCode = $LASTEXITCODE
+
+  if ($makeExitCode -ne 0) {
+    Write-Host "Make failed with exit code $makeExitCode" -ForegroundColor Red
+    exit $makeExitCode
+  }
+
   if ((Test-Path -Path $prgFile) -eq $true) {
     Write-Host "Builded program $prgFile" -ForegroundColor Green
     Write-Host ""
