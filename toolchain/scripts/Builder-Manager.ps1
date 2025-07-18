@@ -62,7 +62,7 @@ function Main {
     New-Item -Path "$($Config.project.buildPath)\$($Config.project.name)" -ItemType Directory -Force
   }
 
-  if ($Rule -eq "clean") { exit 0 }
+  if ($Rule -eq "clean") { MakClean }
 
   if ($Rule -eq "animator") { Start-Animator }
   if ($Rule -eq "framer") { Start-Framer }
