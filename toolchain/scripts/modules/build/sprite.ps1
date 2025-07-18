@@ -1,6 +1,11 @@
 function Build-Sprite {
   Assert-BuildSprite
 
+  if (-Not(Test-Path -Path out)) {
+    Write-Host "Creating out directory" -ForegroundColor Yellow
+    New-Item -ItemType Directory -Path out | Out-Null
+  }
+
   $outputFile = "$($Config.project.buildPath)\$($Config.project.name)\$($Config.project.name)"
   $fixDataFile = "$($Config.project.buildPath)\$($Config.project.name)\fixdata.xml"
   $charDataFile = "$($Config.project.buildPath)\$($Config.project.name)\chardata.xml"
