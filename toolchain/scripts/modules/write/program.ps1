@@ -40,6 +40,7 @@ function Write-Program {
 
   Write-Host $env:path
 
+  # TODO : debug exit code
   & make -f $MakeFile 2>&1 | Tee-Object -FilePath "$pathBuildName\gcc.log"
   $makeExitCode = $LASTEXITCODE
 
