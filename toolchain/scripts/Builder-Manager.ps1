@@ -4,8 +4,6 @@
 
 # TODO : externalize folders creation
 # TODO : inxrease clean rule priority
-# TODO : mak clean:build template path support
-# TODO : externalize systemFont
 
 param (
   [Parameter(Mandatory=$true)][String] $ConfigFile,
@@ -46,6 +44,7 @@ function Main {
   Assert-Rule -Rule $Rule
   Stop-Emulators
 
+  if ($Rule -eq "clean") { MakClean }
   if ($Rule -eq "clean:build") { MakCleanBuild}
 
   $spoolPath = Get-TemplatePath -Path "$($Config.project.buildPath)\spool"
@@ -74,7 +73,6 @@ function Main {
     New-Item -Path "$projectBuildPath\$($Config.project.name)" -ItemType Directory -Force
   }
 
-  if ($Rule -eq "clean") { MakClean }
   if ($Rule -eq "animator") { Start-Animator }
   if ($Rule -eq "framer") { Start-Framer }
   if ($Rule -eq "lib") { Build-NeocoreLib }
