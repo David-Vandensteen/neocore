@@ -9,10 +9,12 @@ function Write-FixdataXML {
 
   $fixDataNode = $xmlDoc.SelectSingleNode("//fixdata/chardata")
 
-  $newXmlDoc = New-Object System.Xml.XmlDocument
+  $xmlContent = $fixDataNode.OuterXml
+  $xmlContent = $xmlContent.Replace("{{build}}", $(Resolve-TemplatePath -Path $Config.project.buildPath))
+  $xmlContent = $xmlContent.Replace("{{neocore}}", $(Resolve-TemplatePath -Path $Config.project.neocorePath))
 
-  $newNode = $newXmlDoc.ImportNode($fixDataNode, $true)
-  $newXmlDoc.AppendChild($newNode)
+  $newXmlDoc = New-Object System.Xml.XmlDocument
+  $newXmlDoc.LoadXml($xmlContent)
 
   Write-Host "Saving fix data to $OutputFile" -ForegroundColor Cyan
   $newXmlDoc.Save($OutputFile)
@@ -32,5 +34,18 @@ function Write-Fix {
 
   Write-Host "Running BuildChar on $XMLFile" -ForegroundColor Cyan
 
-  & BuildChar.exe $XMLFile | Tee-Object -FilePath "$buildPathProject\fix.log"
+  & BuildChar.exe $XMLFile 2>&1 | Tee-Object -FilePath "$buildPathProject\fix.log"
+  $buildCharExitCode = $LASTEXITCODE
+
+  if ($buildCharExitCode -ne 0) {
+    Write-Host "BuildChar.exe failed with exit code $buildCharExitCode" -ForegroundColor Red
+    exit $buildCharExitCode
+  }
+
+  if (Select-String -Path "$buildPathProject\fix.log" -Pattern "System.IO.DirectoryNotFoundException") {
+    Write-Host "Error: Check your file paths in the XML configuration" -ForegroundColor Red
+    exit 1
+  }
+
+  Write-Host "Fix data compiled successfully" -ForegroundColor Green
 }

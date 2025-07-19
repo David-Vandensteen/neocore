@@ -2,6 +2,12 @@ function Parse-Error {
   $projectBuildPath = Get-TemplatePath -Path $Config.project.buildPath
   $buildPathProject = "$projectBuildPath\$($Config.project.name)"
   Get-Content -Path "$buildPathProject\sprite.log" -Force
+
+  if (Select-String -Path "$buildPathProject\sprite.log" -Pattern "System.IO.DirectoryNotFoundException") {
+    Write-Host "Error: Directory not found - Check your file paths in the XML configuration" -ForegroundColor Red
+    exit 1
+  }
+
   if (Select-String -Path "$buildPathProject\sprite.log" -Pattern "Invalid dimension") {
     Write-Host "Invalid dimension" -ForegroundColor Red
     exit 1
@@ -30,10 +36,12 @@ function Write-ChardataXML {
 
   $charDataNode = $xmlDoc.SelectSingleNode("//chardata")
 
-  $newXmlDoc = New-Object System.Xml.XmlDocument
+  $xmlContent = $charDataNode.OuterXml
+  $xmlContent = $xmlContent.Replace("{{build}}", $(Resolve-TemplatePath -Path $Config.project.buildPath))
+  $xmlContent = $xmlContent.Replace("{{neocore}}", $(Resolve-TemplatePath -Path $Config.project.neocorePath))
 
-  $newNode = $newXmlDoc.ImportNode($charDataNode, $true)
-  $newXmlDoc.AppendChild($newNode)
+  $newXmlDoc = New-Object System.Xml.XmlDocument
+  $newXmlDoc.LoadXml($xmlContent)
 
   $newXmlDoc.Save($OutputFile)
 }
@@ -53,7 +61,7 @@ function Write-Sprite {
     exit 1
   }
 
-  & BuildChar.exe $XMLFile | Tee-Object -FilePath "$buildPathProject\sprite.log"
+  & BuildChar.exe $XMLFile 2>&1 | Tee-Object -FilePath "$buildPathProject\sprite.log"
   Parse-Error
 
   if ($Config.project.gfx.DAT.chardata.setup.PSObject.Properties.Name -contains "charfile" -and $Config.project.gfx.DAT.chardata.setup.charfile) {
