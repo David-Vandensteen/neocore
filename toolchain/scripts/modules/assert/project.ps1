@@ -1,6 +1,3 @@
-Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\assert\path.ps1"
-Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\assert\project\name.ps1"
-
 function Assert-Project {
   param ([Parameter(Mandatory=$true)][xml] $Config)
 
@@ -15,9 +12,6 @@ function Assert-Project {
   if (-Not($Config.project.version)) {
     Write-Host "error : project.version not found" -ForegroundColor Red
     exit 1
-  }
-  if ($Config.project.dependencies) {
-    Assert-ProjectDependencies
   }
   if (-Not($Config.project.makefile)) {
     Write-Host "error : project.makefile not found" -ForegroundColor Red
@@ -34,6 +28,12 @@ function Assert-Project {
   if (-Not($Config.project.distPath)) {
     Write-Host "error : project.distPath not found" -ForegroundColor Red
     exit 1
+  }
+  if (-Not($Config.project.gfx)) {
+    Write-Host "error : project.gfx not found" -ForegroundColor Red
+    exit 1
+  } else {
+    Assert-ProjectGfxDat
   }
   if (-Not($Config.project.emulator)) {
     Write-Host "error : project.emulator not found" -ForegroundColor Red

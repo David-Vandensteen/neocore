@@ -1,7 +1,11 @@
 Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\get\template-path.ps1"
 Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\resolve\template-path.ps1"
 Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\assert\project.ps1"
+Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\assert\project\gfx\dat.ps1"
+Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\assert\project\name.ps1"
 Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\assert\program.ps1"
+Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\assert\path.ps1"
+
 
 Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\assert\manifest.ps1"
 Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\assert\rule.ps1"
