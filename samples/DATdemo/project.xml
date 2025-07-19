@@ -17,9 +17,9 @@
         <scrl id="streamScroll" colorStream="horizontal">
           <file>gfx\streamTest.png</file>
         </scrl>
-        <scrl id="SNKLogoStrip" colorStream="vertical">
+        <!-- <scrl id="SNKLogoStrip" colorStream="vertical">
           <file>gfx\SNK_logoStrip.png</file>
-        </scrl>
+        </scrl> -->
         <scrl id="ffbg_a">
           <file>gfx\ffbg_a.png</file>
         </scrl>
@@ -143,8 +143,8 @@
     <name>gcc</name>
     <version>2.95.2</version>
     <path>{{build}}\gcc\gcc-2.95.2</path>
-    <includePath>{{build}}\include</includePath>
+    <includePath>..\..\src-lib\include</includePath>
     <libraryPath>{{build}}\lib</libraryPath>
-    <systemFile>{{build}}\system\neocd.x</systemFile>
+    <systemFile>..\..\src-lib\system\neocd.x</systemFile>
   </compiler>
 </project>
