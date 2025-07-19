@@ -12,7 +12,6 @@ output.map
 palettes.s
 test.o
 test.prg
-externs.h
 as.exe.stackdump
 *.o
 *.prg
