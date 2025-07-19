@@ -3,16 +3,36 @@
   <name></name>
   <version>1.0.0</version>
   <makefile>Makefile</makefile>
+  <neocorePath>..\neocore</neocorePath>
+  <buildPath>{{neocore}}\build</buildPath>
+  <distPath>{{neocore}}\dist</distPath>
   <gfx>
     <DAT>
       <chardata>
         <setup>
           <starting_tile>256</starting_tile>
+          <charfile>out\char.bin</charfile>
+          <mapfile>out\charMaps.s</mapfile>
+          <palfile>out\charPals.s</palfile>
+          <incfile>out\charInclude.h</incfile>
+        <incprefix>../</incprefix>
         </setup>
         <pict id="logo">
           <file>assets\gfx\logo.png</file>
         </pict>
       </chardata>
+      <fixdata>
+        <chardata>
+          <setup fileType="fix">
+            <charfile>out\fix.bin</charfile>
+            <palfile>out\fixPals.s</palfile>
+            <incfile>out\fixData.h</incfile>
+          </setup>
+          <import bank="0">
+            <file>{{build}}\fix\systemFont.bin</file>
+          </import>
+        </chardata>
+      </fixdata>
     </DAT>
   </gfx>
   <!-- To use CDDA audio tracks, uncomment and set up your files.
@@ -62,15 +82,12 @@
       </profile>
     </mame>
   </emulator>
-  <neocorePath>..\neocore</neocorePath>
-  <buildPath>..\build</buildPath>
-  <distPath>..\dist</distPath>
   <compiler>
     <name>gcc</name>
     <version>2.95.2</version>
     <path>{{build}}\gcc\gcc-2.95.2</path>
-    <includePath>{{build}}\include</includePath>
+    <includePath>{{neocore}}\src-lib\include</includePath>
     <libraryPath>{{build}}\lib</libraryPath>
-    <systemFile>{{build}}\system\neocd.x</systemFile>
+    <systemFile>{{neocore}}\src-lib\system\neocd.x</systemFile>
   </compiler>
 </project>
