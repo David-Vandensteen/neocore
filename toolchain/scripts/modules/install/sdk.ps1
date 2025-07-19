@@ -79,6 +79,10 @@ function Install-SDK {
       -PathDownload $downloadPath `
       -PathInstall $Manifest.manifest.dependencies.datLib.path
     Install-Component `
+      -URL $Manifest.manifest.dependencies.systemFont.url `
+      -PathDownload $downloadPath `
+      -PathInstall $Manifest.manifest.dependencies.systemFont.path
+    Install-Component `
       -URL $Manifest.manifest.dependencies.gcc.url `
       -PathDownload $downloadPath `
       -PathInstall $Manifest.manifest.dependencies.gcc.path
