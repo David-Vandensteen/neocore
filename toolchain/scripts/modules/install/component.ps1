@@ -5,7 +5,7 @@ function Install-Component {
     [Parameter(Mandatory=$true)][String] $PathInstall
   )
 
-  $pathInstall = $PathInstall.Replace("{{build}}", $Config.project.buildPath)
+  $pathInstall = Get-TemplatePath -Path $PathInstall
 
   if (-not($(Test-Path -Path $pathInstall))) {
     Write-Host "  create $pathInstall" -ForegroundColor Yellow
@@ -13,8 +13,8 @@ function Install-Component {
   }
 
   $fileName = Split-Path -Path $URL -Leaf
-  $pathDownload = Resolve-Path -Path $PathDownload
-  $pathInstall = Resolve-Path -Path $PathInstall
+  $pathDownload = Resolve-TemplatePath -Path $PathDownload
+  $pathInstall = Resolve-TemplatePath -Path $PathInstall
 
   Write-Host "GET $fileName" -ForegroundColor Blue
   Start-Download -URL $URL -Path $pathDownload

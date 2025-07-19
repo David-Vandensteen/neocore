@@ -57,6 +57,11 @@ function Write-Cache {
   Copy-Item -Path "$PathCDTemplate\*" -Destination $PathISOBuildFolder -Recurse -Force -ErrorAction Stop
   Copy-Item -Path $PRGFile -Destination "$PathISOBuildFolder\DEMO.PRG" -Force -ErrorAction Stop
   Copy-Item -Path $SpriteFile -Destination "$PathISOBuildFolder\DEMO.SPR" -Force -ErrorAction Stop
+
+  if ($Config.project.gfx.DAT.fixdata.chardata.setup.PSObject.Properties.Name -contains "charfile" -and $Config.project.gfx.DAT.fixdata.chardata.setup.charfile) {
+    $fixfile = $Config.project.gfx.DAT.fixdata.chardata.setup.charfile
+    Copy-Item -Path $fixfile -Destination "$PathISOBuildFolder\DEMO.FIX" -Force -ErrorAction Stop
+  }
 }
 
 function Write-SFX {

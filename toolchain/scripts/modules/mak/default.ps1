@@ -1,4 +1,4 @@
 function MakDefault {
-  Build-Sprite
+  Write-Host "Mak default" -ForegroundColor Cyan
   Build-Program
 }

@@ -175,42 +175,6 @@ function Assert-ManifestDependencies {
     Write-Host "error : manifest.dependencies.datLib.url not found" -ForegroundColor Red
     exit 1
   }
-  if (-Not($Manifest.manifest.dependencies.neodevHeader)) {
-    Write-Host "error : manifest.dependencies.neodevHeader not found" -ForegroundColor Red
-    exit 1
-  }
-  if (-Not($Manifest.manifest.dependencies.neodevHeader.path)) {
-    Write-Host "error : manifest.dependencies.neodevHeader.path not found" -ForegroundColor Red
-    exit 1
-  }
-  if (-Not($Manifest.manifest.dependencies.neodevHeader.url)) {
-    Write-Host "error : manifest.dependencies.neodevHeader.url not found" -ForegroundColor Red
-    exit 1
-  }
-  if (-Not($Manifest.manifest.dependencies.datLibHeader)) {
-    Write-Host "error : manifest.dependencies.datLibHeader not found" -ForegroundColor Red
-    exit 1
-  }
-  if (-Not($Manifest.manifest.dependencies.datLibHeader.path)) {
-    Write-Host "error : manifest.dependencies.datLibHeader.path not found" -ForegroundColor Red
-    exit 1
-  }
-  if (-Not($Manifest.manifest.dependencies.datLibHeader.url)) {
-    Write-Host "error : manifest.dependencies.datLibHeader.url not found" -ForegroundColor Red
-    exit 1
-  }
-  if (-Not($Manifest.manifest.dependencies.system)) {
-    Write-Host "error : manifest.dependencies.system not found" -ForegroundColor Red
-    exit 1
-  }
-  if (-Not($Manifest.manifest.dependencies.system.path)) {
-    Write-Host "error : manifest.dependencies.system.path not found" -ForegroundColor Red
-    exit 1
-  }
-  if (-Not($Manifest.manifest.dependencies.system.url)) {
-    Write-Host "error : manifest.dependencies.system.url not found" -ForegroundColor Red
-    exit 1
-  }
   if (-Not($Manifest.manifest.dependencies.gcc)) {
     Write-Host "error : manifest.dependencies.gcc not found" -ForegroundColor Red
     exit 1

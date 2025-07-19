@@ -4,7 +4,8 @@ function Install-GCC {
     [Parameter(Mandatory=$true)][String] $Destination
   )
 
-  $downloadPath = $(Resolve-Path -Path "$($Config.project.buildPath)\spool")
+  $projectBuildPath = Get-TemplatePath -Path $Config.project.buildPath
+  $downloadPath = $(Resolve-TemplatePath -Path "$projectBuildPath\spool")
   if (-not $(Test-Path -Path $Destination)) {
     New-Item -Path $Destination -ItemType Directory -Force
     Install-Component -URL $URL -PathDownload $downloadPath -PathInstall $Destination
@@ -12,8 +13,8 @@ function Install-GCC {
 }
 
 function Install-SDK {
-  $installPath = $(Resolve-Path -Path $Config.project.buildPath)
-  $downloadPath = $(Resolve-Path -Path "$($Config.project.buildPath)\spool")
+  $installPath = $(Resolve-TemplatePath -Path $Config.project.buildPath)
+  $downloadPath = $(Resolve-TemplatePath -Path "$($Config.project.buildPath)\spool")
   $buildConfig
 
   if ($Manifest.manifest.dependencies) { # TODO : make it mandatory in neocore v3
@@ -78,17 +79,9 @@ function Install-SDK {
       -PathDownload $downloadPath `
       -PathInstall $Manifest.manifest.dependencies.datLib.path
     Install-Component `
-      -URL $Manifest.manifest.dependencies.neodevHeader.url `
+      -URL $Manifest.manifest.dependencies.systemFont.url `
       -PathDownload $downloadPath `
-      -PathInstall $Manifest.manifest.dependencies.neodevHeader.path
-    Install-Component `
-      -URL $Manifest.manifest.dependencies.datLibHeader.url `
-      -PathDownload $downloadPath `
-      -PathInstall $Manifest.manifest.dependencies.datLibHeader.path
-    Install-Component `
-      -URL $Manifest.manifest.dependencies.system.url `
-      -PathDownload $downloadPath `
-      -PathInstall $Manifest.manifest.dependencies.system.path
+      -PathInstall $Manifest.manifest.dependencies.systemFont.path
     Install-Component `
       -URL $Manifest.manifest.dependencies.gcc.url `
       -PathDownload $downloadPath `
@@ -116,10 +109,14 @@ function Install-SDK {
     Install-GCC -URL "$($BaseURL)/gcc-2.95.2.zip" -Destination "$($installPath)\gcc\gcc-2.95.2"
   }
 
-  #Install-Component -URL "$($BaseURL)/MinGW-m68k-elf-13.1.0.zip" -PathDownload $downloadPath -PathInstall "$($installPath)\gcc"
-
   Build-NeocoreLib
-  $manifestFile = "$($Config.project.neocorePath)\manifest.xml"
+  $projectNeocorePath = Resolve-TemplatePath -Path $Config.project.neocorePath
+  $manifestFile = "$projectNeocorePath\manifest.xml"
+
+  Write-Host "Copying $manifestFile to $installPath" -ForegroundColor Cyan
   Copy-Item -Path $manifestFile $installPath -Force -ErrorAction Stop
-  Copy-Item -Path "$($Config.project.neocorePath)\manifest.xml" $Config.project.buildPath -Force -ErrorAction Stop
+
+  # TODO : refactor this
+  # Write-Host "Copying $manifestFile to $projectBuildPath" -ForegroundColor Cyan
+  # Copy-Item -Path "$($Config.project.neocorePath)\manifest.xml" $Config.project.buildPath -Force -ErrorAction Stop
 }

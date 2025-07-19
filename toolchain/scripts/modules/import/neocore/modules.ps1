@@ -1,6 +1,7 @@
 Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\get\template-path.ps1"
 Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\resolve\template-path.ps1"
 Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\assert\project.ps1"
+Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\assert\program.ps1"
 
 Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\assert\manifest.ps1"
 Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\assert\rule.ps1"
@@ -26,7 +27,8 @@ Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\watch\fo
 Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\write\iso.ps1"
 Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\write\dist.ps1"
 Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\write\program.ps1"
-Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\write\sprite.ps1"
+Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\write\chardata.ps1"
+Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\write\fixdata.ps1"
 
 Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\mak\default.ps1"
 Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\mak\iso.ps1"
@@ -56,7 +58,6 @@ Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\assert\b
 Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\write\program.ps1"
 
 Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\assert\build\sprite.ps1"
-Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\write\sprite.ps1"
 
 Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\start\download.ps1"
 

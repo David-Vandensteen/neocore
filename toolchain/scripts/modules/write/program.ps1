@@ -7,11 +7,11 @@ function Write-Program {
     [Parameter(Mandatory=$true)][String] $ProjectName,
     [Parameter(Mandatory=$true)][String] $BinPath
   )
+  Write-Host "Write Program" -ForegroundColor Cyan
+  Write-Host "Asserting program requierments before compiling" -ForegroundColor Yellow
+  Assert-Program
+
   Write-Host "Compiling program $PRGFile" -ForegroundColor Yellow
-  if ((Test-Path -Path $MakeFile) -eq $false) {
-    Write-Host "$MakeFile not found" -ForegroundColor Red
-    exit 1
-  }
 
   $gccPath = Get-TemplatePath -Path $GCCPath
   $binPath = Get-TemplatePath -Path $BinPath
@@ -32,7 +32,7 @@ function Write-Program {
 
   $Config.project.compiler
 
-  $env:PROJECT_PATH = $(Resolve-Path -Path .)
+  $env:PROJECT_PATH = $(Resolve-TemplatePath -Path .)
   $env:INCLUDE_PATH = $includePath
   $env:LIBRARY_PATH = $libraryPath
   $env:NEO_GEO_SYSTEM = $systemFile
@@ -41,8 +41,15 @@ function Write-Program {
 
   Write-Host $env:path
 
-  & make -f $MakeFile > "$pathBuildName\gcc.log" 2>&1
-  & type "$pathBuildName\gcc.log"
+  # TODO : debug exit code
+  & make -f $MakeFile 2>&1 | Tee-Object -FilePath "$pathBuildName\gcc.log"
+  $makeExitCode = $LASTEXITCODE
+
+  if ($makeExitCode -ne 0) {
+    Write-Host "Make failed with exit code $makeExitCode" -ForegroundColor Red
+    exit $makeExitCode
+  }
+
   if ((Test-Path -Path $prgFile) -eq $true) {
     Write-Host "Builded program $prgFile" -ForegroundColor Green
     Write-Host ""

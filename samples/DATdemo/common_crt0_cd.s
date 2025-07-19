@@ -62,7 +62,7 @@ _IRQ7	=	0x00c00426
 	.long	0xC004E0
 	
 	|; 0x64
-	.long _IRQ1, _IRQ2, _IRQ3, _IRQ4, _IRQ5, _IRQ6, _IRQ7	/*;4-7 unused*/
+	.long	_IRQ1, _IRQ2, _IRQ3, _IRQ4, _IRQ5, _IRQ6, _IRQ7	/*;4-7 unused*/
 	.long	TRAP00,	TRAP01,	TRAP02,	TRAP03
 	.long	TRAP04,	TRAP05,	TRAP06,	TRAP07
 	.long	TRAP08,	TRAP09,	TRAP10,	TRAP11
@@ -72,8 +72,7 @@ _IRQ7	=	0x00c00426
 	.long	0xC00426, 0xC00426, 0xC00426, 0xC00426
 	.long	0xC00426, 0xC00426, 0xC00426, 0xC00426
 	
-	.org 0x100
-
+	.org	0x100
 	.ascii	"NEO-GEO"
 	.byte	_CDDA_FLAG
 	.word	_NGH
@@ -87,10 +86,17 @@ _IRQ7	=	0x00c00426
 	.long	NAconfig
 	.long	EUconfig
 	
-	jmp	_ENTRY_USER
-	jmp	_ENTRY_PLAYER_START
-	jmp	_ENTRY_DEMO_END
-	jmp	_ENTRY_COIN_SOUND
+	jmp		_ENTRY_USER
+	jmp		_ENTRY_PLAYER_START
+	jmp		_ENTRY_DEMO_END
+	jmp		_ENTRY_COIN_SOUND
+
+	.word	0xffff
+	.long	0xffffffff
+	.long	0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff
+	.long	0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff
+	.long	0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff
+	.long	0xffffffff, 0xffffffff, 0xffffffff, 0xffffffff
 
 |;* Standard IRQ1 handler
 _irq1_handler:
@@ -116,14 +122,17 @@ _start:
 	|;* Reset watchdog
 	move.b	d0, 0x300001
 	
-	|;* Flush interrupts
-	move.b	#7, 0x3C000C
-	
-	move.l #0, TInextTable
+	moveq	#0, d0
+	move.l	d0, TInextTable
+	move.l	d0, VBL_callBack
+	move.l	d0, VBL_skipCallBack
 	
 	|;* Enable manual reset (A+B+C+START or SELECT)
 	bclr	#7, 0x10FD80
-	
+
+	|;* Flush interrupts
+	move.b	#7, 0x3C000C
+
 	|;* Enable interrupts
 	move.w	#0x2000, sr
 	
@@ -145,7 +154,6 @@ _start:
 	clr.l	-(a7)
 	pea		__bss_start
 	jbsr	memset	
-
 	
 	|;hotfix
 	move.b #0x80, 0x10fd80

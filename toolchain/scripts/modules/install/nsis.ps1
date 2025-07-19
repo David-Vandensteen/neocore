@@ -1,6 +1,6 @@
 function Install-NSIS {
-  $installPath = $(Resolve-Path -Path $Config.project.buildPath)
-  $downloadPath = $(Resolve-Path -Path "$($Config.project.buildPath)\spool")
+  $installPath = $(Resolve-TemplatePath -Path $Config.project.buildPath)
+  $downloadPath = $(Resolve-TemplatePath -Path "$($Config.project.buildPath)\spool")
 
   if ($Manifest.manifest.dependencies.nsis.url) {
     Install-Component `

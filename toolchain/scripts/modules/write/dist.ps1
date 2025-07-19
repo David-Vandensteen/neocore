@@ -35,7 +35,7 @@ function Write-Dist {
     }
   }
   if ($CHDFile) {
-    if ((Test-Path -Path "$PathDestination\mame\$CHDFile.chd") -eq $false) {
+    if ((Test-Path -Path "$PathDestination\mame\$ProjectName.chd") -eq $false) {
       New-Item -Path "$PathDestination\mame" -ItemType Directory -Force
     } else {
       Write-Host "$PathDestination\mame\$ProjectName.chd already exist" -ForegroundColor Red

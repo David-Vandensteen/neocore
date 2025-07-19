@@ -1,10 +1,11 @@
 function MakDistISO {
-  $ISOFile = "$($Config.project.buildPath)\$($Config.project.name)\$($Config.project.name).iso"
-  $CUEFile = "$($Config.project.buildPath)\$($Config.project.name)\$($Config.project.name).cue"
-  $pathDestination = "$($Config.project.distPath)\$($Config.project.name)\$($Config.project.name)-$($Config.project.version)"
+  Write-Host "Mak dist iso" -ForegroundColor Cyan
+  $projectBuildPath = Get-TemplatePath -Path $Config.project.buildPath
+  $projectDistPath = Get-TemplatePath -Path $Config.project.distPath
+  $ISOFile = "$projectBuildPath\$($Config.project.name)\$($Config.project.name).iso"
+  $CUEFile = "$projectBuildPath\$($Config.project.name)\$($Config.project.name).cue"
+  $pathDestination = "$projectDistPath\$($Config.project.name)\$($Config.project.name)-$($Config.project.version)"
   if ((Test-Path -Path $Config.project.distPath) -eq $false) { New-Item -Path $Config.project.distPath -ItemType Directory -Force }
-  Build-Sprite
-  Build-Program
   Build-ISO
   Write-Dist `
     -ProjectName $Config.project.name `

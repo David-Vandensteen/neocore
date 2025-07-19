@@ -3,18 +3,19 @@ function Build-EXE {
   Write-Host "cleaning chd files in Mame to prepare standalone exe building " -ForegroundColor Yellow
   Write-Host ""
 
-  $mameExeFile = $Config.project.emulator.mame.exeFile
-  $mamePath = Resolve-Path -Path $(Convert-Path -Path $mameExeFile)
+  $mameExeFile = Resolve-TemplatePath -Path $Config.project.emulator.mame.exeFile
+  $mamePath = Resolve-TemplatePath -Path $(Convert-Path -Path $mameExeFile)
   $mameRomPath = Join-Path -Path (Split-Path -Path $mamePath -Parent) -ChildPath "roms\neocdz"
   $excludeChdFile = "$($Config.project.name).chd"
   $chdFiles = Get-ChildItem -Path $mameRomPath -Filter *.chd
 
   $packageName = $Config.project.name
-  $distPath = $Config.project.distPath
+  $distPath = Get-TemplatePath -Path $Config.project.distPath
   $version = $Config.project.version
 
-  $NSIFile = "$($Config.project.buildPath)\$packageName\$packageName.nsi"
-  $makeNSISexe = "$($Config.project.buildPath)\tools\nsis-3.08\makensis.exe"
+  $projectBuildPath = Get-TemplatePath -Path $Config.project.buildPath
+  $NSIFile = "$projectBuildPath\$packageName\$packageName.nsi"
+  $makeNSISexe = "$projectBuildPath\tools\nsis-3.08\makensis.exe"
 
   Assert-BuildEXE
 
