@@ -1,6 +1,7 @@
 function MakCleanBuild {
-  if (-Not(Test-Path -Path $Config.project.buildPath)) {
-    Write-Host "Build folder $($Config.project.buildPath) not found" -ForegroundColor Yellow
+  $projectBuildPath = Resolve-TemplatePath -Path $Config.project.buildPath
+  if (-Not(Test-Path -Path $projectBuildPath)) {
+    Write-Host "Build folder $projectBuildPath not found" -ForegroundColor Red
     exit 1
   }
   $buildPath = Resolve-TemplatePath -Path $Config.project.buildPath
