@@ -3,6 +3,9 @@
   <name>DATdemo</name>
   <version>1.0.0</version>
   <makefile>..\Makefile</makefile>
+  <neocorePath>..\..</neocorePath>
+  <buildPath>{{neocore}}\build</buildPath>
+  <distPath>{{neocore}}\dist</distPath>
   <gfx>
     <DAT>
       <chardata>
@@ -17,9 +20,9 @@
         <scrl id="streamScroll" colorStream="horizontal">
           <file>gfx\streamTest.png</file>
         </scrl>
-        <!-- <scrl id="SNKLogoStrip" colorStream="vertical">
+        <scrl id="SNKLogoStrip" colorStream="vertical">
           <file>gfx\SNK_logoStrip.png</file>
-        </scrl> -->
+        </scrl>
         <scrl id="ffbg_a">
           <file>gfx\ffbg_a.png</file>
         </scrl>
@@ -93,7 +96,7 @@
             <incfile>out\fixData.h</incfile>
           </setup>
           <import bank="0">
-            <file>gfx\fix\systemFont.bin</file>
+            <file>{{build}}\fix\systemFont.bin</file>
           </import>
           <fix bank="3" id="fix_sfz3font0">
             <file>gfx\fix\font0.png</file>
@@ -136,15 +139,12 @@
       </profile>
     </mame>
   </emulator>
-  <neocorePath>..\..\</neocorePath>w
-  <buildPath>..\..\build</buildPath>
-  <distPath>..\..\dist</distPath>
   <compiler>
     <name>gcc</name>
     <version>2.95.2</version>
     <path>{{build}}\gcc\gcc-2.95.2</path>
-    <includePath>..\..\src-lib\include</includePath>
+    <includePath>{{neocore}}\src-lib\include</includePath>
     <libraryPath>{{build}}\lib</libraryPath>
-    <systemFile>..\..\src-lib\system\neocd.x</systemFile>
+    <systemFile>{{neocore}}\src-lib\system\neocd.x</systemFile>
   </compiler>
 </project>

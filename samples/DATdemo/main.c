@@ -39,7 +39,7 @@ static const ushort fixPalettes[]= {
 	0x8000, 0xbad3, 0x0111, 0x09c0, 0xe7b0, 0xc580, 0xe250, 0x8000, 0x8000, 0x8000, 0x8000, 0x8000, 0x8000, 0x8000, 0x8000, 0x8000,
 	0x8000, 0xefb8, 0x0111, 0xde96, 0x3c75, 0x2950, 0x4720, 0x8000, 0x8000, 0x8000, 0x8000, 0x8000, 0x8000, 0x8000, 0x8000, 0x8000,
 	0x8000, 0x8444, 0x0111, 0xf555, 0xf666, 0x7777, 0x8888, 0x8000, 0x8000, 0x8000, 0x8000, 0x8000, 0x8000, 0x8000, 0x8000, 0x8000 };
-	
+
 #define CLIPPING 5
 
 void scrollerInitClipped(scroller *s, scrollerInfo *si, ushort baseSprite, ushort basePalette, short posX, short posY, ushort clipping) {
@@ -58,7 +58,7 @@ void scrollerSetPosClipped(scroller *s, short toX, short toY, ushort clipping) {
 
 	if(s->scrlPosY!=toY) {	//Y moved ?
 		scrollerSetPos(s,toX,toY);
-		
+
 		addr=VRAM_POSY_ADDR(s->baseSprite);
 		//pos=((YSHIFT-(0-toY))<<7)|(clipping&0x3f);
 		pos=VRAM_POSY(-toY,SPR_UNLINK,clipping);
@@ -105,7 +105,7 @@ void scrollerDemo() {
 
 		p1=volMEMBYTE(P1_CURRENT);
 		ps=volMEMBYTE(PS_EDGE);
-		
+
 		if(ps&P1_START) {
 			clearSprites(1, 42+ffbg_c.tileWidth);
 			SCClose();
@@ -130,7 +130,7 @@ void scrollerDemo() {
 
 		backX=(((x-8)*141)/299)+BACK_MIN_X;
 		backY=(((y-16)*3)/8)+BACK_MIN_Y;
-		
+
 		jobMeterColor(JOB_BLUE);
 		scrollerSetPos(&frontScroll, x, y);
 		//scrollerSetPosClipped(&frontScroll, x, y, CLIPPING);
@@ -144,7 +144,7 @@ void sortSprites(aSprite *list[], int count) {
 	//insertion sort
 	int x,y;
 	aSprite *tmp;
-	
+
 	for(x=1;x<count;x++) {
 		y=x;
 		while(y>0 && (list[y]->posY < list[y-1]->posY)) {
@@ -279,7 +279,7 @@ void aSpriteDemo() {
 
 		while((volMEMWORD(0x3c0006)>>7)!=0x120); //wait raster line 16
 		jobMeterColor(JOB_BLUE);
-		
+
 		if(p1&JOY_A) {
 			if(p1e&JOY_DOWN)	flipMode|=FLIP_Y;
 			if(p1e&JOY_UP)		flipMode&=~FLIP_Y;
@@ -291,11 +291,11 @@ void aSpriteDemo() {
 			if(p1&JOY_DOWN)	y++;
 			if(p1&JOY_LEFT)	x--;
 			if(p1&JOY_RIGHT)x++;
-			
+
 			if(p1e&JOY_B)	aSpriteSetAnim(&demoSpr,anim^=1);
 			if(p1e&JOY_C)	{demoSpr.flags^=AS_FLAG_STRICT_COORDS;demoSpr.flags|=AS_FLAG_FLIPPED;}
 			//if(p1e&JOY_D)	aSpriteSetAnim(&demoSpr,2);
-			
+
 			if(p1e&JOY_D) {
 				if(showdebug) {
 					//move debug stuff offscreen
@@ -312,7 +312,7 @@ void aSpriteDemo() {
 				showdebug^=1;
 			}
 		}
-	
+
 		//	if(p2&JOY_A) aSpriteSetStep(&demoSpr, 3);
 		//	if(p2&JOY_B) aSpriteSetStep2(&demoSpr, 3);
 		//	if(p2&JOY_C) aSpriteSetAnimStep(&demoSpr, 0, 3);
@@ -343,7 +343,7 @@ void aSpriteDemo() {
 		//	spritePoolDrawList2(&testPool,testPool.way==WAY_UP?(void*)&drawTable[1]:(void*)drawTablePtr);
 		//else spritePoolDrawList(&testPool,testPool.way==WAY_UP?(void*)&drawTable[1]:(void*)drawTablePtr);
 		spritePoolDrawList(&testPool,testPool.way==WAY_UP?(void*)&drawTable[1]:(void*)drawTablePtr);
-		
+
 		#else
 		aSpriteAnimate(&demoSpr);
 		aSpriteAnimate(&demoSpr2);
@@ -372,7 +372,7 @@ void aSpriteDemo() {
 			SC234Put(VRAM_POSY_ADDR(203),VRAM_POSY(relY+((demoSpr.currentFrame->tileHeight-1)<<4),SPR_UNLINK,1));
 			SC234Put(VRAM_POSX_ADDR(204),VRAM_POSX(relX+((demoSpr.currentFrame->tileWidth-1)<<4)));
 			SC234Put(VRAM_POSY_ADDR(204),VRAM_POSY(relY+((demoSpr.currentFrame->tileHeight-1)<<4),SPR_UNLINK,1));
-			
+
 			//debug live update prints = 1 frame ahead. meh.
 			jobMeterColor(JOB_GREY);
 			fixPrintf1(3,25,2,3,"Anim data: A:%02d S:%02d R:%02d   ",demoSpr.currentAnim,demoSpr.stepNum,demoSpr.repeats);
@@ -440,7 +440,7 @@ void pictureDemo() {
 	fixPrint(2,3,4,3,"1P \x12\x13\x10\x11: move picture");
 	fixPrint(2,4,4,3,"1P A+\x12\x13\x10\x11: flip mode");
 	fixPrint(2,5,4,3,"1P B: toggle rasters");
-	
+
 	while(1) {
 		SCClose();
 		waitVBlank();
@@ -448,7 +448,7 @@ void pictureDemo() {
 		ps=volMEMBYTE(PS_CURRENT);
 		p1=volMEMBYTE(P1_CURRENT);
 		p1e=volMEMBYTE(P1_EDGE);
-		
+
 		if(ps&P1_START) {
 			clearSprites(1, terrypict.tileWidth);
 			clearSprites(64, gradient.tileWidth);
@@ -474,7 +474,7 @@ void pictureDemo() {
 			if(p1&JOY_RIGHT)	x++;
 		}
 		if(p1e&JOY_B)	raster^=1;
-		
+
 		pictureSetFlip(&testPict,flipMode);
 		pictureSetPos(&testPict, x, y);
 
@@ -565,11 +565,11 @@ void rasterScrollDemo() {
 	backgroundColor(0x38db);
 	fixPrint(0,1,0,0,"                                       ");
 	fixPrint(0,30,0,0,"                                       ");
-	
+
 	fixPrint(2,3,4,3,"1P \x12\x13: Scroll Up/Down");
 	fixPrint(2,4,4,3,"1P A+\x12\x13: Adjust timer (line)");
 	fixPrint(2,5,4,3,"1P A+\x10\x11: Adjust timer (unit)");
-	
+
 	zeroval=TI_ZERO;
 
 	while(1) {
@@ -578,7 +578,7 @@ void rasterScrollDemo() {
 
 		while((volMEMWORD(0x3c0006)>>7)!=0x120); //line 16
 		jobMeterColor(JOB_BLUE);
-		
+
 		p1=volMEMBYTE(P1_CURRENT);
 		p1e=volMEMBYTE(P1_EDGE);
 		ps=volMEMBYTE(PS_CURRENT);
@@ -593,7 +593,7 @@ void rasterScrollDemo() {
 		}
 
 		fixPrintf2(2,7,5,3,"TIbase: %d (0x%04x)   ",zeroval,zeroval);
-		
+
 		if(p1&JOY_A) {
 			if(p1e&JOY_UP)		zeroval-=384;
 			if(p1e&JOY_DOWN)	zeroval+=384;
@@ -686,27 +686,27 @@ void desertRaster(void) {
 	picture desertHandler;
 	ushort rasterData0[64];
 	ushort rasterData1[64];
-	
+
 	clearFixLayer();
 	backgroundColor(0x6bef);
-	
+
 	pictureInit(&desertHandler, &desert,1, 16, 8, DESERT_POSY,FLIP_NONE);
 	palJobPut(16,desert.palInfo->count,desert.palInfo->data);
-	
+
 	LSPCmode=0x0000;
 	TIbase=TI_ZERO+DESERT_POSY*384; //timing to first line
 	TIreload=384*4; //4 lines intervals
 	rasterAddr=VRAM_POSY_ADDR(desertHandler.baseSprite);
 
 	loadTIirq(TI_MODE_SINGLE_DATA);
-	
+
 	while(1) {
 		fc=DAT_frameCounter;
 		SCClose();
 		waitVBlank();
-		
+
 		ps=volMEMBYTE(PS_EDGE);
-		
+
 		if(ps&P1_START) {
 			clearSprites(1,desert.tileWidth);
 			TInextTable=0;
@@ -750,7 +750,7 @@ void tempTests() {
 
 	scrollerInit(&scroll, &wohd, 1, 16, x, y);
 	palJobPut(16, wohd.palInfo->count, wohd.palInfo->data);
-	
+
 	//fixPrintf1(2,3,4,3,"0x%06x",&scroll);
 	//dbg init
 	scroll.config[23+4]=scroll.config[23+5]=scroll.config[23+6]=scroll.config[23+7]=scroll.config[23+8]=0;
@@ -762,7 +762,7 @@ void tempTests() {
 		p1=volMEMBYTE(P1_CURRENT);
 		p1e=volMEMBYTE(P1_EDGE);
 		ps=volMEMBYTE(PS_CURRENT);
-		
+
 		if((ps&P1_START)&&(ps&P2_START)) {
 			clearSprites(1, 21);
 			SCClose();
@@ -846,7 +846,7 @@ static const ushort	logo_98[78]={	0x0660,0x0661,0x0662,0x0663,0x0664,0x0665,0x06
 									0x0690,0x0691,0x0692,0x0693,0x0694,0x0695,0x0696,0x0697,0x0698,0x0699,0x069a,0x069b,0x0000,
 									0x06a0,0x06a1,0x06a2,0x06a3,0x06a4,0x06a5,0x06a6,0x06a7,0x06a8,0x06a9,0x06aa,0x06ab,0x0000,
 									0x06b0,0x06b1,0x06b2,0x06b3,0x06b4,0x06b5,0x06b6,0x06b7,0x06b8,0x06b9,0x06ba,0x06bb,0x0000 };
-									
+
 #define	MAX_HEALTH	192
 #define	MAX_POWER	64
 /*		/!\ Junk code to demo fix display. /!\				*
@@ -855,7 +855,7 @@ static const ushort	logo_98[78]={	0x0660,0x0661,0x0662,0x0663,0x0664,0x0665,0x06
 void fixDemo() {
 	ushort	a,b,c,d;
 	short	i;
-	
+
 	uint	fc, ticks=0;
 	ushort	power=0, logo=4;
 	short	time=99, health=MAX_HEALTH, fadeIndex=-1,fadeType=1;
@@ -864,7 +864,7 @@ void fixDemo() {
 	ushort	healthTopString[20], healthBotString[20], counterString[20];
 
 	uchar	fadeDensity[40];
-	
+
 	clearFixLayer();
 	jobMeterSetup(true);
 
@@ -878,7 +878,7 @@ void fixDemo() {
 
 		while((volMEMWORD(0x3c0006)>>7)!=0x120); //wait raster line 16
 		jobMeterColor(JOB_BLUE);
-		
+
 		ps=volMEMBYTE(PS_EDGE);
 		if(ps&P1_START) {
 			SCClose();
@@ -952,13 +952,13 @@ void fixDemo() {
 				if(i==38) {fadeType^=1;fadeIndex=-1;}
 			}
 		}
-		
+
 		//display logo
 		a=(DAT_frameCounter>>6)&0x3;
 		if(a!=logo) {
 			ushort *data;
 			logo=a;
-			
+
 			switch(logo) {
 				case 0:
 					data=(ushort*)&logo_95;
@@ -995,16 +995,16 @@ void colorStreamDemoA() {
 	short posY=0;
 	uint *plj;
 	ushort lastJobs=0,jobs=0;
-	
+
 	clearFixLayer();
 	scrollerInit(&sc,&streamScroll,1,16,0,0);
 	colorStreamInit(&stream,&streamScroll_colorStream,16,COLORSTREAM_STARTCONFIG);
-	
+
 	fixPrint(2,3,4,3,"1P \x10\x11: scroll");
 
 	while(1) {
 		SCClose();
-		
+
 		//check palJobs load
 		if(jobs!=0)	lastJobs=jobs;
 		jobs=0;
@@ -1020,14 +1020,14 @@ void colorStreamDemoA() {
 		p1=volMEMBYTE(P1_CURRENT);
 		ps=volMEMBYTE(PS_CURRENT);
 		p1e=volMEMBYTE(P1_EDGE);
-		
+
 		if(ps&P1_START) {
 			clearSprites(1,21);
 			SCClose();
 			waitVBlank();
 			return;
 		}
-		
+
 		if(p1&JOY_B) {
 			if(p1e&JOY_LEFT)	posX-=64;
 			if(p1e&JOY_RIGHT)	posX+=64;
@@ -1037,9 +1037,9 @@ void colorStreamDemoA() {
 		}
 		if(posX<0) posX=0;
 		if(posX>(streamScroll.mapWidth-20)<<4) posX=(streamScroll.mapWidth-20)<<4;
-		
+
 		//fixPrintf1(0,1,3,3,"%d    ",posX);
-		
+
 		scrollerSetPos(&sc,posX,posY);
 		colorStreamSetPos(&stream,posX);
 	}
@@ -1053,17 +1053,17 @@ void colorStreamDemoB() {
 	uint *plj;
 	ushort lastJobs=0,jobs=0;
 
-	
+
 	clearFixLayer();
 	scrollerInit(&sc,&SNKLogoStrip,1,16,0,0);
 	colorStreamInit(&stream,&SNKLogoStrip_colorStream,16,COLORSTREAM_STARTCONFIG);
 
 	fixPrint(2,3,4,3,"1P \x12\x13: scroll");
 	fixPrint(2,29,6,3,"(Sequence formatted by MegaShocked)");
-	
+
 	while(1) {
 		SCClose();
-		
+
 		//check palJobs load
 		if(jobs!=0)	lastJobs=jobs;
 		jobs=0;
@@ -1079,14 +1079,14 @@ void colorStreamDemoB() {
 		p1=volMEMBYTE(P1_CURRENT);
 		ps=volMEMBYTE(PS_CURRENT);
 		p1e=volMEMBYTE(P1_EDGE);
-		
+
 		if(ps&P1_START) {
 			clearSprites(1,21);
 			SCClose();
 			waitVBlank();
 			return;
 		}
-		
+
 		if(p1&JOY_B) {
 			if(p1e&JOY_UP)	posY-=224;
 			if(p1e&JOY_DOWN)posY+=224;
@@ -1096,16 +1096,16 @@ void colorStreamDemoB() {
 		}
 		if(posY<0) posY=0;
 		if(posY>(SNKLogoStrip.mapHeight-14)<<4) posY=(SNKLogoStrip.mapHeight-14)<<4;
-		
+
 		//fixPrintf1(0,1,3,3,"%d    ",posY);
-		
+
 		scrollerSetPos(&sc,posX,posY);
 		colorStreamSetPos(&stream,posY);
 	}
 }
 
 void testCallBack() {
-	if(volMEMBYTE(P1_EDGE)&JOY_A) 
+	if(volMEMBYTE(P1_EDGE)&JOY_A)
 		callBackCounter++;
 }
 
@@ -1115,7 +1115,7 @@ static const uint demos[]={(uint)pictureDemo,(uint)scrollerDemo,(uint)aSpriteDem
 int main(void) {
 	ushort cursor=0;
 	void (*demo)();
-	
+
 	clearFixLayer();
 	initGfx();
 
@@ -1126,14 +1126,14 @@ int main(void) {
 	//else fixPrint(2,4,7,3,"no 4P :(");
 
 	backgroundColor(0x7bbb);
-	
+
 	//using VBL callbacks to count global A button presses
 	callBackCounter=0;
 	VBL_callBack=testCallBack;
 	VBL_skipCallBack=testCallBack;
-	
+
 	fixPrintf1(0,2,1,3,"RAM usage: 0x%04x (%d)",((uint)&_end)-0x100000,((uint)&_end)-0x100000);
-	
+
 	while(1) {
 		SCClose();
 		waitVBlank();
@@ -1149,7 +1149,7 @@ int main(void) {
 			clearFixLayer();
 			volMEMWORD(0x401ffe)=0x7bbb; //restore BG color
 		}
-		
+
 		//if(p1&JOY_B) {
 		//	tempTests();
 		//	clearFixLayer();
