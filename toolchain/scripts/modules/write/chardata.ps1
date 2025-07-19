@@ -37,8 +37,8 @@ function Write-ChardataXML {
   $charDataNode = $xmlDoc.SelectSingleNode("//chardata")
 
   $xmlContent = $charDataNode.OuterXml
-  $xmlContent = $xmlContent.Replace("{{build}}", $(Resolve-TemplatePath -Path $Config.project.buildPath))
-  $xmlContent = $xmlContent.Replace("{{neocore}}", $(Resolve-TemplatePath -Path $Config.project.neocorePath))
+  $xmlContent = $xmlContent.Replace("{{build}}", $(Get-TemplatePath -Path $Config.project.buildPath))
+  $xmlContent = $xmlContent.Replace("{{neocore}}", $(Get-TemplatePath -Path $Config.project.neocorePath))
 
   $newXmlDoc = New-Object System.Xml.XmlDocument
   $newXmlDoc.LoadXml($xmlContent)
