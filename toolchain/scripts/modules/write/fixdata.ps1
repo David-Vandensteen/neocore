@@ -14,6 +14,7 @@ function Write-FixdataXML {
   $newNode = $newXmlDoc.ImportNode($fixDataNode, $true)
   $newXmlDoc.AppendChild($newNode)
 
+  Write-Host "Saving fix data to $OutputFile" -ForegroundColor Cyan
   $newXmlDoc.Save($OutputFile)
 }
 
@@ -21,7 +22,8 @@ function Write-Fix {
   param (
     [Parameter(Mandatory=$true)][String] $XMLFile
   )
-  $buildPathProject = "$($Config.project.buildPath)\$($Config.project.name)"
+  $projectBuildPath = Get-TemplatePath -Path $Config.project.buildPath
+  $buildPathProject = "$projectBuildPath\$($Config.project.name)"
   Write-Host "Compiling fix data" -ForegroundColor Yellow
   if ((Test-Path -Path $XMLFile) -eq $false) {
     Write-Host "$XMLFile not found" -ForegroundColor Red

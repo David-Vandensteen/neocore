@@ -50,21 +50,42 @@ function Invoke-Raine {
   }
   Assert-RaineConfig
   Update-RaineConfigSwitch
+
   Write-Host "Launching raine $FileName" -ForegroundColor Yellow
-  $pathRaineAbs = (Resolve-Path -Path $PathRaine).Path
-  Push-Location -Path $PathISO
-  & "$pathRaineAbs\$ExeName" $FileName
-  Pop-Location
+  $pathRaineAbs = Resolve-TemplatePath -Path $PathRaine
+  $fullExePath = "$pathRaineAbs\$ExeName"
+  $fullCuePath = "$PathISO\$FileName"
+
+  Write-Host "Raine path: $pathRaineAbs" -ForegroundColor Cyan
+  Write-Host "Exe name: $ExeName" -ForegroundColor Cyan
+  Write-Host "ISO path: $PathISO" -ForegroundColor Cyan
+  Write-Host "CUE file: $fullCuePath" -ForegroundColor Cyan
+  Write-Host "Full exe path: $fullExePath" -ForegroundColor Cyan
+
+  if (-Not(Test-Path -Path $fullExePath)) {
+    Write-Host "Error: Raine executable not found at $fullExePath" -ForegroundColor Red
+    exit 1
+  }
+
+  if (-Not(Test-Path -Path $fullCuePath)) {
+    Write-Host "Error: CUE file not found at $fullCuePath" -ForegroundColor Red
+    exit 1
+  }
+
+  Write-Host "Starting Raine with command: `"$fullExePath`" `"$fullCuePath`"" -ForegroundColor Green
+  Start-Process -FilePath $fullExePath -ArgumentList $fullCuePath -Wait
 }
 
 function Start-Raine {
+  Write-Host "Start Raine" -ForegroundColor Cyan
   $exeName = [System.IO.Path]::GetFileName($Config.project.emulator.raine.exeFile)
   $rainePath = Split-Path $Config.project.emulator.raine.exeFile
   $rainePath = Get-TemplatePath -Path $rainePath
+  $pathISO = Get-TemplatePath -Path "$($Config.project.buildPath)\$($Config.project.name)"
 
   Invoke-Raine `
     -FileName "$($Config.project.name).cue" `
     -PathRaine $rainePath `
-    -PathISO "$($Config.project.buildPath)\$($Config.project.name)" `
+    -PathISO $pathISO `
     -ExeName $exeName
 }

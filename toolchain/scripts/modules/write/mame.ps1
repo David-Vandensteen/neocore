@@ -79,7 +79,7 @@ function Write-Mame {
     Write-Host "Builded CHD $OutputFile" -ForegroundColor Green
     Write-Host ""
   }
-  Write-MameHash -ProjectName $ProjectName -CHDFile $OutputFile -XMLFile "$(Resolve-Path -Path $PathMame)\hash\neocd.xml"
+  Write-MameHash -ProjectName $ProjectName -CHDFile $OutputFile -XMLFile "$(Resolve-TemplatePath -Path $PathMame)\hash\neocd.xml"
 }
 
 # TODO : remove at v3

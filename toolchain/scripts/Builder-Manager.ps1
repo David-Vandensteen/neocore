@@ -2,6 +2,11 @@
 # David Vandensteen
 # MIT
 
+# TODO : externalize folders creation
+# TODO : inxrease clean rule priority
+# TODO : mak clean:build template path support
+# TODO : externalize systemFont
+
 param (
   [Parameter(Mandatory=$true)][String] $ConfigFile,
   [String] $Rule = "default"
@@ -13,6 +18,8 @@ function Main {
     [Parameter(Mandatory=$true)][String] $BaseURL,
     [Parameter(Mandatory=$true)][xml] $Config
   )
+
+  Write-Host "Builder Manager" -ForegroundColor Cyan
 
   Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\import\neocore\modules.ps1"
 
@@ -26,7 +33,9 @@ function Main {
   Write-Host "--------------------------------------------"
   Write-Host ""
 
-  [xml]$Manifest = (Get-Content -Path "$($Config.project.neocorePath)\manifest.xml")
+  $manifestPath = $(Resolve-TemplatePath -Path "$($Config.project.neocorePath)\manifest.xml")
+  Write-Host "Getting manifest from $manifestPath" -ForegroundColor Cyan
+  [xml]$Manifest = (Get-Content -Path $manifestPath)
 
   if (Test-Path -Path "$($Config.project.buildPath)\manifest.xml") {
     Assert-Manifest `
@@ -39,11 +48,14 @@ function Main {
 
   if ($Rule -eq "clean:build") { MakCleanBuild}
 
-  if ((Test-Path -Path "$($Config.project.buildPath)\spool") -eq $false) {
-    New-Item -Path "$($Config.project.buildPath)\spool" -ItemType Directory -Force
+  $spoolPath = Get-TemplatePath -Path "$($Config.project.buildPath)\spool"
+  if ((Test-Path -Path $spoolPath) -eq $false) {
+    New-Item -Path $spoolPath -ItemType Directory -Force
   }
 
-  Start-Transcript -Path "$($Config.project.buildPath)\mak.log" -Force
+  $makLogPath = Get-TemplatePath -Path "$($Config.project.buildPath)\mak.log"
+  Write-Host "Starting transcript log in $makLogPath" -ForegroundColor Cyan
+  Start-Transcript -Path $makLogPath -Force
 
   $gccPath = "..\..\build\gcc\gcc-2.95.2"
   Write-Host $gccPath
@@ -53,22 +65,20 @@ function Main {
   Set-EnvPath -GCCPath $gccPath -Bin "$($Config.project.buildPath)\bin"
   $env:NEODEV = "$($Config.project.buildPath)\neodev-sdk"
 
-  if ((Test-Path -Path "$($Config.project.buildPath)\neodev-sdk\m68k\bin") -eq $false) { Install-SDK }
-  if ((Test-Path -Path "$($Config.project.buildPath)\bin") -eq $false) { Install-SDK }
-  if ((Test-Path -Path "$($Config.project.buildPath)\neodev-sdk") -eq $false) { Install-SDK }
+  $projectBuildPath = Get-TemplatePath -Path $Config.project.buildPath
+  if ((Test-Path -Path "$projectBuildPath\bin") -eq $false) { Install-SDK }
+  if ((Test-Path -Path "$projectBuildPath\neodev-sdk") -eq $false) { Install-SDK }
 
-
-  if ((Test-Path -Path "$($Config.project.buildPath)\$($Config.project.name)") -eq $false) {
-    New-Item -Path "$($Config.project.buildPath)\$($Config.project.name)" -ItemType Directory -Force
+  $projectBuildPath = Get-TemplatePath -Path $Config.project.buildPath
+  if ((Test-Path -Path "$projectBuildPath\$($Config.project.name)") -eq $false) {
+    New-Item -Path "$projectBuildPath\$($Config.project.name)" -ItemType Directory -Force
   }
 
   if ($Rule -eq "clean") { MakClean }
-
   if ($Rule -eq "animator") { Start-Animator }
   if ($Rule -eq "framer") { Start-Framer }
   if ($Rule -eq "lib") { Build-NeocoreLib }
   if ($Rule -eq "sprite") { Build-Sprite }
-
   if (($Rule -eq "make") -or ($Rule -eq "") -or (!$Rule) -or ($Rule -eq "default") ) {
     MakDefault
   }
@@ -87,23 +97,18 @@ function Main {
   if ($Rule -eq "serve:mame" -or $Rule -eq "serve") {
     MakServeMame
   }
-
   if ($Rule -eq "dist:iso" -or $Rule -eq "dist:raine") {
     MakDistISO
   }
-
   if ($Rule -eq "dist:mame" -or $Rule -eq "dist:chd") {
     MakDistMame
   }
-
   if ($Rule -eq "dist:exe") {
     MakDistExe
   }
-
   if ($Rule -eq "--version") {
     Show-Version
   }
-
   if ($Rule -eq "only:sprite") { Build-Sprite }
   if ($Rule -eq "only:program") { Build-Program }
   if ($Rule -eq "only:iso") { Build-ISO }

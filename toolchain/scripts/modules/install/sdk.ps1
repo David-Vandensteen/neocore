@@ -4,7 +4,8 @@ function Install-GCC {
     [Parameter(Mandatory=$true)][String] $Destination
   )
 
-  $downloadPath = $(Resolve-Path -Path "$($Config.project.buildPath)\spool")
+  $projectBuildPath = Get-TemplatePath -Path $Config.project.buildPath
+  $downloadPath = $(Resolve-TemplatePath -Path "$projectBuildPath\spool")
   if (-not $(Test-Path -Path $Destination)) {
     New-Item -Path $Destination -ItemType Directory -Force
     Install-Component -URL $URL -PathDownload $downloadPath -PathInstall $Destination
@@ -12,8 +13,8 @@ function Install-GCC {
 }
 
 function Install-SDK {
-  $installPath = $(Resolve-Path -Path $Config.project.buildPath)
-  $downloadPath = $(Resolve-Path -Path "$($Config.project.buildPath)\spool")
+  $installPath = $(Resolve-TemplatePath -Path $Config.project.buildPath)
+  $downloadPath = $(Resolve-TemplatePath -Path "$($Config.project.buildPath)\spool")
   $buildConfig
 
   if ($Manifest.manifest.dependencies) { # TODO : make it mandatory in neocore v3
@@ -105,7 +106,13 @@ function Install-SDK {
   }
 
   Build-NeocoreLib
-  $manifestFile = "$($Config.project.neocorePath)\manifest.xml"
+  $projectNeocorePath = Resolve-TemplatePath -Path $Config.project.neocorePath
+  $manifestFile = "$projectNeocorePath\manifest.xml"
+
+  Write-Host "Copying $manifestFile to $installPath" -ForegroundColor Cyan
   Copy-Item -Path $manifestFile $installPath -Force -ErrorAction Stop
-  Copy-Item -Path "$($Config.project.neocorePath)\manifest.xml" $Config.project.buildPath -Force -ErrorAction Stop
+
+  # TODO : refactor this
+  # Write-Host "Copying $manifestFile to $projectBuildPath" -ForegroundColor Cyan
+  # Copy-Item -Path "$($Config.project.neocorePath)\manifest.xml" $Config.project.buildPath -Force -ErrorAction Stop
 }

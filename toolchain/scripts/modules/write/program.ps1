@@ -7,6 +7,7 @@ function Write-Program {
     [Parameter(Mandatory=$true)][String] $ProjectName,
     [Parameter(Mandatory=$true)][String] $BinPath
   )
+  Write-Host "Write Program" -ForegroundColor Cyan
   Write-Host "Asserting program requierments before compiling" -ForegroundColor Yellow
   Assert-Program
 
@@ -31,7 +32,7 @@ function Write-Program {
 
   $Config.project.compiler
 
-  $env:PROJECT_PATH = $(Resolve-Path -Path .)
+  $env:PROJECT_PATH = $(Resolve-TemplatePath -Path .)
   $env:INCLUDE_PATH = $includePath
   $env:LIBRARY_PATH = $libraryPath
   $env:NEO_GEO_SYSTEM = $systemFile

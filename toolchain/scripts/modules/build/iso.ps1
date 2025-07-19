@@ -1,11 +1,13 @@
 function Build-ISO {
-  $prgFile = "$($Config.project.buildPath)\$($Config.project.name)\$($Config.project.name).prg"
-  $spriteFile = "$($Config.project.buildPath)\$($Config.project.name)\$($Config.project.name).cd"
-  $pathISOBuildFolder = "$($Config.project.buildPath)\$($Config.project.name)\iso"
-  $pathCDTemplate = "$($Config.project.buildPath)\cd_template"
-  $outputISOFile = "$($Config.project.buildPath)\$($Config.project.name)\$($Config.project.name).iso"
-  $outputCUEFile = "$($Config.project.buildPath)\$($Config.project.name)\$($Config.project.name).cue"
+  $projectBuildPath = Resolve-TemplatePath -Path $Config.project.buildPath
+  $prgFile = "$projectBuildPath\$($Config.project.name)\$($Config.project.name).prg"
+  $spriteFile = "$projectBuildPath\$($Config.project.name)\$($Config.project.name).cd"
+  $pathISOBuildFolder = "$projectBuildPath\$($Config.project.name)\iso"
+  $pathCDTemplate = "$projectBuildPath\cd_template"
+  $outputISOFile = "$projectBuildPath\$($Config.project.name)\$($Config.project.name).iso"
+  $outputCUEFile = "$projectBuildPath\$($Config.project.name)\$($Config.project.name).cue"
 
+  Write-Host "Build ISO" -ForegroundColor Cyan
   Assert-BuildISO
 
   Write-Cache `

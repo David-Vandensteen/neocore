@@ -36,12 +36,12 @@ function Write-NSI {
   }
 
   $NSITemplateFile = "$neocorePath\toolchain\nsi\template.nsi"
-  $outPath = Resolve-Path -Path "$buildPath\$packageName"
+  $outPath = Resolve-TemplatePath -Path "$buildPath\$packageName"
   $NSIFile = "$outPath\$packageName.nsi"
-  $outFile = "$(Resolve-Path -Path $distPath)\$packageName\$packageName-$version\exe\$packageName-$version.exe"
-  $icon = Resolve-Path -Path "$neocorePath\toolchain\nsi\neogeo.ico"
+  $outFile = "$(Resolve-TemplatePath -Path $distPath)\$packageName\$packageName-$version\exe\$packageName-$version.exe"
+  $icon = Resolve-TemplatePath -Path "$neocorePath\toolchain\nsi\neogeo.ico"
   $brandingText = "Created with Neocore"
-  $mamePath = "$(Resolve-Path -Path $(Split-Path -Parent $mameExeFile))\"
+  $mamePath = "$(Resolve-TemplatePath -Path $(Split-Path -Parent $mameExeFile))\"
   $exec = "$(Split-Path $mameExeFile -Leaf) -window -skip_gameinfo neocdz $packageName"
 
   if ((Test-Path -Path $NSITemplateFile) -eq $false) {

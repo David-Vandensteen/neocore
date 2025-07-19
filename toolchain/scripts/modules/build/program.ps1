@@ -1,9 +1,12 @@
 function Build-Program {
+  Write-Host "Build Program" -ForegroundColor Cyan
   Assert-BuildProgram
-  $prgFile = "$($Config.project.buildPath)\$($Config.project.name)\$($Config.project.name).prg"
+  $projectBuildPath = Resolve-TemplatePath -Path $Config.project.buildPath
+  $prgFile = "$projectBuildPath\$($Config.project.name)\$($Config.project.name).prg"
   $prgFile = Get-TemplatePath -Path $prgFile
   $buildPath = Get-TemplatePath -Path $Config.project.buildPath
-  $buildPathName = Get-TemplatePath -Path "$($Config.project.buildPath)\$($Config.project.name)"
+  $buildPathName = Get-TemplatePath -Path "$projectBuildPath\$($Config.project.name)"
+
   robocopy .\ "$buildPathName" /e /xf * | Out-Null
   if ($Config.project.compiler.program.version -eq "2.95.2") { $gccPath = Get-TemplatePath -Path $Config.project.compiler.program.path }
 

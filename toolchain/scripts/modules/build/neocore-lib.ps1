@@ -1,7 +1,7 @@
 function Build-NeocoreLib {
-  $buildPath = $(Resolve-Path -Path $Config.project.buildPath)
-  $srcLibPath = $(Resolve-Path -Path "$($Config.project.neocorePath)\src-lib")
-  $includePath = $(Resolve-Path -Path "$($Config.project.neocorePath)\src-lib\include")
+  $buildPath = $(Resolve-TemplatePath -Path $Config.project.buildPath)
+  $srcLibPath = $(Resolve-TemplatePath -Path "$($Config.project.neocorePath)\src-lib")
+  $includePath = $(Resolve-TemplatePath -Path "$($Config.project.neocorePath)\src-lib\include")
 
   Assert-BuildNeocoreLib
 

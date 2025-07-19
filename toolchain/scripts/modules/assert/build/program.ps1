@@ -1,10 +1,13 @@
 function Assert-BuildProgram {
-  if (-Not(Test-Path -Path $Config.project.buildPath)) {
-    Write-Host "error : $($Config.project.buildPath) not found" -ForegroundColor Red
+  Write-Host "Assert build program" -ForegroundColor Yellow
+  $projectBuildPath = Resolve-TemplatePath -Path $Config.project.buildPath
+
+  if (-Not(Test-Path -Path $projectBuildPath)) {
+    Write-Host "Error : $projectBuildPath not found" -ForegroundColor Red
     exit 1
   }
-  if (-Not(Test-Path -Path "$($Config.project.buildPath)\neodev-sdk")) {
-    Write-Host "error : $($Config.project.buildPath)\neodev-sdk not found" -ForegroundColor Red
+  if (-Not(Test-Path -Path "$projectBuildPath\neodev-sdk")) {
+    Write-Host "Error : $projectBuildPath\neodev-sdk not found" -ForegroundColor Red
     exit 1
   }
 }

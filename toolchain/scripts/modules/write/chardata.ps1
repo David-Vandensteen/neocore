@@ -1,5 +1,6 @@
 function Parse-Error {
-  $buildPathProject = "$($Config.project.buildPath)\$($Config.project.name)"
+  $projectBuildPath = Get-TemplatePath -Path $Config.project.buildPath
+  $buildPathProject = "$projectBuildPath\$($Config.project.name)"
   Get-Content -Path "$buildPathProject\sprite.log" -Force
   if (Select-String -Path "$buildPathProject\sprite.log" -Pattern "Invalid dimension") {
     Write-Host "Invalid dimension" -ForegroundColor Red
@@ -43,13 +44,14 @@ function Write-Sprite {
     [Parameter(Mandatory=$true)][String] $OutputFile,
     [Parameter(Mandatory=$true)][String] $XMLFile
   )
-  $buildPathProject = "$($Config.project.buildPath)\$($Config.project.name)"
+  $projectBuildPath = Get-TemplatePath -Path $Config.project.buildPath
+  $buildPathProject = "$projectBuildPath\$($Config.project.name)"
+
   Write-Host "Compiling sprites" -ForegroundColor Yellow
   if ((Test-Path -Path $XMLFile) -eq $false) {
     Write-Host "$XMLFile not found" -ForegroundColor Red
     exit 1
   }
-
 
   & BuildChar.exe $XMLFile | Tee-Object -FilePath "$buildPathProject\sprite.log"
   Parse-Error
@@ -60,7 +62,8 @@ function Write-Sprite {
     $charfile = "char.bin"
   }
 
-  $projectBuildPath = "$($Config.project.buildPath)\$($Config.project.name)"
+  $projectBuildPath = Get-TemplatePath -Path $projectBuildPath
+  $projectBuildPath = "$projectBuildPath\$($Config.project.name)"
   $projectName = $Config.project.name
 
   if (Test-Path -Path "$projectBuildPath\$($projectName).cd") {
