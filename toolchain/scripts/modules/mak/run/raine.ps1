@@ -1,5 +1,7 @@
 function MakRunRaine {
-  Build-Program
+  Write-Host "Mak run raine" -ForegroundColor Cyan
+  # TODO : change process
+  #Build-Program
   Build-ISO
   Start-Raine
 }

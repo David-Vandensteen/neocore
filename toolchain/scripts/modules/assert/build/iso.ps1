@@ -1,4 +1,5 @@
 function Assert-BuildISO {
+  Write-Host "Assert build ISO" -ForegroundColor Yellow
   if (-Not(Test-Path -Path $prgFile)) {
     Write-Host "error : $prgFile not found" -ForegroundColor Red
     exit 1

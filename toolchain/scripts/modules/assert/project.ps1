@@ -4,7 +4,7 @@ Import-Module "$($config.project.neocorePath)\toolchain\scripts\modules\assert\p
 function Assert-Project {
   param ([Parameter(Mandatory=$true)][xml] $Config)
 
-  Write-Host "assert project config" -ForegroundColor Yellow
+  Write-Host "Assert project" -ForegroundColor Yellow
   Assert-Path
   Assert-ProjectName -Name $($Config.project.name)
 
