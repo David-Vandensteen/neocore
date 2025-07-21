@@ -44,14 +44,14 @@ typedef struct Box {
 
 typedef struct GFX_Animated_Sprite {
   aSprite aSpriteDAT;
-  spriteInfo *spriteInfoDAT;
-  paletteInfo *paletteInfoDAT;
+  const spriteInfo *spriteInfoDAT;
+  const paletteInfo *paletteInfoDAT;
 } GFX_Animated_Sprite;
 
 typedef struct GFX_Picture {
   picture pictureDAT;
-  pictureInfo *pictureInfoDAT;
-  paletteInfo *paletteInfoDAT;
+  const pictureInfo *pictureInfoDAT;
+  const paletteInfo *paletteInfoDAT;
   WORD pixel_height;
   WORD pixel_width;
 } GFX_Picture;
@@ -93,14 +93,14 @@ typedef struct RGB16 {
 /*------------------*/
 void nc_init_gfx_animated_sprite(
   GFX_Animated_Sprite *gfx_animated_sprite,
-  spriteInfo *spriteInfo,
-  paletteInfo *paletteInfo
+  const spriteInfo *spriteInfo,
+  const paletteInfo *paletteInfo
 );
 
 void nc_init_gfx_animated_sprite_physic(
   GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic,
-  spriteInfo *spriteInfo,
-  paletteInfo *paletteInfo,
+  const spriteInfo *spriteInfo,
+  const paletteInfo *paletteInfo,
   short box_witdh,
   short box_height,
   short box_width_offset,
@@ -109,14 +109,14 @@ void nc_init_gfx_animated_sprite_physic(
 
 void nc_init_gfx_picture(
   GFX_Picture *gfx_picture,
-  pictureInfo *pictureInfo,
-  paletteInfo *paletteInfo
+  const pictureInfo *pictureInfo,
+  const paletteInfo *paletteInfo
 );
 
 void nc_init_gfx_picture_physic(
   GFX_Picture_Physic *gfx_picture_physic,
-  pictureInfo *pi,
-  paletteInfo *pali,
+  const pictureInfo *pi,
+  const paletteInfo *pali,
   short box_witdh,
   short box_height,
   short box_width_offset,
@@ -180,8 +180,8 @@ void nc_init_display_gfx_animated_sprite_physic(
 
 void nc_init_display_gfx_picture(
   GFX_Picture *gfx_picture,
-  pictureInfo *pictureInfo,
-  paletteInfo *paletteInfo,
+  const pictureInfo *pictureInfo,
+  const paletteInfo *paletteInfo,
   short x,
   short y
 );
@@ -340,7 +340,7 @@ WORD nc_get_max_sprite_index_used();
  /* GPU PALETTE   */
 /*---------------*/
 
-void nc_destroy_palette(paletteInfo* paletteInfo);
+void nc_destroy_palette(const paletteInfo* paletteInfo);
 void nc_clear_palette_index_table();
 WORD nc_get_max_free_palette_index();
 WORD nc_get_max_palette_index_used();

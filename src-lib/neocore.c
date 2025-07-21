@@ -55,7 +55,7 @@ static void init_adpcm_player() {
 }
 
 static BOOL sprite_index_manager_status[SPRITE_INDEX_MANAGER_MAX];
-static paletteInfo *palette_index_manager_status[PALETTE_INDEX_MANAGER_MAX];
+static const paletteInfo *palette_index_manager_status[PALETTE_INDEX_MANAGER_MAX];
 
 static BOOL collide_point(short x, short y, Vec2short vec[], BYTE vector_max);
 
@@ -177,24 +177,24 @@ static WORD use_sprite_manager_index(WORD max) {
 
 static void init_palette_manager_index() {
   WORD i = 0;
-  for (i = 0; i <= 16; i++) palette_index_manager_status[i] = (paletteInfo*) 1;
+  for (i = 0; i <= 16; i++) palette_index_manager_status[i] = (const paletteInfo*) 1;
 }
 
-static void set_palette_manager_index(paletteInfo *pi, WORD index) {
+static void set_palette_manager_index(const paletteInfo *pi, WORD index) {
   WORD i = index;
   for (i = index; i < index + pi->count; i++) palette_index_manager_status[i] = pi;
 }
 
-static void set_free_palette_index_manager(paletteInfo *pi) {
+static void set_free_palette_index_manager(const paletteInfo *pi) {
   WORD i = 0;
   for (i = 0; i <PALETTE_INDEX_MANAGER_MAX; i++) {
     if (palette_index_manager_status[i] == pi) {
-      palette_index_manager_status[i] = (paletteInfo*) NULL;
+      palette_index_manager_status[i] = (const paletteInfo*) NULL;
     }
   }
 }
 
-static WORD use_palette_manager_index(paletteInfo *pi) {
+static WORD use_palette_manager_index(const paletteInfo *pi) {
   WORD i, j = 0;
   WORD found = 0;
   for (i = 0; i < PALETTE_INDEX_MANAGER_MAX; i++) {
@@ -261,8 +261,8 @@ void nc_destroy_gfx_scroller(GFX_Scroller *gfx_scroller) {
 /*------------------*/
 void nc_init_gfx_picture_physic(
   GFX_Picture_Physic *gfx_picture_physic,
-  pictureInfo *pi,
-  paletteInfo *pali,
+  const pictureInfo *pi,
+  const paletteInfo *pali,
   short box_witdh,
   short box_height,
   short box_width_offset,
@@ -279,8 +279,8 @@ void nc_init_gfx_picture_physic(
 
 void nc_init_gfx_picture(
   GFX_Picture *gfx_picture,
-  pictureInfo *pictureInfo,
-  paletteInfo *paletteInfo
+  const pictureInfo *pictureInfo,
+  const paletteInfo *paletteInfo
   ) {
   init_shadow_system();
   gfx_picture->paletteInfoDAT = paletteInfo;
@@ -291,8 +291,8 @@ void nc_init_gfx_picture(
 
 void nc_init_gfx_animated_sprite(
   GFX_Animated_Sprite *gfx_animated_sprite,
-  spriteInfo *spriteInfo,
-  paletteInfo *paletteInfo
+  const spriteInfo *spriteInfo,
+  const paletteInfo *paletteInfo
   ) {
   init_shadow_system();
   gfx_animated_sprite->spriteInfoDAT = spriteInfo;
@@ -301,8 +301,8 @@ void nc_init_gfx_animated_sprite(
 
 void nc_init_gfx_animated_sprite_physic(
     GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic,
-    spriteInfo *spriteInfo,
-    paletteInfo *paletteInfo,
+    const spriteInfo *spriteInfo,
+    const paletteInfo *paletteInfo,
     short box_witdh,
     short box_height,
     short box_width_offset,
@@ -463,8 +463,8 @@ void nc_init_display_gfx_animated_sprite_physic(
 
 void nc_init_display_gfx_picture(
   GFX_Picture *gfx_picture,
-  pictureInfo *pictureInfo,
-  paletteInfo *paletteInfo,
+  const pictureInfo *pictureInfo,
+  const paletteInfo *paletteInfo,
   short x,
   short y
 ) {
@@ -807,12 +807,12 @@ WORD nc_get_max_sprite_index_used() {
 /*---------------*/
 
 void nc_clear_palette_index_table() { init_palette_manager_index(); }
-void nc_destroy_palette(paletteInfo* paletteInfo) { set_free_palette_index_manager(paletteInfo); }
+void nc_destroy_palette(const paletteInfo* paletteInfo) { set_free_palette_index_manager(paletteInfo); }
 
 WORD nc_get_max_free_palette_index() {
   WORD i, max = 0;
   for (i = 0; i < PALETTE_INDEX_MANAGER_MAX; i++) {
-    if (palette_index_manager_status[i] == (paletteInfo*) NULL) max++;
+    if (palette_index_manager_status[i] == (const paletteInfo*) NULL) max++;
   }
   return max;
 }
@@ -820,7 +820,7 @@ WORD nc_get_max_free_palette_index() {
 WORD nc_get_max_palette_index_used() {
   WORD i, max = 0;
   for (i = 0; i < PALETTE_INDEX_MANAGER_MAX; i++) {
-    if (palette_index_manager_status[i] != (paletteInfo*) NULL) max++;
+    if (palette_index_manager_status[i] != (const paletteInfo*) NULL) max++;
   }
   return max;
 }
