@@ -11,3 +11,4 @@ palettes.s
 as.exe.stackdump
 *.o
 *.prg
+out/fix.bin
