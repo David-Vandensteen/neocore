@@ -1,7 +1,7 @@
 #include <neocore.h>
 #include "externs.h"
 
-GFX_Picture neogeoLogo;
+static GFX_Picture neogeoLogo;
 
 int main(void) {
   nc_init_display_gfx_picture(&neogeoLogo, &logo, &logo_Palettes, 100, 160);
