@@ -113,12 +113,19 @@ function Main {
 
 if ((Test-Path -Path $ConfigFile) -eq $false) {
   Write-Host "Config $ConfigFile not found" -ForegroundColor Red
-  exit 1
+  return 1
 }
 
 Write-Host "informations" -ForegroundColor Blue
 Write-Host "Config file : $ConfigFile"
 
-[xml]$config = (Get-Content -Path $ConfigFile)
+# FIX: Safe XML parsing with error handling
+try {
+  [xml]$config = (Get-Content -Path $ConfigFile)
+} catch {
+  Write-Host "Invalid XML configuration file: $ConfigFile" -ForegroundColor Red
+  Write-Host "Error: $($_.Exception.Message)" -ForegroundColor Red
+  return 1
+}
 
 Main -Config $config -BaseURL "http://azertyvortex.free.fr/download" -Rule $Rule
