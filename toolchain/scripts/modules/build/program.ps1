@@ -7,7 +7,45 @@ function Build-Program {
   $buildPath = Get-TemplatePath -Path $Config.project.buildPath
   $buildPathName = Get-TemplatePath -Path "$projectBuildPath\$($Config.project.name)"
 
-  robocopy .\ "$buildPathName" /e /xf * | Out-Null
+  # FIX: Proper robocopy error handling instead of silent | Out-Null
+  Write-Host "Copying project files to build directory..." -ForegroundColor Cyan
+  Write-Host "  Source: $(Get-Location)" -ForegroundColor Gray
+  Write-Host "  Destination: $buildPathName" -ForegroundColor Gray
+
+  try {
+    # Create destination directory if it doesn't exist
+    if (-not (Test-Path $buildPathName)) {
+      New-Item -Path $buildPathName -ItemType Directory -Force | Out-Null
+      Write-Host "  Created build directory: $buildPathName" -ForegroundColor Green
+    }
+
+    # Run robocopy with proper error handling
+    # /e = copy subdirectories including empty ones
+    # /xf * = exclude all files (copy directory structure only)
+    # /njh /njs = no job header/summary (cleaner output)
+    $robocopyOutput = robocopy .\ "$buildPathName" /e /xf * /njh /njs 2>&1
+    $robocopyExitCode = $LASTEXITCODE
+
+    # Robocopy exit codes: 0-7 are success, 8+ are errors
+    if ($robocopyExitCode -gt 7) {
+      Write-Warning "Robocopy completed with warnings/errors (exit code: $robocopyExitCode)"
+      Write-Host "Robocopy output:" -ForegroundColor Yellow
+      $robocopyOutput | ForEach-Object { Write-Host "  $_" -ForegroundColor Gray }
+
+      # Check if destination was created despite warnings
+      if (-not (Test-Path $buildPathName)) {
+        throw "Failed to create build directory structure"
+      }
+    } else {
+      Write-Host "  Directory structure copied successfully" -ForegroundColor Green
+      if ($robocopyExitCode -gt 0) {
+        Write-Host "  (Robocopy exit code: $robocopyExitCode - some files/folders processed)" -ForegroundColor Gray
+      }
+    }
+  } catch {
+    Write-Error "Failed to copy project files: $_"
+    return $false
+  }
 
   # DEBUG: Show compiler configuration
   Write-Host "=== Compiler Configuration Debug ===" -ForegroundColor Magenta
