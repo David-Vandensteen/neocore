@@ -1,5 +1,5 @@
 function Assert-RaineConfig {
-  Write-Host "Asser Raine config" -ForegroundColor Yellow
+  Write-Host "Assert Raine config" -ForegroundColor Yellow
   if (-Not(Resolve-TemplatePath -Path "$($Config.project.buildPath)\raine\config\raine32_sdl.cfg")) {
     Write-Host "$($Config.project.buildPath)\raine\config\raine32_sdl.cfg not found" -ForegroundColor Red
     exit 1
