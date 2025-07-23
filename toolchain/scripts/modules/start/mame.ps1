@@ -3,8 +3,6 @@ function Start-Mame {
   $mamePath = Split-Path $Config.project.emulator.mame.exeFile
   $mamePath = Get-TemplatePath -Path $mamePath
 
-  # TODO : remove at v3
-
   if ($Rule -eq "serve:mame") {
     Mame `
       -ExeName $exeName `

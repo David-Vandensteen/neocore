@@ -82,7 +82,6 @@ function Write-Mame {
   Write-MameHash -ProjectName $ProjectName -CHDFile $OutputFile -XMLFile "$(Resolve-TemplatePath -Path $PathMame)\hash\neocd.xml"
 }
 
-# TODO : remove at v3
 function Mame {
   param (
     [Parameter(Mandatory=$true)][String] $ExeName,

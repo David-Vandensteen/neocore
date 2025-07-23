@@ -88,8 +88,4 @@ function Install-SDK {
 
   Write-Host "Copying $manifestFile to $installPath" -ForegroundColor Cyan
   Copy-Item -Path $manifestFile $installPath -Force -ErrorAction Stop
-
-  # TODO : refactor this
-  # Write-Host "Copying $manifestFile to $projectBuildPath" -ForegroundColor Cyan
-  # Copy-Item -Path "$($Config.project.neocorePath)\manifest.xml" $Config.project.buildPath -Force -ErrorAction Stop
 }
