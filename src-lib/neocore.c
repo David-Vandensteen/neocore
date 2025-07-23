@@ -1191,8 +1191,6 @@ void nc_next_line_log() {
   log_x = log_x_default;
 }
 
-void nc_log(char *message) { nc_log_info(message);}
-
 WORD nc_log_info(char *text, ...) {
   char buffer[256];
   va_list args;

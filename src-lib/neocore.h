@@ -520,11 +520,6 @@ void nc_next_line_log();
 
 WORD nc_log_info(char *txt, ...);
 
-/**
- * @deprecated nc_log is deprecated use nc_log_info instead
- */
-void nc_log(char *message);
-
 void nc_log_word(char *label, WORD value);
 void nc_log_int(char *label, int value);
 void nc_log_dword(char *label, DWORD value);
