@@ -75,28 +75,12 @@ function Assert-ManifestDependencies {
     Write-Host "error : manifest.dependencies.ngfxSoundBuilder.url not found" -ForegroundColor Red
     exit 1
   }
-  if (-Not($Manifest.manifest.dependencies.animator)) {
-    Write-Host "error : manifest.dependencies.animator not found" -ForegroundColor Red
+  if (-Not($Manifest.manifest.dependencies.datAnimatorFramer)) {
+    Write-Host "error : manifest.dependencies.datAnimatorFramer not found" -ForegroundColor Red
     exit 1
   }
-  if (-Not($Manifest.manifest.dependencies.animator.path)) {
-    Write-Host "error : manifest.dependencies.animator.path not found" -ForegroundColor Red
-    exit 1
-  }
-  if (-Not($Manifest.manifest.dependencies.animator.url)) {
-    Write-Host "error : manifest.dependencies.animator.url not found" -ForegroundColor Red
-    exit 1
-  }
-  if (-Not($Manifest.manifest.dependencies.framer)) {
-    Write-Host "error : manifest.dependencies.framer not found" -ForegroundColor Red
-    exit 1
-  }
-  if (-Not($Manifest.manifest.dependencies.framer.path)) {
-    Write-Host "error : manifest.dependencies.framer.path not found" -ForegroundColor Red
-    exit 1
-  }
-  if (-Not($Manifest.manifest.dependencies.framer.url)) {
-    Write-Host "error : manifest.dependencies.framer.url not found" -ForegroundColor Red
+  if (-Not($Manifest.manifest.dependencies.datAnimatorFramer.path)) {
+    Write-Host "error : manifest.dependencies.datAnimatorFramer.path not found" -ForegroundColor Red
     exit 1
   }
   if (-Not($Manifest.manifest.dependencies.neoTools)) {

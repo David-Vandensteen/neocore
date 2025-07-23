@@ -43,13 +43,9 @@ function Install-SDK {
       -PathDownload $downloadPath `
       -PathInstall $Manifest.manifest.dependencies.ngfxSoundBuilder.path
     Install-Component `
-      -URL $Manifest.manifest.dependencies.animator.url `
+      -URL $Manifest.manifest.dependencies.datAnimatorFramer.url `
       -PathDownload $downloadPath `
-      -PathInstall $Manifest.manifest.dependencies.animator.path
-    Install-Component `
-      -URL $Manifest.manifest.dependencies.framer.url `
-      -PathDownload $downloadPath `
-      -PathInstall $Manifest.manifest.dependencies.framer.path
+      -PathInstall $Manifest.manifest.dependencies.datAnimatorFramer.path
     Install-Component `
       -URL $Manifest.manifest.dependencies.neoTools.url `
       -PathDownload $downloadPath `
