@@ -20,3 +20,4 @@ samples/ngcd-music-disk
 samples/geowave
 synchro.sh
 samples/**/out/fix.bin
+samples/**/out/char.bin

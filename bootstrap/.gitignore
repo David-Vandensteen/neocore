@@ -12,3 +12,4 @@ as.exe.stackdump
 *.o
 *.prg
 **/out/fix.bin
+**/out/char.bin
