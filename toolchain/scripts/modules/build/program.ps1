@@ -21,9 +21,8 @@ function Build-Program {
 
     # Run robocopy with proper error handling
     # /e = copy subdirectories including empty ones
-    # /xf * = exclude all files (copy directory structure only)
     # /njh /njs = no job header/summary (cleaner output)
-    $robocopyOutput = robocopy .\ "$buildPathName" /e /xf * /njh /njs 2>&1
+    $robocopyOutput = robocopy .\ "$buildPathName" /e /njh /njs 2>&1
     $robocopyExitCode = $LASTEXITCODE
 
     # Robocopy exit codes: 0-7 are success, 8+ are errors
