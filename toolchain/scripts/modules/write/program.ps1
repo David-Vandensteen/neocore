@@ -8,7 +8,7 @@ function Write-Program {
     [Parameter(Mandatory=$true)][String] $BinPath
   )
   Write-Host "Write Program" -ForegroundColor Cyan
-  Write-Host "Asserting program requierments before compiling" -ForegroundColor Yellow
+  Write-Host "Assert write program" -ForegroundColor Yellow
   Assert-Program
 
   Write-Host "Compiling program $PRGFile" -ForegroundColor Yellow
