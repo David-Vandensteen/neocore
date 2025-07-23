@@ -21,6 +21,7 @@ function Write-Program {
   $projectName = Get-TemplatePath -Path $ProjectName
   $pathBuildName = Get-TemplatePath -Path "$($Config.project.buildPath)\$($Config.project.name)"
   $includePath = Resolve-TemplatePath -Path $Config.project.compiler.includePath
+  $neocoreIncludePath = Resolve-TemplatePath -Path "$($Config.project.neocorePath)\src-lib"
   $libraryPath = Resolve-TemplatePath -Path $Config.project.compiler.libraryPath
   $systemFile = Resolve-TemplatePath -Path $Config.project.compiler.systemFile
 
@@ -34,6 +35,7 @@ function Write-Program {
 
   $env:PROJECT_PATH = $(Resolve-TemplatePath -Path .)
   $env:INCLUDE_PATH = $includePath
+  $env:NEOCORE_INCLUDE_PATH = $neocoreIncludePath
   $env:LIBRARY_PATH = $libraryPath
   $env:NEO_GEO_SYSTEM = $systemFile
 

@@ -4,10 +4,12 @@ function Assert-Program {
   $makeFile = Get-TemplatePath -Path $MakeFile
   $pathNeoDev = Get-TemplatePath -Path $PathNeoDev
   $includePath = Resolve-TemplatePath -Path $Config.project.compiler.includePath
+  $neocoreIncludePath = Resolve-TemplatePath -Path "$($Config.project.neocorePath)\src-lib"
   $libraryPath = Resolve-TemplatePath -Path $Config.project.compiler.libraryPath
   $systemFile = Resolve-TemplatePath -Path $Config.project.compiler.systemFile
 
   Write-Host "includePath: $includePath" -ForegroundColor Yellow
+  Write-Host "neocoreIncludePath: $neocoreIncludePath" -ForegroundColor Yellow
   if (-Not(Test-Path -Path $gccPath) -or $gccPath -eq "") {
     Write-Host "error : $gccPath not found" -ForegroundColor Red
     exit 1
@@ -26,6 +28,10 @@ function Assert-Program {
   }
   if (-Not(Test-Path -Path $includePath)) {
     Write-Host "error : $includePath not found" -ForegroundColor Red
+    exit 1
+  }
+  if (-Not(Test-Path -Path $neocoreIncludePath)) {
+    Write-Host "error : $neocoreIncludePath not found" -ForegroundColor Red
     exit 1
   }
   if (-Not(Test-Path -Path $libraryPath)) {
