@@ -13,9 +13,12 @@ function Assert-Manifest {
     }
 
     if (Test-Path -Path "$projectBuildPath\manifest.xml") {
-      Write-Host "source : $ManifestSource"
-      Write-Host "cache : $ManifestCache"
-      if ((Compare-FileHash -SrcFile $ManifestSource -DestFile $ManifestCache) -eq $false) {
+      $neocorePath = Get-TemplatePath -Path $Config.project.neocorePath
+      $manifestSource = "$neocorePath\manifest.xml"
+      $manifestCache = "$projectBuildPath\manifest.xml"
+      Write-Host "source : $manifestSource"
+      Write-Host "cache : $manifestCache"
+      if ((Compare-FileHash -SrcFile $manifestSource -DestFile $manifestCache) -eq $false) {
         Write-Host "manifest has changed : remove build cache" -ForegroundColor Blue
         Write-Host "Please, remove $projectBuildPath to rebuild neocore"
         Write-Host "You can use mak clean:build"
