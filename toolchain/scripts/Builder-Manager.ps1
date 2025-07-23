@@ -3,7 +3,6 @@
 # MIT
 
 # TODO : externalize folders creation
-# TODO : inxrease clean rule priority
 
 param (
   [Parameter(Mandatory=$true)][String] $ConfigFile,
