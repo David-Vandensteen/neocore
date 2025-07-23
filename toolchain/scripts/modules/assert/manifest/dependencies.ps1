@@ -1,4 +1,9 @@
 function Assert-ManifestDependencies {
+  Write-Host "Assert manifest dependencies" -ForegroundColor Yellow
+  if (-Not($Manifest.manifest.dependencies)) {
+    Write-Host "error : manifest.dependencies not found" -ForegroundColor Red
+    exit 1
+  }
   if (-Not($Manifest.manifest.dependencies.nsis)) {
     Write-Host "error : manifest.dependencies.nsis not found" -ForegroundColor Red
     exit 1

@@ -34,11 +34,7 @@ function Main {
   Write-Host "Getting manifest from $manifestPath" -ForegroundColor Cyan
   [xml]$Manifest = (Get-Content -Path $manifestPath)
 
-  if (Test-Path -Path "$($Config.project.buildPath)\manifest.xml") {
-    Assert-Manifest `
-      -ManifestSource "$($Config.project.neocorePath)\manifest.xml" `
-      -ManifestCache "$($Config.project.buildPath)\manifest.xml"
-  }
+  Assert-Manifest
 
   Assert-Rule -Rule $Rule
   Stop-Emulators
