@@ -59,93 +59,44 @@ function Build-Program {
   }
   Write-Host "===================================" -ForegroundColor Magenta
 
-  $gccPath = $null  # Check if compiler version is specified and supported
-  if ($Config.project.compiler.version -eq "2.95.2") {
-    Write-Host "Using configured GCC 2.95.2 path..." -ForegroundColor Green
-    $gccPath = Get-TemplatePath -Path $Config.project.compiler.path
-    Write-Host "Resolved GCC path: $gccPath" -ForegroundColor Cyan
-  } else {
-    # Handle unspecified version or other versions
-    if ([string]::IsNullOrEmpty($Config.project.compiler.version)) {
-      Write-Host "No compiler version specified, using default configuration..." -ForegroundColor Yellow
-    } else {
-      Write-Warning "Unsupported compiler version: $($Config.project.compiler.version)"
-      Write-Host "Attempting to use default path..." -ForegroundColor Yellow
-    }
+  $gccPath = $null
 
-    # Try path from config first (regardless of version)
-    if ($Config.project.compiler.path) {
-      $configPath = Get-TemplatePath -Path $Config.project.compiler.path
-      Write-Host "Trying configured path: $configPath" -ForegroundColor Cyan
-      if (Test-Path $configPath) {
-        $gccPath = $configPath
-        Write-Host "Using GCC path from config: $gccPath" -ForegroundColor Green
-      } else {
-        Write-Warning "Configured GCC path does not exist: $configPath"
-      }
-    }
-
-    # If still no path found, search in standard locations
-    if (-not $gccPath) {
-      Write-Host "Searching for GCC in standard locations..." -ForegroundColor Yellow
-      $standardPaths = @(
-        "$env:NEODEV\m68k\bin",
-        "C:\neodev\m68k\bin",
-        "C:\mingw\bin",
-        "C:\msys64\usr\bin",
-        "$env:ProgramFiles\mingw-w64\mingw64\bin",
-        "$env:ProgramFiles(x86)\mingw-w64\mingw32\bin"
-      )
-
-      foreach ($path in $standardPaths) {
-        Write-Host "  Checking: $path" -ForegroundColor Gray
-        if (Test-Path $path) {
-          # Check if gcc.exe exists in this path
-          $gccExe = Join-Path $path "gcc.exe"
-          if (Test-Path $gccExe) {
-            $gccPath = $path
-            Write-Host "Found GCC executable at: $gccExe" -ForegroundColor Green
-            break
-          } else {
-            Write-Host "  Path exists but no gcc.exe found" -ForegroundColor Gray
-          }
-        } else {
-          Write-Host "  Path does not exist" -ForegroundColor Gray
-        }
-      }
-
-      # If still not found, try to find gcc.exe anywhere
-      if (-not $gccPath) {
-        Write-Host "Trying to locate gcc.exe using where command..." -ForegroundColor Yellow
-        try {
-          $whereResult = where.exe gcc 2>$null
-          if ($whereResult) {
-            $gccPath = Split-Path $whereResult[0] -Parent
-            Write-Host "Found GCC using where command: $gccPath" -ForegroundColor Green
-          }
-        } catch {
-          Write-Host "where command failed or gcc not in PATH" -ForegroundColor Gray
-        }
-      }
-    }
+  # Validate required compiler configuration
+  if ([string]::IsNullOrEmpty($Config.project.compiler.path)) {
+    Write-Error "Compiler path is not specified in project configuration. Please add <path> element in <compiler> section."
+    return $false
   }
 
-  # Verify that $gccPath is defined before continuing
-  if (-not $gccPath) {
-    Write-Error @"
-Unable to find GCC path. Please check your configuration.
+  if ([string]::IsNullOrEmpty($Config.project.compiler.version)) {
+    Write-Error "Compiler version is not specified in project configuration. Please add <version> element in <compiler> section."
+    return $false
+  }
 
-Current environment variables:
-- NEODEV: $env:NEODEV
-- PATH: $($env:PATH -split ';' | Where-Object { $_ -like '*gcc*' -or $_ -like '*mingw*' -or $_ -like '*msys*' })
+  # Resolve the configured GCC path
+  Write-Host "Using configured GCC compiler..." -ForegroundColor Green
+  Write-Host "  Version: $($Config.project.compiler.version)" -ForegroundColor Cyan
+  Write-Host "  Path (template): $($Config.project.compiler.path)" -ForegroundColor Gray
+
+  $gccPath = Get-TemplatePath -Path $Config.project.compiler.path
+  Write-Host "  Path (resolved): $gccPath" -ForegroundColor Cyan
+
+  # Verify the resolved path exists
+  if (-not (Test-Path $gccPath)) {
+    Write-Error @"
+Configured GCC path does not exist: $gccPath
+
+Please check:
+1. Your project.xml compiler configuration
+2. That the GCC toolchain is installed at the specified location
+3. That template variables {{build}} and {{neocore}} resolve correctly
+
+Raw path from config: $($Config.project.compiler.path)
+Resolved path: $gccPath
 "@
     return $false
   }
 
-  if (-not (Test-Path $gccPath)) {
-    Write-Error "Specified GCC path does not exist: $gccPath"
-    return $false
-  }
+  Write-Host "  GCC path validated successfully" -ForegroundColor Green
 
   Write-Program `
     -ProjectName $Config.project.name `
