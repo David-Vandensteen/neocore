@@ -27,12 +27,6 @@ function Assert-Rule {
     if ($Rule -eq "run:raine") {return 0 }
     if ($Rule -like "run:raine:*") { return 0 }
 
-    if ($Rule -eq "mame") { # TODO : remove at v3
-      Write-Host "warning : mame rule is deprecated, use run:mame instead" -ForegroundColor Yellow
-      pause
-      return 0
-    }
-
     if ($Rule -eq "raine") { # TODO : remove at v3
       Write-Host "warning : raine rule is deprecated, use run:raine instead" -ForegroundColor Yellow
       pause
