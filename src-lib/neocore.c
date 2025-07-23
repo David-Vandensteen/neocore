@@ -427,8 +427,8 @@ void nc_display_gfx_scroller(GFX_Scroller *gfx_scroller, short x, short y) {
 
 void nc_init_display_gfx_animated_sprite(
   GFX_Animated_Sprite *gfx_animated_sprite,
-  spriteInfo *spriteInfo,
-  paletteInfo *paletteInfo,
+  const spriteInfo *spriteInfo,
+  const paletteInfo *paletteInfo,
   short x,
   short y,
   WORD anim
