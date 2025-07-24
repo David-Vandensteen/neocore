@@ -39,6 +39,7 @@ function Write-ChardataXML {
   $xmlContent = $charDataNode.OuterXml
   $xmlContent = $xmlContent.Replace("{{build}}", $(Get-TemplatePath -Path $Config.project.buildPath))
   $xmlContent = $xmlContent.Replace("{{neocore}}", $(Get-TemplatePath -Path $Config.project.neocorePath))
+  $xmlContent = $xmlContent.Replace("{{name}}", $(Get-TemplatePath -Path $Config.project.name))
 
   $newXmlDoc = New-Object System.Xml.XmlDocument
   $newXmlDoc.LoadXml($xmlContent)
@@ -65,7 +66,7 @@ function Write-Sprite {
   Parse-Error
 
   if ($Config.project.gfx.DAT.chardata.setup.PSObject.Properties.Name -contains "charfile" -and $Config.project.gfx.DAT.chardata.setup.charfile) {
-    $charfile = $Config.project.gfx.DAT.chardata.setup.charfile
+    $charfile = Get-TemplatePath -Path $Config.project.gfx.DAT.chardata.setup.charfile
   } else {
     $charfile = "char.bin"
   }

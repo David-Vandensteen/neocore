@@ -12,6 +12,7 @@ function Write-FixdataXML {
   $xmlContent = $fixDataNode.OuterXml
   $xmlContent = $xmlContent.Replace("{{build}}", $(Get-TemplatePath -Path $Config.project.buildPath))
   $xmlContent = $xmlContent.Replace("{{neocore}}", $(Get-TemplatePath -Path $Config.project.neocorePath))
+  $xmlContent = $xmlContent.Replace("{{name}}", $(Get-TemplatePath -Path $Config.project.name))
 
   $newXmlDoc = New-Object System.Xml.XmlDocument
   $newXmlDoc.LoadXml($xmlContent)
