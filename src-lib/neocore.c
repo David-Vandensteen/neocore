@@ -57,7 +57,7 @@ static void init_adpcm_player() {
 static BOOL sprite_index_manager_status[SPRITE_INDEX_MANAGER_MAX];
 static const paletteInfo *palette_index_manager_status[PALETTE_INDEX_MANAGER_MAX];
 
-static BOOL collide_point(short x, short y, Vec2short vec[], BYTE vector_max);
+static BOOL collide_point(short x, short y, Coordinate vec[], BYTE vector_max);
 
 static const WORD shrunk_table_prop[] = {
   0x000, 0x001, 0x002, 0x003, 0x004, 0x005, 0x006, 0x007, 0x008, 0x009,
@@ -99,7 +99,7 @@ static const char sin_table[] = {
   9,11,12,13,14,16,17,18,20,21,23,24,26,27,29,30
 };
 
-static BOOL collide_point(short x, short y, Vec2short vec[], BYTE vector_max) {
+static BOOL collide_point(short x, short y, Coordinate vec[], BYTE vector_max) {
   BYTE i = 0, j = 0;
   for (i = 0; i < vector_max; i++) {
     j = i + 1;
@@ -551,47 +551,48 @@ void nc_show_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic) {
 
 /* GFX POSITION GETTER */
 
-Vec2short nc_get_position_gfx_animated_sprite(GFX_Animated_Sprite gfx_animated_sprite) {
-  Vec2short position = {
-    gfx_animated_sprite.aSpriteDAT.posX,
-    gfx_animated_sprite.aSpriteDAT.posY
-  };
-  return position;
-}
+// TODO
+// Vec2short nc_get_position_gfx_animated_sprite(GFX_Animated_Sprite gfx_animated_sprite) {
+//   Vec2short position = {
+//     gfx_animated_sprite.aSpriteDAT.posX,
+//     gfx_animated_sprite.aSpriteDAT.posY
+//   };
+//   return position;
+// }
 
-Vec2short nc_get_position_gfx_animated_sprite_physic(
-  GFX_Animated_Sprite_Physic gfx_animated_sprite_physic
-  ) {
-  Vec2short position = {
-    gfx_animated_sprite_physic.gfx_animated_sprite.aSpriteDAT.posX,
-    gfx_animated_sprite_physic.gfx_animated_sprite.aSpriteDAT.posY
-  };
-  return position;
-}
+// Vec2short nc_get_position_gfx_animated_sprite_physic(
+//   GFX_Animated_Sprite_Physic gfx_animated_sprite_physic
+//   ) {
+//   Vec2short position = {
+//     gfx_animated_sprite_physic.gfx_animated_sprite.aSpriteDAT.posX,
+//     gfx_animated_sprite_physic.gfx_animated_sprite.aSpriteDAT.posY
+//   };
+//   return position;
+// }
 
-Vec2short nc_get_position_gfx_picture(GFX_Picture gfx_picture) {
-  Vec2short position = {
-    gfx_picture.pictureDAT.posX,
-    gfx_picture.pictureDAT.posY
-  };
-  return position;
-}
+// Vec2short nc_get_position_gfx_picture(GFX_Picture gfx_picture) {
+//   Vec2short position = {
+//     gfx_picture.pictureDAT.posX,
+//     gfx_picture.pictureDAT.posY
+//   };
+//   return position;
+// }
 
-Vec2short nc_get_position_gfx_picture_physic(GFX_Picture_Physic gfx_picture_physic) {
-  Vec2short position = {
-    gfx_picture_physic.gfx_picture.pictureDAT.posX,
-    gfx_picture_physic.gfx_picture.pictureDAT.posY
-  };
-  return position;
-}
+// Vec2short nc_get_position_gfx_picture_physic(GFX_Picture_Physic gfx_picture_physic) {
+//   Vec2short position = {
+//     gfx_picture_physic.gfx_picture.pictureDAT.posX,
+//     gfx_picture_physic.gfx_picture.pictureDAT.posY
+//   };
+//   return position;
+// }
 
-Vec2short nc_get_position_gfx_scroller(GFX_Scroller gfx_scroller) {
-  Vec2short position = {
-    gfx_scroller.scrollerDAT.scrlPosX,
-    gfx_scroller.scrollerDAT.scrlPosY
-  };
-  return position;
-}
+// Vec2short nc_get_position_gfx_scroller(GFX_Scroller gfx_scroller) {
+//   Vec2short position = {
+//     gfx_scroller.scrollerDAT.scrlPosX,
+//     gfx_scroller.scrollerDAT.scrlPosY
+//   };
+//   return position;
+// }
 
 /* GFX POSITION SETTER */
 
@@ -1001,7 +1002,7 @@ void nc_resize_box(Box *box, short edge) {
   box->p3.y += edge;
 }
 
-void nc_update_mask(short x, short y, Vec2short vec[], Vec2short offset[], BYTE vector_max) {
+void nc_update_mask(short x, short y, Coordinate vec[], Coordinate offset[], BYTE vector_max) {
   BYTE i = 0;
   for (i = 0; i < vector_max; i++) {
     vec[i].x = x + offset[i].x;
@@ -1120,13 +1121,14 @@ void nc_reset() {
   nc_init_system();
 }
 
-Vec2short nc_get_relative_position(Box box, Vec2short world_coord) {
-  Vec2short coord = {
-    world_coord.x - box.p0.x,
-    nc_negative(world_coord.y - box.p3.y)
-  };
-  return coord;
-}
+// TODO
+// Vec2short nc_get_relative_position(Box box, Vec2short world_coord) {
+//   Vec2short coord = {
+//     world_coord.x - box.p0.x,
+//     nc_negative(world_coord.y - box.p3.y)
+//   };
+//   return coord;
+// }
 
 void nc_pause(BOOL (*exitFunc)()) {
   nc_update_joypad(0);
@@ -1363,7 +1365,7 @@ BOOL nc_vector_is_left(short x, short y, short v1x, short v1y, short v2x, short 
   return rt;
 }
 
-BOOL nc_vectors_collide(Box *box, Vec2short vec[], BYTE vector_max) {
+BOOL nc_vectors_collide(Box *box, Coordinate vec[], BYTE vector_max) {
   BOOL p0 = false, p1 = false, p2 = false, p3 = false, p4 = false;
   p0 = collide_point(box->p0.x, box->p0.y, vec, vector_max);
   p1 = collide_point(box->p1.x, box->p1.y, vec, vector_max);

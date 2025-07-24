@@ -23,19 +23,16 @@ enum Sound_state { IDLE, PLAYING };
   //--------------------------------------------------------------------------//
  //                          STRUCTURE                                       //
 //--------------------------------------------------------------------------//
-
-typedef struct Vec2int { int x; int y; } Vec2int;
-typedef struct Vec2short { short x; short y; } Vec2short;
-typedef struct Vec2byte { BYTE x; BYTE y; } Vec2byte;
-typedef char Hex_Color[3];
-typedef char Hex_Packed_Color[5];
+typedef struct Coordinate { short x; short y; } Coordinate;
+typedef char Hex_Color[3]; // TODO : useless ?
+typedef char Hex_Packed_Color[5]; // TODO : useless ?
 
 typedef struct Box {
-  Vec2short p0;
-  Vec2short p1;
-  Vec2short p2;
-  Vec2short p3;
-  Vec2short p4;
+  Coordinate p0;
+  Coordinate p1;
+  Coordinate p2;
+  Coordinate p3;
+  Coordinate p4;
   short width;
   short height;
   short widthOffset;
@@ -228,15 +225,16 @@ void nc_show_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic);
 
 /* GFX POSITION GETTER */
 
-Vec2short nc_get_position_gfx_animated_sprite(GFX_Animated_Sprite gfx_animated_sprite);
+// TODO ,
+// Vec2short nc_get_position_gfx_animated_sprite(GFX_Animated_Sprite gfx_animated_sprite); // TODO ?
 
-Vec2short nc_get_position_gfx_animated_sprite_physic(
-  GFX_Animated_Sprite_Physic gfx_animated_sprite_physic
-);
+// Vec2short nc_get_position_gfx_animated_sprite_physic(
+//   GFX_Animated_Sprite_Physic gfx_animated_sprite_physic
+// );
 
-Vec2short nc_get_position_gfx_picture(GFX_Picture gfx_picture);
-Vec2short nc_get_position_gfx_picture_physic(GFX_Picture_Physic gfx_picture_physic);
-Vec2short nc_get_position_gfx_scroller(GFX_Scroller gfx_scroller);
+// Vec2short nc_get_position_gfx_picture(GFX_Picture gfx_picture);
+// Vec2short nc_get_position_gfx_picture_physic(GFX_Picture_Physic gfx_picture_physic);
+// Vec2short nc_get_position_gfx_scroller(GFX_Scroller gfx_scroller);
 
 /* GFX POSITION SETTER */
 
@@ -447,7 +445,7 @@ void nc_init_box(Box *box, short width, short height, short widthOffset, short h
 void nc_update_box(Box *box, short x, short y);
 
 //void mask_display(picture pic[], Vec2short vec[], BYTE vector_max); // todo (minor) - rename ? (vectorsDisplay)
-void nc_update_mask(short x, short y, Vec2short vec[], Vec2short offset[], BYTE vector_max); // todo (minor) - rename ? (vectorsDebug)
+void nc_update_mask(short x, short y, Coordinate vec[], Coordinate offset[], BYTE vector_max); // todo (minor) - rename ? (vectorsDebug)
 
 void nc_shrunk_box(Box *box, Box *bOrigin, WORD shrunkValue);
 void nc_resize_box(Box *Box, short edge); // todo (minor) - deprecated ?
@@ -499,7 +497,7 @@ DWORD nc_frame_to_second(DWORD frame);
 DWORD nc_second_to_frame(DWORD second);
 void nc_init_system();
 void nc_reset();
-Vec2short nc_get_relative_position(Box box, Vec2short world_coord);
+// Vec2short nc_get_relative_position(Box box, Vec2short world_coord); // TODO
 void nc_pause(BOOL (*exitFunc)());
 void nc_sleep(DWORD frame);
 BOOL nc_each_frame(DWORD frame);
