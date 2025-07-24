@@ -6,7 +6,7 @@ function Assert-Program {
   $includePath = Resolve-TemplatePath -Path $Config.project.compiler.includePath
   $neocoreIncludePath = Resolve-TemplatePath -Path "$($Config.project.neocorePath)\src-lib"
   $libraryPath = Resolve-TemplatePath -Path $Config.project.compiler.libraryPath
-  
+
   # Handle systemFile based on platform (defaulting to CD)
   $systemFile = ""
   if ($Config.project.compiler.systemFile.cd) {
@@ -50,7 +50,7 @@ function Assert-Program {
     Write-Host "error : $systemFile not found" -ForegroundColor Red
     return $false
   }
-  
+
   Write-Host "Program assertion completed successfully" -ForegroundColor Green
   return $true
 }

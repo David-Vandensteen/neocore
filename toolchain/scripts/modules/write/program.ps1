@@ -26,7 +26,7 @@ function Write-Program {
   $includePath = Resolve-TemplatePath -Path $Config.project.compiler.includePath
   $neocoreIncludePath = Resolve-TemplatePath -Path "$($Config.project.neocorePath)\src-lib"
   $libraryPath = Resolve-TemplatePath -Path $Config.project.compiler.libraryPath
-  
+
   # Handle systemFile based on platform (defaulting to CD)
   $systemFile = ""
   if ($Config.project.compiler.systemFile.cd) {
