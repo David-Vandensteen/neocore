@@ -71,8 +71,8 @@ typedef struct GFX_Picture_Physic {
 
 typedef struct GFX_Scroller {
   scroller scrollerDAT;
-  scrollerInfo *scrollerInfoDAT;
-  paletteInfo *paletteInfoDAT;
+  const scrollerInfo *scrollerInfoDAT;
+  const paletteInfo *paletteInfoDAT;
 } GFX_Scroller;
 
 typedef struct Adpcm_player {
@@ -126,8 +126,8 @@ void nc_init_gfx_picture_physic(
 
 void nc_init_gfx_scroller(
   GFX_Scroller *gfx_scroller,
-  scrollerInfo *scrollerInfo,
-  paletteInfo *paletteInfo
+  const scrollerInfo *scrollerInfo,
+  const paletteInfo *paletteInfo
 );
 
   /*------------------*/

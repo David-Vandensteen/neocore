@@ -326,8 +326,8 @@ void nc_init_gfx_animated_sprite_physic(
 
 void nc_init_gfx_scroller(
   GFX_Scroller *gfx_scroller,
-  scrollerInfo *scrollerInfo,
-  paletteInfo *paletteInfo
+  const scrollerInfo *scrollerInfo,
+  const paletteInfo *paletteInfo
   ) {
   init_shadow_system();
   gfx_scroller->scrollerInfoDAT = scrollerInfo;
