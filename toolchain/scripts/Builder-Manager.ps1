@@ -45,8 +45,15 @@ function Main {
   Assert-Rule -Rule $Rule
   Stop-Emulators
 
-  if ($Rule -eq "clean") { MakClean }
-  if ($Rule -eq "clean:build") { MakCleanBuild}
+  if ($Rule -eq "clean") {
+    MakClean
+    exit 0
+  }
+
+  if ($Rule -eq "clean:build") {
+    MakCleanBuild
+    exit 0
+  }
 
   $spoolPath = Get-TemplatePath -Path "$($Config.project.buildPath)\spool"
   if ((Test-Path -Path $spoolPath) -eq $false) {
