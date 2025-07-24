@@ -545,7 +545,7 @@ Adpcm_player *nc_get_adpcm_player();
  /* UTIL VECTOR   */
 /*---------------*/
 
-BOOL nc_vectors_collide(Box *box, Vec2short vec[], BYTE vector_max);
+BOOL nc_vectors_collide(Box *box, Coordinate vec[], BYTE vector_max);
 BOOL nc_vector_is_left(short x, short y, short v1x, short v1y, short v2x, short v2y);
 
 #endif
