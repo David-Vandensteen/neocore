@@ -28,14 +28,16 @@ function Write-Cache {
     [Parameter(Mandatory=$true)][String] $PathISOBuildFolder
   )
 
+  $projectBuildPath = Get-TemplatePath -Path $Config.project.buildPath
+
   if ((Test-Path -Path $PathCDTemplate) -eq $false) {
     if ($Manifest.manifest.dependencies.cdTemplate.url) {
       Install-Component `
         -URL $Manifest.manifest.dependencies.cdTemplate.url `
-        -PathDownload "$($Config.project.buildPath)\spool" `
+        -PathDownload "$projectBuildPath\spool" `
         -PathInstall $Manifest.manifest.dependencies.cdTemplate.path
     } else {
-      Install-Component -URL "$BaseURL/neobuild-cd_template.zip" -PathDownload "$($Config.project.buildPath)\spool" -PathInstall $Config.project.buildPath
+      Install-Component -URL "$BaseURL/neobuild-cd_template.zip" -PathDownload "$projectBuildPath\spool" -PathInstall $projectBuildPath
     }
   }
 
@@ -102,28 +104,29 @@ function Write-CUE {
     $ext = [System.IO.Path]::GetExtension($File)
     $path = [System.IO.Path]::GetDirectoryName($File)
 
-    $destination = "$($Config.project.buildPath)\$($Config.project.name)\$path"
+    $projectBuildPath = Get-TemplatePath -Path $Config.project.buildPath
+    $destination = "$projectBuildPath\$($Config.project.name)\$path"
 
     Copy-Item -Path $File -Destination $destination
 
     if ($ext -eq ".mp3" -or ($ext -eq ".wav" -and $ConfigCDDA.dist.iso.format -eq ".mp3")) {
-      if ((Test-Path -Path "$($Config.project.buildPath)\bin\mpg123-1.31.3-static-x86-64") -eq $false) {
+      if ((Test-Path -Path "$projectBuildPath\bin\mpg123-1.31.3-static-x86-64") -eq $false) {
         if ($Manifest.manifest.dependencies.mpg123.url) {
           Install-Component `
           -URL $Manifest.manifest.dependencies.mpg123.url `
-          -PathDownload "$($Config.project.buildPath)\spool" `
+          -PathDownload "$projectBuildPath\spool" `
           -PathInstall $Manifest.manifest.dependencies.mpg123.path
         } else {
           Install-Component `
           -URL "$BaseURL/mpg123-1.31.3-static-x86-64.zip" `
-          -PathDownload "$($Config.project.buildPath)\spool" `
-          -PathInstall "$($Config.project.buildPath)\bin"
+          -PathDownload "$projectBuildPath\spool" `
+          -PathInstall "$projectBuildPath\bin"
         }
       }
     }
 
     if (-Not($Rule -like "*dist*")) {
-      $buildPathProject = "$($Config.project.buildPath)\$($Config.project.name)"
+      $buildPathProject = "$projectBuildPath\$($Config.project.name)"
       if ($ext -eq ".wav") {
         Write-Host "copy $File" -ForegroundColor Blue
         Copy-Item -Path "$buildPathProject\$path\$baseName$ext" -Destination $path\$baseName$ext
@@ -131,7 +134,7 @@ function Write-CUE {
 
       if ($ext -eq ".mp3") {
         Write-WAV `
-          -mpg123 "$($Config.project.buildPath)\bin\mpg123-1.31.3-static-x86-64\mpg123.exe" `
+          -mpg123 "$projectBuildPath\bin\mpg123-1.31.3-static-x86-64\mpg123.exe" `
           -WAVFile "$buildPathProject\$path\$baseName.wav" `
           -MP3File "$path\$baseName.mp3"
         $File = "$path\$baseName.wav"
@@ -140,7 +143,7 @@ function Write-CUE {
 
     if ($Rule -eq "dist:exe" -and $ext -eq ".mp3") {
       Write-WAV `
-        -mpg123 "$($Config.project.buildPath)\bin\mpg123-1.31.3-static-x86-64\mpg123.exe" `
+        -mpg123 "$projectBuildPath\bin\mpg123-1.31.3-static-x86-64\mpg123.exe" `
         -WAVFile "$buildPathProject\$path\$baseName.wav" `
         -MP3File "$path\$baseName.mp3"
       $File = "$path\$baseName.wav"
@@ -148,7 +151,7 @@ function Write-CUE {
 
     if ($Rule -eq "dist:mame" -and $ext -eq ".mp3") {
       Write-WAV `
-        -mpg123 "$($Config.project.buildPath)\bin\mpg123-1.31.3-static-x86-64\mpg123.exe" `
+        -mpg123 "$projectBuildPath\bin\mpg123-1.31.3-static-x86-64\mpg123.exe" `
         -WAVFile "$buildPathProject\$path\$baseName.wav" `
         -MP3File "$path\$baseName.mp3"
       $File = "$path\$baseName.wav"
@@ -167,7 +170,7 @@ function Write-CUE {
     if ($Rule -like "dist:iso") {
       if ($ext -eq ".mp3" -and $ConfigCDDA.dist.iso.format -eq "wav") {
         Write-WAV `
-          -mpg123 "$($Config.project.buildPath)\bin\mpg123-1.31.3-static-x86-64\mpg123.exe" `
+          -mpg123 "$projectBuildPath\bin\mpg123-1.31.3-static-x86-64\mpg123.exe" `
           -WAVFile "$buildPathProject\$path\$baseName.wav" `
           -MP3File "$path\$baseName.mp3"
         $File = "$path\$baseName.wav"
@@ -183,18 +186,18 @@ function Write-CUE {
           if ($Manifest.manifest.dependencies.ffmpeg.url) {
               Install-Component `
                 -URL $Manifest.manifest.dependencies.ffmpeg.url `
-                -PathDownload "$($Config.project.buildPath)\spool" `
+                -PathDownload "$projectBuildPath\spool" `
                 -PathInstall $Manifest.manifest.dependencies.ffmpeg.url
             } else {
               Install-Component `
                 -URL "$BaseURL/ffmpeg-23-12-18.zip" `
-                -PathDownload "$($Config.project.buildPath)\spool" `
-                -PathInstall "$($Config.project.buildPath)\bin"
+                -PathDownload "$projectBuildPath\spool" `
+                -PathInstall "$projectBuildPath\bin"
             }
         }
 
         Write-MP3 `
-          -ffmpeg "$($Config.project.buildPath)\bin\ffmpeg.exe" `
+          -ffmpeg "$projectBuildPath\bin\ffmpeg.exe" `
           -WAVFile "$path\$baseName.wav" `
           -MP3File "$buildPathProject\$path\$baseName.mp3"
         $File = "$path\$baseName.wav"
