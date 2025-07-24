@@ -67,7 +67,6 @@ function Main {
 
   $projectBuildPath = Get-TemplatePath -Path $Config.project.buildPath
   if ((Test-Path -Path "$projectBuildPath\bin") -eq $false) { Install-SDK }
-  if ((Test-Path -Path "$projectBuildPath\neodev-sdk") -eq $false) { Install-SDK }
 
   $projectBuildPath = Get-TemplatePath -Path $Config.project.buildPath
   if ((Test-Path -Path "$projectBuildPath\$($Config.project.name)") -eq $false) {

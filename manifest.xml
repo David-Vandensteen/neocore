@@ -57,10 +57,6 @@
       <url>http://azertyvortex.free.fr/download/neocore/current/msys2-runtime.zip</url>
       <path>{{build}}\bin</path>
     </msys2Runtime>
-    <neodevSDK>
-      <url>http://azertyvortex.free.fr/download/neocore/neodev-sdk-r1.zip</url>
-      <path>{{build}}</path>
-    </neodevSDK>
     <neodevLib>
       <url>http://azertyvortex.free.fr/download/neocore/current/neodev-lib.zip</url>
       <path>{{build}}\lib</path>

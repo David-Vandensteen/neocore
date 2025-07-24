@@ -54,10 +54,6 @@ function Install-SDK {
     -PathDownload $downloadPath `
     -PathInstall $Manifest.manifest.dependencies.chdman.path
   Install-Component `
-    -URL $Manifest.manifest.dependencies.neodevSDK.url `
-    -PathDownload $downloadPath `
-    -PathInstall $Manifest.manifest.dependencies.neodevSDK.path
-  Install-Component `
     -URL $Manifest.manifest.dependencies.neodevLib.url `
     -PathDownload $downloadPath `
     -PathInstall $Manifest.manifest.dependencies.neodevLib.path

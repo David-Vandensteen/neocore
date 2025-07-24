@@ -30,10 +30,6 @@ function Assert-Program {
     Write-Host "error : $makeFile not found" -ForegroundColor Red
     return $false
   }
-  if (-Not(Test-Path -Path $pathNeoDev) -or $pathNeoDev -eq "") {
-    Write-Host "error : $pathNeoDev not found" -ForegroundColor Red
-    return $false
-  }
   if (-Not(Test-Path -Path $includePath)) {
     Write-Host "error : $includePath not found" -ForegroundColor Red
     return $false

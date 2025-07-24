@@ -6,11 +6,6 @@ function Assert-BuildProgram {
     Write-Host "Error : $projectBuildPath not found" -ForegroundColor Red
     return $false
   }
-  if (-Not(Test-Path -Path "$projectBuildPath\neodev-sdk")) {
-    Write-Host "Error : $projectBuildPath\neodev-sdk not found" -ForegroundColor Red
-    return $false
-  }
-
   Write-Host "Build program requirements validated" -ForegroundColor Green
   return $true
 }
