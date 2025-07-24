@@ -56,9 +56,30 @@ function Write-Program {
 
   Write-Host $env:path
 
-  # TODO : debug exit code
-  & make -f $MakeFile 2>&1 | Tee-Object -FilePath "$pathBuildName\gcc.log"
-  $makeExitCode = $LASTEXITCODE
+  # Execute make with proper output handling
+  Write-Host "Executing make command..." -ForegroundColor Cyan
+  Write-Host "Command: make -f $MakeFile" -ForegroundColor Gray
+  Write-Host "Log file: $pathBuildName\gcc.log" -ForegroundColor Gray
+  Write-Host ""
+
+  # Use Start-Process for better output handling
+  $makeProcess = Start-Process -FilePath "make" -ArgumentList "-f", $MakeFile -NoNewWindow -PassThru -Wait -RedirectStandardOutput "$pathBuildName\gcc.log" -RedirectStandardError "$pathBuildName\gcc_error.log"
+  $makeExitCode = $makeProcess.ExitCode
+
+  # Display the output from the log file
+  if (Test-Path "$pathBuildName\gcc.log") {
+    Write-Host "Make output:" -ForegroundColor Yellow
+    Get-Content "$pathBuildName\gcc.log" | ForEach-Object { Write-Host "  $_" -ForegroundColor Gray }
+  }
+
+  # Display errors if any
+  if (Test-Path "$pathBuildName\gcc_error.log") {
+    $errorContent = Get-Content "$pathBuildName\gcc_error.log"
+    if ($errorContent) {
+      Write-Host "Make errors:" -ForegroundColor Red
+      $errorContent | ForEach-Object { Write-Host "  $_" -ForegroundColor Red }
+    }
+  }
 
   if ($makeExitCode -ne 0) {
     Write-Host "Make failed with exit code $makeExitCode" -ForegroundColor Red
