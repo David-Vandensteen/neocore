@@ -79,7 +79,10 @@ function Main {
   if ($Rule -eq "lib") { Build-NeocoreLib }
   if ($Rule -eq "sprite") { Build-Sprite }
   if (($Rule -eq "make") -or ($Rule -eq "") -or (!$Rule) -or ($Rule -eq "default") ) {
-    MakDefault
+    if (-Not(MakDefault)) {
+      Write-Host "Default build failed" -ForegroundColor Red
+      exit 1
+    }
   }
   if ($Rule -eq "iso") {
     MakISO
