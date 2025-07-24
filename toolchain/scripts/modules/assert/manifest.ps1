@@ -8,7 +8,7 @@ function Assert-Manifest {
         Write-Host "manifest not found : remove build cache" -ForegroundColor Blue
         Write-Host "Please, remove $projectBuildPath to rebuild neocore"
         Write-Host "You can use mak clean:build"
-        exit 1
+        return $false
       }
     }
 
@@ -22,11 +22,19 @@ function Assert-Manifest {
         Write-Host "manifest has changed : remove build cache" -ForegroundColor Blue
         Write-Host "Please, remove $projectBuildPath to rebuild neocore"
         Write-Host "You can use mak clean:build"
-        exit 1
+        return $false
       }
     }
 
-    Assert-ManifestDependencies
+    if (-Not(Assert-ManifestDependencies)) {
+      Write-Host "Manifest dependency validation failed" -ForegroundColor Red
+      return $false
+    }
     Write-Host "manifest is compliant" -ForegroundColor Green
+    return $true
+  }
+  else {
+    # For clean:build rule, no validation needed
+    return $true
   }
 }

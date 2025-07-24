@@ -78,5 +78,5 @@ function Assert-Rule {
     Write-Host ""
     Write-Host "--version"
     Write-Host "--help"
-    exit 1
+    return $false
 }

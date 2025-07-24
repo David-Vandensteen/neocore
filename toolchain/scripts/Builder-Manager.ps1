@@ -34,7 +34,10 @@ function Main {
   Write-Host "Getting manifest from $manifestPath" -ForegroundColor Cyan
   [xml]$Manifest = (Get-Content -Path $manifestPath)
 
-  Assert-Manifest
+  if (-Not(Assert-Manifest)) {
+    Write-Host "Manifest assertion failed" -ForegroundColor Red
+    return $false
+  }
 
   Assert-Rule -Rule $Rule
   Stop-Emulators
@@ -109,6 +112,9 @@ function Main {
   if ($Rule -eq "only:run") { Start-Mame }
   if ($Rule -eq "only:run:mame") { Start-Mame }
   if ($Rule -eq "only:run:raine") { Start-Mame }
+
+  # All operations completed successfully
+  return $true
 }
 
 if ((Test-Path -Path $ConfigFile) -eq $false) {
@@ -128,4 +134,11 @@ try {
   return 1
 }
 
-Main -Config $config -BaseURL "http://azertyvortex.free.fr/download" -Rule $Rule
+$mainResult = Main -Config $config -BaseURL "http://azertyvortex.free.fr/download" -Rule $Rule
+if ($mainResult -eq $false) {
+  Write-Host "Build process failed" -ForegroundColor Red
+  exit 1
+}
+
+Write-Host "Build process completed successfully" -ForegroundColor Green
+exit 0

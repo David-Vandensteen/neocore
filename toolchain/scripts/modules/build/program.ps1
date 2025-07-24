@@ -1,6 +1,9 @@
 function Build-Program {
   Write-Host "Build Program" -ForegroundColor Cyan
-  Assert-BuildProgram
+  if (-Not(Assert-BuildProgram)) {
+    Write-Host "Build program assertion failed" -ForegroundColor Red
+    return $false
+  }
   $projectBuildPath = Resolve-TemplatePath -Path $Config.project.buildPath
   $prgFile = "$projectBuildPath\$($Config.project.name)\$($Config.project.name).prg"
   $prgFile = Get-TemplatePath -Path $prgFile

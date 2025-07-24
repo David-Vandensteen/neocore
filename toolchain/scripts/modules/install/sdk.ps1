@@ -46,17 +46,9 @@ function Install-SDK {
     -PathDownload $downloadPath `
     -PathInstall $Manifest.manifest.dependencies.datAnimatorFramer.path
   Install-Component `
-    -URL $Manifest.manifest.dependencies.neoTools.url `
+    -URL $Manifest.manifest.dependencies.datBuildCharCharSplit.url `
     -PathDownload $downloadPath `
-    -PathInstall $Manifest.manifest.dependencies.neoTools.path
-  Install-Component `
-    -URL $Manifest.manifest.dependencies.buildChar.url `
-    -PathDownload $downloadPath `
-    -PathInstall $Manifest.manifest.dependencies.buildChar.path
-  Install-Component `
-    -URL $Manifest.manifest.dependencies.charSplit.url `
-    -PathDownload $downloadPath `
-    -PathInstall $Manifest.manifest.dependencies.charSplit.path
+    -PathInstall $Manifest.manifest.dependencies.datBuildCharCharSplit.path
   Install-Component `
     -URL $Manifest.manifest.dependencies.chdman.url `
     -PathDownload $downloadPath `
