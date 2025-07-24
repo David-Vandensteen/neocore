@@ -4,21 +4,33 @@ function Write-FixdataXML {
     [Parameter(Mandatory=$true)][String] $OutputFile
   )
 
-  $xmlDoc = New-Object System.Xml.XmlDocument
-  $xmlDoc.Load($InputFile)
+  try {
+    $xmlDoc = New-Object System.Xml.XmlDocument
+    $xmlDoc.Load($InputFile)
 
-  $fixDataNode = $xmlDoc.SelectSingleNode("//fixdata/chardata")
+    $fixDataNode = $xmlDoc.SelectSingleNode("//fixdata/chardata")
 
-  $xmlContent = $fixDataNode.OuterXml
-  $xmlContent = $xmlContent.Replace("{{build}}", $(Get-TemplatePath -Path $Config.project.buildPath))
-  $xmlContent = $xmlContent.Replace("{{neocore}}", $(Get-TemplatePath -Path $Config.project.neocorePath))
-  $xmlContent = $xmlContent.Replace("{{name}}", $(Get-TemplatePath -Path $Config.project.name))
+    if ($null -eq $fixDataNode) {
+      Write-Host "Error: fixdata/chardata node not found in $InputFile" -ForegroundColor Red
+      return $false
+    }
 
-  $newXmlDoc = New-Object System.Xml.XmlDocument
-  $newXmlDoc.LoadXml($xmlContent)
+    $xmlContent = $fixDataNode.OuterXml
+    $xmlContent = $xmlContent.Replace("{{build}}", $(Get-TemplatePath -Path $Config.project.buildPath))
+    $xmlContent = $xmlContent.Replace("{{neocore}}", $(Get-TemplatePath -Path $Config.project.neocorePath))
+    $xmlContent = $xmlContent.Replace("{{name}}", $Config.project.name)
 
-  Write-Host "Saving fix data to $OutputFile" -ForegroundColor Cyan
-  $newXmlDoc.Save($OutputFile)
+    $newXmlDoc = New-Object System.Xml.XmlDocument
+    $newXmlDoc.LoadXml($xmlContent)
+
+    Write-Host "Saving fix data to $OutputFile" -ForegroundColor Cyan
+    $newXmlDoc.Save($OutputFile)
+    return $true
+  }
+  catch {
+    Write-Host "Error processing fixdata XML: $($_.Exception.Message)" -ForegroundColor Red
+    return $false
+  }
 }
 
 function Write-Fix {
@@ -30,7 +42,7 @@ function Write-Fix {
   Write-Host "Compiling fix data" -ForegroundColor Yellow
   if ((Test-Path -Path $XMLFile) -eq $false) {
     Write-Host "$XMLFile not found" -ForegroundColor Red
-    exit 1
+    return $false
   }
 
   Write-Host "Running BuildChar on $XMLFile" -ForegroundColor Cyan
@@ -40,13 +52,14 @@ function Write-Fix {
 
   if ($buildCharExitCode -ne 0) {
     Write-Host "BuildChar.exe failed with exit code $buildCharExitCode" -ForegroundColor Red
-    exit $buildCharExitCode
+    return $false
   }
 
   if (Select-String -Path "$buildPathProject\fix.log" -Pattern "System.IO.DirectoryNotFoundException") {
     Write-Host "Error: Check your file paths in the XML configuration" -ForegroundColor Red
-    exit 1
+    return $false
   }
 
   Write-Host "Fix data compiled successfully" -ForegroundColor Green
+  return $true
 }

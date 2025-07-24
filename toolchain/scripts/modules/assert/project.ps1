@@ -6,7 +6,10 @@ function Assert-Project {
     Write-Host "Path assertion failed" -ForegroundColor Red
     return $false
   }
-  Assert-ProjectName -Name $($Config.project.name)
+  if (-Not(Assert-ProjectName -Name $($Config.project.name))) {
+    Write-Host "Project name assertion failed" -ForegroundColor Red
+    return $false
+  }
 
   if (-Not($Config.project.name)) {
     Write-Host "error : project.name not found" -ForegroundColor Red
@@ -15,6 +18,15 @@ function Assert-Project {
   if (-Not($Config.project.version)) {
     Write-Host "error : project.version not found" -ForegroundColor Red
     return $false
+  }
+  if (-Not($Config.project.platform)) {
+    Write-Host "error : project.platform not found" -ForegroundColor Red
+    return $false
+  } else {
+    if ($Config.project.platform -ne "cd") {
+      Write-Host "error : project.platform must be 'cd'" -ForegroundColor Red
+      return $false
+    }
   }
   if (-Not($Config.project.makefile)) {
     Write-Host "error : project.makefile not found" -ForegroundColor Red
@@ -36,7 +48,10 @@ function Assert-Project {
     Write-Host "error : project.gfx not found" -ForegroundColor Red
     return $false
   } else {
-    Assert-ProjectGfxDat
+    if (-Not(Assert-ProjectGfxDat)) {
+      Write-Host "Project GFX DAT assertion failed" -ForegroundColor Red
+      return $false
+    }
   }
   if (-Not($Config.project.emulator)) {
     Write-Host "error : project.emulator not found" -ForegroundColor Red
@@ -61,6 +76,11 @@ function Assert-Project {
   if (-Not($Config.project.compiler.systemFile)) {
     Write-Host "error : project.compiler.systemFile not found" -ForegroundColor Red
     return $false
+  } else {
+    if (-Not(Assert-ProjectCompilerSystemFile)) {
+      Write-Host "Project system file assertion failed" -ForegroundColor Red
+      return $false
+    }
   }
 
   if ($Config.project.sound) {

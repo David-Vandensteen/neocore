@@ -6,40 +6,51 @@ function Assert-Program {
   $includePath = Resolve-TemplatePath -Path $Config.project.compiler.includePath
   $neocoreIncludePath = Resolve-TemplatePath -Path "$($Config.project.neocorePath)\src-lib"
   $libraryPath = Resolve-TemplatePath -Path $Config.project.compiler.libraryPath
-  $systemFile = Resolve-TemplatePath -Path $Config.project.compiler.systemFile
+  
+  # Handle systemFile based on platform (defaulting to CD)
+  $systemFile = ""
+  if ($Config.project.compiler.systemFile.cd) {
+    $systemFile = Resolve-TemplatePath -Path $Config.project.compiler.systemFile.cd
+  } elseif ($Config.project.compiler.systemFile.cartridge) {
+    $systemFile = Resolve-TemplatePath -Path $Config.project.compiler.systemFile.cartridge
+  }
 
+  Write-Host "Assert program" -ForegroundColor Yellow
   Write-Host "includePath: $includePath" -ForegroundColor Yellow
   Write-Host "neocoreIncludePath: $neocoreIncludePath" -ForegroundColor Yellow
   if (-Not(Test-Path -Path $gccPath) -or $gccPath -eq "") {
     Write-Host "error : $gccPath not found" -ForegroundColor Red
-    exit 1
+    return $false
   }
   if (-Not(Test-Path -Path $binPath) -or $binPath -eq "") {
     Write-Host "error : $binPath not found" -ForegroundColor Red
-    exit 1
+    return $false
   }
   if (-Not(Test-Path -Path $makeFile) -or $makeFile -eq "") {
     Write-Host "error : $makeFile not found" -ForegroundColor Red
-    exit 1
+    return $false
   }
   if (-Not(Test-Path -Path $pathNeoDev) -or $pathNeoDev -eq "") {
     Write-Host "error : $pathNeoDev not found" -ForegroundColor Red
-    exit 1
+    return $false
   }
   if (-Not(Test-Path -Path $includePath)) {
     Write-Host "error : $includePath not found" -ForegroundColor Red
-    exit 1
+    return $false
   }
   if (-Not(Test-Path -Path $neocoreIncludePath)) {
     Write-Host "error : $neocoreIncludePath not found" -ForegroundColor Red
-    exit 1
+    return $false
   }
   if (-Not(Test-Path -Path $libraryPath)) {
     Write-Host "error : $libraryPath not found" -ForegroundColor Red
-    exit 1
+    return $false
   }
-  if (-Not(Test-Path -Path $systemFile)) {
+  if ($systemFile -and -Not(Test-Path -Path $systemFile)) {
     Write-Host "error : $systemFile not found" -ForegroundColor Red
-    exit 1
+    return $false
   }
+  
+  Write-Host "Program assertion completed successfully" -ForegroundColor Green
+  return $true
 }

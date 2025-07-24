@@ -9,7 +9,10 @@ function Write-Program {
   )
   Write-Host "Write Program" -ForegroundColor Cyan
   Write-Host "Assert write program" -ForegroundColor Yellow
-  Assert-Program
+  if (-Not(Assert-Program)) {
+    Write-Host "Program assertion failed" -ForegroundColor Red
+    return $false
+  }
 
   Write-Host "Compiling program $PRGFile" -ForegroundColor Yellow
 
@@ -23,7 +26,17 @@ function Write-Program {
   $includePath = Resolve-TemplatePath -Path $Config.project.compiler.includePath
   $neocoreIncludePath = Resolve-TemplatePath -Path "$($Config.project.neocorePath)\src-lib"
   $libraryPath = Resolve-TemplatePath -Path $Config.project.compiler.libraryPath
-  $systemFile = Resolve-TemplatePath -Path $Config.project.compiler.systemFile
+  
+  # Handle systemFile based on platform (defaulting to CD)
+  $systemFile = ""
+  if ($Config.project.compiler.systemFile.cd) {
+    $systemFile = Resolve-TemplatePath -Path $Config.project.compiler.systemFile.cd
+  } elseif ($Config.project.compiler.systemFile.cartridge) {
+    $systemFile = Resolve-TemplatePath -Path $Config.project.compiler.systemFile.cartridge
+  } else {
+    Write-Host "Error: No system file configured for CD or cartridge" -ForegroundColor Red
+    return $false
+  }
 
   $env:PROJECT = $ProjectName
   $env:GCC_PATH = $gccPath
@@ -49,14 +62,15 @@ function Write-Program {
 
   if ($makeExitCode -ne 0) {
     Write-Host "Make failed with exit code $makeExitCode" -ForegroundColor Red
-    exit $makeExitCode
+    return $false
   }
 
   if ((Test-Path -Path $prgFile) -eq $true) {
     Write-Host "Builded program $prgFile" -ForegroundColor Green
     Write-Host ""
+    return $true
   } else {
     Write-Host "$prgFile was not generated" -ForegroundColor Red
-    exit 1
+    return $false
   }
 }

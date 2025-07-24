@@ -20,7 +20,10 @@ function Main {
 
   Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\import\neocore\modules.ps1"
 
-  Assert-Project -Config $Config
+  if (-Not(Assert-Project -Config $Config)) {
+    Write-Host "Project assertion failed" -ForegroundColor Red
+    exit 1
+  }
 
   Write-Host ""
   Write-Host "Name : $($Config.project.name)"
@@ -36,7 +39,7 @@ function Main {
 
   if (-Not(Assert-Manifest)) {
     Write-Host "Manifest assertion failed" -ForegroundColor Red
-    return $false
+    exit 1
   }
 
   Assert-Rule -Rule $Rule

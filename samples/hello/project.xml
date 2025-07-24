@@ -2,6 +2,7 @@
 <project>
   <name>hello</name>
   <version>1.0.0</version>
+  <platform>cd</platform>
   <makefile>..\Makefile</makefile>
   <neocorePath>..\..</neocorePath>
   <buildPath>{{neocore}}\build</buildPath>
@@ -66,6 +67,9 @@
     <path>{{build}}\gcc\gcc-2.95.2</path>
     <includePath>{{neocore}}\src-lib\include</includePath>
     <libraryPath>{{build}}\lib</libraryPath>
-    <systemFile>{{neocore}}\src-lib\system\neocd.x</systemFile>
+    <systemFile>
+      <cd>{{neocore}}\src-lib\system\neocd.x</cd>
+      <cartridge>{{neocore}}\src-lib\system\neocart.x</cartridge>
+    </systemFile>
   </compiler>
 </project>
