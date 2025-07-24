@@ -15,7 +15,7 @@
           <mapfile>out\charMaps.s</mapfile>
           <palfile>out\charPals.s</palfile>
           <incfile>out\charInclude.h</incfile>
-        <incprefix>../</incprefix>
+          <incprefix>../</incprefix>
         </setup>
         <scrl id="streamScroll" colorStream="horizontal">
           <file>gfx\streamTest.png</file>

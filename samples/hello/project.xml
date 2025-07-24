@@ -16,7 +16,7 @@
           <mapfile>out\charMaps.s</mapfile>
           <palfile>out\charPals.s</palfile>
           <incfile>out\charInclude.h</incfile>
-        <incprefix>../</incprefix>
+          <incprefix>../</incprefix>
         </setup>
         <pict id="logo">
           <file>assets\gfx\logo.png</file>
