@@ -128,8 +128,6 @@ static int log_y = LOG_Y_INIT;
 static int log_x_default = LOG_X_INIT;
 static int log_y_default = LOG_Y_INIT;
 
-static BOOL log_auto_next_line = true;
-
 #define set_log_x(x) (log_x = (x))
 #define set_log_y(y) (log_y = (y))
 #define reset_log_position() \
@@ -1170,7 +1168,6 @@ void nc_init_log() {
   log_y = LOG_Y_INIT;
   log_x_default = LOG_X_INIT;
   log_y_default = LOG_Y_INIT;
-  log_auto_next_line = true;
   clearFixLayer();
 }
 
@@ -1184,113 +1181,138 @@ void nc_set_position_log(WORD _x, WORD _y) {
   log_y_default = log_y;
 }
 
-void nc_set_auto_next_line_log(BOOL auto_next_line) {
-  log_auto_next_line = auto_next_line;
-}
-
-void nc_next_line_log() {
+void nc_log_next_log() {
   log_y++;
   log_x = log_x_default;
 }
 
 WORD nc_log_info(char *text, ...) {
   char buffer[256];
+  char line_buffer[32];
+  va_list args;
+  char *line_start;
+  char *newline_pos;
+  int line_len;
+
+  va_start(args, text);
+  vsprintf(buffer, text, args);
+  va_end(args);
+
+  // Check if text contains \n and handle line by line
+  if (strchr(buffer, '\n') != NULL) {
+    line_start = buffer;
+    while ((newline_pos = strchr(line_start, '\n')) != NULL) {
+      // Copy the line without the \n
+      line_len = newline_pos - line_start;
+      strncpy(line_buffer, line_start, line_len);
+      line_buffer[line_len] = '\0';
+
+      // Print the line
+      fixPrintf(log_x, log_y, 0, 0, "%s", line_buffer);
+
+      // Move to next line
+      log_y++;
+      log_x = log_x_default;
+
+      // Move to next line in buffer
+      line_start = newline_pos + 1;
+    }
+
+    // Handle remaining text after last \n (if any)
+    if (*line_start != '\0') {
+      fixPrintf(log_x, log_y, 0, 0, "%s", line_start);
+      log_x += strlen(line_start);
+    }
+  } else {
+    // No \n, just print and advance log_x
+    fixPrintf(log_x, log_y, 0, 0, "%s", buffer);
+    log_x += strlen(buffer);
+  }
+
+  return strlen(text);
+}
+
+WORD nc_log_info_line(char *text, ...) {
+  char buffer[256];
   va_list args;
   va_start(args, text);
   vsprintf(buffer, text, args);
   va_end(args);
   fixPrintf(log_x, log_y, 0, 0, "%s", buffer);
-  if (log_auto_next_line) {
-    nc_next_line_log();
-  } else {
-    log_x += strlen(text);
-  }
+
+  // Always advance to next line
+  nc_log_next_log();
+
   return strlen(text);
 }
 
-void nc_log_word(char *label, WORD value){
-  WORD yc = log_y;
-  log_x = log_x_default + nc_log_info(label) + 2;
-  fixPrintf(log_x , yc, 0, 0, "%04d", value);
-  log_x = log_x_default;
+void nc_log_word(WORD value) {
+  fixPrintf(log_x, log_y, 0, 0, "%04d", value);
+  nc_log_next_log();
 }
 
-void nc_log_int(char *label, int value){
-  WORD yc = log_y;
-  log_x = log_x_default + nc_log_info(label) + 2;
-  fixPrintf(log_x , yc, 0, 0, "%08d", value);
-  log_x = log_x_default;
+void nc_log_int(int value) {
+  fixPrintf(log_x, log_y, 0, 0, "%08d", value);
+  nc_log_next_log();
 }
 
-void nc_log_dword(char *label, DWORD value){
-  WORD yc = log_y;
-  log_x = log_x_default + nc_log_info(label) + 2;
-  fixPrintf(log_x , yc, 0, 0, "%08d", value);
-  log_x = log_x_default;
+void nc_log_dword(DWORD value) {
+  fixPrintf(log_x, log_y, 0, 0, "%08d", value);
+  nc_log_next_log();
 }
 
-void nc_log_short(char *label, short value) {
-  WORD yc = log_y;
-  log_x = log_x_default + nc_log_info(label) + 2;
-  fixPrintf(log_x , yc, 0, 0, "%02d", value);
-  log_x = log_x_default;
+void nc_log_short(short value) {
+  fixPrintf(log_x, log_y, 0, 0, "%02d", value);
+  nc_log_next_log();
 }
 
-void nc_log_byte(char *label, BYTE value) {
-  WORD yc = log_y;
-  log_x = log_x_default + nc_log_info(label) + 2;
-  fixPrintf(log_x , yc, 0, 0, "%02d", value);
-  log_x = log_x_default;
+void nc_log_byte(BYTE value) {
+  fixPrintf(log_x, log_y, 0, 0, "%02d", value);
+  nc_log_next_log();
 }
 
-void nc_log_bool(char *label, BOOL value) {
-  WORD yc = log_y;
-  log_x = log_x_default + nc_log_info(label) + 2;
-  fixPrintf(log_x , yc, 0, 0, "%01d", value);
-  log_x = log_x_default;
+void nc_log_bool(BOOL value) {
+  fixPrintf(log_x, log_y, 0, 0, "%01d", value);
+  nc_log_next_log();
 }
 
-void nc_log_spriteInfo(char *label, spriteInfo *si) {
-  nc_log_info(label);
-  nc_log_word("PALCOUNT : ", si->palInfo->count);
-  nc_log_word("FRAMECOUNT : ", si->frameCount);
-  nc_log_word("MAXWIDTH : ", si->maxWidth);
+void nc_log_spriteInfo(spriteInfo *si) {
+  nc_log_info("PALCOUNT : %04d", si->palInfo->count);
+  nc_log_info("FRAMECOUNT : %04d", si->frameCount);
+  nc_log_info("MAXWIDTH : %04d", si->maxWidth);
 }
 
-void nc_log_box(char *label, Box *b) {
-  nc_log_info(label);
-  nc_log_short("P0X", (short)b->p0.x);
-  nc_log_short("P0Y", (short)b->p0.y);
+void nc_log_box(Box *b) {
+  nc_log_info("P0X: %d", (short)b->p0.x);
+  nc_log_info("P0Y: %d", (short)b->p0.y);
   nc_log_info("");
-  nc_log_short("P1X", (short)b->p1.x);
-  nc_log_short("P1Y", (short)b->p1.y);
+  nc_log_info("P1X: %d", (short)b->p1.x);
+  nc_log_info("P1Y: %d", (short)b->p1.y);
   nc_log_info("");
-  nc_log_short("P2X", (short)b->p2.x);
-  nc_log_short("P2Y", (short)b->p2.y);
+  nc_log_info("P2X: %d", (short)b->p2.x);
+  nc_log_info("P2Y: %d", (short)b->p2.y);
   nc_log_info("");
-  nc_log_short("P3X", (short)b->p3.x);
-  nc_log_short("P3Y", (short)b->p3.y);
+  nc_log_info("P3X: %d", (short)b->p3.x);
+  nc_log_info("P3Y: %d", (short)b->p3.y);
   nc_log_info("");
-  nc_log_short("P4X", (short)b->p4.x);
-  nc_log_short("P4Y", (short)b->p4.y);
+  nc_log_info("P4X: %d", (short)b->p4.x);
+  nc_log_info("P4Y: %d", (short)b->p4.y);
   nc_log_info("");
-  nc_log_short("WIDTH ", b->width);
-  nc_log_short("HEIGHT ", b->height);
+  nc_log_info("WIDTH: %d", b->width);
+  nc_log_info("HEIGHT: %d", b->height);
   nc_log_info("");
-  nc_log_short("WIDTH OFFSET ", b->widthOffset);
-  nc_log_short("HEIGHT OFFSET ", b->heightOffset);
+  nc_log_info("WIDTH OFFSET: %d", b->widthOffset);
+  nc_log_info("HEIGHT OFFSET: %d", b->heightOffset);
 }
 
-void nc_log_pictureInfo(char *label, pictureInfo *pi) {
-  nc_log_info(label);
-  nc_log_word("TILEWIDTH : ", (WORD)pi->tileWidth);
-  nc_log_word("TILEHEIGHT : ", (WORD)pi->tileHeight);
+void nc_log_pictureInfo(pictureInfo *pi) {
+  nc_log_info("TILEWIDTH : %04d", (WORD)pi->tileWidth);
+  nc_log_info("TILEHEIGHT : %04d", (WORD)pi->tileHeight);
 }
 
-void nc_log_vec2short(char *label, Vec2short vec2short) {
-  nc_log_info(label);
-  nc_log_short("X", vec2short.x);
-  nc_log_short("Y", vec2short.y);
+void nc_log_coordinate(Coordinate coordinate) {
+  nc_log_info("X: %d", coordinate.x);
+  nc_log_info("Y: %d", coordinate.y);
 }
 
 void nc_log_palette_info(paletteInfo *paletteInfo) {
