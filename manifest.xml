@@ -9,10 +9,10 @@
       <url>http://azertyvortex.free.fr/download/neocore/DAT-animator-framer-r0.zip</url>
       <path>{{build}}\tools</path>
     </datAnimatorFramer>
-    <buildchar>
-      <url>http://azertyvortex.free.fr/download/neocore/buildchar-r1.zip</url>
+    <datBuildCharCharSplit>
+      <url>http://azertyvortex.free.fr/download/neocore/DAT-buildchar-charsplit-r0.zip</url>
       <path>{{build}}\bin</path>
-    </buildchar>
+    </datBuildCharCharSplit>
     <cdTemplate>
       <url>http://azertyvortex.free.fr/download/neocore/current/cd_template.zip</url>
       <path>{{build}}</path>
@@ -21,10 +21,6 @@
       <url>http://azertyvortex.free.fr/download/neocore/current/chdman.zip</url>
       <path>{{build}}\bin</path>
     </chdman>
-    <charSplit>
-      <url>http://azertyvortex.free.fr/download/neocore/charsplit-r1.zip</url>
-      <path>{{build}}\bin</path>
-    </charSplit>
     <datLib>
       <url>http://azertyvortex.free.fr/download/neocore/libDATlib-0-3-r0.zip</url>
       <path>{{build}}\lib</path>
@@ -61,10 +57,6 @@
       <url>http://azertyvortex.free.fr/download/neocore/current/msys2-runtime.zip</url>
       <path>{{build}}\bin</path>
     </msys2Runtime>
-    <neoTools>
-      <url>http://azertyvortex.free.fr/download/neocore/neotools-r1.zip</url>
-      <path>{{build}}\bin</path>
-    </neoTools>
     <neodevSDK>
       <url>http://azertyvortex.free.fr/download/neocore/neodev-sdk-r1.zip</url>
       <path>{{build}}</path>
