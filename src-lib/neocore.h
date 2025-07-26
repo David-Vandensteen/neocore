@@ -167,8 +167,8 @@ void nc_init_display_gfx_animated_sprite(
 
 void nc_init_display_gfx_animated_sprite_physic(
   GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic,
-  spriteInfo *spriteInfo,
-  paletteInfo *paletteInfo,
+  const spriteInfo *spriteInfo,
+  const paletteInfo *paletteInfo,
   short x,
   short y,
   short box_witdh,
@@ -188,8 +188,8 @@ void nc_init_display_gfx_picture(
 
 void nc_init_display_gfx_picture_physic(
   GFX_Picture_Physic *gfx_picture_physic,
-  pictureInfo *pictureInfo,
-  paletteInfo *paletteInfo,
+  const pictureInfo *pictureInfo,
+  const paletteInfo *paletteInfo,
   short x,
   short y,
   short box_witdh,
