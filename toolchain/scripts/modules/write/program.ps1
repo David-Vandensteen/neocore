@@ -72,12 +72,29 @@ function Write-Program {
     Get-Content "$pathBuildName\gcc.log" | ForEach-Object { Write-Host "  $_" -ForegroundColor Gray }
   }
 
-  # Display errors if any
+  # Display warnings and errors if any
   if (Test-Path "$pathBuildName\gcc_error.log") {
     $errorContent = Get-Content "$pathBuildName\gcc_error.log"
     if ($errorContent) {
-      Write-Host "Make errors:" -ForegroundColor Red
-      $errorContent | ForEach-Object { Write-Host "  $_" -ForegroundColor Red }
+      $warnings = $errorContent | Where-Object { $_ -match "warning:" }
+      $errors = $errorContent | Where-Object { $_ -match "error:" }
+
+      if ($warnings) {
+        Write-Host "Make warnings:" -ForegroundColor Yellow
+        $warnings | ForEach-Object { Write-Host "  $_" -ForegroundColor Yellow }
+      }
+
+      if ($errors) {
+        Write-Host "Make errors:" -ForegroundColor Red
+        $errors | ForEach-Object { Write-Host "  $_" -ForegroundColor Red }
+      }
+
+      # If there are other messages that are neither warnings nor errors
+      $others = $errorContent | Where-Object { $_ -notmatch "warning:" -and $_ -notmatch "error:" }
+      if ($others) {
+        Write-Host "Make messages:" -ForegroundColor Cyan
+        $others | ForEach-Object { Write-Host "  $_" -ForegroundColor Cyan }
+      }
     }
   }
 
@@ -87,7 +104,18 @@ function Write-Program {
   }
 
   if ((Test-Path -Path $prgFile) -eq $true) {
-    Write-Host "Builded program $prgFile" -ForegroundColor Green
+    # Check if there were warnings
+    $warningCount = 0
+    if (Test-Path "$pathBuildName\gcc_error.log") {
+      $errorContent = Get-Content "$pathBuildName\gcc_error.log"
+      $warningCount = ($errorContent | Where-Object { $_ -match "warning:" } | Measure-Object).Count
+    }
+
+    if ($warningCount -gt 0) {
+      Write-Host "Builded program $prgFile (with $warningCount warning$(if($warningCount -gt 1){'s'}))" -ForegroundColor Yellow
+    } else {
+      Write-Host "Builded program $prgFile" -ForegroundColor Green
+    }
     Write-Host ""
     return $true
   } else {

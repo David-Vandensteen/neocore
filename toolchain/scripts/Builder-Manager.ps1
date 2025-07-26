@@ -94,39 +94,98 @@ function Main {
     }
   }
   if ($Rule -eq "iso") {
-    MakISO
+    if (-Not(MakISO)) {
+      Write-Host "ISO build failed" -ForegroundColor Red
+      return $false
+    }
   }
   if ($Rule -eq "run:raine" -or $Rule -eq "raine" -or $Rule -like "run:raine:*") {
-    MakRunRaine
+    if (-Not(MakRunRaine)) {
+      Write-Host "Raine run failed" -ForegroundColor Red
+      return $false
+    }
   }
   if ($Rule -like "run:mame*" -or $Rule -eq "mame" -or $Rule -eq "run") {
-    MakRunMame
+    if (-Not(MakRunMame)) {
+      Write-Host "Mame run failed" -ForegroundColor Red
+      return $false
+    }
   }
   if ($Rule -eq "serve:raine") {
-    MakServeRaine
+    if (-Not(MakServeRaine)) {
+      Write-Host "Raine serve failed" -ForegroundColor Red
+      return $false
+    }
   }
   if ($Rule -eq "serve:mame" -or $Rule -eq "serve") {
-    MakServeMame
+    if (-Not(MakServeMame)) {
+      Write-Host "Mame serve failed" -ForegroundColor Red
+      return $false
+    }
   }
   if ($Rule -eq "dist:iso" -or $Rule -eq "dist:raine") {
-    MakDistISO
+    if (-Not(MakDistISO)) {
+      Write-Host "ISO distribution failed" -ForegroundColor Red
+      return $false
+    }
   }
   if ($Rule -eq "dist:mame" -or $Rule -eq "dist:chd") {
-    MakDistMame
+    if (-Not(MakDistMame)) {
+      Write-Host "Mame distribution failed" -ForegroundColor Red
+      return $false
+    }
   }
   if ($Rule -eq "dist:exe") {
-    MakDistExe
+    if (-Not(MakDistExe)) {
+      Write-Host "Exe distribution failed" -ForegroundColor Red
+      return $false
+    }
   }
   if ($Rule -eq "--version") {
     Show-Version
   }
-  if ($Rule -eq "only:sprite") { Build-Sprite }
-  if ($Rule -eq "only:program") { Build-Program }
-  if ($Rule -eq "only:iso") { Build-ISO }
-  if ($Rule -eq "only:mame") { Build-Mame }
-  if ($Rule -eq "only:run") { Start-Mame }
-  if ($Rule -eq "only:run:mame") { Start-Mame }
-  if ($Rule -eq "only:run:raine") { Start-Mame }
+  if ($Rule -eq "only:sprite") {
+    if (-Not(Build-Sprite)) {
+      Write-Host "Sprite build failed" -ForegroundColor Red
+      return $false
+    }
+  }
+  if ($Rule -eq "only:program") {
+    if (-Not(Build-Program)) {
+      Write-Host "Program build failed" -ForegroundColor Red
+      return $false
+    }
+  }
+  if ($Rule -eq "only:iso") {
+    if (-Not(Build-ISO)) {
+      Write-Host "ISO build failed" -ForegroundColor Red
+      return $false
+    }
+  }
+  if ($Rule -eq "only:mame") {
+    if (-Not(Build-Mame)) {
+      Write-Host "Mame build failed" -ForegroundColor Red
+      return $false
+    }
+  }
+  if ($Rule -eq "only:run") {
+    if (-Not(Start-Mame)) {
+      Write-Host "Mame start failed" -ForegroundColor Red
+      return $false
+    }
+  }
+  if ($Rule -eq "only:run:mame") {
+    if (-Not(Start-Mame)) {
+      Write-Host "Mame start failed" -ForegroundColor Red
+      return $false
+    }
+  }
+  if ($Rule -eq "only:run:raine") {
+    if (-Not(Start-Raine)) {
+      Write-Host "Raine start failed" -ForegroundColor Red
+      return $false
+    }
+  }
 
   # All operations completed successfully
   return $true
