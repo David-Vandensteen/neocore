@@ -105,9 +105,26 @@ function Write-CUE {
     $path = [System.IO.Path]::GetDirectoryName($File)
 
     $projectBuildPath = Get-TemplatePath -Path $Config.project.buildPath
-    $destination = "$projectBuildPath\$($Config.project.name)\$path"
+    $buildPathProject = "$projectBuildPath\$($Config.project.name)"
+    $destination = "$buildPathProject\$path"
 
-    Copy-Item -Path $File -Destination $destination
+    # Source file should be from the build folder, not project root
+    $sourceFile = "$buildPathProject\$File"
+
+    # Ensure destination directory exists
+    if (-Not(Test-Path -Path $destination)) {
+      New-Item -ItemType Directory -Path $destination -Force | Out-Null
+    }
+
+    # Only copy if source file exists and destination is different
+    $destinationFile = "$destination\$baseName$ext"
+    if (Test-Path -Path $sourceFile) {
+      if ($sourceFile -ne $destinationFile) {
+        Copy-Item -Path $sourceFile -Destination $destination -Force
+      }
+    } else {
+      Write-Warning "Source file not found: $sourceFile"
+    }
 
     if ($ext -eq ".mp3" -or ($ext -eq ".wav" -and $ConfigCDDA.dist.iso.format -eq ".mp3")) {
       if ((Test-Path -Path "$projectBuildPath\bin\mpg123-1.31.3-static-x86-64") -eq $false) {
@@ -126,7 +143,6 @@ function Write-CUE {
     }
 
     if (-Not($Rule -like "*dist*")) {
-      $buildPathProject = "$projectBuildPath\$($Config.project.name)"
       if ($ext -eq ".wav") {
         Write-Host "copy $File" -ForegroundColor Blue
         Copy-Item -Path "$buildPathProject\$path\$baseName$ext" -Destination $path\$baseName$ext
@@ -182,25 +198,48 @@ function Write-CUE {
       }
 
       if ($ext -eq ".wav" -and $ConfigCDDA.dist.iso.format -eq "mp3") {
-        if ((Test-Path -Path "$($Config.project.buildPath)\bin\ffmpeg.exe") -eq $false) {
+        # Search for ffmpeg executable in bin folder or its subdirectories
+        $ffmpegPath = Get-ChildItem -Path "$projectBuildPath\bin" -Name "ffmpeg.exe" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+        if ($ffmpegPath) {
+          $ffmpegExe = Join-Path "$projectBuildPath\bin" $ffmpegPath
+        } else {
+          $ffmpegExe = "$projectBuildPath\bin\ffmpeg.exe"
+        }
+
+        # Download ffmpeg if not found
+        if (-Not(Test-Path -Path $ffmpegExe)) {
           if ($Manifest.manifest.dependencies.ffmpeg.url) {
               Install-Component `
                 -URL $Manifest.manifest.dependencies.ffmpeg.url `
                 -PathDownload "$projectBuildPath\spool" `
-                -PathInstall $Manifest.manifest.dependencies.ffmpeg.url
+                -PathInstall (Get-TemplatePath -Path $Manifest.manifest.dependencies.ffmpeg.path)
             } else {
               Install-Component `
                 -URL "$BaseURL/ffmpeg-23-12-18.zip" `
                 -PathDownload "$projectBuildPath\spool" `
                 -PathInstall "$projectBuildPath\bin"
             }
+
+          # Re-search for ffmpeg after installation
+          $ffmpegPath = Get-ChildItem -Path "$projectBuildPath\bin" -Name "ffmpeg.exe" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+          if ($ffmpegPath) {
+            $ffmpegExe = Join-Path "$projectBuildPath\bin" $ffmpegPath
+          } else {
+            $ffmpegExe = "$projectBuildPath\bin\ffmpeg.exe"
+          }
+        }
+
+        # Create destination directory if necessary
+        $destinationDir = Split-Path -Path "$buildPathProject\$path\$baseName.mp3" -Parent
+        if (-Not(Test-Path -Path $destinationDir)) {
+          New-Item -ItemType Directory -Path $destinationDir -Force | Out-Null
         }
 
         Write-MP3 `
-          -ffmpeg "$projectBuildPath\bin\ffmpeg.exe" `
-          -WAVFile "$path\$baseName.wav" `
+          -ffmpeg $ffmpegExe `
+          -WAVFile "$buildPathProject\$path\$baseName.wav" `
           -MP3File "$buildPathProject\$path\$baseName.mp3"
-        $File = "$path\$baseName.wav"
+        $File = "$buildPathProject\$path\$baseName.mp3"
       }
     }
 

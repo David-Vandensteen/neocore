@@ -4,10 +4,10 @@ function Write-NSI {
 
   $packageName = $Config.project.name
   $version = $Config.project.version
-  $buildPath = $Config.project.buildPath
-  $distPath = $Config.project.distPath
-  $neocorePath = $Config.project.neocorePath
-  $mameExeFile = $Config.project.emulator.mame.exeFile
+  $buildPath = Get-TemplatePath -Path $Config.project.buildPath
+  $distPath = Get-TemplatePath -Path $Config.project.distPath
+  $neocorePath = Get-TemplatePath -Path $Config.project.neocorePath
+  $mameExeFile = Get-TemplatePath -Path $Config.project.emulator.mame.exeFile
 
   if ((Test-Path -Path $distPath) -eq $false) {
     Write-Host "create $distPath folder" -ForegroundColor Yellow
@@ -24,24 +24,29 @@ function Write-NSI {
     New-Item -Path "$distPath\$packageName\$packageName-$version" -ItemType Directory -Force
   }
 
-  if ((Test-Path -Path "$distPath\$packageName\$packageName-$version\exe") -eq $false) {
-    Write-Host "create $distPath\$packageName\$packageName-$version\exe folder" -ForegroundColor Yellow
-    New-Item -Path "$distPath\$packageName\$packageName-$version\exe" -ItemType Directory -Force
+  if ((Test-Path -Path "$distPath\$packageName\$packageName-$version\cd") -eq $false) {
+    Write-Host "create $distPath\$packageName\$packageName-$version\cd folder" -ForegroundColor Yellow
+    New-Item -Path "$distPath\$packageName\$packageName-$version\cd" -ItemType Directory -Force
   }
 
-  if ((Test-Path -Path "$distPath\$packageName\$packageName-$version\exe\$packageName-$version.exe") -eq $true) {
+  if ((Test-Path -Path "$distPath\$packageName\$packageName-$version\cd\exe") -eq $false) {
+    Write-Host "create $distPath\$packageName\$packageName-$version\cd\exe folder" -ForegroundColor Yellow
+    New-Item -Path "$distPath\$packageName\$packageName-$version\cd\exe" -ItemType Directory -Force
+  }
+
+  if ((Test-Path -Path "$distPath\$packageName\$packageName-$version\cd\exe\$packageName-$version.exe") -eq $true) {
     Write-Host "$packageName : $version was already released" -ForegroundColor Red
-    Write-Host "$distPath\$packageName\$packageName-$version\exe\$packageName-$version.exe already exist" -ForegroundColor Red
+    Write-Host "$distPath\$packageName\$packageName-$version\cd\exe\$packageName-$version.exe already exist" -ForegroundColor Red
     exit 1
   }
 
   $NSITemplateFile = "$neocorePath\toolchain\nsi\template.nsi"
-  $outPath = Resolve-TemplatePath -Path "$buildPath\$packageName"
+  $outPath = "$buildPath\$packageName"
   $NSIFile = "$outPath\$packageName.nsi"
-  $outFile = "$(Resolve-TemplatePath -Path $distPath)\$packageName\$packageName-$version\exe\$packageName-$version.exe"
-  $icon = Resolve-TemplatePath -Path "$neocorePath\toolchain\nsi\neogeo.ico"
+  $outFile = "$distPath\$packageName\$packageName-$version\cd\exe\$packageName-$version.exe"
+  $icon = "$neocorePath\toolchain\nsi\neogeo.ico"
   $brandingText = "Created with Neocore"
-  $mamePath = "$(Resolve-TemplatePath -Path $(Split-Path -Parent $mameExeFile))\"
+  $mamePath = "$(Split-Path -Parent $mameExeFile)\"
   $exec = "$(Split-Path $mameExeFile -Leaf) -window -skip_gameinfo neocdz $packageName"
 
   if ((Test-Path -Path $NSITemplateFile) -eq $false) {
