@@ -84,16 +84,16 @@ function Assert-Project {
   }
 
   if ($Config.project.sound) {
-    if ($Config.project.sound.cdda) {
-      if (-Not($Config.project.sound.cdda.dist.iso.format)) {
-        Write-Host "error : project.sound.cdda.dist.iso.format not found" -ForegroundColor Red
-        return $false
-      }
-      if (-Not($Config.project.sound.cdda.tracks)) {
-        Write-Host "error : project.sound.cdda.tracks not found" -ForegroundColor Red
-        return $false
-      }
+  if ($Config.project.sound.cd.cdda) {
+    if (-Not($Config.project.sound.cd.cdda.dist.iso.format)) {
+      Write-Host "error : sound.cd.cdda.dist.iso.format not found" -ForegroundColor Red
+      return $false
     }
+    if (-Not($Config.project.sound.cd.cdda.tracks)) {
+      Write-Host "error : sound.cd.cdda.tracks not found" -ForegroundColor Red
+      return $false
+    }
+  }
   }
 
   Write-Host "project config is compliant" -ForegroundColor Green

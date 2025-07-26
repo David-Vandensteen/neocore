@@ -35,13 +35,11 @@ function Build-ISO {
     -PathISOBuildFolder $pathISOBuildFolder `
     -PathCDTemplate $pathCDTemplate
 
-  $configCDDA = $null
-
-  if ($Config.project.sound.cdda.tracks.track) { $configCDDA = $Config.project.sound.cdda }
-
-  Write-CUE `
-    -Rule $Rule `
-    -OutputFile $outputCUEFile `
-    -ISOName "$($Config.project.name).iso" `
-    -Config $configCDDA
+  if ($Config.project.sound.cd.cdda.tracks.track) {
+    Write-CUE `
+      -Rule $Rule `
+      -OutputFile $outputCUEFile `
+      -ISOName "$($Config.project.name).iso" `
+      -Config $Config.project.sound.cd.cdda
+  }
 }
