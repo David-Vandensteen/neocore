@@ -42,7 +42,10 @@ function Main {
     exit 1
   }
 
-  Assert-Rule -Rule $Rule
+  if (-Not(Assert-Rule -Rule $Rule)) {
+    Write-Host "Invalid rule: $Rule" -ForegroundColor Red
+    exit 1
+  }
   Stop-Emulators
 
   if ($Rule -eq "clean") {

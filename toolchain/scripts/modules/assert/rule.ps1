@@ -2,32 +2,32 @@ function Assert-Rule {
   param (
     [Parameter(Mandatory=$true)][String] $Rule
   )
-    if ($Rule -eq "") { return 0 }
-    if ($Rule -eq "animator") { return 0 }
-    if ($Rule -eq "clean") { return 0 }
-    if ($Rule -eq "clean:build") { return 0 }
-    if ($Rule -eq "default") { return 0 }
-    if ($Rule -eq "dist:iso") { return 0 }
-    if ($Rule -eq "dist:mame") { return 0 }
-    if ($Rule -eq "dist:exe") { return 0 }
-    if ($Rule -eq "framer") { return 0 }
-    if ($Rule -eq "iso") { return 0 }
-    if ($Rule -eq "lib") { return 0 }
-    if ($Rule -eq "make") { return 0 }
-    if ($Rule -eq "only:sprite") { return 0 }
-    if ($Rule -eq "only:program") { return 0 }
-    if ($Rule -eq "only:mame") { return 0 }
-    if ($Rule -eq "only:run") { return 0 }
-    if ($Rule -eq "only:run:mame") { return 0 }
-    if ($Rule -eq "only:run:raine") { return 0 }
-    if ($Rule -eq "sprite") { return 0 }
-    if ($Rule -eq "serve:raine") { return 0 }
-    if ($Rule -eq "serve:mame") { return 0 }
-    if ($Rule -like "run:mame*") { return 0 }
-    if ($Rule -eq "run:raine") {return 0 }
-    if ($Rule -like "run:raine:*") { return 0 }
+    if ($Rule -eq "") { return $true }
+    if ($Rule -eq "animator") { return $true }
+    if ($Rule -eq "clean") { return $true }
+    if ($Rule -eq "clean:build") { return $true }
+    if ($Rule -eq "default") { return $true }
+    if ($Rule -eq "dist:iso") { return $true }
+    if ($Rule -eq "dist:mame") { return $true }
+    if ($Rule -eq "dist:exe") { return $true }
+    if ($Rule -eq "framer") { return $true }
+    if ($Rule -eq "iso") { return $true }
+    if ($Rule -eq "lib") { return $true }
+    if ($Rule -eq "make") { return $true }
+    if ($Rule -eq "only:sprite") { return $true }
+    if ($Rule -eq "only:program") { return $true }
+    if ($Rule -eq "only:mame") { return $true }
+    if ($Rule -eq "only:run") { return $true }
+    if ($Rule -eq "only:run:mame") { return $true }
+    if ($Rule -eq "only:run:raine") { return $true }
+    if ($Rule -eq "sprite") { return $true }
+    if ($Rule -eq "serve:raine") { return $true }
+    if ($Rule -eq "serve:mame") { return $true }
+    if ($Rule -like "run:mame*") { return $true }
+    if ($Rule -eq "run:raine") {return $true }
+    if ($Rule -like "run:raine:*") { return $true }
 
-    if ($Rule -eq "--version") { return 0 }
+    if ($Rule -eq "--version") { return $true }
 
     if (-Not($Rule -eq "--help")) {
       Write-Host "error : unknow parameter $Rule" -ForegroundColor Red
