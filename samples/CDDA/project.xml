@@ -40,35 +40,37 @@
     </DAT>
   </gfx>
   <sound>
-    <cdda>
-      <dist>
-        <iso>
-          <format>mp3</format>
-        </iso>
-      </dist>
-      <tracks>
-        <track><!-- track id 1 is reserved for the binary program -->
-          <id>2</id>
-          <file>assets\sounds\cdda\The Moon - High Orbit.wav</file>
-          <pregap>00:02:00</pregap>
-        </track>
-        <track>
-          <id>3</id>
-          <file>assets\sounds\cdda\Sweet_Mermaids.wav</file>
-          <pregap>00:02:00</pregap>
-        </track>
-        <track>
-          <id>4</id>
-          <file>assets\sounds\cdda\Level One.wav</file>
-          <pregap>00:02:00</pregap>
-        </track>
-        <track>
-          <id>5</id>
-          <file>assets\sounds\cdda\pong.mp3</file>
-          <pregap>00:02:00</pregap>
-        </track>
-      </tracks>
-    </cdda>
+    <cd>
+      <cdda>
+        <dist>
+          <iso>
+            <format>mp3</format>
+          </iso>
+        </dist>
+        <tracks>
+          <track><!-- track id 1 is reserved for the binary program -->
+            <id>2</id>
+            <file>assets\sounds\cdda\The Moon - High Orbit.wav</file>
+            <pregap>00:02:00</pregap>
+          </track>
+          <track>
+            <id>3</id>
+            <file>assets\sounds\cdda\Sweet_Mermaids.wav</file>
+            <pregap>00:02:00</pregap>
+          </track>
+          <track>
+            <id>4</id>
+            <file>assets\sounds\cdda\Level One.wav</file>
+            <pregap>00:02:00</pregap>
+          </track>
+          <track>
+            <id>5</id>
+            <file>assets\sounds\cdda\pong.mp3</file>
+            <pregap>00:02:00</pregap>
+          </track>
+        </tracks>
+      </cdda>
+    </cd>
   </sound>
   <emulator>
     <raine>
