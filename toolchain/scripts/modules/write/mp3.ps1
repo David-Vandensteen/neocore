@@ -8,5 +8,5 @@ function Write-MP3 {
   Write-Host $ffmpeg
   Write-Host $MP3File
   Write-Host $WAVFile
-  Start-Process -NoNewWindow -FilePath $ffmpeg -ArgumentList "-i `"$WAVFile`" -b:a 192k `"$MP3File`"" -Wait
+  Start-Process -NoNewWindow -FilePath $ffmpeg -ArgumentList "-y -i `"$WAVFile`" -b:a 192k `"$MP3File`"" -Wait
 }
