@@ -39,24 +39,26 @@
   <!-- To use CDDA audio tracks, uncomment and set up your files.
   Warning: Track ID 1 is reserved for the binary program.
   <sound>
-    <sfx>
-      <pcm>assets\sounds\sfx\click.V1</pcm>
-      <z80>assets\sounds\sfx\click.M1</z80>
-    </sfx>
-    <cdda>
-      <dist>
-        <iso>
-          <format>mp3</format>
-        </iso>
-      </dist>
-      <tracks>
-        <track>
-          <id>2</id>
-          <file>assets\sounds\cdda\track_1.mp3</file>
-          <pregap>00:02:00</pregap>
-        </track>
-      </tracks>
-    </cdda>
+    <cd>
+      <sfx>
+        <pcm>assets\sounds\sfx\click.V1</pcm>
+        <z80>assets\sounds\sfx\click.M1</z80>
+      </sfx>
+      <cdda>
+        <dist>
+          <iso>
+            <format>mp3</format>
+          </iso>
+        </dist>
+        <tracks>
+          <track>
+            <id>2</id>
+            <file>assets\sounds\cdda\track_1.mp3</file>
+            <pregap>00:02:00</pregap>
+          </track>
+        </tracks>
+      </cdda>
+    </cd>
   </sound> -->
   <emulator>
     <raine>
