@@ -23,16 +23,19 @@ enum Sound_state { IDLE, PLAYING };
   //--------------------------------------------------------------------------//
  //                          STRUCTURE                                       //
 //--------------------------------------------------------------------------//
-typedef struct Coordinate { short x; short y; } Coordinate;
+typedef struct Position { short x; short y; } Position;
 typedef char Hex_Color[3]; // TODO : useless ?
+
+//void mask_display(picture pic[], Position vec[], BYTE vector_max); // todo (minor) - rename ? (vectorsDisplay)
+void nc_update_mask(short x, short y, Position vec[], Position offset[], BYTE vector_max); // todo (minor) - rename ? (vectorsDebug)
 typedef char Hex_Packed_Color[5]; // TODO : useless ?
 
 typedef struct Box {
-  Coordinate p0;
-  Coordinate p1;
-  Coordinate p2;
-  Coordinate p3;
-  Coordinate p4;
+  Position p0;
+  Position p1;
+  Position p2;
+  Position p3;
+  Position p4;
   short width;
   short height;
   short widthOffset;
@@ -225,16 +228,14 @@ void nc_show_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic);
 
 /* GFX POSITION GETTER */
 
-// TODO ,
-// Vec2short nc_get_position_gfx_animated_sprite(GFX_Animated_Sprite gfx_animated_sprite); // TODO ?
-
-// Vec2short nc_get_position_gfx_animated_sprite_physic(
-//   GFX_Animated_Sprite_Physic gfx_animated_sprite_physic
-// );
-
-// Vec2short nc_get_position_gfx_picture(GFX_Picture gfx_picture);
-// Vec2short nc_get_position_gfx_picture_physic(GFX_Picture_Physic gfx_picture_physic);
-// Vec2short nc_get_position_gfx_scroller(GFX_Scroller gfx_scroller);
+void nc_get_position_gfx_animated_sprite(GFX_Animated_Sprite *gfx_animated_sprite, Position *position);
+void nc_get_position_gfx_animated_sprite_physic(
+  GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic,
+  Position *position
+);
+void nc_get_position_gfx_picture(GFX_Picture *gfx_picture, Position *position);
+void nc_get_position_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic, Position *position);
+void nc_get_position_gfx_scroller(GFX_Scroller *gfx_scroller, Position *position);
 
 /* GFX POSITION SETTER */
 
@@ -444,9 +445,6 @@ BOOL nc_collide_box(Box *box1, Box *box2);
 void nc_init_box(Box *box, short width, short height, short widthOffset, short heightOffset);
 void nc_update_box(Box *box, short x, short y);
 
-//void mask_display(picture pic[], Vec2short vec[], BYTE vector_max); // todo (minor) - rename ? (vectorsDisplay)
-void nc_update_mask(short x, short y, Coordinate vec[], Coordinate offset[], BYTE vector_max); // todo (minor) - rename ? (vectorsDebug)
-
 void nc_shrunk_box(Box *box, Box *bOrigin, WORD shrunkValue);
 void nc_resize_box(Box *Box, short edge); // todo (minor) - deprecated ?
 
@@ -497,7 +495,7 @@ DWORD nc_frame_to_second(DWORD frame);
 DWORD nc_second_to_frame(DWORD second);
 void nc_init_system();
 void nc_reset();
-// Vec2short nc_get_relative_position(Box box, Vec2short world_coord); // TODO
+// Position nc_get_relative_position(Box box, Position world_coord); // TODO
 void nc_pause(BOOL (*exitFunc)());
 void nc_sleep(DWORD frame);
 BOOL nc_each_frame(DWORD frame);
@@ -527,7 +525,7 @@ void nc_log_bool(BOOL value);
 void nc_log_spriteInfo(spriteInfo *si);
 void nc_log_box(Box *b);
 void nc_log_pictureInfo(pictureInfo *pi);
-void nc_log_coordinate(Coordinate coordinate);
+void nc_log_position(Position position);
 void nc_log_palette_info(paletteInfo *paletteInfo);
 void nc_log_packed_color16(WORD packed_color);
 void nc_log_rgb16(RGB16 *color);
@@ -545,7 +543,7 @@ Adpcm_player *nc_get_adpcm_player();
  /* UTIL VECTOR   */
 /*---------------*/
 
-BOOL nc_vectors_collide(Box *box, Coordinate vec[], BYTE vector_max);
+BOOL nc_vectors_collide(Box *box, Position vec[], BYTE vector_max);
 BOOL nc_vector_is_left(short x, short y, short v1x, short v1y, short v2x, short v2y);
 
 #endif
