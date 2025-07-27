@@ -37,7 +37,9 @@ function Write-Cache {
         -PathDownload "$projectBuildPath\spool" `
         -PathInstall $Manifest.manifest.dependencies.cdTemplate.path
     } else {
-      Install-Component -URL "$BaseURL/neobuild-cd_template.zip" -PathDownload "$projectBuildPath\spool" -PathInstall $projectBuildPath
+      Write-Host "Error: CD Template not found in manifest dependencies" -ForegroundColor Red
+      Write-Host "Please add cdTemplate to manifest.xml dependencies section" -ForegroundColor Yellow
+      exit 1
     }
   }
 
@@ -134,10 +136,9 @@ function Write-CUE {
           -PathDownload "$projectBuildPath\spool" `
           -PathInstall $Manifest.manifest.dependencies.mpg123.path
         } else {
-          Install-Component `
-          -URL "$BaseURL/mpg123-1.31.3-static-x86-64.zip" `
-          -PathDownload "$projectBuildPath\spool" `
-          -PathInstall "$projectBuildPath\bin"
+          Write-Host "Error: mpg123 not found in manifest dependencies" -ForegroundColor Red
+          Write-Host "Please add mpg123 to manifest.xml dependencies section" -ForegroundColor Yellow
+          exit 1
         }
       }
     }
@@ -209,16 +210,15 @@ function Write-CUE {
         # Download ffmpeg if not found
         if (-Not(Test-Path -Path $ffmpegExe)) {
           if ($Manifest.manifest.dependencies.ffmpeg.url) {
-              Install-Component `
-                -URL $Manifest.manifest.dependencies.ffmpeg.url `
-                -PathDownload "$projectBuildPath\spool" `
-                -PathInstall (Get-TemplatePath -Path $Manifest.manifest.dependencies.ffmpeg.path)
-            } else {
-              Install-Component `
-                -URL "$BaseURL/ffmpeg-23-12-18.zip" `
-                -PathDownload "$projectBuildPath\spool" `
-                -PathInstall "$projectBuildPath\bin"
-            }
+            Install-Component `
+              -URL $Manifest.manifest.dependencies.ffmpeg.url `
+              -PathDownload "$projectBuildPath\spool" `
+              -PathInstall (Get-TemplatePath -Path $Manifest.manifest.dependencies.ffmpeg.path)
+          } else {
+            Write-Host "Error: ffmpeg not found in manifest dependencies" -ForegroundColor Red
+            Write-Host "Please add ffmpeg to manifest.xml dependencies section" -ForegroundColor Yellow
+            exit 1
+          }
 
           # Re-search for ffmpeg after installation
           $ffmpegPath = Get-ChildItem -Path "$projectBuildPath\bin" -Name "ffmpeg.exe" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1

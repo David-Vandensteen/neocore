@@ -12,7 +12,6 @@ param (
 function Main {
   param (
     [Parameter(Mandatory=$true)][String] $Rule,
-    [Parameter(Mandatory=$true)][String] $BaseURL,
     [Parameter(Mandatory=$true)][xml] $Config
   )
 
@@ -208,11 +207,11 @@ try {
   return 1
 }
 
-$mainResult = Main -Config $config -BaseURL "http://azertyvortex.free.fr/download" -Rule $Rule
+$mainResult = Main -Config $config -Rule $Rule
 if ($mainResult -eq $false) {
-  Write-Host "Build process failed" -ForegroundColor Red
+  Write-Host "Build manager process failed" -ForegroundColor Red
   exit 1
 }
 
-Write-Host "Build process completed successfully" -ForegroundColor Green
+Write-Host "Build manager process completed successfully" -ForegroundColor Green
 exit 0

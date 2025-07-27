@@ -57,7 +57,9 @@ function Write-Mame {
         -PathDownload "$($Config.project.buildPath)\spool" `
         -PathInstall $Manifest.manifest.dependencies.mame.path
     } else {
-      Install-Component -URL "$BaseURL/neocore-mame.zip" -PathDownload "$($Config.project.buildPath)\spool" -PathInstall $Config.project.buildPath
+      Write-Host "Error: MAME not found in manifest dependencies" -ForegroundColor Red
+      Write-Host "Please add mame to manifest.xml dependencies section" -ForegroundColor Yellow
+      exit 1
     }
   }
   if ((Test-Path -Path $PathMame) -eq $false) { Write-Host "error - $PathMame not found" -ForegroundColor Red; exit 1 }

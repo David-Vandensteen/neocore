@@ -6,8 +6,11 @@ function Install-NSIS {
     Install-Component `
       -URL $Manifest.manifest.dependencies.nsis.url `
       -PathDownload $downloadPath `
-      -PathInstall $Manifest.manifest.dependencies.nsis.path
+      -PathInstall (Get-TemplatePath -Path $Manifest.manifest.dependencies.nsis.path)
   } else {
-    Install-Component -URL "$BaseURL/retro-game-winpacker/nsis-3.08.zip" -PathDownload $downloadPath -PathInstall "$installPath\tools"
+    Write-Host "Error: NSIS not found in manifest dependencies" -ForegroundColor Red
+    Write-Host "Please add nsis to manifest.xml dependencies section" -ForegroundColor Yellow
+    exit 1
   }
+}
 }

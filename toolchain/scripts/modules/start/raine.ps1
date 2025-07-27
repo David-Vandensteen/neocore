@@ -44,7 +44,9 @@ function Invoke-Raine {
         -PathDownload "$($Config.project.buildPath)\spool" `
         -PathInstall $Manifest.manifest.dependencies.raine.path
     } else {
-      Install-Component -URL "$BaseURL/neobuild-raine.zip" -PathDownload "$($Config.project.buildPath)\spool" -PathInstall $Config.project.buildPath
+      Write-Host "Error: Raine not found in manifest dependencies" -ForegroundColor Red
+      Write-Host "Please add raine to manifest.xml dependencies section" -ForegroundColor Yellow
+      exit 1
     }
     Install-RaineConfig -Path $PathRaine
   }
@@ -73,7 +75,12 @@ function Invoke-Raine {
   }
 
   Write-Host "Starting Raine with command: `"$fullExePath`" `"$fullCuePath`"" -ForegroundColor Green
-  Start-Process -FilePath $fullExePath -ArgumentList $fullCuePath -Wait
+  $raineProcess = Start-Process -FilePath $fullExePath -ArgumentList $fullCuePath -Wait -PassThru
+
+  # Raine might return non-zero exit codes even on normal exit, so we consider it successful
+  # as long as the process started and ran
+  Write-Host "Raine exited with code $($raineProcess.ExitCode)" -ForegroundColor Cyan
+  return $true
 }
 
 function Start-Raine {
@@ -83,7 +90,7 @@ function Start-Raine {
   $rainePath = Get-TemplatePath -Path $rainePath
   $pathISO = Get-TemplatePath -Path "$($Config.project.buildPath)\$($Config.project.name)"
 
-  Invoke-Raine `
+  return Invoke-Raine `
     -FileName "$($Config.project.name).cue" `
     -PathRaine $rainePath `
     -PathISO $pathISO `
