@@ -88,5 +88,9 @@ function Write-NSI {
     Write-Host ""
     Write-Host "NSI script $NSIFile" -ForegroundColor Green
     Write-Host ""
+    return $true
   }
+
+  # Cette ligne ne devrait jamais être atteinte, mais par sécurité
+  return $false
 }
