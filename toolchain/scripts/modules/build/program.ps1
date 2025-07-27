@@ -49,20 +49,6 @@ function Build-Program {
     return $false
   }
 
-  # DEBUG: Show compiler configuration
-  Write-Host "=== Compiler Configuration Debug ===" -ForegroundColor Magenta
-  Write-Host "Compiler name: $($Config.project.compiler.name)" -ForegroundColor Gray
-  Write-Host "Compiler version: $($Config.project.compiler.version)" -ForegroundColor Gray
-  Write-Host "Compiler path (raw): $($Config.project.compiler.path)" -ForegroundColor Gray
-  if ($Config.project.compiler.path) {
-    $resolvedPath = Get-TemplatePath -Path $Config.project.compiler.path
-    Write-Host "Compiler path (resolved): $resolvedPath" -ForegroundColor Gray
-    Write-Host "Path exists: $(Test-Path $resolvedPath)" -ForegroundColor Gray
-  }
-  Write-Host "===================================" -ForegroundColor Magenta
-
-  $gccPath = $null
-
   # Validate required compiler configuration
   if ([string]::IsNullOrEmpty($Config.project.compiler.path)) {
     Write-Error "Compiler path is not specified in project configuration. Please add <path> element in <compiler> section."
@@ -100,10 +86,26 @@ Resolved path: $gccPath
 
   Write-Host "  GCC path validated successfully" -ForegroundColor Green
 
+  Write-Host "Calling Write-Program..." -ForegroundColor Cyan
+
+  # Create a temporary file to capture the return status
+  $statusFile = "$buildPath\build_status.tmp"
+  if (Test-Path $statusFile) { Remove-Item $statusFile -Force }
+
   Write-Program `
     -ProjectName $Config.project.name `
     -GCCPath $gccPath -PathNeoDev "$($buildPath)\neodev-sdk" `
     -MakeFile $Config.project.makefile `
     -PRGFile $prgFile `
-    -BinPath "$($buildPath)\bin"
+    -BinPath "$($buildPath)\bin" `
+    -StatusFile $statusFile | Out-Null
+
+  $result = $false
+  if (Test-Path $statusFile) {
+    $statusContent = Get-Content $statusFile
+    $result = ($statusContent -eq "SUCCESS")
+    Remove-Item $statusFile -Force
+  }
+
+  return $result
 }

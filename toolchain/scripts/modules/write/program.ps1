@@ -5,9 +5,10 @@ function Write-Program {
     [Parameter(Mandatory=$true)][String] $PRGFile,
     [Parameter(Mandatory=$true)][String] $PathNeoDev,
     [Parameter(Mandatory=$true)][String] $ProjectName,
-    [Parameter(Mandatory=$true)][String] $BinPath
+    [Parameter(Mandatory=$true)][String] $BinPath,
+    [String] $StatusFile
   )
-  Write-Host "Write Program" -ForegroundColor Cyan
+  Write-Host "Compiling program $PRGFile" -ForegroundColor Yellow
   Write-Host "Assert write program" -ForegroundColor Yellow
   if (-Not(Assert-Program)) {
     Write-Host "Program assertion failed" -ForegroundColor Red
@@ -43,9 +44,6 @@ function Write-Program {
 
   $env:FILEPRG = $prgFile
   $env:PATHBUILD = $pathBuildName
-
-  $Config.project.compiler
-
   $env:PROJECT_PATH = $(Resolve-TemplatePath -Path .)
   $env:INCLUDE_PATH = $includePath
   $env:NEOCORE_INCLUDE_PATH = $neocoreIncludePath
@@ -65,6 +63,8 @@ function Write-Program {
   # Use Start-Process for better output handling
   $makeProcess = Start-Process -FilePath "make" -ArgumentList "-f", $MakeFile -NoNewWindow -PassThru -Wait -RedirectStandardOutput "$pathBuildName\gcc.log" -RedirectStandardError "$pathBuildName\gcc_error.log"
   $makeExitCode = $makeProcess.ExitCode
+
+  Write-Host "Make exit code: $makeExitCode" -ForegroundColor Magenta
 
   # Display the output from the log file
   if (Test-Path "$pathBuildName\gcc.log") {
@@ -100,26 +100,30 @@ function Write-Program {
 
   if ($makeExitCode -ne 0) {
     Write-Host "Make failed with exit code $makeExitCode" -ForegroundColor Red
+    if ($StatusFile) { "FAILURE" | Out-File -FilePath $StatusFile -Force }
     return $false
-  }
-
-  if ((Test-Path -Path $prgFile) -eq $true) {
-    # Check if there were warnings
-    $warningCount = 0
-    if (Test-Path "$pathBuildName\gcc_error.log") {
-      $errorContent = Get-Content "$pathBuildName\gcc_error.log"
-      $warningCount = ($errorContent | Where-Object { $_ -match "warning:" } | Measure-Object).Count
-    }
-
-    if ($warningCount -gt 0) {
-      Write-Host "Builded program $prgFile (with $warningCount warning$(if($warningCount -gt 1){'s'}))" -ForegroundColor Yellow
-    } else {
-      Write-Host "Builded program $prgFile" -ForegroundColor Green
-    }
-    Write-Host ""
-    return $true
   } else {
-    Write-Host "$prgFile was not generated" -ForegroundColor Red
-    return $false
+    # Only check for output file if make succeeded
+    if ((Test-Path -Path $prgFile) -eq $true) {
+      # Check if there were warnings
+      $warningCount = 0
+      if (Test-Path "$pathBuildName\gcc_error.log") {
+        $errorContent = Get-Content "$pathBuildName\gcc_error.log"
+        $warningCount = ($errorContent | Where-Object { $_ -match "warning:" } | Measure-Object).Count
+      }
+
+      if ($warningCount -gt 0) {
+        Write-Host "Builded program $prgFile (with $warningCount warning$(if($warningCount -gt 1){'s'}))" -ForegroundColor Yellow
+      } else {
+        Write-Host "Builded program $prgFile" -ForegroundColor Green
+      }
+      Write-Host ""
+      if ($StatusFile) { "SUCCESS" | Out-File -FilePath $StatusFile -Force }
+      return $true
+    } else {
+      Write-Host "$prgFile was not generated" -ForegroundColor Red
+      if ($StatusFile) { "FAILURE" | Out-File -FilePath $StatusFile -Force }
+      return $false
+    }
   }
 }
