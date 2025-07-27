@@ -4,7 +4,10 @@ function Build-Sprite {
     New-Item -ItemType Directory -Path out | Out-Null
   }
 
-  Assert-BuildSprite
+  if (-Not(Assert-BuildSprite)) {
+    Write-Host "Sprite build assertion failed" -ForegroundColor Red
+    return $false
+  }
 
   $projectBuildPath = Get-TemplatePath -Path $Config.project.buildPath
   $outputFile = "$projectBuildPath\$($Config.project.name)\$($Config.project.name)"

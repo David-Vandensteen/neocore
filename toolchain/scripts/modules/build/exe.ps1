@@ -17,7 +17,10 @@ function Build-EXE {
   $NSIFile = "$projectBuildPath\$packageName\$packageName.nsi"
   $makeNSISexe = "$projectBuildPath\tools\nsis-3.08\makensis.exe"
 
-  Assert-BuildEXE
+  if (-Not(Assert-BuildEXE)) {
+    Write-Host "EXE build assertion failed" -ForegroundColor Red
+    return $false
+  }
 
   foreach ($file in $chdFiles) {
     if ($file.Name -ne $excludeChdFile) {
@@ -32,12 +35,12 @@ function Build-EXE {
 
   if ((Test-Path -Path $NSIFile) -eq $false) {
     Write-Host "$NSIFile not found" -ForegroundColor Red
-    exit 1
+    return $false
   }
 
   if ((Test-Path -Path $makeNSISexe) -eq $false) {
     Write-Host "$makeNSISexe not found" -ForegroundColor Red
-    exit 1
+    return $false
   }
 
   Start-Process -FilePath $makeNSISexe -Wait -NoNewWindow -ArgumentList $NSIFile

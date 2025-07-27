@@ -21,7 +21,7 @@ function Install-Component {
 
   if (-not($(Test-Path -Path "$pathDownload\$fileName"))) {
     Write-Host "  error : download failed" -ForegroundColor Red
-    exit 1
+    return $false
   }
 
   Expand-Archive -Path "$pathDownload\$fileName" -DestinationPath $pathInstall -Force -ErrorAction Stop

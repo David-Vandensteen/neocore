@@ -3,7 +3,10 @@ function Build-NeocoreLib {
   $srcLibPath = $(Resolve-TemplatePath -Path "$($Config.project.neocorePath)\src-lib")
   $includePath = $(Resolve-TemplatePath -Path "$($Config.project.neocorePath)\src-lib\include")
 
-  Assert-BuildNeocoreLib
+  if (-Not(Assert-BuildNeocoreLib)) {
+    Write-Host "Neocore lib build assertion failed" -ForegroundColor Red
+    return $false
+  }
 
   pushd $srcLibPath
   .\build-neocore.bat `

@@ -50,7 +50,10 @@ function Invoke-Raine {
     }
     Install-RaineConfig -Path $PathRaine
   }
-  Assert-RaineConfig
+  if (-Not(Assert-RaineConfig)) {
+    Write-Host "Raine config assertion failed" -ForegroundColor Red
+    return $false
+  }
   Update-RaineConfigSwitch
 
   Write-Host "Launching raine $FileName" -ForegroundColor Yellow

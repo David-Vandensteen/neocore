@@ -59,12 +59,12 @@ function Write-Mame {
     } else {
       Write-Host "Error: MAME not found in manifest dependencies" -ForegroundColor Red
       Write-Host "Please add mame to manifest.xml dependencies section" -ForegroundColor Yellow
-      exit 1
+      return $false
     }
   }
-  if ((Test-Path -Path $PathMame) -eq $false) { Write-Host "error - $PathMame not found" -ForegroundColor Red; exit 1 }
-  if ((Test-Path -Path $CUEFile) -eq $false) { Write-Host "error - $CUEFile not found" -ForegroundColor Red; exit 1 }
-  if ((Test-Path -Path "$PathMame\mame64.exe") -eq $false) { Write-Host "error - mame64.exe is not found in $PathMame" -ForegroundColor Red; exit 1 }
+  if ((Test-Path -Path $PathMame) -eq $false) { Write-Host "error - $PathMame not found" -ForegroundColor Red; return $false }
+  if ((Test-Path -Path $CUEFile) -eq $false) { Write-Host "error - $CUEFile not found" -ForegroundColor Red; return $false }
+  if ((Test-Path -Path "$PathMame\mame64.exe") -eq $false) { Write-Host "error - mame64.exe is not found in $PathMame" -ForegroundColor Red; return $false }
 
   Write-Host "Compiling CHD" -ForegroundColor Yellow
 
@@ -76,7 +76,7 @@ function Write-Mame {
 
   if ((Test-Path -Path $OutputFile) -eq $false) {
     Write-Host "$OutputFile was not generated" -ForegroundColor Red
-    exit 1
+    return $false
   } else {
     Write-Host "Builded CHD $OutputFile" -ForegroundColor Green
     Write-Host ""
@@ -100,9 +100,9 @@ function Mame {
 
   if ((Test-Path -Path $pathMame) -eq $false) {
     Write-Host "$pathMame not found" -ForegroundColor Red
-    exit 1
+    return $false
   }
-  if ((Test-Path -Path "$pathMame\$ExeName") -eq $false) { Write-Host ("error - {0}\ not found" -f $PathMame) -ForegroundColor Red; exit 1 }
+  if ((Test-Path -Path "$pathMame\$ExeName") -eq $false) { Write-Host ("error - {0}\ not found" -f $PathMame) -ForegroundColor Red; return $false }
   Write-Host "Launching mame $GameName" -ForegroundColor Yellow
   Write-Host "$pathMame\$ExeName $mameArgs $defaultMameArgs"
   Start-Process -NoNewWindow -FilePath "$pathMame\$ExeName" -ArgumentList "$mameArgs $defaultMameArgs"
@@ -119,7 +119,7 @@ function Mame-WithProfile {
   if ($Rule -eq "run:mame") { $profileName = "default" }
   if (-Not($Config.project.emulator.mame.profile.$profileName)) {
     Write-Host "error : mame profile $profileName not found" -ForegroundColor Red
-    exit 1
+    return $false
   }
 
   Write-Host "start mame with profile : $profileName" -ForegroundColor Yellow

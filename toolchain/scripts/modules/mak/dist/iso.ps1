@@ -7,10 +7,20 @@ function MakDistISO {
   $pathDestination = "$projectDistPath\$($Config.project.name)\$($Config.project.name)-$($Config.project.version)"
   $projectDistPath = Get-TemplatePath -Path $Config.project.distPath
   if ((Test-Path -Path $projectDistPath) -eq $false) { New-Item -Path $projectDistPath -ItemType Directory -Force }
-  Build-ISO
-  Write-Dist `
+
+  if (-Not(Build-ISO)) {
+    Write-Host "ISO build failed" -ForegroundColor Red
+    return $false
+  }
+
+  if (-Not(Write-Dist `
     -ProjectName $Config.project.name `
     -PathDestination $pathDestination `
     -ISOFile $ISOFile `
-    -CUEFile $CUEFile
+    -CUEFile $CUEFile)) {
+    Write-Host "ISO distribution failed" -ForegroundColor Red
+    return $false
+  }
+
+  return $true
 }

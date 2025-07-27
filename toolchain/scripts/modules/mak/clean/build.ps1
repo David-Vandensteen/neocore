@@ -2,7 +2,7 @@ function MakCleanBuild {
   $projectBuildPath = Resolve-TemplatePath -Path $Config.project.buildPath
   if (-Not(Test-Path -Path $projectBuildPath)) {
     Write-Host "Build folder $projectBuildPath not found" -ForegroundColor Red
-    exit 1
+    return $false
   }
   $buildPath = Resolve-TemplatePath -Path $Config.project.buildPath
   $confirmation = Read-Host "Are you sure you want to remove the build folder $buildPath ? (y/n)"

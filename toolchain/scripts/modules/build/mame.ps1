@@ -6,7 +6,10 @@ function Build-Mame {
   $cueFile = "$projectBuildPath\$name\$name.cue"
 
   Write-Host "Build mame" -ForegroundColor Cyan
-  Assert-BuildMame
+  if (-Not(Assert-BuildMame)) {
+    Write-Host "MAME build assertion failed" -ForegroundColor Red
+    return $false
+  }
 
   Write-Mame `
     -ProjectName $name `

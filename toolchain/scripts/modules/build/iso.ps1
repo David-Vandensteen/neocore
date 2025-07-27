@@ -8,7 +8,10 @@ function Build-ISO {
   $outputCUEFile = "$projectBuildPath\$($Config.project.name)\$($Config.project.name).cue"
 
   Write-Host "Build ISO" -ForegroundColor Cyan
-  Assert-BuildISO
+  if (-Not(Assert-BuildISO)) {
+    Write-Host "ISO build assertion failed" -ForegroundColor Red
+    return $false
+  }
 
   Write-Cache `
     -PRGFile $prgFile `

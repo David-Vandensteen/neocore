@@ -11,19 +11,19 @@ function Write-Dist {
 
   if ($ISOFile -and (Test-Path -Path $ISOFile) -eq $false) {
     Write-Host "$ISOFile not found" -ForegroundColor Red
-    exit 1
+    return $false
   }
   if ($CUEFile -and (Test-Path -Path $CUEFile) -eq $false) {
     Write-Host "$CUEFile not found" -ForegroundColor Red
-    exit 1
+    return $false
   }
   if ($CHDFile -and (Test-Path -Path $CHDFile) -eq $false) {
     Write-Host "$CHDFile not found" -ForegroundColor Red
-    exit 1
+    return $false
   }
   if ($HashFile -and (Test-Path -Path $HashFile) -eq $false) {
     Write-Host "$HashFile not found" -ForegroundColor Red
-    exit 1
+    return $false
   }
 
   # Always use cd subfolder structure
@@ -35,7 +35,7 @@ function Write-Dist {
       New-Item -Path $isoPath -ItemType Directory -Force
     } else {
       Write-Host "$isoPath\$ProjectName.iso already exist" -ForegroundColor Red
-      exit 1
+      return $false
     }
   }
   if ($CHDFile) {
@@ -44,7 +44,7 @@ function Write-Dist {
       New-Item -Path $mamePath -ItemType Directory -Force
     } else {
       Write-Host "$mamePath\$ProjectName.chd already exist" -ForegroundColor Red
-      exit 1
+      return $false
     }
   }
   if ($ISOFile) {
@@ -126,7 +126,7 @@ function Write-Dist {
       Write-Host "ISO delivery $isoPath" -ForegroundColor Green
     } else {
       Write-Host "ISO dist failed" -ForegroundColor Red
-      exit 1
+      return $false
     }
   }
 
@@ -136,7 +136,10 @@ function Write-Dist {
       Write-Host "Mame delivery $mamePath" -ForegroundColor Green
     } else {
       Write-Host "Mame dist failed" -ForegroundColor Red
-      exit 1
+      return $false
     }
   }
+
+  # Distribution completed successfully
+  return $true
 }
