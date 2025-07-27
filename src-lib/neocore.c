@@ -32,11 +32,11 @@
 #define JOYPAD_IS_C_P1       neocore_joypad_p1&JOY_C
 #define JOYPAD_IS_D_P1       neocore_joypad_p1&JOY_D
 
-#define X 0
-#define Y 1
+#define X 1
+#define Y 0
 
 #define LOG_X_INIT   1
-#define LOG_Y_INIT   2
+#define LOG_Y_INIT   0
 
 #define SPRITE_INDEX_MANAGER_MAX  384
 #define PALETTE_INDEX_MANAGER_MAX 256
