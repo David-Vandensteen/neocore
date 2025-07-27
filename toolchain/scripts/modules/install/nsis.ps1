@@ -13,4 +13,3 @@ function Install-NSIS {
     exit 1
   }
 }
-}
