@@ -80,7 +80,10 @@ function Main {
 
   if ($Config.project.compiler.path) { $gccPath = $Config.project.compiler.path }
 
-  Set-EnvPath -GCCPath $gccPath -Bin "$($Config.project.buildPath)\bin"
+  if (-not (Set-EnvPath -GCCPath $gccPath -Bin "$($Config.project.buildPath)\bin")) {
+    Write-Host "Environment path setup failed" -ForegroundColor Red
+    return $false
+  }
   $env:NEODEV = "$($Config.project.buildPath)\neodev-sdk"
 
   $projectBuildPath = Get-TemplatePath -Path $Config.project.buildPath
