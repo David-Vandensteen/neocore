@@ -22,3 +22,4 @@ synchro.sh
 samples/**/out/fix.bin
 samples/**/out/char.bin
 IMPROVEMENTS_SUMMARY.md
+LOGGING_STANDARDS.md
