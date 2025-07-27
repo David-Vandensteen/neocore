@@ -2,9 +2,11 @@
 #include <math.h>
 #include "externs.h"
 
-GFX_Animated_Sprite player;
+static GFX_Animated_Sprite player;
 
 int main(void) {
+  Position current_pos;
+
   nc_init_display_gfx_animated_sprite(
     &player,
     &player_sprite,
@@ -22,7 +24,7 @@ int main(void) {
     nc_update_animation_gfx_animated_sprite(&player);
 
     if (nc_get_frame_counter() < frame_seq) {
-      nc_log_info("INIT GAS");
+      nc_log_info("INIT GAS\n");
       nc_log_info("DISPLAY GAS AT 100 100");
     }
 
@@ -36,7 +38,9 @@ int main(void) {
     frame_seq += accumulator;
 
     if (nc_get_frame_counter() >= (frame_seq - accumulator) && nc_get_frame_counter() < frame_seq) {
-      if (nc_get_position_gfx_animated_sprite(player).x < 0) {
+      Position current_pos;
+      nc_get_position_gfx_animated_sprite(&player, &current_pos);
+      if (current_pos.x < 0) {
         nc_set_position_gfx_animated_sprite(&player, 150, 150);
       } else {
         nc_set_animation_gfx_animated_sprite(&player, PLAYER_SPRITE_ANIM_UP);
@@ -51,8 +55,9 @@ int main(void) {
       nc_log_info("GET X AND Y");
       nc_set_position_gfx_animated_sprite(&player, 181, 57);
       nc_set_animation_gfx_animated_sprite(&player, PLAYER_SPRITE_ANIM_IDLE);
-      nc_log_short("X", nc_get_position_gfx_animated_sprite(player).x);
-      nc_log_short("Y", nc_get_position_gfx_animated_sprite(player).y);
+      nc_get_position_gfx_animated_sprite(&player, &current_pos);
+      nc_log_info("X: %d", current_pos.x);
+      nc_log_info("Y: %d", current_pos.y);
     }
 
     frame_seq += accumulator;
