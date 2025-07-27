@@ -195,7 +195,7 @@ if ((Test-Path -Path $ConfigFile) -eq $false) {
   return 1
 }
 
-Write-Host "informations" -ForegroundColor Blue
+Write-Host "informations" -ForegroundColor Cyan
 Write-Host "Config file : $ConfigFile"
 
 # FIX: Safe XML parsing with error handling

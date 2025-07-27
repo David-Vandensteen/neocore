@@ -64,7 +64,7 @@ function Write-Program {
   $makeProcess = Start-Process -FilePath "make" -ArgumentList "-f", $MakeFile -NoNewWindow -PassThru -Wait -RedirectStandardOutput "$pathBuildName\gcc.log" -RedirectStandardError "$pathBuildName\gcc_error.log"
   $makeExitCode = $makeProcess.ExitCode
 
-  Write-Host "Make exit code: $makeExitCode" -ForegroundColor Magenta
+  Write-Host "Make exit code: $makeExitCode" -ForegroundColor Cyan
 
   # Display the output from the log file
   if (Test-Path "$pathBuildName\gcc.log") {

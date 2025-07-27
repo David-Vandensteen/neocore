@@ -49,14 +49,14 @@ function Write-Dist {
   }
   if ($ISOFile) {
     $isoPath = if ($hasCD) { "$PathDestination\cd\iso" } else { "$PathDestination\iso" }
-    Write-Host "Copy iso file $isoPath" -ForegroundColor Blue
+    Write-Host "Copy iso file $isoPath" -ForegroundColor Cyan
     Copy-Item -Path $ISOFile -Destination $isoPath
     Copy-Item -Path $CUEFile -Destination $isoPath
   }
 
   if ($CHDFile) {
     $mamePath = if ($hasCD) { "$PathDestination\cd\mame" } else { "$PathDestination\mame" }
-    Write-Host "Copy chd file $mamePath" -ForegroundColor Blue
+    Write-Host "Copy chd file $mamePath" -ForegroundColor Cyan
     Copy-Item -Path $CHDFile -Destination $mamePath
     Copy-Item -Path $HashFile -Destination $mamePath
   }
@@ -68,7 +68,7 @@ function Write-Dist {
 
   if ($ISOFile -and $cddaTracks) {
     Write-Host ""
-    Write-Host "copy sound tracks" -ForegroundColor Blue
+    Write-Host "copy sound tracks" -ForegroundColor Cyan
     Write-Host ""
     Write-Host "CUE file : $CUEFile"
     $content = [System.IO.File]::ReadAllText($CUEFile)
@@ -114,7 +114,7 @@ function Write-Dist {
       $content = $content.Replace("$($filePath)\$($fileNameWithoutExt).wav", "$($fileNameWithoutExt).$ext")
       $content = $content.Replace("$($filePath)\$($fileNameWithoutExt).mp3", "$($fileNameWithoutExt).$ext")
     }
-    Write-Host "make the cue file" -ForegroundColor Blue
+    Write-Host "make the cue file" -ForegroundColor Cyan
     Write-Host $content
     $isoPath = if ($hasCD) { "$PathDestination\cd\iso" } else { "$PathDestination\iso" }
     $content | Out-File -FilePath "$isoPath\$ProjectName.cue" -Encoding ascii -Force

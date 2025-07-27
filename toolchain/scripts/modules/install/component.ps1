@@ -16,7 +16,7 @@ function Install-Component {
   $pathDownload = Resolve-TemplatePath -Path $PathDownload
   $pathInstall = Resolve-TemplatePath -Path $PathInstall
 
-  Write-Host "GET $fileName" -ForegroundColor Blue
+  Write-Host "GET $fileName" -ForegroundColor Cyan
   Start-Download -URL $URL -Path $pathDownload
 
   if (-not($(Test-Path -Path "$pathDownload\$fileName"))) {

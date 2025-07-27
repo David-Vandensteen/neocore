@@ -4,7 +4,7 @@ function Write-MP3 {
     [Parameter(Mandatory=$true)][String] $MP3File,
     [Parameter(Mandatory=$true)][String] $WAVFile
   )
-  Write-Host "Convert $WAVFile $MP3File" -ForegroundColor Blue
+  Write-Host "Convert $WAVFile $MP3File" -ForegroundColor Cyan
   Write-Host $ffmpeg
   Write-Host $MP3File
   Write-Host $WAVFile

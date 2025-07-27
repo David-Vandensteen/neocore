@@ -77,10 +77,10 @@ function Write-SFX {
 
   Write-Host "SoundFX" -ForegroundColor Yellow
 
-  if ($PCMFile) { Write-Host $PCMFile -ForegroundColor Blue }
-  if ($Z80File) { Write-Host $Z80File -ForegroundColor Blue }
+  if ($PCMFile) { Write-Host $PCMFile -ForegroundColor Cyan }
+  if ($Z80File) { Write-Host $Z80File -ForegroundColor Cyan }
 
-  Write-Host "Destination folder $PathISOBuildFolder" -ForegroundColor Blue
+  Write-Host "Destination folder $PathISOBuildFolder" -ForegroundColor Cyan
 
   if ($PCMFile) { Copy-Item -Path $PCMFile -Destination "$PathISOBuildFolder\DEMO.PCM" -Force -ErrorAction Stop }
   if ($Z80File) { Copy-Item -Path $Z80File -Destination "$PathISOBuildFolder\DEMO.Z80" -Force -ErrorAction Stop }
@@ -145,7 +145,7 @@ function Write-CUE {
 
     if (-Not($Rule -like "*dist*")) {
       if ($ext -eq ".wav") {
-        Write-Host "copy $File" -ForegroundColor Blue
+        Write-Host "copy $File" -ForegroundColor Cyan
         Copy-Item -Path "$buildPathProject\$path\$baseName$ext" -Destination $path\$baseName$ext
       }
 
@@ -175,12 +175,12 @@ function Write-CUE {
     }
 
     if ($Rule -eq "dist:exe" -and $ext -eq ".wav") {
-      Write-Host "copy $File" -ForegroundColor Blue
+      Write-Host "copy $File" -ForegroundColor Cyan
       Copy-Item -Path "$buildPathProject\$path\$baseName$ext" -Destination $path\$baseName$ext
     }
 
     if ($Rule -eq "dist:mame" -and $ext -eq ".wav") {
-      Write-Host "copy $File" -ForegroundColor Blue
+      Write-Host "copy $File" -ForegroundColor Cyan
       Copy-Item -Path "$buildPathProject\$path\$baseName$ext" -Destination $path\$baseName$ext
     }
 
@@ -194,7 +194,7 @@ function Write-CUE {
       }
 
       if ($ext -eq ".wav" -and $ConfigCDDA.dist.iso.format -eq "wav") {
-        Write-Host "copy $File" -ForegroundColor Blue
+        Write-Host "copy $File" -ForegroundColor Cyan
         Copy-Item -Path "$buildPathProject\$path\$baseName$ext" -Destination $path\$baseName$ext
       }
 
