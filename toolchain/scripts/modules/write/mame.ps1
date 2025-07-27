@@ -41,6 +41,8 @@ function Write-MameHash {
 
   $SHA1 = Get-CHDSHA1 -File $CHDFile
   Write-MameHashFile -ProjectName $ProjectName -XMLFile $XMLFile -SHA1 $SHA1
+
+  return $true
 }
 
 function Write-Mame {
@@ -52,10 +54,13 @@ function Write-Mame {
   )
   if ((Test-Path -Path $PathMame) -eq $false) {
     if ($Manifest.manifest.dependencies.mame.url) {
-      Install-Component `
+      if (-not (Install-Component `
         -URL $Manifest.manifest.dependencies.mame.url `
         -PathDownload "$($Config.project.buildPath)\spool" `
-        -PathInstall $Manifest.manifest.dependencies.mame.path
+        -PathInstall $Manifest.manifest.dependencies.mame.path)) {
+        Write-Host "Failed to install MAME component" -ForegroundColor Red
+        return $false
+      }
     } else {
       Write-Host "Error: MAME not found in manifest dependencies" -ForegroundColor Red
       Write-Host "Please add mame to manifest.xml dependencies section" -ForegroundColor Yellow
@@ -82,6 +87,8 @@ function Write-Mame {
     Write-Host ""
   }
   Write-MameHash -ProjectName $ProjectName -CHDFile $OutputFile -XMLFile "$(Resolve-TemplatePath -Path $PathMame)\hash\neocd.xml"
+
+  return $true
 }
 
 function Mame {
@@ -106,6 +113,8 @@ function Mame {
   Write-Host "Launching mame $GameName" -ForegroundColor Yellow
   Write-Host "$pathMame\$ExeName $mameArgs $defaultMameArgs"
   Start-Process -NoNewWindow -FilePath "$pathMame\$ExeName" -ArgumentList "$mameArgs $defaultMameArgs"
+
+  return $true
 }
 
 function Mame-WithProfile {
@@ -131,4 +140,6 @@ function Mame-WithProfile {
 
   Write-Host "$pathMame\$ExeName $mameArgs $defaultMameArgs"
   Start-Process -NoNewWindow -FilePath "$pathMame\$ExeName" -ArgumentList "$mameArgs $defaultMameArgs"
+
+  return $true
 }

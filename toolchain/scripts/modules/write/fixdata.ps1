@@ -47,6 +47,14 @@ function Write-Fix {
 
   Write-Host "Running BuildChar on $XMLFile" -ForegroundColor Cyan
 
+  # Check if BuildChar.exe exists in PATH or current directory
+  $buildCharPath = Get-Command "BuildChar.exe" -ErrorAction SilentlyContinue
+  if (-not $buildCharPath) {
+    Write-Host "Error: BuildChar.exe not found in PATH or current directory" -ForegroundColor Red
+    Write-Host "Please ensure SDK is properly installed" -ForegroundColor Yellow
+    return $false
+  }
+
   & BuildChar.exe $XMLFile 2>&1 | Tee-Object -FilePath "$buildPathProject\fix.log"
   $buildCharExitCode = $LASTEXITCODE
 

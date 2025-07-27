@@ -10,7 +10,7 @@ function Update-RaineConfigSwitch {
   if ($Rule -like "run:raine:*") {
     if (-Not($Config.project.emulator.raine.config.$raineConfigName)) {
       Write-Host "Error - $raineConfigName not found in project.emulator.raine.config" -ForegroundColor Red
-      exit 1
+      return $false
     }
     $raineConfig = Resolve-TemplatePath -Path $Config.project.emulator.raine.config.$raineConfigName
   } else {
@@ -19,7 +19,7 @@ function Update-RaineConfigSwitch {
 
   if (-Not(Test-Path -Path $raineConfig)) {
     Write-Host "Error - $raineConfig not found" -ForegroundColor Red
-    exit 1
+    return $false
   }
 
   Write-Host "Copying $raineConfig to $rainePath\config\raine32_sdl.cfg"
@@ -35,7 +35,7 @@ function Invoke-Raine {
   )
   if ((Test-Path -Path "$PathISO\$FileName") -eq $false) {
     Write-Host "$FileName not found" -ForegroundColor Red
-    exit 1
+    return $false
   }
   if ((Test-Path -Path $PathRaine) -eq $false) {
     if ($Manifest.manifest.dependencies.raine.url) {
@@ -46,7 +46,7 @@ function Invoke-Raine {
     } else {
       Write-Host "Error: Raine not found in manifest dependencies" -ForegroundColor Red
       Write-Host "Please add raine to manifest.xml dependencies section" -ForegroundColor Yellow
-      exit 1
+      return $false
     }
     Install-RaineConfig -Path $PathRaine
   }
@@ -69,12 +69,12 @@ function Invoke-Raine {
 
   if (-Not(Test-Path -Path $fullExePath)) {
     Write-Host "Error: Raine executable not found at $fullExePath" -ForegroundColor Red
-    exit 1
+    return $false
   }
 
   if (-Not(Test-Path -Path $fullCuePath)) {
     Write-Host "Error: CUE file not found at $fullCuePath" -ForegroundColor Red
-    exit 1
+    return $false
   }
 
   Write-Host "Starting Raine with command: `"$fullExePath`" `"$fullCuePath`"" -ForegroundColor Green

@@ -37,7 +37,7 @@ function Write-NSI {
   if ((Test-Path -Path "$distPath\$packageName\$packageName-$version\cd\exe\$packageName-$version.exe") -eq $true) {
     Write-Host "$packageName : $version was already released" -ForegroundColor Red
     Write-Host "$distPath\$packageName\$packageName-$version\cd\exe\$packageName-$version.exe already exist" -ForegroundColor Red
-    exit 1
+    return $false
   }
 
   $NSITemplateFile = "$neocorePath\toolchain\nsi\template.nsi"
@@ -51,22 +51,22 @@ function Write-NSI {
 
   if ((Test-Path -Path $NSITemplateFile) -eq $false) {
     Write-Host "$NSITemplateFile not found" -ForegroundColor Red
-    exit 1
+    return $false
   }
 
   if ((Test-Path -Path $outPath) -eq $false) {
     Write-Host "$outPath not found" -ForegroundColor Red
-    exit 1
+    return $false
   }
 
   if ((Test-Path -Path $icon) -eq $false) {
     Write-Host "$icon not found" -ForegroundColor Red
-    exit 1
+    return $false
   }
 
   if ((Test-Path -Path $mamePath) -eq $false) {
     Write-Host "$mamePath not found" -ForegroundColor Red
-    exit 1
+    return $false
   }
 
   $NSIcontent = [System.IO.File]::ReadAllText($NSITemplateFile)
@@ -81,7 +81,7 @@ function Write-NSI {
 
   if ((Test-Path -Path $NSIFile) -eq $false) {
     Write-Host "$NSIFile was not generated" -ForegroundColor Red
-    exit 1
+    return $false
   }
 
   if ((Test-Path -Path $NSIFile) -eq $true) {

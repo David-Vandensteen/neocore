@@ -16,10 +16,11 @@ function Build-NeocoreLib {
   if ($LASTEXITCODE -ne 0) {
     popd
     Write-Host "Neocore lib was not builded" -ForegroundColor Red
-    exit $LASTEXITCODE
+    return $false
   }
   Write-Host ""
   Write-Host "Neocore lib was builded" -ForegroundColor Green
   Write-Host ""
   popd
+  return $true
 }

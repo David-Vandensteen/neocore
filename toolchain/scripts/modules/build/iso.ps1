@@ -13,30 +13,38 @@ function Build-ISO {
     return $false
   }
 
-  Write-Cache `
+  if (-not (Write-Cache `
     -PRGFile $prgFile `
     -SpriteFile $spriteFile `
     -PathISOBuildFolder $pathISOBuildFolder `
-    -PathCDTemplate $pathCDTemplate
+    -PathCDTemplate $pathCDTemplate)) {
+    return $false
+  }
 
   if ($config.project.sound.sfx.pcm) {
-    Write-SFX `
+    if (-not (Write-SFX `
     -PathISOBuildFolder $pathISOBuildFolder `
-    -PCMFile "$($Config.project.sound.sfx.pcm)"
+    -PCMFile "$($Config.project.sound.sfx.pcm)")) {
+      return $false
+    }
   }
 
   if ($config.project.sound.sfx.z80) {
-    Write-SFX `
+    if (-not (Write-SFX `
       -PathISOBuildFolder $pathISOBuildFolder `
-      -Z80File "$($Config.project.sound.sfx.z80)"
+      -Z80File "$($Config.project.sound.sfx.z80)")) {
+      return $false
+    }
   }
 
-  Write-ISO `
+  if (-not (Write-ISO `
     -PRGFile $prgFile `
     -SpriteFile $spriteFile `
     -OutputFile $outputISOFile `
     -PathISOBuildFolder $pathISOBuildFolder `
-    -PathCDTemplate $pathCDTemplate
+    -PathCDTemplate $pathCDTemplate)) {
+    return $false
+  }
 
   # Always generate CUE file, with or without CDDA tracks
   $cddaConfig = $null
@@ -44,9 +52,13 @@ function Build-ISO {
     $cddaConfig = $Config.project.sound.cd.cdda
   }
 
-  Write-CUE `
+  if (-not (Write-CUE `
     -Rule $Rule `
     -OutputFile $outputCUEFile `
     -ISOName "$($Config.project.name).iso" `
-    -ConfigCDDA $cddaConfig
+    -ConfigCDDA $cddaConfig)) {
+    return $false
+  }
+
+  return $true
 }

@@ -14,9 +14,19 @@ function Build-Sprite {
   $fixDataFile = "$projectBuildPath\$($Config.project.name)\fixdata.xml"
   $charDataFile = "$projectBuildPath\$($Config.project.name)\chardata.xml"
 
-  Write-FixdataXML -InputFile $ConfigFile -OutputFile $fixDataFile
-  Write-Fix -XMLFile $fixDataFile
+  if (-not (Write-FixdataXML -InputFile $ConfigFile -OutputFile $fixDataFile)) {
+    return $false
+  }
+  if (-not (Write-Fix -XMLFile $fixDataFile)) {
+    return $false
+  }
 
-  Write-ChardataXML -InputFile $ConfigFile -OutputFile $charDataFile
-  Write-Sprite -XMLFile $charDataFile -Format "cd" -OutputFile $outputFile
+  if (-not (Write-ChardataXML -InputFile $ConfigFile -OutputFile $charDataFile)) {
+    return $false
+  }
+  if (-not (Write-Sprite -XMLFile $charDataFile -Format "cd" -OutputFile $outputFile)) {
+    return $false
+  }
+
+  return $true
 }

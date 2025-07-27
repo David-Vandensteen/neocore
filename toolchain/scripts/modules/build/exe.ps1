@@ -1,5 +1,8 @@
 function Build-EXE {
-  Write-NSI
+  if (-not (Write-NSI)) {
+    Write-Host "NSI file creation failed" -ForegroundColor Red
+    return $false
+  }
   Write-Host "cleaning chd files in Mame to prepare standalone exe building " -ForegroundColor Yellow
   Write-Host ""
 

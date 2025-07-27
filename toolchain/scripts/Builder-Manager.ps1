@@ -21,7 +21,7 @@ function Main {
 
   if (-Not(Assert-Project -Config $Config)) {
     Write-Host "Project assertion failed" -ForegroundColor Red
-    exit 1
+    return $false
   }
 
   Write-Host ""
@@ -38,23 +38,32 @@ function Main {
 
   if (-Not(Assert-Manifest)) {
     Write-Host "Manifest assertion failed" -ForegroundColor Red
-    exit 1
+    return $false
   }
 
   if (-Not(Assert-Rule -Rule $Rule)) {
     Write-Host "Invalid rule: $Rule" -ForegroundColor Red
-    exit 1
+    return $false
   }
-  Stop-Emulators
+  if (-not (Stop-Emulators)) {
+    Write-Host "Warning: Failed to stop emulators" -ForegroundColor Yellow
+    # Continue anyway as this is not critical
+  }
 
   if ($Rule -eq "clean") {
-    MakClean
-    exit 0
+    if (-not (MakClean)) {
+      Write-Host "Clean operation failed" -ForegroundColor Red
+      return $false
+    }
+    return $true
   }
 
   if ($Rule -eq "clean:build") {
-    MakCleanBuild
-    exit 0
+    if (-not (MakCleanBuild)) {
+      Write-Host "Clean build operation failed" -ForegroundColor Red
+      return $false
+    }
+    return $true
   }
 
   $spoolPath = Get-TemplatePath -Path "$($Config.project.buildPath)\spool"
@@ -64,7 +73,7 @@ function Main {
 
   $makLogPath = Get-TemplatePath -Path "$($Config.project.buildPath)\mak.log"
   Write-Host "Starting transcript log in $makLogPath" -ForegroundColor Cyan
-  Start-Transcript -Path $makLogPath -Force
+  Start-Transcript -Path $makLogPath -Force | Out-Null
 
   $gccPath = "..\..\build\gcc\gcc-2.95.2"
   Write-Host $gccPath
@@ -75,21 +84,58 @@ function Main {
   $env:NEODEV = "$($Config.project.buildPath)\neodev-sdk"
 
   $projectBuildPath = Get-TemplatePath -Path $Config.project.buildPath
-  if ((Test-Path -Path "$projectBuildPath\bin") -eq $false) { Install-SDK }
+  $sdkComplete = $true
+
+  # Check if SDK is complete by verifying key components
+  if (-not (Test-Path -Path "$projectBuildPath\bin")) {
+    $sdkComplete = $false
+  } elseif (-not (Test-Path -Path "$projectBuildPath\manifest.xml")) {
+    $sdkComplete = $false
+    Write-Host "Warning: SDK appears incomplete (missing manifest.xml)" -ForegroundColor Yellow
+  }
+
+  if (-not $sdkComplete) {
+    Write-Host "Installing or updating SDK..." -ForegroundColor Cyan
+    if (-not (Install-SDK)) {
+      Write-Host "SDK installation failed" -ForegroundColor Red
+      return $false
+    }
+  }
 
   $projectBuildPath = Get-TemplatePath -Path $Config.project.buildPath
   if ((Test-Path -Path "$projectBuildPath\$($Config.project.name)") -eq $false) {
     New-Item -Path "$projectBuildPath\$($Config.project.name)" -ItemType Directory -Force
   }
 
-  if ($Rule -eq "animator") { Start-Animator }
-  if ($Rule -eq "framer") { Start-Framer }
-  if ($Rule -eq "lib") { Build-NeocoreLib }
-  if ($Rule -eq "sprite") { Build-Sprite }
+  if ($Rule -eq "animator") {
+    if (-not (Start-Animator)) {
+      Write-Host "Animator start failed" -ForegroundColor Red
+      return $false
+    }
+  }
+  if ($Rule -eq "framer") {
+    if (-not (Start-Framer)) {
+      Write-Host "Framer start failed" -ForegroundColor Red
+      return $false
+    }
+  }
+  if ($Rule -eq "lib") {
+    if (-not (Build-NeocoreLib)) {
+      Write-Host "Neocore library build failed" -ForegroundColor Red
+      return $false
+    }
+  }
+  if ($Rule -eq "sprite") {
+    if (-not (Build-Sprite)) {
+      Write-Host "Sprite build failed" -ForegroundColor Red
+      return $false
+    }
+    return $true
+  }
   if (($Rule -eq "make") -or ($Rule -eq "") -or (!$Rule) -or ($Rule -eq "default") ) {
     if (-Not(MakDefault)) {
       Write-Host "Default build failed" -ForegroundColor Red
-      exit 1
+      return $false
     }
   }
   if ($Rule -eq "iso") {

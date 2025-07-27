@@ -5,24 +5,26 @@ function Parse-Error {
 
   if (Select-String -Path "$buildPathProject\sprite.log" -Pattern "System.IO.DirectoryNotFoundException") {
     Write-Host "Error: Directory not found - Check your file paths in the XML configuration" -ForegroundColor Red
-    exit 1
+    return $false
   }
 
   if (Select-String -Path "$buildPathProject\sprite.log" -Pattern "Invalid dimension") {
     Write-Host "Invalid dimension" -ForegroundColor Red
-    exit 1
+    return $false
   }
   if (Select-String -Path "$buildPathProject\sprite.log" -Pattern "est pas valide") {
     Write-Host "Invalid parameter" -ForegroundColor Red
-    exit 1
+    return $false
   }
 
   if ((Get-ChildItem -Path "." -Filter "*.*_reject.*" -Recurse -ErrorAction SilentlyContinue -Force).Length -ne 0) {
     Write-Host "Open reject *_reject file(s)" -ForegroundColor Red
     Write-Host "Fix asset and remove *_reject file(s) in your project before launch a new build ..." -ForegroundColor Red
     Write-Host "Sprite reject..." -ForegroundColor Red
-    exit 1
+    return $false
   }
+
+  return $true
 }
 
 function Write-ChardataXML {
@@ -36,15 +38,25 @@ function Write-ChardataXML {
 
   $charDataNode = $xmlDoc.SelectSingleNode("//chardata")
 
+  if ($charDataNode -eq $null) {
+    Write-Host "No chardata node found in XML" -ForegroundColor Red
+    return $false
+  }
+
   $xmlContent = $charDataNode.OuterXml
   $xmlContent = $xmlContent.Replace("{{build}}", $(Get-TemplatePath -Path $Config.project.buildPath))
   $xmlContent = $xmlContent.Replace("{{neocore}}", $(Get-TemplatePath -Path $Config.project.neocorePath))
   $xmlContent = $xmlContent.Replace("{{name}}", $Config.project.name)
 
   $newXmlDoc = New-Object System.Xml.XmlDocument
-  $newXmlDoc.LoadXml($xmlContent)
-
-  $newXmlDoc.Save($OutputFile)
+  try {
+    $newXmlDoc.LoadXml($xmlContent)
+    $newXmlDoc.Save($OutputFile)
+    return $true
+  } catch {
+    Write-Host "Failed to save CharData XML: $($_.Exception.Message)" -ForegroundColor Red
+    return $false
+  }
 }
 
 function Write-Sprite {
@@ -59,11 +71,13 @@ function Write-Sprite {
   Write-Host "Compiling sprites" -ForegroundColor Yellow
   if ((Test-Path -Path $XMLFile) -eq $false) {
     Write-Host "$XMLFile not found" -ForegroundColor Red
-    exit 1
+    return $false
   }
 
   & BuildChar.exe $XMLFile 2>&1 | Tee-Object -FilePath "$buildPathProject\sprite.log"
-  Parse-Error
+  if (-not (Parse-Error)) {
+    return $false
+  }
 
   if ($Config.project.gfx.DAT.chardata.setup.PSObject.Properties.Name -contains "charfile" -and $Config.project.gfx.DAT.chardata.setup.charfile) {
     $charfile = Get-TemplatePath -Path $Config.project.gfx.DAT.chardata.setup.charfile
@@ -87,8 +101,9 @@ function Write-Sprite {
   if ((Test-Path -Path "$OutputFile.$Format") -eq $true) {
     Write-Host "Builded sprites $OutputFile.$Format" -ForegroundColor Green
     Write-Host ""
+    return $true
   } else {
     Write-Host ("error - {0}.{1} was not generated" -f $OutputFile, $Format) -ForegroundColor Red
-    exit 1
+    return $false
   }
 }

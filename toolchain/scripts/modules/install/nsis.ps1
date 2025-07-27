@@ -10,6 +10,6 @@ function Install-NSIS {
   } else {
     Write-Host "Error: NSIS not found in manifest dependencies" -ForegroundColor Red
     Write-Host "Please add nsis to manifest.xml dependencies section" -ForegroundColor Yellow
-    exit 1
+    return $false
   }
 }

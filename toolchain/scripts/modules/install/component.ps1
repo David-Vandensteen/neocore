@@ -24,10 +24,16 @@ function Install-Component {
     return $false
   }
 
-  Expand-Archive -Path "$pathDownload\$fileName" -DestinationPath $pathInstall -Force -ErrorAction Stop
-
-  Write-Host "  expanded $filename $pathInstall" -ForegroundColor Yellow
+  try {
+    Expand-Archive -Path "$pathDownload\$fileName" -DestinationPath $pathInstall -Force -ErrorAction Stop
+    Write-Host "  expanded $filename $pathInstall" -ForegroundColor Yellow
+  } catch {
+    Write-Host "  error : failed to expand archive $fileName" -ForegroundColor Red
+    Write-Host "  error details: $($_.Exception.Message)" -ForegroundColor Red
+    return $false
+  }
   Write-Host ""
 
   Remove-Item -Path "$pathDownload\$fileName" -Force
+  return $true
 }

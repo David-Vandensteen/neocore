@@ -14,9 +14,10 @@ function Write-ISO {
   if ((Test-Path -Path $OutputFile) -eq $true) {
     Write-Host "Builded ISO $OutputFile" -ForegroundColor Green
     Write-Host ""
+    return $true
   } else {
     Write-Host "$OutputFile was not generated" -ForegroundColor Red
-    exit 1
+    return $false
   }
 }
 
@@ -32,14 +33,17 @@ function Write-Cache {
 
   if ((Test-Path -Path $PathCDTemplate) -eq $false) {
     if ($Manifest.manifest.dependencies.cdTemplate.url) {
-      Install-Component `
+      if (-not (Install-Component `
         -URL $Manifest.manifest.dependencies.cdTemplate.url `
         -PathDownload "$projectBuildPath\spool" `
-        -PathInstall $Manifest.manifest.dependencies.cdTemplate.path
+        -PathInstall $Manifest.manifest.dependencies.cdTemplate.path)) {
+        Write-Host "Failed to install CD Template component" -ForegroundColor Red
+        return $false
+      }
     } else {
       Write-Host "Error: CD Template not found in manifest dependencies" -ForegroundColor Red
       Write-Host "Please add cdTemplate to manifest.xml dependencies section" -ForegroundColor Yellow
-      exit 1
+      return $false
     }
   }
 
@@ -47,15 +51,15 @@ function Write-Cache {
   if (-Not(Test-Path -Path $PathISOBuildFolder)) { mkdir -Path $PathISOBuildFolder | Out-Null }
   if (-Not(Test-Path -Path $PathCDTemplate)) {
     Write-Host "$PathCDTemplate not found" -ForegroundColor Red
-    exit 1
+    return $false
   }
   if (-Not(Test-Path -Path $PRGFile)) {
     Write-Host "$PRGFile not found" -ForegroundColor Red
-    exit 1
+    return $false
   }
   if (-Not(Test-Path -Path $SpriteFile)) {
     Write-Host "$SpriteFile not found" -ForegroundColor Red
-    exit 1
+    return $false
   }
 
   Copy-Item -Path "$PathCDTemplate\*" -Destination $PathISOBuildFolder -Recurse -Force -ErrorAction Stop
@@ -66,6 +70,8 @@ function Write-Cache {
     $fixfile = $Config.project.gfx.DAT.fixdata.chardata.setup.charfile
     Copy-Item -Path $fixfile -Destination "$PathISOBuildFolder\DEMO.FIX" -Force -ErrorAction Stop
   }
+
+  return $true
 }
 
 function Write-SFX {
@@ -84,6 +90,8 @@ function Write-SFX {
 
   if ($PCMFile) { Copy-Item -Path $PCMFile -Destination "$PathISOBuildFolder\DEMO.PCM" -Force -ErrorAction Stop }
   if ($Z80File) { Copy-Item -Path $Z80File -Destination "$PathISOBuildFolder\DEMO.Z80" -Force -ErrorAction Stop }
+
+  return $true
 }
 
 function Write-CUE {
@@ -131,14 +139,17 @@ function Write-CUE {
     if ($ext -eq ".mp3" -or ($ext -eq ".wav" -and $ConfigCDDA.dist.iso.format -eq ".mp3")) {
       if ((Test-Path -Path "$projectBuildPath\bin\mpg123-1.31.3-static-x86-64") -eq $false) {
         if ($Manifest.manifest.dependencies.mpg123.url) {
-          Install-Component `
+          if (-not (Install-Component `
           -URL $Manifest.manifest.dependencies.mpg123.url `
           -PathDownload "$projectBuildPath\spool" `
-          -PathInstall $Manifest.manifest.dependencies.mpg123.path
+          -PathInstall $Manifest.manifest.dependencies.mpg123.path)) {
+            Write-Host "Failed to install mpg123 component" -ForegroundColor Red
+            return $false
+          }
         } else {
           Write-Host "Error: mpg123 not found in manifest dependencies" -ForegroundColor Red
           Write-Host "Please add mpg123 to manifest.xml dependencies section" -ForegroundColor Yellow
-          exit 1
+          return $false
         }
       }
     }
@@ -210,14 +221,17 @@ function Write-CUE {
         # Download ffmpeg if not found
         if (-Not(Test-Path -Path $ffmpegExe)) {
           if ($Manifest.manifest.dependencies.ffmpeg.url) {
-            Install-Component `
+            if (-not (Install-Component `
               -URL $Manifest.manifest.dependencies.ffmpeg.url `
               -PathDownload "$projectBuildPath\spool" `
-              -PathInstall (Get-TemplatePath -Path $Manifest.manifest.dependencies.ffmpeg.path)
+              -PathInstall (Get-TemplatePath -Path $Manifest.manifest.dependencies.ffmpeg.path))) {
+              Write-Host "Failed to install ffmpeg component" -ForegroundColor Red
+              return $false
+            }
           } else {
             Write-Host "Error: ffmpeg not found in manifest dependencies" -ForegroundColor Red
             Write-Host "Please add ffmpeg to manifest.xml dependencies section" -ForegroundColor Yellow
-            exit 1
+            return $false
           }
 
           # Re-search for ffmpeg after installation
@@ -272,8 +286,9 @@ function Write-CUE {
   if ((Test-Path -Path $OutputFile) -eq $true) {
     Write-Host "Builded CUE $OutputFile" -ForegroundColor Green
     Write-Host ""
+    return $true
   } else {
     Write-Host "$OutputFile was not generated" -ForegroundColor Red
-    exit 1
+    return $false
   }
 }

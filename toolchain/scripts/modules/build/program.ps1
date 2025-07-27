@@ -5,6 +5,10 @@ function Build-Program {
     return $false
   }
   $projectBuildPath = Resolve-TemplatePath -Path $Config.project.buildPath
+  if (-not $projectBuildPath) {
+    Write-Host "Failed to resolve build path: $($Config.project.buildPath)" -ForegroundColor Red
+    return $false
+  }
   $prgFile = "$projectBuildPath\$($Config.project.name)\$($Config.project.name).prg"
   $prgFile = Get-TemplatePath -Path $prgFile
   $buildPath = Get-TemplatePath -Path $Config.project.buildPath
