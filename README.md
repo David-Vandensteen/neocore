@@ -3,48 +3,60 @@
 
 ![](https://media.giphy.com/media/TLfbmyW3523z24WONz/giphy.gif) ![](https://media.giphy.com/media/iFUh5AEPD4XfvpsvJh/giphy.gif) ![](https://media.giphy.com/media/iJObJsdx6ud4zI7cS1/giphy.gif)
 
+## 🎯 Overview
 
-Neocore is a library and toolchain for developing on Neo Geo CD.  
-It provides functions over Neo Dev Kit and DATlib 0.2, and includes tools and code that can help with projects on this platform.  
+Neocore is a library and toolchain for developing on Neo Geo CD.
 
- - High abstraction level for Neo Geo CD development
- - Compatible with ~~Windows 10 and~~ Windows 11
+It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes tools and code that can help with projects on this platform.
 
-[discord](https://discord.com/channels/1330066799445676093/1330089958798790686)
+### ✨ Key Features
+- 🚀 **High abstraction level** for Neo Geo CD development
+- 🔧 **Complete toolchain** with PowerShell scripts
+- 🎮 **Compatible** with Windows 11
+- 📖 **Documentation** generated with Doxygen
+- 🔄 **Hot reload** for rapid development
+
+### 🔗 Quick Links
+- [💬 Discord](https://discord.com/channels/1330066799445676093/1330089958798790686)
+- [📋 Migration from previous versions](IMPROVEMENTS_SUMMARY.md#migration-guide)
+- [📚 API Documentation](http://azertyvortex.free.fr/neocore-doxy/r11/neocore_8h.html)
+- [📝 Changelog](CHANGELOG.md)
+
+> ⚠️ **Current Version**: This version includes **breaking changes**. Please check the [migration guide](IMPROVEMENTS_SUMMARY.md) before updating your existing projects.
 
 ## 📚 Table of Contents
-- [🎮 Game, demo, code learning using Neocore](#examples)
-- [📋 Requirements](#requirements)
-- [📅 Roadmap](#roadmap)
-- [🚀 Init](#init)
-- [▶️ Build and run the hello sample](#build-and-run-the-hello-sample)
-- [⚙️ Mak rules](#mak-rules)
-- [📦 Create a project](#create-a-project)
-- [🆙 Upgrade an existing project](#upgrade-an-existing-project)
-- [📤 Release a project](#release-a-project)
-- [📖 Documentation of Neocore C lib](#documentation-of-neocore-c-lib)
-- [🤝 Contribute](#contribute)
-- [🎨 DATlib assets](#datlib-assets)
-- [🕹 Mame profiles](#mame-profiles)
-- [🧪 Raine configs](#raine-configs)
-- [🌿 Pull or checkout another branches](#pull-or-checkout-another-branches)
-- [♻️ Hot reload](#hot-reload)
-- [🔧 Compiling the lib (necessary if you develop or modify Neocore C lib)](#compiling-the-lib)
-- [📚 Dependencies](#dependencies)
-- [📝 Changelog](#changelog)
+- [🎯 Overview](#overview)
+- [🚀 Quick Start](#quick-start)
+  - [📋 Requirements](#requirements)
+  - [⚡ Installation](#installation)
+- [📦 Project Management](#project-management)
+  - [🆕 Create a Project](#create-a-project)
+  - [🆙 Upgrade a Project](#upgrade-an-existing-project)
+  - [📤 Release a Project](#release-a-project)
+- [⚙️ Command Reference](#command-reference)
+  - [🔨 Mak Rules](#mak-rules)
+  - [🎮 Emulator Profiles](#emulator-profiles)
+- [📖 Documentation & Resources](#documentation--resources)
+  - [📚 C API Documentation](#documentation-of-neocore-c-lib)
+  - [🎨 DATlib Assets](#datlib-assets)
+  - [🔄 Migration from Previous Versions](IMPROVEMENTS_SUMMARY.md)
+- [🛠️ Advanced Development](#advanced-development)
+  - [♻️ Hot Reload](#hot-reload)
+  - [🔧 Compile Library](#compiling-the-lib)
+  - [🌿 Branches & Versions](#pull-or-checkout-another-branches)
+- [🤝 Contribution](#contribute)
+  - [📅 Roadmap](#roadmap)
+  - [📚 Dependencies](#dependencies)
+- [🎮 Examples & Showcases](#examples)
 
-### Game, demo, code learning using Neocore<a name="examples"></a>
+---
 
-  - Pong : https://github.com/David-Vandensteen/neogeo-cd-pong
-  - Flamble :
-    -  [https://twitter.com/i/status/1296434554526478336](https://twitter.com/i/status/1296434554526478336)
-    -  [https://www.youtube.com/embed/YjRmvMAfgbc](https://www.youtube.com/embed/YjRmvMAfgbc)
-    -  [http://azertyvortex.free.fr/flamble](http://azertyvortex.free.fr/flamble)
-
-## Requirements
+## Requirements<a name="requirements"></a>
 * Up to date Windows 11
 * Git [https://git-scm.com/download/win](https://git-scm.com/download/win)
 * Windows Terminal with cmd instance (shortcut win + r and type `wt cmd`)
+
+---
 
 ## 📅 Roadmap<a name="roadmap"></a>
 
@@ -66,274 +78,371 @@ It provides functions over Neo Dev Kit and DATlib 0.2, and includes tools and co
 - [ ] AES / MVS support (limited)
 - [ ] CLI-based asset packager
 
-## Init
+---
+
+## 🚀 Quick Start
+
+### ⚡ Installation<a name="installation"></a>
+
+**1. Clone the repository**
 ```cmd
 git clone https://github.com/David-Vandensteen/neocore.git
+cd neocore
 ```
-    
-## Build and run the hello sample
-```cmd
-cd .\neocore\samples\hello
-```
-```cmd
-.\mak.bat run:mame
-```
-  
-## Mak rules
-⚠️ ___***Warning: The mak script overrides the path environment variable during compilation.  
-If you encounter any problems after using it, simply close and restart a new command terminal.***___
 
-- Remove the builded resources
+**2. Test the installation**
 ```cmd
-.\mak.bat clean
-```
-- Remove the build folder (remove tools, emulators, builded resources ...)
-```cmd
-.\mak.bat clean:build
-```  
-- Build sprites
-```cmd
+cd samples\hello
 .\mak.bat sprite
-```
-- Build the program
-```cmd
 .\mak.bat
-```
-- Build the ISO file
-```cmd
-.\mak.bat iso
-```
-- **Run with Raine**
-```cmd
-.\mak.bat run:raine
-```
-- **Run with Mame**
-```cmd
-.\mak.bat run:mame
-```
-- Display version information
-```cmd
-.\mak.bat --version
-```
-## Create a project
-* Go to the folder where you've cloned this Neocore repository (*replace `<neocore>` with your path in the following command*)
-```cmd
-cd <neocore>\bootstrap\scripts\project
-```
-
-* Replace `myGame` and `c:\temp\myGame` with your data in the following command
-
-```cmd
-.\create.bat -name myGame -projectPath c:\temp\myGame
-```
-This script allow the -force parameter.   
-Be aware that in this case, existing resources will be overwritten.   
-```cmd
-.\create.bat -name myGame -projectPath c:\temp\myGame -force
-```
-
-* Go to the `src` folder project (*replace `c:\temp\myGame\src` with your path in the following command*)
-```cmd
-cd c:\temp\myGame\src
-```
-
-* Compile and run it
-```cmd
 .\mak.bat run:mame
 ```
 
-## Upgrade an existing project
-*It's recommended to back up your project folder before starting.*   
-*This process does not upgrade your code, XML project definition, or assets and you must handle any breaking changes yourself.*   
-*The files mak.bat and mak.ps1 will be overwritten.*   
-*Neocore Toolchain will be replaced.*   
-*Neocore Lib C will be replaced.*   
-
-* Remove the `build` folder in your project (*replace `c:\temp\myGame\build` with your path in the following command*)
-
+**3. Create your first project**
 ```cmd
-rd /S /Q c:\temp\myGame\build
+cd ..\..\bootstrap\scripts\project
+.\create.bat -name MyGame -projectPath C:\temp\MyGame
+cd C:\temp\MyGame\src
+.\mak.bat sprite
+.\mak.bat
+.\mak.bat run:mame
 ```
 
-* Go to the folder where you've cloned this Neocore repository (*replace `<neocore>` with your path in the following command*)
-```cmd
-cd <neocore>\bootstrap\scripts\project
-```
+🎉 **Congratulations!** You've created and launched your first Neo Geo CD project.
 
-* For upgrading your project, replace `c:\temp\myGame\src` and `c:\temp\myGame\neocore` with your data in the following command
-```cmd
-.\upgrade.bat -projectSrcPath c:\temp\myGame\src -projectNeocorePath c:\temp\myGame\neocore
-```
+> 💡 **Next Steps**: See [Project Management](#project-management) section for detailed project creation options and workflows.
 
-## Release a project
-* Go to your src folder project (*replace `c:\temp\myGame\src` with your path in the following command*)
-```cmd
-cd c:\temp\myGame\src
-```
+---
 
-- ISO
-```cmd
-.\mak.bat dist:iso
-```
-- MAME
-```cmd
-.\mak.bat dist:mame
-```
-- EXE *(create a Windows standalone executable with the game project and Mame emulator embedded)*
-```cmd
-.\mak.bat dist:exe
-```
+## ⚙️ Command Reference
 
-## Documentation of Neocore C lib
+### 🔨 Mak Rules<a name="mak-rules"></a>
 
-  - Doxygen: [http://azertyvortex.free.fr/neocore-doxy/r11/neocore_8h.html](http://azertyvortex.free.fr/neocore-doxy/r11/neocore_8h.html)
-    
-## Contribute
+> ⚠️ **Warning**: The mak script overrides the PATH environment variable during compilation. If you encounter any problems after using it, simply close and restart a new command terminal.
 
-Please note that the project is under development and the author is not responsible for any software damage.  
-This library is mainly tested on Raine and MAME emulators.  
-  
-**There is no guarantee or obligation from the author that anything will work on the real Neo-Geo hardware.**  
+| Command | Description |
+|---------|-------------|
+| `.\mak.bat` | Build the program |
+| `.\mak.bat clean` | Remove built resources |
+| `.\mak.bat clean:build` | Remove the entire build folder |
+| `.\mak.bat sprite` | Build sprites |
+| `.\mak.bat iso` | Generate ISO file |
+| `.\mak.bat run:raine` | Run with Raine emulator |
+| `.\mak.bat run:mame` | Run with MAME emulator |
+| `.\mak.bat serve:mame` | Run in hot reload mode |
+| `.\mak.bat dist:iso` | Create ISO distribution package |
+| `.\mak.bat dist:mame` | Create MAME distribution package |
+| `.\mak.bat dist:exe` | Create Windows standalone executable |
+| `.\mak.bat framer` | Launch DATlib Framer |
+| `.\mak.bat animator` | Launch DATlib Animator |
+| `.\mak.bat lib` | Compile Neocore library |
+| `.\mak.bat --version` | Display version information |
 
-To test and improve compatibility with the hardware, I am searching for a Neo-Geo CD with an SD loader and HDMI capabilities.  
-You can contribute to this effort with a donation if you want.
+### 🎮 Custom Emulator Profiles<a name="emulator-profiles"></a>
 
-[Make a Paypal donation to help Neocore project](https://www.paypal.com/donate/?hosted_button_id=YAHAJGP58TYM4)
+You can create custom emulator profiles for different testing scenarios.
+Neocore comes with default profiles (`default`, `full`, `nosound`, `debug` for MAME), but you can add your own.
 
-Here are other ways to contribute:
+**Creating Custom MAME Profiles:**
 
-- If you own a Neo-Geo CD, you can test the examples and open or confirm issues on real hardware.  
-- If you are a developer, you can create tutorials or example code.
-
-Any help is welcome.  
-    
-## DATlib assets
-For making graphics, see the DATlib ref available here: 
-[http://azertyvortex.free.fr/download/DATlib-LibraryReference.pdf](http://azertyvortex.free.fr/download/DATlib-LibraryReference.pdf)   
-
-Neocore embed the content of `chardata.xml` in `project.xml`   
-
-```xml
-<project>
-  <gfx>
-    <DAT>
-      <chardata>
-      </chardata>
-    </DAT>
-  </gfx>
-</project>
-```
-
-For launching the DATlib Framer application:    
-```cmd
-.\mak.bat framer
-```
-For launching the DATlib Animator application:  
-```cmd
-.\mak.bat animator
-```
-
-## Mame profiles
-
+Add custom profiles to your `project.xml`:
 ```xml
 <project>
   <emulator>
     <mame>
       <profile>
-        <default>-window -skip_gameinfo neocdz</default>
-        <full>-nowindow -skip_gameinfo neocdz</full>
-        <nosound>-sound none -window -skip_gameinfo neocdz</nosound>
-        <debug>-debug -window -skip_gameinfo neocdz</debug>
+        <!-- Default profiles are already included -->
+        <myprofile>-window -skip_gameinfo -throttle neocdz</myprofile>
+        <benchmark>-window -skip_gameinfo -nothrottle -bench 60 neocdz</benchmark>
+        <record>-window -skip_gameinfo -aviwrite output.avi neocdz</record>
       </profile>
     </mame>
   </emulator>
 </project>
 ```
 
-To use a named profile, launch mak run:mame:profileName   
-Example:
-- To run MAME in fullscreen.   
-```cmd
-.\mak.bat run:mame:full
-```
+**Creating Custom Raine Configurations:**
 
-You can add more custom profiles.
-
-## Raine configs
+Create custom config files in your project and reference them:
 ```xml
 <project>
   <emulator>
     <raine>
       <config>
-        <default>{{build}}\raine\config\default.cfg</default>
-        <full>{{build}}\raine\config\fullscreen.cfg</full>
-        <yuv>{{build}}\raine\config\yuv.cfg</yuv>
+        <!-- Default configs are already included -->
+        <myconfig>raine\config\myconfig.cfg</myconfig>
+        <test>raine\config\test.cfg</test>
       </config>
     </raine>
   </emulator>
 </project>
 ```
 
-To use a named config, launch mak run:raine:configName   
-Example:
-- To run RAINE in fullscreen.   
+**Usage:**
 ```cmd
-.\mak.bat run:raine:full
+# Use your custom MAME profiles
+.\mak.bat run:mame:myprofile
+.\mak.bat run:mame:benchmark
+.\mak.bat run:mame:record
+
+# Use your custom Raine configs
+.\mak.bat run:raine:myconfig
+.\mak.bat run:raine:test
+
+# Default profiles (included with Neocore)
+.\mak.bat run:mame:full      # Fullscreen
+.\mak.bat run:mame:debug     # Debug mode
+.\mak.bat run:raine:full     # Fullscreen
 ```
 
-You can add more custom configs.
+---
 
-## Pull or checkout another branches
-**BE CAREFUL : You need to remove build folder `.\neocore\build` for supress cache files before compiling a project**  
+## 📦 Project Management
 
-## Hot reload
-* Go to the folder where you've cloned this Neocore repository (*replace `<neocore>` with your path in the following command*)
+### 🆕 Create a New Project<a name="create-a-project"></a>
+
+```cmd
+cd <neocore>\bootstrap\scripts\project
+.\create.bat -name MyGame -projectPath C:\temp\MyGame
+```
+
+**Available options:**
+- `-force`: Overwrite existing files
+- `-name`: Project name
+- `-projectPath`: Destination path
+
+### 🆙 Upgrade an Existing Project<a name="upgrade-an-existing-project"></a>
+
+> ⚠️ **Important**: Backup your project before upgrading. Check the [migration guide](IMPROVEMENTS_SUMMARY.md) for breaking changes.
+
+```cmd
+# 1. Remove build folder
+rd /S /Q C:\temp\MyGame\build
+
+# 2. Run upgrade
+cd <neocore>\bootstrap\scripts\project
+.\upgrade.bat -projectSrcPath C:\temp\MyGame\src -projectNeocorePath C:\temp\MyGame\neocore
+```
+
+**What gets updated:**
+- ✅ Neocore toolchain
+- ✅ Neocore C library
+- ✅ mak.bat and mak.ps1 scripts
+- ❌ Your source code (manual migration needed)
+- ❌ XML project definition
+- ❌ Project assets
+
+### 📤 Release a Project<a name="release-a-project"></a>
+
+From your project's `src` folder:
+
+```cmd
+# ISO distribution
+.\mak.bat dist:iso
+
+# MAME distribution
+.\mak.bat dist:mame
+
+# Windows standalone executable (game + emulator)
+.\mak.bat dist:exe
+```
+
+---
+## 📖 Documentation & Resources
+
+### 📚 C API Documentation<a name="documentation-of-neocore-c-lib"></a>
+
+- **[Complete Doxygen Documentation](http://azertyvortex.free.fr/neocore-doxy/r11/neocore_8h.html)**
+- **[Migration Guide](IMPROVEMENTS_SUMMARY.md)** - Breaking changes and migration from previous versions
+- **[Detailed Changelog](CHANGELOG.md)** - Version history
+
+### 🎨 DATlib Assets<a name="datlib-assets"></a>
+
+**DATlib Documentation:**
+- [DATlib Reference (PDF)](http://azertyvortex.free.fr/download/DATlib-LibraryReference.pdf)
+
+**Configuration in project.xml:**
+```xml
+<project>
+  <gfx>
+    <DAT>
+      <chardata>
+        <!-- DATlib configuration -->
+      </chardata>
+      <fixdata>
+        <!-- DATlib fixdata configuration -->
+      </fixdata>
+    </DAT>
+  </gfx>
+</project>
+```
+
+**DATlib Tools:**
+```cmd
+.\mak.bat framer     # Launch DATlib Framer
+.\mak.bat animator   # Launch DATlib Animator
+```
+
+---
+
+## 🎵 Audio Configuration<a name="audio-configuration"></a>
+
+### CDDA (CD Digital Audio) Configuration
+
+For Neo Geo CD projects, you can configure CDDA tracks in your `project.xml`:
+
+**Configuration structure:**
+```xml
+<project>
+  <sound>
+    <cd>
+      <cdda>
+        <dist>
+          <iso>
+            <format>mp3</format>  <!-- Distribution format -->
+          </iso>
+        </dist>
+        <tracks>
+          <track><!-- track id 1 is reserved for the binary program -->
+            <id>2</id>
+            <file>assets\sounds\cdda\track02.wav</file>
+            <pregap>00:02:00</pregap>
+          </track>
+          <!-- Add more tracks as needed -->
+        </tracks>
+      </cdda>
+    </cd>
+  </sound>
+</project>
+```
+
+**Key points:**
+- Track ID 1 is reserved for the binary program
+- Use WAV files for source audio (high quality)
+- Distribution format (MP3) optimizes ISO size
+- Pregap of `00:02:00` is standard for CD audio
+- Mixed source formats supported (WAV, MP3)
+
+**Audio file organization:**
+```
+assets/
+└── sounds/
+    └── cdda/
+        ├── track02.wav
+        ├── track03.wav
+        └── track04.mp3
+```
+
+---
+
+## 🤝 Contribution<a name="contribute"></a>
+
+### 🎯 How to Contribute
+
+**Developers:**
+- 📝 Create tutorials or code examples
+- 🐛 Report and fix bugs
+- 💡 Propose new features
+- 📚 Improve documentation
+
+**Neo-Geo CD Owners:**
+- 🧪 Test examples on real hardware
+- 🐛 Report hardware compatibility issues
+- ✅ Confirm functionality on real hardware
+
+**Financial Support:**
+To improve hardware compatibility and project development, any financial contribution is appreciated.
+
+[💰 Make a PayPal donation](https://www.paypal.com/donate/?hosted_button_id=YAHAJGP58TYM4)
+
+### ⚠️ Disclaimers
+
+- This project is under active development
+- Mainly tested on Raine and MAME emulators
+- **No guarantee of functionality on real Neo-Geo hardware**
+- The author is not responsible for any software damage
+
+Any help is welcome! 🙏
+
+---
+
+### 🎮 Game Examples & Showcases<a name="examples"></a>
+
+- **Pong**: https://github.com/David-Vandensteen/neogeo-cd-pong
+- **Flamble**:
+  - [Twitter Demo](https://twitter.com/i/status/1296434554526478336)
+  - [YouTube Video](https://www.youtube.com/embed/YjRmvMAfgbc)
+  - [Website](http://azertyvortex.free.fr/flamble)
+
+---
+
+## 🛠️ Advanced Development
+
+### ♻️ Hot Reload<a name="hot-reload"></a>
+
+Hot reload allows you to automatically recompile and restart your project when making changes:
+
 ```cmd
 cd <neocore>\samples\hello
-```
-```cmd
 .\mak.bat serve:mame
 ```
-  
-Wait for the emulator to run and edit `main.c`.  
-Now, remove `nc_log_info("DAVID VANDENSTEEN");` line.  
-Save the file.
-  
-The hot-reload process will rebuild & run your project automaticaly.
-  
-Some problems currently:  
-* The process is not a real watcher (the rebuild is triggered only if the folder size change)  
-* When you break this process, path is not restored in the current terminal (close & reopen a new terminal)  
 
-## Compiling the lib (necessary if you develop or modify Neocore C lib)<a name="compiling-the-lib"></a>
+1. The emulator launches
+2. Edit `main.c`
+3. Save the file
+4. The project recompiles and restarts automatically
+
+**Current limitations:**
+- ⚠️ Not a real watcher (triggers only when folder size changes)
+- ⚠️ PATH is not restored when interrupted (close/reopen terminal)
+
+### 🔧 Compile Library<a name="compiling-the-lib"></a>
+
+Necessary if you modify Neocore source code:
 
 ```cmd
+.\mak.bat clean
 .\mak.bat lib
 ```
 
-## Dependencies
+### 🌿 Branches & Versions<a name="pull-or-checkout-another-branches"></a>
 
-  - NeoDev
-  - DATlib
-  - DATimage
-  - NGFX SoundBuilder
-  - Raine
-  - Mame
-  - CHDMAN
-  - Doxygen
-  - MSYS2
-  - Mkisofs
-  - GCC
-  - mpg123
-  - ffmpeg
-  - NSIS
+> ⚠️ **Important**: Remove the `.\neocore\build` folder before compiling after a branch change to avoid cache conflicts.
 
-## [Changelog](CHANGELOG.md)
-  - [link](CHANGELOG.md)
+```cmd
+.\mak.bat clean:build
+```
 
-## License
+---
 
-Neocore is licensed under the MIT license.  
-Copyright 2019 by David Vandensteen.  
-Some graphics by **Grass**.    
+## 📚 Dependencies<a name="dependencies"></a>
+
+- NeoDev
+- DATlib
+- DATimage
+- NGFX SoundBuilder
+- Raine
+- Mame
+- CHDMAN
+- Doxygen
+- MSYS2
+- Mkisofs
+- GCC
+- mpg123
+- ffmpeg
+- NSIS
+
+---
+
+## 📝 [Changelog](CHANGELOG.md)
+
+Complete version history and changes documentation.
+
+---
+
+## 📄 License
+
+Neocore is licensed under the MIT license.
+Copyright 2019 by David Vandensteen.
+Some graphics by **Grass**.
 
