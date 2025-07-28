@@ -12,9 +12,9 @@ static short logo1_shrunk_inc = -1;
 static BYTE logo3_shrunk_y = 0xFF;
 static short logo3_shrunk_inc = -1;
 
-static Vec2short logo1_position_center = { LOGO1_POSITION_CENTER_X_INIT, 30 };
-static Vec2short logo2_position_center = { 160, 180 };
-static Vec2short logo3_position_center = { 160, LOGO3_POSITION_CENTER_Y_INIT };
+static Position logo1_position_center = { LOGO1_POSITION_CENTER_X_INIT, 30 };
+static Position logo2_position_center = { 160, 180 };
+static Position logo3_position_center = { 160, LOGO3_POSITION_CENTER_Y_INIT };
 
 static WORD shrunkTableIndex = 0;
 

@@ -12,6 +12,20 @@ function Show-Error {
   exit 1
 }
 
+# Read version from manifest.xml
+$manifestPath = Resolve-Path -Path "..\..\..\manifest.xml"
+if (-Not(Test-Path -Path $manifestPath)) {
+  Show-Error "manifest.xml not found at $manifestPath"
+}
+
+try {
+  [xml]$manifestXml = Get-Content -Path $manifestPath
+  $version = $manifestXml.manifest.version
+  Write-Host "Neocore version: $version" -ForegroundColor Green
+} catch {
+  Show-Error "Failed to read version from manifest.xml: $($_.Exception.Message)"
+}
+
 if (Test-Path -Path $ProjectNeocorePath) {
   $srcLib = Resolve-Path -Path "..\..\..\src-lib"
   $toolchain = Resolve-Path -Path "..\..\..\toolchain"

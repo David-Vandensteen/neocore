@@ -20,7 +20,7 @@ static void debug_adpcm_player() {
   nc_log("");
   if (nc_get_adpcm_player()->state == PLAYING) nc_log("ADPCM SAMPLE IS PLAYING");
   nc_log(""); nc_log("");
-  nc_log_dword("REMAINING", nc_get_adpcm_player()->remaining_frame);
+  nc_log_info("REMAINING: %08ld", nc_get_adpcm_player()->remaining_frame);
 }
 
 int main(void) {

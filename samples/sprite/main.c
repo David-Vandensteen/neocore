@@ -32,9 +32,9 @@ int main(void) {
   );
 
   while(1) {
-    Vec2short position;
+    Position position;
     nc_update();
-    position = nc_get_position_gfx_animated_sprite(player);
+    nc_get_position_gfx_animated_sprite(&player, &position);
     if (nc_joypad_is_left(0) && position.x > 0) { nc_move_gfx_animated_sprite(&player, -1, 0); }
     if (nc_joypad_is_right(0) && position.y < 280) { nc_move_gfx_animated_sprite(&player, 1, 0); }
     if (nc_joypad_is_up(0) && position.y > 0) {

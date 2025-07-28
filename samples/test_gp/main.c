@@ -49,8 +49,8 @@ static void update() {
   if (nc_get_frame_counter() >= (frame_seq - accumulator) && nc_get_frame_counter() < frame_seq) {
     nc_log_info("GET X AND Y GP");
     nc_set_position_gfx_picture(&asteroid, 181, 57);
-    nc_log_short("X", nc_get_position_gfx_picture(asteroid).x);
-    nc_log_short("Y", nc_get_position_gfx_picture(asteroid).y);
+    nc_log_info("X: %d", nc_get_position_gfx_picture(asteroid).x);
+    nc_log_info("Y: %d", nc_get_position_gfx_picture(asteroid).y);
   }
 
   frame_seq += accumulator;
