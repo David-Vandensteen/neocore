@@ -98,7 +98,7 @@ function Main {
   }
 
   if (-not $sdkComplete) {
-    Write-Host "Installing or updating SDK..." -ForegroundColor Cyan
+    Write-Host "Installing SDK..." -ForegroundColor Cyan
     if (-not (Install-SDK)) {
       Write-Host "SDK installation failed" -ForegroundColor Red
       return $false
