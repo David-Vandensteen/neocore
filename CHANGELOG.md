@@ -1,5 +1,35 @@
 ## 3.0.0
 
+  - **MAJOR RELEASE** - DATLib 0.3, toolchain refactoring and quality improvement
+  - **BREAKING CHANGES**:
+    - **PowerShell Toolchain**:
+      - **Command deprecations**: mak mame and mak raine deprecated (use mak run:mame and mak run:raine instead)
+    - **Dependencies**:
+      - **DATlib upgraded to version 0.3** - Breaking compatibility with previous DATlib version
+      - **Package updates in manifest.xml**:
+        - Updated DATlib package
+        - Refreshed toolchain component packages (mame, raine, gcc, etc.)
+        - Updated build tools and runtime dependencies
+    - **Project Configuration**:
+      - **project.xml schema changes**: Enhanced structure - prepares cartridge compatibility for future version
+      - **Templated path system**: Build paths now use template variables ({{neocore}}, {{build}})
+      - **Sound structure changes**: Reorganized sound.cd.cdda hierarchy
+      - **Path resolution**: Improved neocorePath and buildPath handling mechanisms
+    - **C API Changes**:
+      - **GFX getter functions**: Breaking signature changes - now require Position* parameter:
+        - nc_get_position_gfx_animated_sprite() now takes Position* instead of returning values
+        - nc_get_position_gfx_animated_sprite_physic() now takes Position* instead of returning values
+        - nc_get_position_gfx_picture() now takes Position* instead of returning values
+        - nc_get_position_gfx_picture_physic() now takes Position* instead of returning values
+        - nc_get_position_gfx_scroller() now takes Position* instead of returning values
+      - **Function signatures**: All coordinate-related functions standardized to short type
+  - **TOOLCHAIN IMPROVEMENTS**:
+    - refactor PowerShell toolchain modules
+    - improve error handling and return values across all scripts
+    - add comprehensive error propagation in all critical functions
+    - improve robustness of Set-EnvPath, Stop-Emulators, and Watch-Folder modules
+    - fix infinite loops and blocking risks in build scripts
+
 ## 2.9.0
 
   - add formatting arguments support in nc log info (check out samples\hello)
