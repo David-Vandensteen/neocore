@@ -1,3 +1,5 @@
+## 3.0.0
+
 ## 2.9.0
 
   - add formatting arguments support in nc log info (check out samples\hello)
