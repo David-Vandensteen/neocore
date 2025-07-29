@@ -1166,7 +1166,7 @@ void nc_set_position_log(WORD _x, WORD _y) {
   log_y_default = log_y;
 }
 
-void nc_log_next_log() {
+void nc_log_next_line() {
   log_y++;
   log_x = log_x_default;
 }
@@ -1226,39 +1226,39 @@ WORD nc_log_info_line(char *text, ...) {
   fixPrintf(log_x, log_y, 0, 0, "%s", buffer);
 
   // Always advance to next line
-  nc_log_next_log();
+  nc_log_next_line();
 
   return strlen(text);
 }
 
 void nc_log_word(WORD value) {
   fixPrintf(log_x, log_y, 0, 0, "%04d", value);
-  nc_log_next_log();
+  nc_log_next_line();
 }
 
 void nc_log_int(int value) {
   fixPrintf(log_x, log_y, 0, 0, "%08d", value);
-  nc_log_next_log();
+  nc_log_next_line();
 }
 
 void nc_log_dword(DWORD value) {
   fixPrintf(log_x, log_y, 0, 0, "%08d", value);
-  nc_log_next_log();
+  nc_log_next_line();
 }
 
 void nc_log_short(short value) {
   fixPrintf(log_x, log_y, 0, 0, "%02d", value);
-  nc_log_next_log();
+  nc_log_next_line();
 }
 
 void nc_log_byte(BYTE value) {
   fixPrintf(log_x, log_y, 0, 0, "%02d", value);
-  nc_log_next_log();
+  nc_log_next_line();
 }
 
 void nc_log_bool(BOOL value) {
   fixPrintf(log_x, log_y, 0, 0, "%01d", value);
-  nc_log_next_log();
+  nc_log_next_line();
 }
 
 void nc_log_spriteInfo(spriteInfo *si) {
