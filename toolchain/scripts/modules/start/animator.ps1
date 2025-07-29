@@ -5,4 +5,5 @@ function Start-Animator {
     if (-not (Test-Path -Path $exe)) { Install-SDK }
 
     Start-Process -NoNewWindow -FilePath $exe
+    return $true
 }
