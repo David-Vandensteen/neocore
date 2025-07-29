@@ -32,11 +32,11 @@
 #define JOYPAD_IS_C_P1       neocore_joypad_p1&JOY_C
 #define JOYPAD_IS_D_P1       neocore_joypad_p1&JOY_D
 
-#define X 1
+#define X 0
 #define Y 1
 
 #define LOG_X_INIT   1
-#define LOG_Y_INIT   1
+#define LOG_Y_INIT   2
 
 #define SPRITE_INDEX_MANAGER_MAX  384
 #define PALETTE_INDEX_MANAGER_MAX 256
@@ -1233,32 +1233,32 @@ WORD nc_log_info_line(char *text, ...) {
 
 void nc_log_word(WORD value) {
   fixPrintf(log_x, log_y, 0, 0, "%04d", value);
-  nc_log_next_line();
+  log_x += 4;
 }
 
 void nc_log_int(int value) {
   fixPrintf(log_x, log_y, 0, 0, "%08d", value);
-  nc_log_next_line();
+  log_x += 8;
 }
 
 void nc_log_dword(DWORD value) {
   fixPrintf(log_x, log_y, 0, 0, "%08d", value);
-  nc_log_next_line();
+  log_x += 8;
 }
 
 void nc_log_short(short value) {
   fixPrintf(log_x, log_y, 0, 0, "%02d", value);
-  nc_log_next_line();
+  log_x += 2;
 }
 
 void nc_log_byte(BYTE value) {
   fixPrintf(log_x, log_y, 0, 0, "%02d", value);
-  nc_log_next_line();
+  log_x += 2;
 }
 
 void nc_log_bool(BOOL value) {
   fixPrintf(log_x, log_y, 0, 0, "%01d", value);
-  nc_log_next_line();
+  log_x += 1;
 }
 
 void nc_log_spriteInfo(spriteInfo *si) {
