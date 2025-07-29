@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
-  <name>test_copy_palettes</name>
+  <name>test_copy_pal</name>
   <version>1.0.0</version>
   <platform>cd</platform>
   <makefile>..\Makefile</makefile>
