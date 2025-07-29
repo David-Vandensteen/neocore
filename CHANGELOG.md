@@ -16,6 +16,8 @@
       - **Sound structure changes**: Reorganized sound.cd.cdda hierarchy
       - **Path resolution**: Improved neocorePath and buildPath handling mechanisms
     - **C API Changes**:
+      - **Function removals**:
+        - nc_log() function removed - use nc_log_info() for logging functionality
       - **GFX getter functions**: Breaking signature changes - now require Position* parameter:
         - nc_get_position_gfx_animated_sprite() now takes Position* instead of returning values
         - nc_get_position_gfx_animated_sprite_physic() now takes Position* instead of returning values
@@ -23,6 +25,13 @@
         - nc_get_position_gfx_picture_physic() now takes Position* instead of returning values
         - nc_get_position_gfx_scroller() now takes Position* instead of returning values
       - **Function signatures**: All coordinate-related functions standardized to short type
+      - **Logging behavior changes**: nc_log_info(), nc_log_short(), nc_log_word(), and other nc_log_* functions no longer automatically add line breaks - use nc_log_info_line() for automatic line breaks or nc_log_next_line() to manually control line breaks
+  - **NEW C API FUNCTIONS**:
+    - **Logging Functions**:
+      - nc_log_info_line() - Log with automatic line break
+      - nc_log_next_line() - Move to next log line
+      - nc_init_log() - Initialize logging system
+      - nc_set_position_log() - Set log cursor position
   - **TOOLCHAIN IMPROVEMENTS**:
     - refactor PowerShell toolchain modules
     - improve error handling and return values across all scripts
