@@ -16,6 +16,21 @@
   - **BREAKING CHANGES**:
     - **PowerShell Toolchain**:
       - **Command deprecations**: mak mame and mak raine deprecated (use mak run:mame and mak run:raine instead)
+      - **Build workflow changes**: Build steps are now explicit and must be run manually instead of automatic execution
+        - **Before**: `mak run:raine` or `mak run:mame` automatically executed all build steps
+        - **Now**: Manual execution required: `mak sprite` → `mak` → `mak run:raine`
+        - **Reason**: Better control over build process, clearer separation of build phases, faster development cycle by leveraging cache (skip sprite generation when unchanged), and reduced build time
+        - **Usage examples**:
+          ```bash
+          # Initial development (do everything)
+          mak sprite && mak && mak run:raine
+
+          # Code-only modifications (sprites unchanged)
+          mak && mak run:raine  # ⚡ Faster!
+
+          # Quick test without recompilation
+          mak run:raine  # 🚀 Instant!
+          ```
     - **Dependencies**:
       - **DATlib upgraded to version 0.3** - Breaking compatibility with previous DATlib version
       - **Package updates in manifest.xml**:
