@@ -1262,41 +1262,41 @@ void nc_log_bool(BOOL value) {
 }
 
 void nc_log_spriteInfo(spriteInfo *si) {
-  nc_log_info("PALCOUNT : %04d", si->palInfo->count);
-  nc_log_info("FRAMECOUNT : %04d", si->frameCount);
+  nc_log_info_line("PALCOUNT : %04d", si->palInfo->count);
+  nc_log_info_line("FRAMECOUNT : %04d", si->frameCount);
   nc_log_info("MAXWIDTH : %04d", si->maxWidth);
 }
 
 void nc_log_box(Box *b) {
-  nc_log_info("P0X: %d", (short)b->p0.x);
-  nc_log_info("P0Y: %d", (short)b->p0.y);
+  nc_log_info_line("P0X: %d", (short)b->p0.x);
+  nc_log_info_line("P0Y: %d", (short)b->p0.y);
+  nc_log_info_line("");
+  nc_log_info_line("P1X: %d", (short)b->p1.x);
+  nc_log_info_line("P1Y: %d", (short)b->p1.y);
+  nc_log_info_line("");
+  nc_log_info_line("P2X: %d", (short)b->p2.x);
+  nc_log_info_line("P2Y: %d", (short)b->p2.y);
+  nc_log_info_line("");
+  nc_log_info_line("P3X: %d", (short)b->p3.x);
+  nc_log_info_line("P3Y: %d", (short)b->p3.y);
+  nc_log_info_line("");
+  nc_log_info_line("P4X: %d", (short)b->p4.x);
+  nc_log_info_line("P4Y: %d", (short)b->p4.y);
   nc_log_info("");
-  nc_log_info("P1X: %d", (short)b->p1.x);
-  nc_log_info("P1Y: %d", (short)b->p1.y);
-  nc_log_info("");
-  nc_log_info("P2X: %d", (short)b->p2.x);
-  nc_log_info("P2Y: %d", (short)b->p2.y);
-  nc_log_info("");
-  nc_log_info("P3X: %d", (short)b->p3.x);
-  nc_log_info("P3Y: %d", (short)b->p3.y);
-  nc_log_info("");
-  nc_log_info("P4X: %d", (short)b->p4.x);
-  nc_log_info("P4Y: %d", (short)b->p4.y);
-  nc_log_info("");
-  nc_log_info("WIDTH: %d", b->width);
-  nc_log_info("HEIGHT: %d", b->height);
-  nc_log_info("");
-  nc_log_info("WIDTH OFFSET: %d", b->widthOffset);
+  nc_log_info_line("WIDTH: %d", b->width);
+  nc_log_info_line("HEIGHT: %d", b->height);
+  nc_log_info_line("");
+  nc_log_info_line("WIDTH OFFSET: %d", b->widthOffset);
   nc_log_info("HEIGHT OFFSET: %d", b->heightOffset);
 }
 
 void nc_log_pictureInfo(pictureInfo *pi) {
-  nc_log_info("TILEWIDTH : %04d", (WORD)pi->tileWidth);
+  nc_log_info_line("TILEWIDTH : %04d", (WORD)pi->tileWidth);
   nc_log_info("TILEHEIGHT : %04d", (WORD)pi->tileHeight);
 }
 
 void nc_log_position(Position position) {
-  nc_log_info("X: %d", position.x);
+  nc_log_info_line("X: %d", position.x);
   nc_log_info("Y: %d", position.y);
 }
 
