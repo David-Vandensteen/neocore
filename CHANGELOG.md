@@ -26,6 +26,7 @@
         - nc_get_position_gfx_scroller() now takes Position* instead of returning values
       - **Function signatures**: All coordinate-related functions standardized to short type
       - **Logging behavior changes**: nc_log_info(), nc_log_short(), nc_log_word(), and other nc_log_* functions no longer automatically add line breaks - use nc_log_info_line() for automatic line breaks or nc_log_next_line() to manually control line breaks
+      - **Logging parameter changes**: Some logging functions no longer accept the `label` parameter - use simplified function signatures without label parameter
   - **NEW C API FUNCTIONS**:
     - **Logging Functions**:
       - nc_log_info_line() - Log with automatic line break
@@ -38,6 +39,7 @@
     - add comprehensive error propagation in all critical functions
     - improve robustness of Set-EnvPath, Stop-Emulators, and Watch-Folder modules
     - fix infinite loops and blocking risks in build scripts
+    - **Embedded headers**: Neodev and DATlib headers are now embedded in NeoCore instead of being installed as external dependencies
 
 ## 2.9.0
 
