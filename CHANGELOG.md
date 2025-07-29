@@ -1,6 +1,18 @@
 ## 3.0.0
 
   - **MAJOR RELEASE** - DATLib 0.3, toolchain refactoring and quality improvement
+    - refactor PowerShell toolchain modules
+    - improve error handling and return values across all scripts
+    - add comprehensive error propagation in all critical functions
+    - improve robustness of Set-EnvPath, Stop-Emulators, and Watch-Folder modules
+    - fix infinite loops and blocking risks in build scripts
+    - **Embedded headers**: neodev and DATlib headers are now embedded in NeoCore instead of being installed as external dependencies
+  - **DOCUMENTATION IMPROVEMENTS**:
+    - **Doxygen integration**: Added comprehensive documentation tags throughout neocore.h
+    - **API documentation**: Complete documentation for all major structures (Position, Box, RGB16, GFX_*)
+    - **Function documentation**: Detailed parameter descriptions, return values, and usage notes
+    - **Neo Geo specific documentation**: Hardware constraints, memory addresses, and platform-specific optimizations documented
+    - **Code review**: Complete security and quality analysis with actionable recommendations in review/lib/.3, toolchain refactoring and quality improvement
   - **BREAKING CHANGES**:
     - **PowerShell Toolchain**:
       - **Command deprecations**: mak mame and mak raine deprecated (use mak run:mame and mak run:raine instead)
