@@ -17,13 +17,13 @@ int main(void) {
     /* nc_log_info - no automatic newline, continues on same line */
     nc_log_info("PRINT INT: ");
     nc_log_info("%d", 10);
-    nc_log_next_log(); /* manually go to next line */
+    nc_log_next_line(); /* manually go to next line */
     nc_log_int(10); /* alternative way to log an integer */
     nc_log_info(" PRINT SHORT: ");
     nc_log_info("%d", -10);
-    nc_log_next_log(); /* manually go to next line */
+    nc_log_next_line(); /* manually go to next line */
     nc_log_short(-10);
-    nc_log_next_log(); /* manually go to next line */
+    nc_log_next_line(); /* manually go to next line */
 
     /* using nc_log_info_line for automatic newlines */
     nc_log_info_line("DEC %d %d %d", 1, 2, 3);
@@ -32,13 +32,13 @@ int main(void) {
 
     /* text with manual newlines - position updated automatically */
     nc_log_info("TEXT\nWITH\nMANUAL\nNEWLINES\n");
-    nc_log_next_log();
+    nc_log_next_line();
 
     /* normal text - no automatic newline, stays on same line */
     nc_log_info("NORMAL TEXT ");
     nc_log_info("CONTINUES ");
     nc_log_info("ON SAME LINE");
-    nc_log_next_log(); /* manually go to next line */
+    nc_log_next_line(); /* manually go to next line */
 
     /* text ending with newline - position updated automatically */
     nc_log_info("TEXT WITH ENDING NEWLINE\n");
