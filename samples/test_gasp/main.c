@@ -2,7 +2,7 @@
 #include <math.h>
 #include "externs.h"
 
-GFX_Animated_Sprite_Physic player;
+static GFX_Animated_Sprite_Physic player;
 
 int main(void) {
   const DWORD accumulator = 200;
@@ -30,7 +30,7 @@ int main(void) {
     nc_update_animation_gfx_animated_sprite_physic(&player);
 
     if (nc_get_frame_counter() < frame_seq) {
-      nc_log_info("INIT GASP");
+      nc_log_info_line("INIT GASP");
       nc_log_info("DISPLAY GASP AT 100 100");
     }
 
@@ -57,11 +57,11 @@ int main(void) {
     frame_seq += accumulator;
 
     if (nc_get_frame_counter() >= (frame_seq - accumulator) && nc_get_frame_counter() < frame_seq) {
-      nc_log_info("GET X AND Y");
+      nc_log_info_line("GET X AND Y");
       nc_set_position_gfx_animated_sprite_physic(&player, 181, 57);
       nc_set_animation_gfx_animated_sprite_physic(&player, PLAYER_SPRITE_ANIM_IDLE);
       nc_get_position_gfx_animated_sprite_physic(&player, &current_pos);
-      nc_log_info("X: %d", current_pos.x);
+      nc_log_info_line("X: %d", current_pos.x);
       nc_log_info("Y: %d", current_pos.y);
     }
 
