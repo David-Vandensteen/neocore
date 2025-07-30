@@ -38,7 +38,7 @@ function Write-ChardataXML {
 
   $charDataNode = $xmlDoc.SelectSingleNode("//chardata")
 
-  if ($charDataNode -eq $null) {
+  if ($null -eq $charDataNode) {
     Write-Host "No chardata node found in XML" -ForegroundColor Red
     return $false
   }
