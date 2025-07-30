@@ -58,6 +58,7 @@ Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\write\ma
 Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\write\mp3.ps1"
 Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\write\nsi.ps1"
 Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\write\program.ps1"
+Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\write\sprite.ps1"
 Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\write\wav.ps1"
 
 # ============================================================================
