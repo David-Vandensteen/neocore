@@ -3,6 +3,7 @@
 #include "externs.h"
 
 static GFX_Scroller background;
+static Position position;
 
 int main(void) {
   nc_init_display_gfx_scroller(
@@ -17,7 +18,8 @@ int main(void) {
     nc_update();
     nc_move_gfx_scroller(&background, 1, 0);
 
-    if (nc_get_position_gfx_scroller(background).x > 512) {
+    nc_get_position_gfx_scroller(&background, &position);
+    if (position.x > 512) {
       nc_set_position_gfx_scroller(&background, 0, 0);
     }
   };
