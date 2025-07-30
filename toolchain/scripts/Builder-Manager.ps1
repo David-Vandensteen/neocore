@@ -34,7 +34,7 @@ function Main {
 
   $manifestPath = $(Resolve-TemplatePath -Path "$($Config.project.neocorePath)\manifest.xml")
   Write-Host "Getting manifest from $manifestPath" -ForegroundColor Cyan
-  [xml]$Manifest = (Get-Content -Path $manifestPath)
+  $global:Manifest = [xml](Get-Content -Path $manifestPath)
 
   if (-Not(Assert-Manifest)) {
     Write-Host "Manifest assertion failed" -ForegroundColor Red
@@ -140,99 +140,116 @@ function Main {
       Write-Host "Default build failed" -ForegroundColor Red
       return $false
     }
+    return $true
   }
   if ($Rule -eq "iso") {
     if (-Not(MakISO)) {
       Write-Host "ISO build failed" -ForegroundColor Red
       return $false
     }
+    return $true
   }
   if ($Rule -eq "run:raine" -or $Rule -eq "raine" -or $Rule -like "run:raine:*") {
     if (-Not(MakRunRaine)) {
       Write-Host "Raine run failed" -ForegroundColor Red
       return $false
     }
+    return $true
   }
   if ($Rule -like "run:mame*" -or $Rule -eq "mame" -or $Rule -eq "run") {
     if (-Not(MakRunMame)) {
       Write-Host "Mame run failed" -ForegroundColor Red
       return $false
     }
+    return $true
   }
   if ($Rule -eq "serve:raine") {
     if (-Not(MakServeRaine)) {
       Write-Host "Raine serve failed" -ForegroundColor Red
       return $false
     }
+    return $true
   }
   if ($Rule -eq "serve:mame" -or $Rule -eq "serve") {
     if (-Not(MakServeMame)) {
       Write-Host "Mame serve failed" -ForegroundColor Red
       return $false
     }
+    return $true
   }
   if ($Rule -eq "dist:iso" -or $Rule -eq "dist:raine") {
     if (-Not(MakDistISO)) {
       Write-Host "ISO distribution failed" -ForegroundColor Red
       return $false
     }
+    return $true
   }
   if ($Rule -eq "dist:mame" -or $Rule -eq "dist:chd") {
     if (-Not(MakDistMame)) {
       Write-Host "Mame distribution failed" -ForegroundColor Red
       return $false
     }
+    return $true
   }
   if ($Rule -eq "dist:exe") {
     if (-Not(MakDistExe)) {
       Write-Host "Exe distribution failed" -ForegroundColor Red
       return $false
     }
+    return $true
   }
   if ($Rule -eq "--version") {
     Show-Version
+    return $true
   }
   if ($Rule -eq "only:sprite") {
     if (-Not(Build-Sprite)) {
       Write-Host "Sprite build failed" -ForegroundColor Red
       return $false
     }
+    return $true
   }
   if ($Rule -eq "only:program") {
     if (-Not(Build-Program)) {
       Write-Host "Program build failed" -ForegroundColor Red
       return $false
     }
+    return $true
   }
   if ($Rule -eq "only:iso") {
     if (-Not(Build-ISO)) {
       Write-Host "ISO build failed" -ForegroundColor Red
       return $false
     }
+    return $true
   }
   if ($Rule -eq "only:mame") {
     if (-Not(Build-Mame)) {
       Write-Host "Mame build failed" -ForegroundColor Red
       return $false
     }
+    return $true
   }
   if ($Rule -eq "only:run") {
     if (-Not(Start-Mame)) {
       Write-Host "Mame start failed" -ForegroundColor Red
       return $false
     }
+    return $true
   }
   if ($Rule -eq "only:run:mame") {
     if (-Not(Start-Mame)) {
       Write-Host "Mame start failed" -ForegroundColor Red
       return $false
     }
+    return $true
   }
   if ($Rule -eq "only:run:raine") {
     if (-Not(Start-Raine)) {
       Write-Host "Raine start failed" -ForegroundColor Red
       return $false
     }
+    return $true
   }
 
   # All operations completed successfully
@@ -257,7 +274,7 @@ try {
 }
 
 $mainResult = Main -Config $config -Rule $Rule
-if ($mainResult -eq $false) {
+if (-not $mainResult) {
   Write-Host "Build manager process failed" -ForegroundColor Red
   exit 1
 }
