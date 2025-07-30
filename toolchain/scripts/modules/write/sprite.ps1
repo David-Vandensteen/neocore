@@ -84,6 +84,16 @@ function Write-Sprite {
     New-Item -Path $buildPathProject -ItemType Directory -Force | Out-Null
   }
 
+  # Ensure out directory exists in the current working directory
+  if (-not (Test-Path "out")) {
+    Write-Host "Creating 'out' directory..." -ForegroundColor Yellow
+    New-Item -Path "out" -ItemType Directory -Force | Out-Null
+  }
+
+  # Debug: Show current working directory and out directory status
+  Write-Host "Current working directory: $(Get-Location)" -ForegroundColor Cyan
+  Write-Host "Out directory exists: $(Test-Path 'out')" -ForegroundColor Cyan
+
   # Simple approach: execute and display output line by line
   Write-Host "BuildChar.exe output:" -ForegroundColor Yellow
 
@@ -137,6 +147,12 @@ function Write-Sprite {
   $process.WaitForExit()
   $exitCode = $process.ExitCode
 
+  # Ensure exitCode is not null
+  if ($null -eq $exitCode) {
+    $exitCode = 0  # Default to success if we can't get the exit code
+    Write-Host "Warning: Could not retrieve exit code, assuming success" -ForegroundColor Yellow
+  }
+
   # Display any final output that might have been missed
   if (Test-Path "$buildPathProject\sprite_temp.log") {
     $content = Get-Content "$buildPathProject\sprite_temp.log" -Raw -ErrorAction SilentlyContinue
@@ -178,15 +194,33 @@ function Write-Sprite {
 
   # Clean up temp files
   Remove-Item "$buildPathProject\sprite_temp.log" -Force -ErrorAction SilentlyContinue
-  Remove-Item "$buildPathProject\sprite_error.log" -Force -ErrorAction SilentlyContinue  Write-Host "BuildChar.exe completed with exit code: $exitCode" -ForegroundColor Cyan
+  Remove-Item "$buildPathProject\sprite_error.log" -Force -ErrorAction SilentlyContinue
 
-  # Check for errors in the log file
+  Write-Host "BuildChar.exe completed with exit code: $exitCode" -ForegroundColor Cyan
+
+  # Debug: Check what files were created after BuildChar.exe execution
+  Write-Host "Checking for files created by BuildChar.exe..." -ForegroundColor Yellow
+  Write-Host "Contents of 'out' directory after BuildChar.exe:" -ForegroundColor Yellow
+  if (Test-Path "out") {
+    $outFiles = Get-ChildItem "out" -ErrorAction SilentlyContinue
+    if ($outFiles) {
+      $outFiles | ForEach-Object { Write-Host "  $($_.Name)" -ForegroundColor Gray }
+    } else {
+      Write-Host "  (empty)" -ForegroundColor Gray
+    }
+  } else {
+    Write-Host "  'out' directory does not exist" -ForegroundColor Red
+  }  # Check for errors in the log file
   if (-not (Watch-Error)) {
     return $false
   }
 
-  if ($exitCode -ne 0) {
-    Write-Host "ERROR: BuildChar.exe failed with exit code: $exitCode" -ForegroundColor Red
+  if ($null -eq $exitCode -or $exitCode -ne 0) {
+    if ($null -eq $exitCode) {
+      Write-Host "ERROR: Could not determine BuildChar.exe exit code" -ForegroundColor Red
+    } else {
+      Write-Host "ERROR: BuildChar.exe failed with exit code: $exitCode" -ForegroundColor Red
+    }
     return $false
   }
 
@@ -200,19 +234,10 @@ function Write-Sprite {
 
   if (-not (Test-Path $charfilePath)) {
     Write-Host "char.bin file was not created by BuildChar.exe at expected location: $charfilePath" -ForegroundColor Red
-    Write-Host "Current directory contents:" -ForegroundColor Yellow
-    Get-ChildItem . | ForEach-Object { Write-Host "  $($_.Name)" -ForegroundColor Gray }
-
-    # Also check if out directory exists and list its contents
-    if (Test-Path "out") {
-      Write-Host "Contents of 'out' directory:" -ForegroundColor Yellow
-      Get-ChildItem "out" | ForEach-Object { Write-Host "  $($_.Name)" -ForegroundColor Gray }
-    } else {
-      Write-Host "'out' directory does not exist" -ForegroundColor Yellow
-    }
-
     return $false
   }
+
+  Write-Host "char.bin found successfully at: $charfilePath" -ForegroundColor Green
 
   # Check if CharSplit.exe exists
   $charSplitPath = (Get-Command "CharSplit.exe" -ErrorAction SilentlyContinue).Source
@@ -221,6 +246,7 @@ function Write-Sprite {
     return $false
   }
 
+  Write-Host "Running CharSplit.exe $charfilePath '-$Format' $OutputFile" -ForegroundColor Cyan
   & CharSplit.exe $charfilePath "-$Format" $OutputFile
   $charSplitExitCode = $LASTEXITCODE
 
@@ -229,15 +255,54 @@ function Write-Sprite {
     return $false
   }
 
+  Write-Host "CharSplit.exe completed successfully" -ForegroundColor Green
+
+  # Debug: Check where files were created
+  Write-Host "Checking for output files after CharSplit.exe..." -ForegroundColor Yellow
+  Write-Host "Looking for: $OutputFile.$Format" -ForegroundColor Cyan
+  Write-Host "Current directory contents after CharSplit:" -ForegroundColor Yellow
+  Get-ChildItem . | ForEach-Object { Write-Host "  $($_.Name)" -ForegroundColor Gray }
+
+  # Also check the target directory
+  $targetDir = Split-Path $OutputFile -Parent
+  if ($targetDir -and (Test-Path $targetDir)) {
+    Write-Host "Target directory ($targetDir) contents:" -ForegroundColor Yellow
+    Get-ChildItem $targetDir | ForEach-Object { Write-Host "  $($_.Name)" -ForegroundColor Gray }
+  }
+
+  # Look for any .cd files in current directory
+  $cdFiles = Get-ChildItem . -Filter "*.cd" -ErrorAction SilentlyContinue
+  if ($cdFiles) {
+    Write-Host "Found .cd files in current directory:" -ForegroundColor Yellow
+    $cdFiles | ForEach-Object { Write-Host "  $($_.Name)" -ForegroundColor Gray }
+  }
+
+  # Check for .SPR file and rename it to .cd (like in chardata.ps1)
+  $projectName = Split-Path $OutputFile -Leaf
+  $targetDir = Split-Path $OutputFile -Parent
+  $sprFile = "$targetDir\$projectName.SPR"
+  $cdFile = "$targetDir\$projectName.cd"
+
+  Write-Host "Looking for SPR file: $sprFile" -ForegroundColor Cyan
+  if (Test-Path -Path $sprFile) {
+    Write-Host "Found SPR file, renaming to .cd" -ForegroundColor Green
+    Rename-Item -Path $sprFile -NewName "$projectName.cd" -Force
+    Write-Host "Renamed $sprFile to $cdFile" -ForegroundColor Green
+  } else {
+    Write-Host "Warning: $sprFile not found, no file to rename" -ForegroundColor Yellow
+  }
+
+  # Remove the temporary char.bin file
   Remove-Item -Path $charfilePath -Force
 
+  # Check if the final output file was created
   if ((Test-Path -Path "$OutputFile.$Format") -eq $true) {
     Write-Host "Builded sprites $OutputFile.$Format" -ForegroundColor Green
     Write-Host ""
     return $true
   } else {
-    Write-Host "Current directory contents:" -ForegroundColor Red
-    Get-ChildItem . | ForEach-Object { Write-Host "  $($_.Name)" -ForegroundColor Red }
+    Write-Host "Current directory contents:" -ForegroundColor Yellow
+    Get-ChildItem . | ForEach-Object { Write-Host "  $($_.Name)" -ForegroundColor Gray }
     Write-Host ("error - {0}.{1} was not generated" -f $OutputFile, $Format) -ForegroundColor Red
     return $false
   }
