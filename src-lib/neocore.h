@@ -298,8 +298,8 @@ void nc_init_display_gfx_picture_physic(
 
 void nc_init_display_gfx_scroller(
   GFX_Scroller *gfx_scroller,
-  scrollerInfo *scrollerInfo,
-  paletteInfo *paletteInfo,
+  const scrollerInfo *scrollerInfo,
+  const paletteInfo *paletteInfo,
   short x,
   short y
 );
