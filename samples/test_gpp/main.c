@@ -2,6 +2,7 @@
 #include "externs.h"
 
 static GFX_Picture_Physic asteroid;
+static Position position;
 
 static void init();
 static void display();
@@ -22,7 +23,7 @@ static void update() {
   nc_init_log();
 
   if (nc_get_frame_counter() < frame_seq) {
-    nc_log_info("INIT GPP");
+    nc_log_info_line("INIT GPP");
     nc_log_info("DISPLAY GPP AT 100 100");
   }
 
@@ -36,7 +37,8 @@ static void update() {
   frame_seq += accumulator;
 
   if (nc_get_frame_counter() >= (frame_seq - accumulator) && nc_get_frame_counter() < frame_seq) {
-    if (nc_get_position_gfx_picture_physic(asteroid).x < 0) {
+    nc_get_position_gfx_picture_physic(&asteroid, &position);
+    if (position.x < 0) {
       nc_set_position_gfx_picture_physic(&asteroid, 150, 150);
     } else {
       nc_log_info("MOVE GPP -1 -1");
@@ -47,10 +49,11 @@ static void update() {
   frame_seq += accumulator;
 
   if (nc_get_frame_counter() >= (frame_seq - accumulator) && nc_get_frame_counter() < frame_seq) {
-    nc_log_info("GET X AND Y GPP");
+    nc_log_info_line("GET X AND Y GPP");
     nc_set_position_gfx_picture_physic(&asteroid, 181, 57);
-    nc_log_info("X: %d", nc_get_position_gfx_picture_physic(asteroid).x);
-    nc_log_info("Y: %d", nc_get_position_gfx_picture_physic(asteroid).y);
+    nc_get_position_gfx_picture_physic(&asteroid, &position);
+    nc_log_info_line("X: %d", position.x);
+    nc_log_info("Y: %d", position.y);
   }
 
   frame_seq += accumulator;
