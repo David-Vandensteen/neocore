@@ -75,7 +75,9 @@ function Write-Sprite {
   }
 
   & BuildChar.exe $XMLFile 2>&1 | Tee-Object -FilePath "$buildPathProject\sprite.log"
-  if (-not (Parse-Error)) {
+  $parseResult = Parse-Error
+  if (-not $parseResult) {
+    Write-Host "Sprite compilation failed due to errors" -ForegroundColor Red
     return $false
   }
 
@@ -94,9 +96,18 @@ function Write-Sprite {
   }
 
   & CharSplit.exe $charfile "-$Format" $OutputFile
-  Remove-Item -Path $charfile -Force
-  Rename-Item -Path "$projectBuildPath\$($projectName).SPR" `
-    -NewName "$($projectName).cd" -Force
+  if (-not (Test-Path -Path $charfile)) {
+    Write-Host "Warning: $charfile not found, skipping removal" -ForegroundColor Yellow
+  } else {
+    Remove-Item -Path $charfile -Force
+  }
+
+  if (-not (Test-Path -Path "$projectBuildPath\$($projectName).SPR")) {
+    Write-Host "Warning: $($projectName).SPR not found, skipping rename" -ForegroundColor Yellow
+  } else {
+    Rename-Item -Path "$projectBuildPath\$($projectName).SPR" `
+      -NewName "$($projectName).cd" -Force
+  }
 
   if ((Test-Path -Path "$OutputFile.$Format") -eq $true) {
     Write-Host "Builded sprites $OutputFile.$Format" -ForegroundColor Green
