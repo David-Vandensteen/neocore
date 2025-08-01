@@ -7,6 +7,25 @@
     - improve robustness of Set-EnvPath, Stop-Emulators, and Watch-Folder modules
     - fix infinite loops and blocking risks in build scripts
     - **Embedded headers**: neodev and DATlib headers are now embedded in NeoCore instead of being installed as external dependencies
+  - **TOOLCHAIN ROBUSTNESS IMPROVEMENTS**:
+    - **Enhanced Build Error Handling**:
+      - Real-time BuildChar output monitoring with immediate process termination on color overload errors
+      - Comprehensive error parsing and propagation across all build scripts
+      - Improved robocopy error handling with detailed logging and validation
+      - Enhanced make process execution with separate output/error log files
+    - **Build System Optimization**:
+      - **CRT Configuration System**: Added configurable `crtPath` in project.xml for flexible runtime file management
+      - **Automated CRT File Management**: Runtime files (crt0_cd.s, common_crt0_cd.s, etc.) are now automatically copied from configured source to build directory
+      - **Cleanup**: Removed duplicate CRT files from samples/ directory - now sourced from single `src-lib/crt/` location
+      - **Environment Variable Fixes**: Corrected PROJECT_PATH to point to build directory for proper assembler include resolution
+      - **Makefile Improvements**: Added `-I$(PROJECT_PATH)` to ASFLAGS for correct assembler include path handling
+    - **Configuration Validation**:
+      - Improved XML path resolution and template variable handling
+      - Better error messages for missing or invalid project configurations
+    - **Developer Experience**:
+      - More transparent build process with detailed logging and progress indicators
+      - Clearer error messages with actionable feedback
+      - Robust file detection and validation throughout build pipeline
   - **DOCUMENTATION IMPROVEMENTS**:
     - **Doxygen integration**: Added comprehensive documentation tags throughout neocore.h
     - **API documentation**: Complete documentation for all major structures (Position, Box, RGB16, GFX_*)
