@@ -37,7 +37,7 @@ static void update() {
   DWORD result;
   WORD i = 0;
   nc_init_log();
-  nc_log_info("F : %08ld", nc_get_frame_counter());
+  nc_log_info_line("F : %08ld", nc_get_frame_counter());
   nc_log_info("FD : %04d", DAT_droppedFrames);
   // BURN
   /*
