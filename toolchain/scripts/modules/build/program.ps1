@@ -53,6 +53,41 @@ function Build-Program {
     return $false
   }
 
+  # Copy CRT files using configured crtPath
+  Write-Host "Copying CRT runtime files..." -ForegroundColor Cyan
+  $crtPath = Resolve-TemplatePath -Path $Config.project.compiler.crtPath
+  if ([string]::IsNullOrEmpty($crtPath)) {
+    Write-Error "CRT path is not specified in project configuration. Please add <crtPath> element in <compiler> section."
+    return $false
+  }
+  Write-Host "  Source: $crtPath" -ForegroundColor Gray
+  Write-Host "  Destination: $buildPathName" -ForegroundColor Gray
+
+  try {
+    if (-not (Test-Path $crtPath)) {
+      throw "CRT source directory not found: $crtPath"
+    }
+
+    # Copy CRT files to build directory
+    $crtCopyOutput = robocopy "$crtPath" "$buildPathName" *.* /e /njh /njs 2>&1
+    $crtCopyExitCode = $LASTEXITCODE
+
+    # Robocopy exit codes: 0-7 are success, 8+ are errors
+    if ($crtCopyExitCode -gt 7) {
+      Write-Warning "CRT files copy completed with warnings/errors (exit code: $crtCopyExitCode)"
+      Write-Host "Robocopy output:" -ForegroundColor Yellow
+      $crtCopyOutput | ForEach-Object { Write-Host "  $_" -ForegroundColor Gray }
+    } else {
+      Write-Host "  CRT files copied successfully" -ForegroundColor Green
+      if ($crtCopyExitCode -gt 0) {
+        Write-Host "  (Robocopy exit code: $crtCopyExitCode - some files processed)" -ForegroundColor Gray
+      }
+    }
+  } catch {
+    Write-Error "Failed to copy CRT files: $_"
+    return $false
+  }
+
   # Validate required compiler configuration
   if ([string]::IsNullOrEmpty($Config.project.compiler.path)) {
     Write-Error "Compiler path is not specified in project configuration. Please add <path> element in <compiler> section."

@@ -44,7 +44,7 @@ function Write-Program {
 
   $env:FILEPRG = $prgFile
   $env:PATHBUILD = $pathBuildName
-  $env:PROJECT_PATH = $(Resolve-TemplatePath -Path .)
+  $env:PROJECT_PATH = $pathBuildName
   $env:INCLUDE_PATH = $includePath
   $env:NEOCORE_INCLUDE_PATH = $neocoreIncludePath
   $env:LIBRARY_PATH = $libraryPath

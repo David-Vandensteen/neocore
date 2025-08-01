@@ -73,6 +73,10 @@ function Assert-Project {
     Write-Host "error : project.compiler.libraryPath not found" -ForegroundColor Red
     return $false
   }
+  if (-Not($Config.project.compiler.crtPath)) {
+    Write-Host "error : project.compiler.crtPath not found" -ForegroundColor Red
+    return $false
+  }
   if (-Not($Config.project.compiler.systemFile)) {
     Write-Host "error : project.compiler.systemFile not found" -ForegroundColor Red
     return $false
