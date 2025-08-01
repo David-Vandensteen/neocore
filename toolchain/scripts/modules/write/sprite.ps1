@@ -121,6 +121,27 @@ function Write-Sprite {
         foreach ($line in $newLines) {
           if ($line.Trim() -ne "") {
             Write-Host "  $line" -ForegroundColor Gray
+
+            # Check for color overload errors in real-time
+            if ($line -match "Tile #\d+ color overload") {
+              Write-Host "" -ForegroundColor Red
+              Write-Host "===============================================" -ForegroundColor Red
+              Write-Host "ERROR: Tile color overload detected!" -ForegroundColor Red
+              Write-Host "===============================================" -ForegroundColor Red
+              Write-Host "" -ForegroundColor Red
+              Write-Host "Neo Geo tiles can only have a maximum of 15 colors + transparency per tile." -ForegroundColor Red
+              Write-Host "BuildChar.exe has been terminated to prevent further processing." -ForegroundColor Red
+              Write-Host "" -ForegroundColor Red
+              Write-Host "Please reduce colors in your source images and try again." -ForegroundColor Yellow
+              Write-Host "===============================================" -ForegroundColor Red
+
+              # Kill the BuildChar process
+              if (-not $process.HasExited) {
+                $process.Kill()
+                $process.WaitForExit()
+              }
+              return $false
+            }
           }
         }
         $lastOutputSize = $content.Length
@@ -136,6 +157,27 @@ function Write-Sprite {
         foreach ($line in $newErrorLines) {
           if ($line.Trim() -ne "") {
             Write-Host "  $line" -ForegroundColor Red
+
+            # Check for color overload errors in stderr as well
+            if ($line -match "Tile #\d+ color overload") {
+              Write-Host "" -ForegroundColor Red
+              Write-Host "===============================================" -ForegroundColor Red
+              Write-Host "ERROR: Tile color overload detected!" -ForegroundColor Red
+              Write-Host "===============================================" -ForegroundColor Red
+              Write-Host "" -ForegroundColor Red
+              Write-Host "Neo Geo tiles can only have a maximum of 15 colors + transparency per tile." -ForegroundColor Red
+              Write-Host "BuildChar.exe has been terminated to prevent further processing." -ForegroundColor Red
+              Write-Host "" -ForegroundColor Red
+              Write-Host "Please reduce colors in your source images and try again." -ForegroundColor Yellow
+              Write-Host "===============================================" -ForegroundColor Red
+
+              # Kill the BuildChar process
+              if (-not $process.HasExited) {
+                $process.Kill()
+                $process.WaitForExit()
+              }
+              return $false
+            }
           }
         }
         $lastErrorSize = $errorContent.Length

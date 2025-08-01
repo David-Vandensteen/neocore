@@ -17,6 +17,26 @@ function Parse-Error {
     return $false
   }
 
+  # Check for tile color overload errors
+  $colorOverloadErrors = Select-String -Path "$buildPathProject\sprite.log" -Pattern "Tile #\d+ color overload"
+  if ($colorOverloadErrors) {
+    Write-Host "" -ForegroundColor Red
+    Write-Host "===============================================" -ForegroundColor Red
+    Write-Host "ERROR: Tile color overload detected!" -ForegroundColor Red
+    Write-Host "===============================================" -ForegroundColor Red
+    Write-Host "" -ForegroundColor Red
+    Write-Host "The following tiles have too many colors:" -ForegroundColor Yellow
+    $colorOverloadErrors | ForEach-Object {
+      Write-Host "  $($_.Line)" -ForegroundColor Yellow
+    }
+    Write-Host "" -ForegroundColor Red
+    Write-Host "Neo Geo tiles can only have a maximum of 15 colors + transparency by tile." -ForegroundColor Red
+    Write-Host "" -ForegroundColor Red
+    Write-Host "Build halted due to color overload errors." -ForegroundColor Red
+    Write-Host "===============================================" -ForegroundColor Red
+    return $false
+  }
+
   if ((Get-ChildItem -Path "." -Filter "*.*_reject.*" -Recurse -ErrorAction SilentlyContinue -Force).Length -ne 0) {
     Write-Host "Open reject *_reject file(s)" -ForegroundColor Red
     Write-Host "Fix asset and remove *_reject file(s) in your project before launch a new build ..." -ForegroundColor Red
