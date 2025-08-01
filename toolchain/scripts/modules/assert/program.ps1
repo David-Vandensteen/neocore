@@ -30,15 +30,15 @@ function Assert-Program {
     Write-Host "error : $makeFile not found" -ForegroundColor Red
     return $false
   }
-  if (-Not(Test-Path -Path $includePath)) {
-    Write-Host "error : $includePath not found" -ForegroundColor Red
+  if (-not $includePath -or $includePath -eq "" -or -Not(Test-Path -Path $includePath)) {
+    Write-Host "Error: $includePath not found" -ForegroundColor Red
     return $false
   }
   if (-Not(Test-Path -Path $neocoreIncludePath)) {
     Write-Host "error : $neocoreIncludePath not found" -ForegroundColor Red
     return $false
   }
-  if (-Not(Test-Path -Path $libraryPath)) {
+  if (-not $libraryPath -or $libraryPath -eq "" -or -Not(Test-Path -Path $libraryPath)) {
     Write-Host "error : $libraryPath not found" -ForegroundColor Red
     return $false
   }
