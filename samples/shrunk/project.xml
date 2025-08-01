@@ -33,6 +33,7 @@
     <path>..\..\build\gcc\gcc-2.95.2</path>
     <includePath>..\..\build\include</includePath>
     <libraryPath>..\..\build\lib</libraryPath>
+    <crtPath>{{neocore}}\src-lib\crt</crtPath>
     <systemFile>..\..\build\system\neocd.x</systemFile>
   </compiler>
   <!-- for using cdda audio tracks, uncomment & set up your files

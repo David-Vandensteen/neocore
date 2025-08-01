@@ -76,6 +76,7 @@
     <path>{{build}}\gcc\gcc-2.95.2</path>
     <includePath>{{neocore}}\src-lib\include</includePath>
     <libraryPath>{{build}}\lib</libraryPath>
+    <crtPath>{{neocore}}\src-lib\crt</crtPath>
     <systemFile>
       <cd>{{neocore}}\src-lib\system\neocd.x</cd>
       <cartridge>{{neocore}}\src-lib\system\neocart.x</cartridge>
