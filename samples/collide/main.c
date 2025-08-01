@@ -18,18 +18,18 @@ int main(void) {
     PLAYER_SPRITE_ANIM_IDLE
   );
 
-  // nc_init_display_gfx_picture_physic(
-  //   &asteroid,
-  //   &asteroid_sprite,
-  //   &asteroid_sprite_Palettes,
-  //   100,
-  //   100,
-  //   32,
-  //   32,
-  //   0,
-  //   0,
-  //   AUTOBOX
-  // );
+  nc_init_display_gfx_picture_physic(
+    &asteroid,
+    &asteroid_sprite,
+    &asteroid_sprite_Palettes,
+    100,
+    100,
+    32,
+    32,
+    0,
+    0,
+    AUTOBOX
+  );
 
   while(1) {
     Position position;
