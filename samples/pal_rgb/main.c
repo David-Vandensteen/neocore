@@ -36,7 +36,7 @@ static void update() {
     nc_wait_vbl_max(10);
     nc_init_log();
     nc_log_rgb16(&color);
-    nc_log_info("");
+    nc_log_info_line("");
     nc_log_packed_color16(nc_rgb16_to_packed_color16(color));
   }
 }
