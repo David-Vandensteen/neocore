@@ -1,5 +1,2 @@
-
-//pictures
-extern pictureInfo logo;
-extern paletteInfo logo_Palettes;
-
+#include "out/charInclude.h"
+#include "out/fixData.h"
