@@ -1,9 +1,9 @@
 #include <neocore.h>
 #include "externs.h"
 
-int main(void) {
-  GFX_Picture background;
+static GFX_Picture background;
 
+int main(void) {
   nc_init_display_gfx_picture(
     &background,
     &background_asset,
