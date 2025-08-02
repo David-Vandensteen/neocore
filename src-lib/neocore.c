@@ -1310,7 +1310,7 @@ void nc_log_palette_info(paletteInfo *paletteInfo) {
 }
 
 void nc_log_packed_color16(WORD packed_color) {
-  Hex_Packed_Color hexpacket_color;
+  char hexpacket_color[5];
   char buffer[24];
   nc_word_to_hex(packed_color, hexpacket_color);
   sprintf(buffer, "PACKED COLOR 0x%04X", packed_color);
@@ -1318,7 +1318,7 @@ void nc_log_packed_color16(WORD packed_color) {
 }
 
 void nc_log_rgb16(RGB16 *color) {
-  Hex_Color dark, r, g, b;
+  char dark[3], r[3], g[3], b[3];
   char buffer[32];
   nc_byte_to_hex(color->dark, dark);
   nc_byte_to_hex(color->r, r);
