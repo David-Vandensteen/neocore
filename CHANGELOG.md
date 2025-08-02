@@ -15,11 +15,13 @@
       - Enhanced make process execution with separate output/error log files
     - **Build System Optimization**:
       - **CRT Configuration System**: Added configurable `crtPath` in project.xml for flexible runtime file management
-      - **Automated CRT File Management**: Runtime files (crt0_cd.s, common_crt0_cd.s, etc.) are now automatically copied from configured source to build directory
-      - **Cleanup**: Removed duplicate CRT files from samples/ directory - now sourced from single `src-lib/crt/` location
+      - **Embedded CRT Runtime**: Runtime files (crt0_cd.s, common_crt0_cd.s, etc.) are now automatically embedded in each build from centralized `src-lib/crt/` source
+      - **CRT Cleanup**: Removed duplicate CRT files from samples/ directory - now sourced from single authoritative location
+      - **SFX Audio Integration**: Sound effects files (PCM/Z80) are now automatically copied during program build for immediate availability
       - **Environment Variable Fixes**: Corrected PROJECT_PATH to point to build directory for proper assembler include resolution
       - **Makefile Improvements**: Added `-I$(PROJECT_PATH)` to ASFLAGS for correct assembler include path handling
     - **Configuration Validation**:
+      - Enhanced Assert-Project function to validate new crtPath configuration
       - Improved XML path resolution and template variable handling
       - Better error messages for missing or invalid project configurations
     - **Developer Experience**:
