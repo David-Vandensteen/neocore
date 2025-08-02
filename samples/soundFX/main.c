@@ -16,10 +16,11 @@ static void log_and_sound(char *message) {
 }
 
 static void debug_adpcm_player() {
-  if (nc_get_adpcm_player()->state == IDLE) nc_log("ADPCM SAMPLE IS READY");
-  nc_log("");
-  if (nc_get_adpcm_player()->state == PLAYING) nc_log("ADPCM SAMPLE IS PLAYING");
-  nc_log(""); nc_log("");
+  if (nc_get_adpcm_player()->state == IDLE) nc_log_info("ADPCM SAMPLE IS READY");
+  nc_log_info_line("");
+  if (nc_get_adpcm_player()->state == PLAYING) nc_log_info("ADPCM SAMPLE IS PLAYING");
+  nc_log_info_line("");
+  nc_log_info_line("");
   nc_log_info("REMAINING: %08ld", nc_get_adpcm_player()->remaining_frame);
 }
 
@@ -31,7 +32,7 @@ int main(void) {
   while(1) {
     nc_update();
     nc_init_log();
-    nc_log("INTERACT WITH JOYPAD ...");
+    nc_log_info_line("INTERACT WITH JOYPAD ...");
 
     nc_set_position_log(3, 2);
     nc_debug_joypad(0);
