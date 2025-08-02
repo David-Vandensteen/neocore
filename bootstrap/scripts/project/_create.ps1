@@ -54,9 +54,6 @@ try {
   [xml]$xml = Get-Content -Path $xmlPath
   $xml.project.name = $Name
   $xml.Save($xmlPath)
-
-  $crt0cdContent = [System.IO.File]::ReadAllText("..\..\..\bootstrap\standalone\crt0_cd.s").Replace("/*project_name*/", $Name.PadRight(16))
-  [System.IO.File]::WriteAllText("$Path\src\crt0_cd.s", $crt0cdContent)
 } catch {
   Write-Host $_.Exception.Message -ForegroundColor Red
   exit 1

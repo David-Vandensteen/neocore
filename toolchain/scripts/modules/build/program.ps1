@@ -72,6 +72,8 @@ function Build-Program {
     $crtCopyOutput = robocopy "$crtPath" "$buildPathName" *.* /e /njh /njs 2>&1
     $crtCopyExitCode = $LASTEXITCODE
 
+
+
     # Robocopy exit codes: 0-7 are success, 8+ are errors
     if ($crtCopyExitCode -gt 7) {
       Write-Warning "CRT files copy completed with warnings/errors (exit code: $crtCopyExitCode)"
@@ -82,6 +84,27 @@ function Build-Program {
       if ($crtCopyExitCode -gt 0) {
         Write-Host "  (Robocopy exit code: $crtCopyExitCode - some files processed)" -ForegroundColor Gray
       }
+    }
+
+    # Customize CRT files with project-specific values
+    $crt0File = "$buildPathName\crt0_cd.s"
+    if (Test-Path $crt0File) {
+      Write-Host "Customizing CRT file with project name..." -ForegroundColor Cyan
+
+      # Ensure project name is exactly 16 characters with padding
+      $projectName = $Config.project.name
+      if ($projectName.Length -gt 16) {
+        $projectName = $projectName.Substring(0, 16)
+        Write-Warning "  Project name truncated to 16 characters: '$projectName'"
+      } elseif ($projectName.Length -lt 16) {
+        $projectName = $projectName.PadRight(16, ' ')
+        Write-Host "  Project name padded to 16 characters: '$projectName'" -ForegroundColor Gray
+      }
+
+      $crtContent = Get-Content $crt0File -Raw
+      $crtContent = $crtContent -replace '/\*project_name\*/', $projectName
+      Set-Content -Path $crt0File -Value $crtContent -NoNewline
+      Write-Host "  Replaced /*project_name*/ with '$projectName' in crt0_cd.s" -ForegroundColor Green
     }
   } catch {
     Write-Error "Failed to copy CRT files: $_"
