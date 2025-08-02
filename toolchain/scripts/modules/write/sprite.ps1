@@ -328,6 +328,13 @@ function Write-Sprite {
   Write-Host "Looking for SPR file: $sprFile" -ForegroundColor Cyan
   if (Test-Path -Path $sprFile) {
     Write-Host "Found SPR file, renaming to .cd" -ForegroundColor Green
+
+    # Remove destination file if it exists to avoid rename conflicts
+    if (Test-Path -Path $cdFile) {
+      Remove-Item -Path $cdFile -Force
+      Write-Host "Removed existing $cdFile" -ForegroundColor Gray
+    }
+
     Rename-Item -Path $sprFile -NewName "$projectName.cd" -Force
     Write-Host "Renamed $sprFile to $cdFile" -ForegroundColor Green
   } else {
