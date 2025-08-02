@@ -66,6 +66,9 @@
     - **C API Changes**:
       - **Function removals**:
         - nc_log() function removed - use nc_log_info() for logging functionality
+      - **Type removals**:
+        - typedef char Hex_Color[3]; removed - no longer supported
+        - typedef char Hex_Packed_Color[5]; removed - no longer supported
       - **GFX getter functions**: Breaking signature changes - now require Position* parameter:
         - nc_get_position_gfx_animated_sprite() now takes Position* instead of returning values
         - nc_get_position_gfx_animated_sprite_physic() now takes Position* instead of returning values
