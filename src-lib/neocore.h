@@ -38,11 +38,9 @@ enum Sound_state { IDLE, PLAYING };
  * @since 1.0.0
  */
 typedef struct Position { short x; short y; } Position;
-typedef char Hex_Color[3]; // TODO : useless ?
 
 //void mask_display(picture pic[], Position vec[], BYTE vector_max); // todo (minor) - rename ? (vectorsDisplay)
 void nc_update_mask(short x, short y, Position vec[], Position offset[], BYTE vector_max); // todo (minor) - rename ? (vectorsDebug)
-typedef char Hex_Packed_Color[5]; // TODO : useless ?
 
 /**
  * @brief Collision detection bounding box
