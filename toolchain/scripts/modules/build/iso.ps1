@@ -21,18 +21,18 @@ function Build-ISO {
     return $false
   }
 
-  if ($config.project.sound.sfx.pcm) {
+  if ($config.project.sound.cd.sfx.pcm) {
     if (-not (Write-SFX `
     -PathISOBuildFolder $pathISOBuildFolder `
-    -PCMFile "$($Config.project.sound.sfx.pcm)")) {
+    -PCMFile "$($Config.project.sound.cd.sfx.pcm)")) {
       return $false
     }
   }
 
-  if ($config.project.sound.sfx.z80) {
+  if ($config.project.sound.cd.sfx.z80) {
     if (-not (Write-SFX `
       -PathISOBuildFolder $pathISOBuildFolder `
-      -Z80File "$($Config.project.sound.sfx.z80)")) {
+      -Z80File "$($Config.project.sound.cd.sfx.z80)")) {
       return $false
     }
   }
