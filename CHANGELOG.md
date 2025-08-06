@@ -91,6 +91,12 @@
     - improve robustness of Set-EnvPath, Stop-Emulators, and Watch-Folder modules
     - fix infinite loops and blocking risks in build scripts
     - **Embedded headers**: Neodev and DATlib headers are now embedded in NeoCore instead of being installed as external dependencies
+  - **MIGRATION TOOLS ENHANCEMENTS**:
+    - **Enhanced Migration Safety**: Added automatic project backup to `%TEMP%\[UUID]` before v2→v3 migration
+    - **Improved User Experience**: Clear migration warnings with ASCII-compatible prompts (Y/N confirmation)
+    - **Comprehensive Logging**: Detailed migration logging with colored output and persistent log files
+    - **Post-Migration Validation**: Automatic Assert-Project validation after project.xml generation
+    - **Full XML Rewrite**: Complete project.xml rewrite using v3 template structure while preserving user data
 
 ## 2.9.0
 

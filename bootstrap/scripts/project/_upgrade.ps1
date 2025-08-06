@@ -9,6 +9,19 @@ param (
 # Initialize logging
 $global:MigrationLogPath = "$ProjectSrcPath\..\migration.log"
 
+# Display log path for debugging
+Write-Host "Migration log will be written to: $global:MigrationLogPath" -ForegroundColor Cyan
+
+# Test log file creation immediately
+try {
+  "=== Migration Log Test ===" | Out-File -FilePath $global:MigrationLogPath -Encoding UTF8
+  Write-Host "Log file test: SUCCESS - File created at $global:MigrationLogPath" -ForegroundColor Green
+} catch {
+  Write-Host "Log file test: FAILED - Cannot create file at $global:MigrationLogPath" -ForegroundColor Red
+  Write-Host "Error: $($_.Exception.Message)" -ForegroundColor Red
+  exit 1
+}
+
 function Write-MigrationLog {
   param(
     [string]$Message,
@@ -17,20 +30,17 @@ function Write-MigrationLog {
   $timestamp = Get-Date -Format "yyyy-MM-dd HH:mm:ss"
   $logEntry = "[$timestamp] [$Level] $Message"
 
-  # Write to console with appropriate color
-  switch ($Level) {
-    "ERROR" { Write-Host $logEntry -ForegroundColor Red }
-    "WARN" { Write-Host $logEntry -ForegroundColor Yellow }
-    "SUCCESS" { Write-Host $logEntry -ForegroundColor Green }
-    "INFO" { Write-Host $logEntry -ForegroundColor Cyan }
-    default { Write-Host $logEntry }
-  }
-
-  # Append to log file
+  # Only write to log file (no console output for logs)
   try {
+    # Ensure the parent directory exists
+    $logDir = Split-Path -Parent $global:MigrationLogPath
+    if (-not (Test-Path -Path $logDir)) {
+      New-Item -ItemType Directory -Path $logDir -Force | Out-Null
+    }
+
     $logEntry | Out-File -FilePath $global:MigrationLogPath -Append -Encoding UTF8
   } catch {
-    Write-Host "Warning: Could not write to log file: $($_.Exception.Message)" -ForegroundColor Yellow
+    Write-Host "Warning: Could not write to log file '$global:MigrationLogPath': $($_.Exception.Message)" -ForegroundColor Yellow
   }
 }
 
@@ -38,6 +48,139 @@ function Show-Error {
   param ($message)
   Write-MigrationLog -Message "FATAL: $message" -Level "ERROR"
   exit 1
+}
+
+function Show-MigrationWarning {
+  param(
+    [string]$ProjectSrcPath,
+    [string]$ProjectNeocorePath,
+    [string]$CurrentVersion,
+    [string]$TargetVersion,
+    [array]$DetectedIssues,
+    [string]$BackupPath = ""
+  )
+
+  Write-MigrationLog -Message "Displaying migration warning to user" -Level "INFO"
+  Write-MigrationLog -Message "Migration details - Current: $CurrentVersion, Target: $TargetVersion, Issues count: $($DetectedIssues.Count)" -Level "INFO"
+
+  Write-Host ""
+  Write-Host "================================================================" -ForegroundColor Yellow
+  Write-Host "                    [WARNING] MIGRATION ALERT [WARNING]         " -ForegroundColor Red
+  Write-Host "================================================================" -ForegroundColor Yellow
+  Write-Host ""
+  Write-Host "This script will perform an automatic migration of your NeoCore project." -ForegroundColor White
+  Write-Host ""
+  Write-Host "[PROJECT] PROJECT TO MIGRATE:" -ForegroundColor Cyan
+  Write-Host "   * Source folder: $ProjectSrcPath" -ForegroundColor Gray
+  Write-Host "   * NeoCore folder: $ProjectNeocorePath" -ForegroundColor Gray
+  Write-Host ""
+  Write-Host "[VERSION] MIGRATION:" -ForegroundColor Cyan
+  Write-Host "   * Current version: $CurrentVersion" -ForegroundColor Gray
+  Write-Host "   * Target version: $TargetVersion" -ForegroundColor Gray
+  Write-Host ""
+
+  if ($DetectedIssues -and $DetectedIssues.Count -gt 0) {
+    Write-Host "[CHANGES] PROJECT.XML WILL BE UPDATED WITH:" -ForegroundColor Cyan
+    foreach ($issue in $DetectedIssues) {
+      Write-Host "   * $issue" -ForegroundColor Gray
+    }
+    Write-Host ""
+  }
+
+  Write-Host "[BACKUP] AUTOMATIC BACKUPS:" -ForegroundColor Green
+  if ($BackupPath -and $BackupPath -ne "") {
+    Write-Host "   * Complete project -> $BackupPath" -ForegroundColor Gray
+    Write-MigrationLog -Message "Backup path displayed to user: $BackupPath" -Level "INFO"
+  } else {
+    Write-Host "   * Complete project -> %TEMP%\[UUID] (will be created)" -ForegroundColor Gray
+    Write-MigrationLog -Message "Backup path template displayed to user: %TEMP%\[UUID] (will be created)" -Level "INFO"
+  }
+  Write-Host ""
+  Write-Host "[SAFETY] RECOMMENDED ACTIONS BEFORE MIGRATION:" -ForegroundColor Red
+  Write-Host "   1. Backup your ENTIRE project to another folder" -ForegroundColor Yellow
+  Write-Host "   2. Close your editor/IDE before continuing" -ForegroundColor Yellow
+  Write-Host ""
+  Write-Host "[CRITICAL] IMPORTANT: This migration will permanently modify your files!" -ForegroundColor Red
+  Write-Host "           Automatic backups do not replace a complete project backup." -ForegroundColor Red
+  Write-Host ""
+  Write-Host "================================================================" -ForegroundColor Yellow
+
+  do {
+    Write-Host ""
+    Write-MigrationLog -Message "Prompting user for migration confirmation" -Level "INFO"
+    $confirmation = Read-Host "Do you want to continue with the migration? (Y/N)"
+    $confirmation = $confirmation.Trim()
+    Write-MigrationLog -Message "User input received: '$confirmation'" -Level "INFO"
+
+    if ($confirmation -eq "Y" -or $confirmation -eq "y") {
+      Write-MigrationLog -Message "User confirmed migration continuation" -Level "INFO"
+      return $true
+    } elseif ($confirmation -eq "N" -or $confirmation -eq "n") {
+      Write-MigrationLog -Message "User cancelled migration" -Level "INFO"
+      Write-Host ""
+      Write-Host "Migration cancelled by user." -ForegroundColor Yellow
+      Write-Host "No modifications have been made." -ForegroundColor Green
+      return $false
+    } else {
+      Write-MigrationLog -Message "Invalid user input: '$confirmation', requesting Y/N again" -Level "WARN"
+      Write-Host "Please answer 'Y' or 'N'." -ForegroundColor Red
+    }
+  } while ($true)
+}
+
+function Import-AssertModules {
+  param([string]$NeocorePath)
+
+  try {
+    $assertModulesPath = "$NeocorePath\toolchain\scripts\modules\assert"
+    Write-MigrationLog -Message "Attempting to load Assert modules from: $assertModulesPath" -Level "INFO"
+
+    if (-not (Test-Path -Path $assertModulesPath)) {
+      Write-MigrationLog -Message "Assert modules path not found: $assertModulesPath" -Level "WARN"
+      return $false
+    }
+
+    # Load required Assert modules in correct order
+    $moduleFiles = @(
+      "$assertModulesPath\path.ps1",
+      "$assertModulesPath\project\name.ps1",
+      "$assertModulesPath\project\gfx\dat.ps1",
+      "$assertModulesPath\project\compiler\systemFile.ps1",
+      "$assertModulesPath\project.ps1"
+    )
+
+    $loadedCount = 0
+    $totalCount = $moduleFiles.Count
+
+    foreach ($moduleFile in $moduleFiles) {
+      if (Test-Path -Path $moduleFile) {
+        try {
+          . $moduleFile
+          $loadedCount++
+          Write-MigrationLog -Message "Successfully loaded Assert module: $(Split-Path -Leaf $moduleFile)" -Level "INFO"
+        } catch {
+          Write-MigrationLog -Message "Error loading Assert module $(Split-Path -Leaf $moduleFile): $($_.Exception.Message)" -Level "ERROR"
+        }
+      } else {
+        Write-MigrationLog -Message "Assert module not found: $moduleFile" -Level "WARN"
+      }
+    }
+
+    Write-MigrationLog -Message "Assert modules loading summary: $loadedCount/$totalCount modules loaded successfully" -Level "INFO"
+
+    # Test if Assert-Project function is available and return result based on that
+    if (Get-Command "Assert-Project" -ErrorAction SilentlyContinue) {
+      Write-MigrationLog -Message "Assert-Project function is available after module loading" -Level "SUCCESS"
+      return $true
+    } else {
+      Write-MigrationLog -Message "Assert-Project function is NOT available after module loading" -Level "ERROR"
+      return $false
+    }
+
+  } catch {
+    Write-MigrationLog -Message "Error loading Assert modules: $($_.Exception.Message)" -Level "ERROR"
+    return $false
+  }
 }
 
 function Test-ProjectXmlV3Compatibility {
@@ -48,20 +191,28 @@ function Test-ProjectXmlV3Compatibility {
     [string]$ProjectPath
   )
 
+  Write-MigrationLog -Message "Starting v3 compatibility analysis..." -Level "INFO"
   $issues = @()
   $warnings = @()
 
   # Check for missing platform element (v3 requirement)
+  Write-MigrationLog -Message "Checking for platform element..." -Level "INFO"
   $platformNode = $ProjectXml.SelectSingleNode("//platform")
   if (-not $platformNode) {
-    $issues += "Missing <platform> element - required for v3 compatibility"
+    $issues += "Add <platform> element if missing - required for v3 compatibility"
+    Write-MigrationLog -Message "Issue detected: Missing platform element" -Level "WARN"
   } elseif ([string]::IsNullOrWhiteSpace($platformNode.InnerText)) {
-    $issues += "Empty <platform> element - should specify target platform (e.g., 'cd')"
+    $issues += "Update <platform> element - should specify target platform (e.g., 'cd')"
+    Write-MigrationLog -Message "Issue detected: Empty platform element" -Level "WARN"
+  } else {
+    Write-MigrationLog -Message "Platform element found: '$($platformNode.InnerText)'" -Level "INFO"
   }
 
   # Check for missing DAT setup elements (v3 requirements)
+  Write-MigrationLog -Message "Checking DAT setup elements..." -Level "INFO"
   $datSetupNode = $ProjectXml.SelectSingleNode("//DAT//chardata//setup")
   if ($datSetupNode) {
+    Write-MigrationLog -Message "DAT setup node found, checking required elements..." -Level "INFO"
     $requiredDatElements = @("charfile", "mapfile", "palfile", "incfile", "incprefix")
     $missingDatElements = @()
 
@@ -69,64 +220,107 @@ function Test-ProjectXmlV3Compatibility {
       $existingElement = $datSetupNode.SelectSingleNode($elementName)
       if (-not $existingElement) {
         $missingDatElements += $elementName
+        Write-MigrationLog -Message "Missing DAT element: $elementName" -Level "WARN"
+      } else {
+        Write-MigrationLog -Message "Found DAT element: $elementName = '$($existingElement.InnerText)'" -Level "INFO"
       }
     }
 
     if ($missingDatElements.Count -gt 0) {
-      $issues += "Missing DAT setup elements: $($missingDatElements -join ', ') - required for v3 DAT processing"
+      $issues += "Add DAT setup elements if missing: $($missingDatElements -join ', ') - required for v3 DAT processing"
+      Write-MigrationLog -Message "Issue detected: Missing DAT elements: $($missingDatElements -join ', ')" -Level "WARN"
     }
+  } else {
+    Write-MigrationLog -Message "No DAT setup node found" -Level "INFO"
   }
 
   # Check for missing fixdata section (v3 requirement)
+  Write-MigrationLog -Message "Checking fixdata section..." -Level "INFO"
   $datNode = $ProjectXml.SelectSingleNode("//DAT")
   if ($datNode) {
     $fixdataNode = $datNode.SelectSingleNode("fixdata")
     if (-not $fixdataNode) {
-      $issues += "Missing fixdata section - required for v3 fix font processing"
+      $issues += "Add fixdata section if missing - required for v3 fix font processing"
+      Write-MigrationLog -Message "Issue detected: Missing fixdata section" -Level "WARN"
+    } else {
+      Write-MigrationLog -Message "Fixdata section found" -Level "INFO"
     }
+  } else {
+    Write-MigrationLog -Message "No DAT node found" -Level "INFO"
   }
 
   # Check for missing RAINE config section (v3 requirement)
+  Write-MigrationLog -Message "Checking RAINE configuration..." -Level "INFO"
   $raineNode = $ProjectXml.SelectSingleNode("//emulator/raine")
   if ($raineNode) {
     $configNode = $raineNode.SelectSingleNode("config")
     if (-not $configNode) {
-      $issues += "Missing RAINE config section - required for v3 emulator configurations"
+      $issues += "Add RAINE config section if missing - required for v3 emulator configurations"
+      Write-MigrationLog -Message "Issue detected: Missing RAINE config section" -Level "WARN"
+    } else {
+      Write-MigrationLog -Message "RAINE config section found" -Level "INFO"
     }
+  } else {
+    Write-MigrationLog -Message "No RAINE emulator node found" -Level "INFO"
   }
 
   # Check for missing MAME profile section (v3 requirement)
+  Write-MigrationLog -Message "Checking MAME configuration..." -Level "INFO"
   $mameNode = $ProjectXml.SelectSingleNode("//emulator/mame")
   if ($mameNode) {
     $profileNode = $mameNode.SelectSingleNode("profile")
     if (-not $profileNode) {
-      $issues += "Missing MAME profile section - required for v3 emulator configurations"
+      $issues += "Add MAME profile section if missing - required for v3 emulator configurations"
+      Write-MigrationLog -Message "Issue detected: Missing MAME profile section" -Level "WARN"
+    } else {
+      Write-MigrationLog -Message "MAME profile section found" -Level "INFO"
     }
+  } else {
+    Write-MigrationLog -Message "No MAME emulator node found" -Level "INFO"
   }
 
   # Check for missing compiler elements (v3 requirements)
+  Write-MigrationLog -Message "Checking compiler configuration..." -Level "INFO"
   $compilerNode = $ProjectXml.SelectSingleNode("//compiler")
   if ($compilerNode) {
     $crtPathNode = $compilerNode.SelectSingleNode("crtPath")
     if (-not $crtPathNode) {
-      $issues += "Missing compiler <crtPath> element - required for v3 compilation"
+      $issues += "Add compiler <crtPath> element if missing - required for v3 compilation"
+      Write-MigrationLog -Message "Issue detected: Missing compiler crtPath element" -Level "WARN"
+    } else {
+      Write-MigrationLog -Message "Compiler crtPath found: '$($crtPathNode.InnerText)'" -Level "INFO"
     }
 
     # Check systemFile structure (v3 format)
     $systemFileNode = $compilerNode.SelectSingleNode("systemFile")
     if (-not $systemFileNode) {
-      $issues += "Missing systemFile section - required for v3 compilation"
+      $issues += "Add systemFile section if missing - required for v3 compilation"
+      Write-MigrationLog -Message "Issue detected: Missing systemFile section" -Level "WARN"
     } else {
+      Write-MigrationLog -Message "SystemFile section found, checking cd/cartridge elements..." -Level "INFO"
       $cdNode = $systemFileNode.SelectSingleNode("cd")
       $cartridgeNode = $systemFileNode.SelectSingleNode("cartridge")
       if (-not $cdNode -or -not $cartridgeNode) {
-        $issues += "systemFile structure needs v3 update (missing cd/cartridge elements)"
+        $issues += "Update systemFile structure to v3 format (add cd/cartridge elements if missing)"
+        Write-MigrationLog -Message "Issue detected: SystemFile missing cd/cartridge elements" -Level "WARN"
+      } else {
+        Write-MigrationLog -Message "SystemFile cd and cartridge elements found" -Level "INFO"
       }
     }
+  } else {
+    Write-MigrationLog -Message "No compiler node found" -Level "INFO"
   }
 
   # Note: With complete rewrite approach, most legacy pattern detection is unnecessary
   # The new v3 template will automatically use the correct structure and paths
+
+  Write-MigrationLog -Message "Compatibility analysis completed: $($issues.Count) issues, $($warnings.Count) warnings" -Level "INFO"
+  if ($issues.Count -gt 0) {
+    Write-MigrationLog -Message "Detected issues: $($issues -join '; ')" -Level "WARN"
+  }
+  if ($warnings.Count -gt 0) {
+    Write-MigrationLog -Message "Detected warnings: $($warnings -join '; ')" -Level "WARN"
+  }
 
   return @{
     Issues = $issues
@@ -314,6 +508,169 @@ function Repair-ProjectXmlForV3 {
     Write-MigrationLog -Message "Writing new v3 project.xml structure to file" -Level "INFO"
     $newXmlContent | Out-File -FilePath $ProjectXmlPath -Encoding UTF8 -Force
     Write-MigrationLog -Message "Successfully wrote v3 project.xml with preserved user data" -Level "SUCCESS"
+
+    # Post-generation validation with Assert-Project
+    Write-MigrationLog -Message "Validating generated project.xml with Assert-Project module" -Level "INFO"
+    try {
+      # Load the generated XML for validation
+      [xml]$generatedXml = Get-Content -Path $ProjectXmlPath
+
+      # Determine NeoCore path for Assert modules
+      $resolvedNeocorePath = if ($existingNeocorePath -like "*neocore*") {
+        if ([System.IO.Path]::IsPathRooted($existingNeocorePath)) {
+          $existingNeocorePath
+        } else {
+          Resolve-Path -Path (Join-Path (Split-Path -Parent $ProjectXmlPath) $existingNeocorePath) -ErrorAction SilentlyContinue
+        }
+      } else { $null }
+
+      if ($resolvedNeocorePath -and (Test-Path -Path $resolvedNeocorePath)) {
+        Write-MigrationLog -Message "Resolved NeoCore path: $resolvedNeocorePath" -Level "INFO"
+        # Load Assert modules
+        Write-MigrationLog -Message "Attempting to load Assert modules for validation..." -Level "INFO"
+        if (Import-AssertModules -NeocorePath $resolvedNeocorePath) {
+          Write-MigrationLog -Message "Assert modules loaded successfully, running validation..." -Level "INFO"
+
+          # Verify the generated XML is valid before proceeding
+          if (-not $generatedXml) {
+            Write-MigrationLog -Message "Generated XML is null or invalid - skipping Assert-Project validation" -Level "ERROR"
+            throw "Generated XML is null or invalid"
+          }
+
+          Write-MigrationLog -Message "Generated XML loaded successfully, proceeding with validation..." -Level "INFO"
+
+          # Set the global Config variable that Assert-Project expects
+          $global:Config = $generatedXml
+          # Also set local Config for functions that expect it in local scope
+          $Config = $generatedXml
+
+          # Store the modules path for potential re-import
+          $assertModulesPath = "$resolvedNeocorePath\toolchain\scripts\modules\assert"
+
+          # Run Assert-Project validation immediately while modules are still in scope
+          Write-MigrationLog -Message "Executing Assert-Project validation..." -Level "INFO"
+          try {
+            # Verify XML document is valid
+            if (-not $generatedXml -or -not $generatedXml.DocumentElement) {
+              throw "Generated XML document is null or invalid"
+            }
+
+            Write-MigrationLog -Message "XML document validated - root element: $($generatedXml.DocumentElement.Name)" -Level "INFO"
+
+            # Try different approaches to execute Assert-Project
+            $validationResult = $null
+
+            # First try: Direct call without script block
+            if (Test-Path Function:\Assert-Project) {
+              Write-MigrationLog -Message "Assert-Project found as function, executing directly..." -Level "INFO"
+              Write-MigrationLog -Message "Using generated XML data for validation (type: $($generatedXml.GetType().Name))" -Level "INFO"
+
+              # Set global Config before calling
+              $global:Config = $generatedXml
+
+              try {
+                # Direct function call
+                $validationResult = Assert-Project -Config $generatedXml
+                Write-MigrationLog -Message "Direct Assert-Project call completed successfully" -Level "SUCCESS"
+              } catch {
+                Write-MigrationLog -Message "Direct Assert-Project call failed: $($_.Exception.Message)" -Level "WARN"
+                # Try with no parameters (some Assert functions expect global Config)
+                try {
+                  $validationResult = Assert-Project
+                  Write-MigrationLog -Message "Assert-Project call without parameters completed successfully" -Level "SUCCESS"
+                } catch {
+                  Write-MigrationLog -Message "Assert-Project call without parameters also failed: $($_.Exception.Message)" -Level "WARN"
+                  throw "Both Assert-Project call methods failed"
+                }
+              }
+            } else {
+              # Second try: Force re-import all dependencies and main module
+              Write-MigrationLog -Message "Re-importing all Assert modules for direct execution..." -Level "INFO"
+              . "$assertModulesPath\path.ps1"
+              . "$assertModulesPath\project\name.ps1"
+              . "$assertModulesPath\project\gfx\dat.ps1"
+              . "$assertModulesPath\project\compiler\systemFile.ps1"
+              . "$assertModulesPath\project.ps1"
+
+              if (Test-Path Function:\Assert-Project) {
+                # Verify all dependencies are available
+                $dependenciesOk = (Test-Path Function:\Assert-Path) -and
+                                  (Test-Path Function:\Assert-ProjectName) -and
+                                  (Test-Path Function:\Assert-ProjectGfxDat) -and
+                                  (Test-Path Function:\Assert-ProjectCompilerSystemFile)
+
+                if ($dependenciesOk) {
+                  Write-MigrationLog -Message "All Assert dependencies verified, executing validation..." -Level "INFO"
+                  Write-MigrationLog -Message "Using generated XML data for validation (type: $($generatedXml.GetType().Name))" -Level "INFO"
+
+                  # Set global Config before calling
+                  $global:Config = $generatedXml
+
+                  try {
+                    # Direct function call
+                    $validationResult = Assert-Project -Config $generatedXml
+                    Write-MigrationLog -Message "Direct Assert-Project call completed successfully after re-import" -Level "SUCCESS"
+                  } catch {
+                    Write-MigrationLog -Message "Direct Assert-Project call failed after re-import: $($_.Exception.Message)" -Level "WARN"
+                    # Try with no parameters
+                    try {
+                      $validationResult = Assert-Project
+                      Write-MigrationLog -Message "Assert-Project call without parameters completed successfully after re-import" -Level "SUCCESS"
+                    } catch {
+                      Write-MigrationLog -Message "Assert-Project call without parameters also failed after re-import: $($_.Exception.Message)" -Level "WARN"
+                      throw "Both Assert-Project call methods failed after re-import"
+                    }
+                  }
+                } else {
+                  Write-MigrationLog -Message "Assert dependencies missing, skipping validation" -Level "WARN"
+                  throw "Missing Assert dependencies - Path: $(Test-Path Function:\Assert-Path), ProjectName: $(Test-Path Function:\Assert-ProjectName), ProjectGfxDat: $(Test-Path Function:\Assert-ProjectGfxDat), ProjectCompilerSystemFile: $(Test-Path Function:\Assert-ProjectCompilerSystemFile)"
+                }
+              } else {
+                throw "Assert-Project function still not available after full re-import"
+              }
+            }
+
+            # If we get here, Assert-Project executed successfully
+            Write-MigrationLog -Message "[OK] Generated project.xml passed Assert-Project validation" -Level "SUCCESS"
+            Write-Host "  - Generated XML validated with Assert-Project" -ForegroundColor Green
+          } catch {
+            Write-MigrationLog -Message "Error executing Assert-Project: $($_.Exception.Message)" -Level "WARN"
+            Write-Host "  - Warning: Assert-Project validation skipped: $($_.Exception.Message)" -ForegroundColor Yellow
+
+            # Fallback: Basic XML structure validation
+            Write-MigrationLog -Message "Performing fallback XML structure validation..." -Level "INFO"
+            try {
+              [xml]$xmlDoc = Get-Content -Path $ProjectXmlPath
+              $basicValidation = @{
+                hasName = [bool]$xmlDoc.SelectSingleNode("//name")
+                hasPlatform = [bool]$xmlDoc.SelectSingleNode("//platform")
+                hasCompiler = [bool]$xmlDoc.SelectSingleNode("//compiler")
+              }
+
+              if ($basicValidation.hasName -and $basicValidation.hasPlatform -and $basicValidation.hasCompiler) {
+                Write-MigrationLog -Message "[OK] Basic XML structure validation passed" -Level "SUCCESS"
+                Write-Host "  - Basic XML structure validation: PASSED" -ForegroundColor Green
+              } else {
+                Write-MigrationLog -Message "[WARN] Basic XML structure validation failed" -Level "WARN"
+                Write-Host "  - Warning: Basic XML structure validation failed" -ForegroundColor Yellow
+              }
+            } catch {
+              Write-MigrationLog -Message "Fallback validation also failed: $($_.Exception.Message)" -Level "ERROR"
+            }
+          }
+        } else {
+          Write-MigrationLog -Message "Could not load Assert modules - skipping validation" -Level "WARN"
+          Write-Host "  - Warning: Could not load Assert modules - skipping validation" -ForegroundColor Yellow
+        }
+      } else {
+        Write-MigrationLog -Message "NeoCore path not resolved ($existingNeocorePath) - skipping Assert-Project validation" -Level "WARN"
+        Write-Host "  - Warning: NeoCore path not resolved - skipping validation" -ForegroundColor Yellow
+      }
+    } catch {
+      Write-MigrationLog -Message "Error during Assert-Project validation: $($_.Exception.Message)" -Level "WARN"
+      Write-Host "  - Warning: Could not validate with Assert-Project: $($_.Exception.Message)" -ForegroundColor Yellow
+    }
+
     Write-Host "  - Project.xml rewritten with complete v3 structure" -ForegroundColor Green
     Write-Host "  - Preserved existing name: '$existingName'" -ForegroundColor Green
     Write-Host "  - Preserved existing version: '$existingVersion'" -ForegroundColor Green
@@ -345,16 +702,11 @@ function Update-ProjectManifestVersion {
       Write-MigrationLog -Message "Current manifest version: $oldVersion" -Level "INFO"
 
       if ($oldVersion -ne $NewVersion) {
-        # Create backup
-        $backupPath = "$ProjectManifestPath.v2.backup"
-        Write-MigrationLog -Message "Creating manifest backup: $backupPath" -Level "INFO"
-        Copy-Item -Path $ProjectManifestPath -Destination $backupPath -Force
-
         # Update version
         $projectManifest.manifest.version = $NewVersion
         $projectManifest.Save($ProjectManifestPath)
 
-        Write-MigrationLog -Message "Updated manifest version: $oldVersion → $NewVersion" -Level "SUCCESS"
+        Write-MigrationLog -Message "Updated manifest version: $oldVersion -> $NewVersion" -Level "SUCCESS"
         Write-Host "  - Updated project manifest.xml version: $oldVersion to $NewVersion" -ForegroundColor Green
         return $true
       } else {
@@ -432,7 +784,7 @@ $projectXmlPath = "$ProjectSrcPath\project.xml"
 $projectManifestPath = "$ProjectSrcPath\..\manifest.xml"
 
 # Initialize migration logging
-Write-MigrationLog -Message "=== NeoCore v2→v3 Migration Started ===" -Level "INFO"
+Write-MigrationLog -Message "=== NeoCore v2->v3 Migration Started ===" -Level "INFO"
 Write-MigrationLog -Message "Project source path: $ProjectSrcPath" -Level "INFO"
 Write-MigrationLog -Message "NeoCore path: $ProjectNeocorePath" -Level "INFO"
 Write-MigrationLog -Message "Project XML: $projectXmlPath" -Level "INFO"
@@ -440,56 +792,135 @@ Write-MigrationLog -Message "Project manifest: $projectManifestPath" -Level "INF
 
 if (Test-Path -Path $projectXmlPath) {
   Write-MigrationLog -Message "Found project.xml, analyzing for v3 migration..." -Level "INFO"
-  Write-Host ""
-  Write-Host "Analyzing project for v3 migration..." -ForegroundColor Cyan
 
-  # Check project's current NeoCore version
+  # Preliminary analysis to determine migration needs
+  Write-MigrationLog -Message "Starting preliminary analysis to determine migration needs..." -Level "INFO"
   $projectNeocoreVersion = "Unknown"
   $migrationRequired = $false
+  $detectedIssues = @()
 
+  Write-MigrationLog -Message "Checking for project manifest at: $projectManifestPath" -Level "INFO"
   if (Test-Path -Path $projectManifestPath) {
+    Write-MigrationLog -Message "Project manifest found, reading version information..." -Level "INFO"
     try {
-      [xml]$projectManifest = Get-Content -Path $projectManifestPath
-      $projectNeocoreVersion = $projectManifest.manifest.version
-      Write-MigrationLog -Message "Found project manifest with NeoCore version: $projectNeocoreVersion" -Level "INFO"
-      Write-Host "Project's current NeoCore version: $projectNeocoreVersion" -ForegroundColor Yellow
-
-      # Check if migration from v2 to v3 is needed
-      if ($projectNeocoreVersion -like "2.*") {
-        $migrationRequired = $true
-        Write-MigrationLog -Message "v2 detected - migration to v3 required" -Level "WARN"
-        Write-Host "Migration from v2 to v3 is required!" -ForegroundColor Red
-
-        # Always update manifest version when migrating from v2 to v3
-        Write-MigrationLog -Message "Updating project manifest from $projectNeocoreVersion to $version" -Level "INFO"
-        Write-Host "Updating project manifest to v3..." -ForegroundColor Cyan
-        $manifestUpdated = Update-ProjectManifestVersion -ProjectManifestPath $projectManifestPath -NewVersion $version
-        $projectNeocoreVersion = $version # Update the displayed version
-
-      } elseif ($projectNeocoreVersion -like "3.*" -and $projectNeocoreVersion -ne $version) {
-        Write-MigrationLog -Message "v3 detected but version differs: $projectNeocoreVersion → $version" -Level "INFO"
-        Write-Host "Project is using NeoCore v3 but version differs from current" -ForegroundColor Yellow
-        Write-Host "Updating to latest v3 version..." -ForegroundColor Cyan
-        $manifestUpdated = Update-ProjectManifestVersion -ProjectManifestPath $projectManifestPath -NewVersion $version
-        $projectNeocoreVersion = $version
-        $migrationRequired = $false # No structural migration needed, just version update
-
-      } elseif ($projectNeocoreVersion -eq $version) {
-        Write-MigrationLog -Message "Project already uses current NeoCore version ($version)" -Level "SUCCESS"
-        Write-Host "Project is already using the current NeoCore version ($version)" -ForegroundColor Green
-        $migrationRequired = $false
-
+      [xml]$manifestXml = Get-Content -Path $projectManifestPath
+      $versionNode = $manifestXml.SelectSingleNode("//neocore")
+      if ($versionNode -and $versionNode.version) {
+        $projectNeocoreVersion = $versionNode.version
+        Write-MigrationLog -Message "Found project manifest with NeoCore version: $projectNeocoreVersion" -Level "INFO"
       } else {
-        Write-MigrationLog -Message "Unrecognized version format: $projectNeocoreVersion" -Level "WARN"
-        Write-Host "Warning: Unrecognized version format, proceeding with compatibility check..." -ForegroundColor Yellow
-        $migrationRequired = $true
+        Write-MigrationLog -Message "Project manifest found but no neocore version node detected" -Level "WARN"
       }
     } catch {
-      Write-MigrationLog -Message "Error reading project manifest: $($_.Exception.Message)" -Level "ERROR"
-      Write-Host "Warning: Could not read project manifest.xml: $($_.Exception.Message)" -ForegroundColor Yellow
-      Write-Host "Proceeding with compatibility check..." -ForegroundColor Yellow
-      $migrationRequired = $true
+      Write-MigrationLog -Message "Error reading project manifest: $($_.Exception.Message)" -Level "WARN"
     }
+  } else {
+    Write-MigrationLog -Message "Project manifest not found at $projectManifestPath" -Level "WARN"
+  }
+
+  # Quick compatibility check to determine what needs to be done
+  Write-MigrationLog -Message "Performing compatibility check on project.xml..." -Level "INFO"
+  try {
+    [xml]$projectXml = Get-Content -Path $projectXmlPath
+    Write-MigrationLog -Message "Project.xml loaded successfully, running compatibility test..." -Level "INFO"
+    $result = Test-ProjectXmlV3Compatibility -ProjectXml $projectXml -ProjectPath $ProjectSrcPath
+
+    if ($result.issues.Count -gt 0) {
+      $migrationRequired = $true
+      $detectedIssues = $result.issues
+      Write-MigrationLog -Message "Migration required: $($result.issues.Count) compatibility issues detected" -Level "WARN"
+    } else {
+      Write-MigrationLog -Message "No compatibility issues detected in preliminary analysis" -Level "INFO"
+    }
+  } catch {
+    Write-MigrationLog -Message "Error analyzing project.xml: $($_.Exception.Message)" -Level "WARN"
+    $migrationRequired = $true
+    $detectedIssues = @("Unable to analyze project.xml file (possibly corrupted)")
+  }
+
+  # Show warning and get user confirmation BEFORE any migration
+  Write-MigrationLog -Message "Evaluating if migration warning should be displayed..." -Level "INFO"
+  Write-MigrationLog -Message "Migration required: $migrationRequired, Detected issues count: $($detectedIssues.Count)" -Level "INFO"
+
+  if ($migrationRequired) {
+    Write-MigrationLog -Message "Migration required - preparing backup and user confirmation..." -Level "INFO"
+    # Create automatic backup in temp folder with UUID
+    $backupUuid = [System.Guid]::NewGuid().ToString()
+    $tempBackupPath = "$env:TEMP\$backupUuid"
+    $projectRootPath = Split-Path -Parent $ProjectSrcPath
+
+    Write-MigrationLog -Message "Creating automatic project backup with UUID: $backupUuid" -Level "INFO"
+    Write-MigrationLog -Message "Backup will be created at: $tempBackupPath" -Level "INFO"
+    Write-MigrationLog -Message "Project root path: $projectRootPath" -Level "INFO"
+    Write-Host "Creating automatic project backup..." -ForegroundColor Cyan
+
+    try {
+      # Create temp backup directory
+      Write-MigrationLog -Message "Creating backup directory: $tempBackupPath" -Level "INFO"
+      New-Item -ItemType Directory -Path $tempBackupPath -Force | Out-Null
+
+      # Copy entire project to temp backup, excluding the migration log file
+      Write-MigrationLog -Message "Starting robocopy operation from '$projectRootPath' to '$tempBackupPath'" -Level "INFO"
+      robocopy "$projectRootPath" "$tempBackupPath" /E /XD ".git" "build" "dist" "node_modules" /XF "migration.log" /NFL /NDL /NJH /NJS | Out-Null
+
+      Write-MigrationLog -Message "Project backup created at: $tempBackupPath" -Level "SUCCESS"
+      Write-Host "  - Backup location: $tempBackupPath" -ForegroundColor Green
+      Write-Host "  - Backup UUID: $backupUuid" -ForegroundColor Green
+    } catch {
+      Write-MigrationLog -Message "Warning: Could not create automatic backup: $($_.Exception.Message)" -Level "WARN"
+      Write-Host "  - Warning: Could not create automatic backup" -ForegroundColor Yellow
+    }
+
+    Write-MigrationLog -Message "Calling Show-MigrationWarning for user confirmation..." -Level "INFO"
+    if (-not (Show-MigrationWarning -ProjectSrcPath $ProjectSrcPath -ProjectNeocorePath $ProjectNeocorePath -CurrentVersion $projectNeocoreVersion -TargetVersion $version -DetectedIssues $detectedIssues -BackupPath $tempBackupPath)) {
+      Write-MigrationLog -Message "User declined migration - exiting script" -Level "INFO"
+      exit 0
+    }
+    Write-MigrationLog -Message "User confirmed migration - proceeding with analysis..." -Level "INFO"
+  } else {
+    Write-MigrationLog -Message "No migration required based on preliminary analysis" -Level "INFO"
+  }
+
+  Write-Host ""
+  Write-Host "Analyzing project for v3 migration..." -ForegroundColor Cyan
+  Write-MigrationLog -Message "Starting detailed v3 migration analysis..." -Level "INFO"
+
+  # Use the previously determined values from the preliminary analysis
+  Write-Host "Project's current NeoCore version: $projectNeocoreVersion" -ForegroundColor Yellow
+  Write-MigrationLog -Message "Current project NeoCore version: $projectNeocoreVersion" -Level "INFO"
+
+  # Check if migration from v2 to v3 is needed
+  Write-MigrationLog -Message "Evaluating migration requirements based on version..." -Level "INFO"
+  if ($projectNeocoreVersion -like "2.*") {
+    $migrationRequired = $true
+    Write-MigrationLog -Message "v2 detected - migration to v3 required" -Level "WARN"
+    Write-Host "Migration from v2 to v3 is required!" -ForegroundColor Red
+
+    # Always update manifest version when migrating from v2 to v3
+    Write-MigrationLog -Message "Updating project manifest from $projectNeocoreVersion to $version" -Level "INFO"
+    Write-Host "Updating project manifest to v3..." -ForegroundColor Cyan
+    $null = Update-ProjectManifestVersion -ProjectManifestPath $projectManifestPath -NewVersion $version
+    $projectNeocoreVersion = $version # Update the displayed version
+
+  } elseif ($projectNeocoreVersion -like "3.*" -and $projectNeocoreVersion -ne $version) {
+    Write-MigrationLog -Message "v3 detected but version differs: $projectNeocoreVersion -> $version" -Level "INFO"
+    Write-Host "Project is using NeoCore v3 but version differs from current" -ForegroundColor Yellow
+    Write-Host "Updating to latest v3 version..." -ForegroundColor Cyan
+    $null = Update-ProjectManifestVersion -ProjectManifestPath $projectManifestPath -NewVersion $version
+    $projectNeocoreVersion = $version
+    $migrationRequired = $false # No structural migration needed, just version update
+
+  } elseif ($projectNeocoreVersion -eq $version) {
+    Write-MigrationLog -Message "Project already uses current NeoCore version ($version)" -Level "SUCCESS"
+    Write-Host "Project is already using the current NeoCore version ($version)" -ForegroundColor Green
+    $migrationRequired = $false
+
+  } else {
+    Write-MigrationLog -Message "Unrecognized version format: $projectNeocoreVersion" -Level "WARN"
+    Write-Host "Warning: Unrecognized version format, proceeding with compatibility check..." -ForegroundColor Yellow
+    $migrationRequired = $true
+  }
+
   } else {
     Write-MigrationLog -Message "Project manifest.xml not found at $projectManifestPath" -Level "WARN"
     Write-Host "Warning: Project manifest.xml not found at $projectManifestPath" -ForegroundColor Yellow
@@ -497,35 +928,37 @@ if (Test-Path -Path $projectXmlPath) {
     $migrationRequired = $true
   }
 
-  try {
-    # Load and analyze project.xml
-    Write-MigrationLog -Message "Loading and analyzing project.xml..." -Level "INFO"
-    [xml]$projectXml = Get-Content -Path $projectXmlPath
+  # Run detailed compatibility check if migration is required
+  Write-MigrationLog -Message "Checking if detailed compatibility check is needed..." -Level "INFO"
+  Write-MigrationLog -Message "Migration required flag: $migrationRequired" -Level "INFO"
 
-    # Test compatibility (always run for detailed analysis)
-    $compatibilityResult = Test-ProjectXmlV3Compatibility -ProjectXml $projectXml -ProjectPath $ProjectSrcPath
-    Write-MigrationLog -Message "Compatibility check completed: $($compatibilityResult.Issues.Count) issues, $($compatibilityResult.Warnings.Count) warnings" -Level "INFO"
-
-    if ($migrationRequired -and $compatibilityResult.Issues.Count -gt 0) {
-      Write-MigrationLog -Message "Migration required - found $($compatibilityResult.Issues.Count) blocking issues" -Level "WARN"
-      Write-Host ""
-      Write-Host "v2 to v3 migration issues found:" -ForegroundColor Red
-      foreach ($issue in $compatibilityResult.Issues) {
-        Write-MigrationLog -Message "Issue: $issue" -Level "WARN"
-        Write-Host "  * $issue" -ForegroundColor Red
+  if ($migrationRequired) {
+    Write-MigrationLog -Message "Starting detailed compatibility check..." -Level "INFO"
+    try {
+      # Load and analyze project.xml (re-use previous analysis if available)
+      if (-not $result) {
+        Write-MigrationLog -Message "Loading and analyzing project.xml (no previous result available)..." -Level "INFO"
+        [xml]$projectXml = Get-Content -Path $projectXmlPath
+        $result = Test-ProjectXmlV3Compatibility -ProjectXml $projectXml -ProjectPath $ProjectSrcPath
+      } else {
+        Write-MigrationLog -Message "Re-using previous compatibility analysis result" -Level "INFO"
       }
 
-      # Create backup
-      $backupPath = "$projectXmlPath.v2.backup"
-      Write-MigrationLog -Message "Creating backup: $backupPath" -Level "INFO"
-      Copy-Item -Path $projectXmlPath -Destination $backupPath -Force
-      Write-Host ""
-      Write-Host "Backup created: $backupPath" -ForegroundColor Yellow
+      Write-MigrationLog -Message "Compatibility check completed: $($result.Issues.Count) issues, $($result.Warnings.Count) warnings" -Level "INFO"
+
+      if ($result.Issues.Count -gt 0) {
+        Write-MigrationLog -Message "Migration required - found $($result.Issues.Count) blocking issues" -Level "WARN"
+        Write-Host ""
+        Write-Host "v2 to v3 migration issues found:" -ForegroundColor Red
+        foreach ($issue in $result.Issues) {
+          Write-MigrationLog -Message "Issue: $issue" -Level "WARN"
+          Write-Host "  * $issue" -ForegroundColor Red
+        }
 
       # Attempt automatic repair
       Write-MigrationLog -Message "Starting automatic v3 migration..." -Level "INFO"
       Write-Host "Attempting automatic v3 migration..." -ForegroundColor Cyan
-      $repaired = Repair-ProjectXmlForV3 -ProjectXml $projectXml -ProjectXmlPath $projectXmlPath
+      $null = Repair-ProjectXmlForV3 -ProjectXml $projectXml -ProjectXmlPath $projectXmlPath
 
       # Re-test after repairs
       Write-MigrationLog -Message "Re-testing project.xml after migration..." -Level "INFO"
@@ -539,7 +972,7 @@ if (Test-Path -Path $projectXmlPath) {
         Write-MigrationLog -Message "Migration completed but $($retest.Issues.Count) issues remain" -Level "WARN"
         Write-Host "Some issues remain - manual review recommended" -ForegroundColor Yellow
       }
-    } elseif ($compatibilityResult.Issues.Count -eq 0) {
+    } elseif ($result.Issues.Count -eq 0) {
       if ($migrationRequired) {
         Write-MigrationLog -Message "No structural changes needed - project.xml already v3 compatible" -Level "SUCCESS"
         Write-Host "  - project.xml is already v3 compatible!" -ForegroundColor Green
@@ -549,20 +982,22 @@ if (Test-Path -Path $projectXmlPath) {
       }
     }
 
-    if ($compatibilityResult.Warnings.Count -gt 0) {
-      Write-MigrationLog -Message "Found $($compatibilityResult.Warnings.Count) warnings for manual review" -Level "WARN"
+    if ($result.Warnings.Count -gt 0) {
+      Write-MigrationLog -Message "Found $($result.Warnings.Count) warnings for manual review" -Level "WARN"
       Write-Host ""
       Write-Host "Warnings (manual review recommended):" -ForegroundColor Yellow
-      foreach ($warning in $compatibilityResult.Warnings) {
+      foreach ($warning in $result.Warnings) {
         Write-MigrationLog -Message "Warning: $warning" -Level "WARN"
         Write-Host "  * $warning" -ForegroundColor Yellow
       }
     }
 
-    # Display project info
-    $projectNameNode = $projectXml.SelectSingleNode("//name")
-    $projectVersionNode = $projectXml.SelectSingleNode("//version")
-    $projectPlatformNode = $projectXml.SelectSingleNode("//platform")
+    # Display project info (reload XML to get the most current data after migration)
+    [xml]$currentProjectXml = Get-Content -Path $projectXmlPath
+
+    $projectNameNode = $currentProjectXml.SelectSingleNode("//name")
+    $projectVersionNode = $currentProjectXml.SelectSingleNode("//version")
+    $projectPlatformNode = $currentProjectXml.SelectSingleNode("//platform")
 
     $projectName = if ($projectNameNode) { $projectNameNode.InnerText } else { "Unknown" }
     $projectVersion = if ($projectVersionNode) { $projectVersionNode.InnerText } else { "Unknown" }
@@ -582,7 +1017,7 @@ if (Test-Path -Path $projectXmlPath) {
       Write-Host "Migration Summary:" -ForegroundColor Cyan
       Write-Host "  - Source Version: $projectNeocoreVersion" -ForegroundColor Yellow
       Write-Host "  - Target Version: $version" -ForegroundColor Green
-      if ($compatibilityResult.IsCompatible) {
+      if ($retest -and $retest.IsCompatible) {
         Write-MigrationLog -Message "Migration completed successfully" -Level "SUCCESS"
         Write-Host "  - Status: Migration Complete" -ForegroundColor Green
       } else {
@@ -592,7 +1027,8 @@ if (Test-Path -Path $projectXmlPath) {
     }
 
   } catch {
-    Write-MigrationLog -Message "Error parsing project.xml: $($_.Exception.Message)" -Level "ERROR"
+    Write-MigrationLog -Message "Error during compatibility check or migration: $($_.Exception.Message)" -Level "ERROR"
+    Write-MigrationLog -Message "Stack trace: $($_.ScriptStackTrace)" -Level "ERROR"
     Write-Host "Error: Could not parse project.xml: $($_.Exception.Message)" -ForegroundColor Red
     Write-Host "Please manually verify project.xml format" -ForegroundColor Yellow
   }
@@ -629,5 +1065,10 @@ if (Test-Path -Path $gitignorePath) {
 }
 
 # Migration completed
-Write-MigrationLog -Message "=== NeoCore v2→v3 Migration Completed ===" -Level "SUCCESS"
+Write-MigrationLog -Message "=== NeoCore v2->v3 Migration Completed ===" -Level "SUCCESS"
+Write-MigrationLog -Message "Script execution completed successfully" -Level "SUCCESS"
+Write-MigrationLog -Message "Total log entries written during migration process" -Level "INFO"
 Write-MigrationLog -Message "Log file saved at: $global:MigrationLogPath" -Level "INFO"
+Write-Host ""
+Write-Host "Migration process completed. Check the migration log for detailed information:" -ForegroundColor Green
+Write-Host "  Log file: $global:MigrationLogPath" -ForegroundColor Cyan
