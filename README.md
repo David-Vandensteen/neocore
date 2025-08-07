@@ -18,11 +18,11 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
 
 ### 🔗 Quick Links
 - [💬 Discord](https://discord.com/channels/1330066799445676093/1330089958798790686)
-- [📋 Migration from previous versions](IMPROVEMENTS_SUMMARY.md#migration-guide)
+- [📋 Migration from previous versions](docs/MIGRATION_GUIDE_v2Tov3.md)
 - [📚 API Documentation](http://azertyvortex.free.fr/neocore-doxy/r11/neocore_8h.html)
 - [📝 Changelog](CHANGELOG.md)
 
-> ⚠️ **Current Version**: This version includes **breaking changes**. Please check the [migration guide](IMPROVEMENTS_SUMMARY.md) before updating your existing projects.
+> ⚠️ **Current Version**: This version includes **breaking changes**. Please check the [migration guide](docs/MIGRATION_GUIDE_v2Tov3.md) before updating your existing projects.
 
 ## 📚 Table of Contents
 - [🎯 Overview](#overview)
@@ -39,7 +39,7 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
 - [📖 Documentation & Resources](#documentation--resources)
   - [📚 C API Documentation](#documentation-of-neocore-c-lib)
   - [🎨 DATlib Assets](#datlib-assets)
-  - [🔄 Migration from Previous Versions](IMPROVEMENTS_SUMMARY.md)
+  - [🔄 Migration from Previous Versions](docs/MIGRATION_GUIDE_v2Tov3.md)
 - [🛠️ Advanced Development](#advanced-development)
   - [♻️ Hot Reload](#hot-reload)
   - [🔧 Compile Library](#compiling-the-lib)
@@ -254,7 +254,7 @@ cd <neocore>\bootstrap\scripts\project
 
 ### 🆙 Upgrade an Existing Project<a name="upgrade-an-existing-project"></a>
 
-> ⚠️ **Important**: Backup your project before upgrading. Check the [migration guide](IMPROVEMENTS_SUMMARY.md) for breaking changes.
+> ⚠️ **Important**: Backup your project before upgrading. Check the [migration guide](docs/MIGRATION_GUIDE_v2Tov3.md) for breaking changes.
 
 ```cmd
 # 1. Remove build folder
@@ -294,7 +294,7 @@ From your project's `src` folder:
 ### 📚 C API Documentation<a name="documentation-of-neocore-c-lib"></a>
 
 - **[Complete Doxygen Documentation](http://azertyvortex.free.fr/neocore-doxy/r11/neocore_8h.html)**
-- **[Migration Guide](IMPROVEMENTS_SUMMARY.md)** - Breaking changes and migration from previous versions
+- **[Migration Guide](docs/MIGRATION_GUIDE_v2Tov3.md)** - Breaking changes and migration from previous versions
 - **[Detailed Changelog](CHANGELOG.md)** - Version history
 
 ### 🎨 DATlib Assets<a name="datlib-assets"></a>
