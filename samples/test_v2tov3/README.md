@@ -19,9 +19,28 @@ Ce projet simule un projet NeoCore v2 typique avec les patterns et configuration
 
 ### Code source avec patterns v2
 
-- **`main.c`** : Contient du code utilisant des patterns v2 :
-  - Typedefs supprimés : `Hex_Color`, `Hex_Packed_Color`
-  - Fonctions utilisant ces typedefs : `nc_log_rgb16()`, `nc_log_packed_color16()`
+- **`main.c`** : Contient du code utilisant des patterns v2 complets :
+
+#### NeoCore Framework v2 patterns :
+  - Typedefs supprimés : `Hex_Color`, `Hex_Packed_Color`, `Vec2short`
+  - Fonctions avec signatures changées : `nc_log_rgb16()`, `nc_log_packed_color16()`, `nc_log_vec2short()`
+  - Fonctions de logging avec labels (supprimées) : `nc_log_word("label", value)`
+  - Ancienne fonction `nc_log()` (remplacée par `nc_log_info/nc_log_info_line`)
+  - Fonctions position avec valeurs de retour : `nc_get_position_gfx_*()`
+  - Fonction supprimée : `nc_get_relative_position()`
+
+#### DATlib 0.2 patterns (remplacés par DATlib 0.3) :
+  - Structure `paletteInfo` : membre `palCount` (renommé `count`)
+  - Structure `scroller` : membres supprimés `colNumber`, `topBk`, `botBk`
+  - Structure `animation` : complètement supprimée en 0.3
+  - Structure `aSprite` : membres renommés/supprimés (`currentStepNum`, `maxStep`, `currentAnimation`)
+  - Structure `sprFrame` : membre `colSize` (renommé `stripSize`)
+  - Structure `pictureInfo` : membre `unused__height` supprimé
+  - Structure `scrollerInfo` : array `map` remplacé par `strips`
+  - Constantes couleurs job meter : valeurs changées (`JOB_BLACK`, `JOB_LIGHTRED`, etc.)
+  - Constante supprimée : `ASPRITE_FRAMES_ADDR`
+  - Flags hardcodés : `0x0080`, `0xff7f` (remplacés par `AS_FLAG_*`)
+  - Signatures fonctions : `pictureInit()`, `aSpriteInit()`, `spritePoolInit()` (types/paramètres changés)
 
 ## Test de migration
 
@@ -57,14 +76,18 @@ upgrade.bat -projectSrcPath "..\..\..\..\samples\test_v2tov3" -projectNeocorePat
 - ✅ Backups créés
 
 **Issues restantes (migration manuelle requise) :**
-- ⚠️ `main.c` : typedefs supprimés nécessitent correction manuelle
-- ⚠️ Compilation échouera jusqu'à correction du code
+- ⚠️ `main.c` : Plus de 30 patterns v2/DATlib 0.2 détectés nécessitent correction manuelle
+- ⚠️ Types supprimés : `Vec2short`, `Hex_Color`, `Hex_Packed_Color`, `animation`
+- ⚠️ Structures modifiées : `paletteInfo`, `scroller`, `aSprite`, `sprFrame`, etc.
+- ⚠️ Fonctions avec nouvelles signatures : position getters, logging, DATlib init
+- ⚠️ Constantes changées : couleurs job meter, flags sprites
+- ⚠️ Compilation échouera jusqu'à correction complète du code
 
 ## Complexité de migration estimée
 
 - **Configuration XML** : 1/10 (automatique)
-- **Code source** : 4/10 (semi-automatique)
-- **Temps total** : 5-10 minutes (vs 2-4 heures en manuel)
+- **Code source** : 8/10 (détection automatique, correction manuelle importante)
+- **Temps total** : 2-4 heures pour correction manuelle (vs 1-2 jours en recherche manuelle)
 
 ## Utilisation
 
