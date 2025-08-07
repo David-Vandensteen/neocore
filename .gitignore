@@ -1,4 +1,5 @@
 .DS_Store
+.specstory
 *.png_reject.png
 /dist/
 /build/
