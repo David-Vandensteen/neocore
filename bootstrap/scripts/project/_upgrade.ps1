@@ -87,6 +87,12 @@ function Show-MigrationWarning {
     Write-Host ""
   }
 
+  Write-Host "[ANALYSIS] AUTOMATIC COMPATIBILITY CHECKS:" -ForegroundColor Cyan
+  Write-Host "   * project.xml structure migration (automatic fixes)" -ForegroundColor Gray
+  Write-Host "   * C files v2/v3 compatibility analysis (detection only)" -ForegroundColor Gray
+  Write-Host "   * .gitignore patterns validation" -ForegroundColor Gray
+  Write-Host ""
+
   Write-Host "[BACKUP] AUTOMATIC BACKUPS:" -ForegroundColor Green
   if ($BackupPath -and $BackupPath -ne "") {
     Write-Host "   * Complete project -> $BackupPath" -ForegroundColor Gray
@@ -101,7 +107,9 @@ function Show-MigrationWarning {
   Write-Host "   2. Close your editor/IDE before continuing" -ForegroundColor Yellow
   Write-Host ""
   Write-Host "[CRITICAL] IMPORTANT: This migration will permanently modify your files!" -ForegroundColor Red
-  Write-Host "           Automatic backups do not replace a complete project backup." -ForegroundColor Red
+  Write-Host "           - project.xml will be automatically migrated" -ForegroundColor Red
+  Write-Host "           - C files will only be analyzed (manual changes required)" -ForegroundColor Red
+  Write-Host "           - Automatic backups do not replace a complete project backup" -ForegroundColor Red
   Write-Host ""
   Write-Host "================================================================" -ForegroundColor Yellow
 
@@ -540,6 +548,135 @@ function Repair-ProjectXmlForV3 {
   }
 }
 
+function Test-CFileV3Compatibility {
+  param (
+    [Parameter(Mandatory=$true)]
+    [string]$FilePath,
+    [Parameter(Mandatory=$true)]
+    [string]$FileContent
+  )
+
+  Write-MigrationLog -Message "Analyzing C file for v3 compatibility: $FilePath" -Level "INFO"
+  $issues = @()
+  $lineNumber = 0
+  $lines = $FileContent -split "`n"
+
+  # Analyze line by line for better context
+  foreach ($line in $lines) {
+    $lineNumber++
+    $trimmedLine = $line.Trim()
+
+    # Skip comments and empty lines
+    if ($trimmedLine -match '^\s*//' -or $trimmedLine -match '^\s*/\*' -or $trimmedLine -eq '') {
+      continue
+    }
+
+    # Check for v2 type usage patterns
+    if ($line -match '\bVec2short\b') {
+      $issues += "Line $lineNumber`: Uses 'Vec2short' type (replaced by 'Position' in v3)"
+    }
+
+    if ($line -match '\bHex_Color\b') {
+      $issues += "Line $lineNumber`: Uses 'Hex_Color' typedef (removed in v3, use char arrays directly)"
+    }
+
+    if ($line -match '\bHex_Packed_Color\b') {
+      $issues += "Line $lineNumber`: Uses 'Hex_Packed_Color' typedef (removed in v3, use char arrays directly)"
+    }
+
+    # Check for v2 function signatures (return value patterns)
+    if ($line -match '\bVec2short\s+\w+\s*=\s*nc_get_position_') {
+      $issues += "Line $lineNumber`: Uses v2 position function return pattern (v3 uses output parameters)"
+    }
+
+    # Check for specific v2 function calls with old signatures
+    if ($line -match '\bnc_get_position_gfx_animated_sprite\s*\([^,)]+\)') {
+      $issues += "Line $lineNumber`: Uses v2 nc_get_position_gfx_animated_sprite signature (v3 requires output parameter)"
+    }
+
+    if ($line -match '\bnc_get_position_gfx_picture\s*\([^,)]+\)') {
+      $issues += "Line $lineNumber`: Uses v2 nc_get_position_gfx_picture signature (v3 requires output parameter)"
+    }
+
+    if ($line -match '\bnc_get_position_gfx_scroller\s*\([^,)]+\)') {
+      $issues += "Line $lineNumber`: Uses v2 nc_get_position_gfx_scroller signature (v3 requires output parameter)"
+    }
+
+    # Check for removed logging functions
+    if ($line -match '\bnc_log_vec2short\b') {
+      $issues += "Line $lineNumber`: Uses 'nc_log_vec2short' function (replaced by 'nc_log_position' in v3)"
+    }
+
+    if ($line -match '\bnc_log_rgb16\b') {
+      $issues += "Line $lineNumber`: Uses 'nc_log_rgb16' function (signature changed in v3)"
+    }
+
+    if ($line -match '\bnc_log_packed_color16\b') {
+      $issues += "Line $lineNumber`: Uses 'nc_log_packed_color16' function (signature changed in v3)"
+    }
+
+    # Check for palette manager functions with old signatures
+    if ($line -match '\bnc_load_palettes\s*\([^,)]*\)') {
+      $issues += "Line $lineNumber`: Uses v2 nc_load_palettes signature (v3 requires palette bank parameter)"
+    }
+
+    if ($line -match '\bnc_get_palette\s*\([^,)]*\)') {
+      $issues += "Line $lineNumber`: Uses v2 nc_get_palette signature (v3 API changed)"
+    }
+
+    # Check for sprite manager functions with old signatures
+    if ($line -match '\bnc_load_sprites\s*\([^,)]*\)') {
+      $issues += "Line $lineNumber`: Uses v2 nc_load_sprites signature (v3 requires sprite bank parameter)"
+    }
+
+    # Check for DATlib 0.2 patterns
+    if ($line -match '\bGFX_AnimatedSprite_\w+_physic\b') {
+      $issues += "Line $lineNumber`: Uses DATlib 0.2 physic sprite patterns (DATlib 0.3 required for v3)"
+    }
+
+    if ($line -match '\bnc_\w*_gfx_animated_sprite_\w*_physic\b') {
+      $issues += "Line $lineNumber`: Uses DATlib 0.2 physic function patterns (DATlib 0.3 API required)"
+    }
+
+    # Check for old include patterns
+    if ($line -match '#include\s*["<]neocore\.h[">]') {
+      $issues += "Line $lineNumber`: Uses '#include `"neocore.h`"' (v3 may require updated include path)"
+    }
+
+    # Check for old constant usage
+    if ($line -match '\bCD_WIDTH\b|\bCD_HEIGHT\b') {
+      $issues += "Line $lineNumber`: Uses CD_WIDTH/CD_HEIGHT constants (verify v3 compatibility)"
+    }
+
+    # Check for old macro usage
+    if ($line -match '\bVEC2SHORT\s*\(') {
+      $issues += "Line $lineNumber`: Uses VEC2SHORT macro (replaced by POSITION macro in v3)"
+    }
+
+    # Check for old sound functions
+    if ($line -match '\bnc_load_sound\s*\([^,)]*\)') {
+      $issues += "Line $lineNumber`: Uses v2 nc_load_sound signature (v3 API may have changed)"
+    }
+
+    # Check for old ADPCM functions
+    if ($line -match '\bnc_adpcm_\w+\s*\([^,)]*\)') {
+      $issues += "Line $lineNumber`: Uses v2 ADPCM functions (verify v3 compatibility and signatures)"
+    }
+
+    # Check for old memory management patterns
+    if ($line -match '\bnc_malloc\s*\(') {
+      $issues += "Line $lineNumber`: Uses nc_malloc (verify v3 memory management compatibility)"
+    }
+
+    if ($line -match '\bnc_free\s*\(') {
+      $issues += "Line $lineNumber`: Uses nc_free (verify v3 memory management compatibility)"
+    }
+  }
+
+  Write-MigrationLog -Message "C file analysis completed: $($issues.Count) issues found in $FilePath" -Level "INFO"
+  return $issues
+}
+
 function Update-ProjectManifestVersion {
   param (
     [Parameter(Mandatory=$true)]
@@ -893,6 +1030,70 @@ if (Test-Path -Path $projectXmlPath) {
   Write-Host "This may not be a NeoCore project directory" -ForegroundColor Yellow
 }
 
+# Check C files for v2/v3 compatibility issues
+Write-MigrationLog -Message "Checking C files for v2/v3 compatibility issues..." -Level "INFO"
+$cFilesPath = "$ProjectSrcPath"
+$cFiles = Get-ChildItem -Path $cFilesPath -Filter "*.c" -Recurse -ErrorAction SilentlyContinue
+
+if ($cFiles.Count -gt 0) {
+  Write-Host ""
+  Write-Host "Analyzing C files for v2 to v3 compatibility..." -ForegroundColor Cyan
+  Write-MigrationLog -Message "Found $($cFiles.Count) C files to analyze" -Level "INFO"
+
+  $totalIssues = 0
+  $filesWithIssues = 0
+
+  foreach ($file in $cFiles) {
+    Write-MigrationLog -Message "Analyzing file: $($file.FullName)" -Level "INFO"
+    $relativePath = $file.FullName.Replace($ProjectSrcPath, "").TrimStart('\')
+    $fileContent = Get-Content -Path $file.FullName -Raw -ErrorAction SilentlyContinue
+
+    if ($fileContent) {
+      # Use the dedicated function for detailed analysis
+      $issues = Test-CFileV3Compatibility -FilePath $relativePath -FileContent $fileContent
+
+      # Display results for this file
+      if ($issues.Count -gt 0) {
+        $filesWithIssues++
+        $totalIssues += $issues.Count
+
+        Write-Host ""
+        Write-Host "Issues found in: $relativePath" -ForegroundColor Red
+        Write-MigrationLog -Message "File '$relativePath' has $($issues.Count) v2/v3 compatibility issues" -Level "WARN"
+
+        foreach ($issue in $issues) {
+          Write-Host "  * $issue" -ForegroundColor Yellow
+          Write-MigrationLog -Message "Issue in '$relativePath': $issue" -Level "WARN"
+        }
+      } else {
+        Write-MigrationLog -Message "File '$relativePath' appears to be v3 compatible" -Level "INFO"
+      }
+    } else {
+      Write-MigrationLog -Message "Could not read file: $($file.FullName)" -Level "WARN"
+    }
+  }
+
+  # Summary
+  Write-Host ""
+  if ($totalIssues -gt 0) {
+    Write-Host "C Code Analysis Summary:" -ForegroundColor Red
+    Write-Host "  - Files analyzed: $($cFiles.Count)" -ForegroundColor White
+    Write-Host "  - Files with issues: $filesWithIssues" -ForegroundColor Red
+    Write-Host "  - Total issues found: $totalIssues" -ForegroundColor Red
+    Write-Host "  - Status: Manual review and code changes required" -ForegroundColor Yellow
+    Write-MigrationLog -Message "C code analysis completed: $totalIssues issues in $filesWithIssues files" -Level "WARN"
+  } else {
+    Write-Host "C Code Analysis Summary:" -ForegroundColor Green
+    Write-Host "  - Files analyzed: $($cFiles.Count)" -ForegroundColor White
+    Write-Host "  - Files with issues: 0" -ForegroundColor Green
+    Write-Host "  - Status: C code appears to be v3 compatible" -ForegroundColor Green
+    Write-MigrationLog -Message "C code analysis completed: No v2/v3 compatibility issues detected" -Level "SUCCESS"
+  }
+} else {
+  Write-Host "No C files found in project source directory" -ForegroundColor Yellow
+  Write-MigrationLog -Message "No C files found to analyze in $cFilesPath" -Level "INFO"
+}
+
 # Check .gitignore file
 Write-MigrationLog -Message "Checking .gitignore configuration..." -Level "INFO"
 $gitignorePath = "$ProjectSrcPath\..\.gitignore"
@@ -900,15 +1101,15 @@ $gitignorePath = "$ProjectSrcPath\..\.gitignore"
 if (Test-Path -Path $gitignorePath) {
   Write-MigrationLog -Message "Found .gitignore file, checking build/ and dist/ patterns..." -Level "INFO"
   $gitignoreContent = Get-Content -Path $gitignorePath
-  if ($gitignoreContent -notcontains "build/") {
-  } else {
+
+  if ($gitignoreContent -contains "build/") {
     Write-MigrationLog -Message ".gitignore contains 'build/' - should be '/build/'" -Level "WARN"
     Write-Host ""
     Write-Host "warning : the $gitignorePath file contains 'build/'" -ForegroundColor Yellow
     Write-Host "please change it to '/build/'" -ForegroundColor Yellow
   }
-  if ($gitignoreContent -notcontains "dist/") {
-  } else {
+
+  if ($gitignoreContent -contains "dist/") {
     Write-MigrationLog -Message ".gitignore contains 'dist/' - should be '/dist/'" -Level "WARN"
     Write-Host ""
     Write-Host "warning : the $gitignorePath file contains 'dist/'" -ForegroundColor Yellow
@@ -921,8 +1122,6 @@ if (Test-Path -Path $gitignorePath) {
 
 # Migration completed
 Write-MigrationLog -Message "=== NeoCore v2->v3 Migration Completed ===" -Level "SUCCESS"
-Write-MigrationLog -Message "Script execution completed successfully" -Level "SUCCESS"
-Write-MigrationLog -Message "Total log entries written during migration process" -Level "INFO"
 Write-MigrationLog -Message "Log file saved at: $global:MigrationLogPath" -Level "INFO"
 Write-Host ""
 Write-Host "Migration process completed. Check the migration log for detailed information:" -ForegroundColor Green
