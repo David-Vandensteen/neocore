@@ -33,6 +33,9 @@ copy /y manifest.xml %temp%\test_v2tov3\
 copy /y project.xml %temp%\test_v2tov3\src\
 copy /y main.c %temp%\test_v2tov3\src\
 
+:: Copy the lib folder with hello.c to project root (to test recursive C file analysis)
+xcopy /s /i /y lib %temp%\test_v2tov3\lib\
+
 :: Run the migration script
 echo.
 echo Running v2 to v3 migration script...

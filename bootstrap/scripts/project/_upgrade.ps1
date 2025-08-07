@@ -1032,20 +1032,22 @@ if (Test-Path -Path $projectXmlPath) {
 
 # Check C files for v2/v3 compatibility issues
 Write-MigrationLog -Message "Checking C files for v2/v3 compatibility issues..." -Level "INFO"
-$cFilesPath = "$ProjectSrcPath"
-$cFiles = Get-ChildItem -Path $cFilesPath -Filter "*.c" -Recurse -ErrorAction SilentlyContinue
+# Search for C files in the project root (parent of src) to include lib/ and other subdirectories
+$projectRootPath = Split-Path -Parent $ProjectSrcPath
+$cFiles = Get-ChildItem -Path $projectRootPath -Filter "*.c" -Recurse -ErrorAction SilentlyContinue
 
 if ($cFiles.Count -gt 0) {
   Write-Host ""
   Write-Host "Analyzing C files for v2 to v3 compatibility..." -ForegroundColor Cyan
   Write-MigrationLog -Message "Found $($cFiles.Count) C files to analyze" -Level "INFO"
+  Write-MigrationLog -Message "Searching from project root: $projectRootPath" -Level "INFO"
 
   $totalIssues = 0
   $filesWithIssues = 0
 
   foreach ($file in $cFiles) {
     Write-MigrationLog -Message "Analyzing file: $($file.FullName)" -Level "INFO"
-    $relativePath = $file.FullName.Replace($ProjectSrcPath, "").TrimStart('\')
+    $relativePath = $file.FullName.Replace($projectRootPath, "").TrimStart('\', '/')
     $fileContent = Get-Content -Path $file.FullName -Raw -ErrorAction SilentlyContinue
 
     if ($fileContent) {
@@ -1090,8 +1092,8 @@ if ($cFiles.Count -gt 0) {
     Write-MigrationLog -Message "C code analysis completed: No v2/v3 compatibility issues detected" -Level "SUCCESS"
   }
 } else {
-  Write-Host "No C files found in project source directory" -ForegroundColor Yellow
-  Write-MigrationLog -Message "No C files found to analyze in $cFilesPath" -Level "INFO"
+  Write-Host "No C files found in project directory" -ForegroundColor Yellow
+  Write-MigrationLog -Message "No C files found to analyze in $projectRootPath" -Level "INFO"
 }
 
 # Check .gitignore file
