@@ -128,61 +128,6 @@ function Show-MigrationWarning {
   } while ($true)
 }
 
-function Import-AssertModules {
-  param([string]$NeocorePath)
-
-  try {
-    $assertModulesPath = "$NeocorePath\toolchain\scripts\modules\assert"
-    Write-MigrationLog -Message "Attempting to load Assert modules from: $assertModulesPath" -Level "INFO"
-
-    if (-not (Test-Path -Path $assertModulesPath)) {
-      Write-MigrationLog -Message "Assert modules path not found: $assertModulesPath" -Level "WARN"
-      return $false
-    }
-
-    # Load required Assert modules in correct order
-    $moduleFiles = @(
-      "$assertModulesPath\path.ps1",
-      "$assertModulesPath\project\name.ps1",
-      "$assertModulesPath\project\gfx\dat.ps1",
-      "$assertModulesPath\project\compiler\systemFile.ps1",
-      "$assertModulesPath\project.ps1"
-    )
-
-    $loadedCount = 0
-    $totalCount = $moduleFiles.Count
-
-    foreach ($moduleFile in $moduleFiles) {
-      if (Test-Path -Path $moduleFile) {
-        try {
-          . $moduleFile
-          $loadedCount++
-          Write-MigrationLog -Message "Successfully loaded Assert module: $(Split-Path -Leaf $moduleFile)" -Level "INFO"
-        } catch {
-          Write-MigrationLog -Message "Error loading Assert module $(Split-Path -Leaf $moduleFile): $($_.Exception.Message)" -Level "ERROR"
-        }
-      } else {
-        Write-MigrationLog -Message "Assert module not found: $moduleFile" -Level "WARN"
-      }
-    }
-
-    Write-MigrationLog -Message "Assert modules loading summary: $loadedCount/$totalCount modules loaded successfully" -Level "INFO"
-
-    # Test if Assert-Project function is available and return result based on that
-    if (Get-Command "Assert-Project" -ErrorAction SilentlyContinue) {
-      Write-MigrationLog -Message "Assert-Project function is available after module loading" -Level "SUCCESS"
-      return $true
-    } else {
-      Write-MigrationLog -Message "Assert-Project function is NOT available after module loading" -Level "ERROR"
-      return $false
-    }
-
-  } catch {
-    Write-MigrationLog -Message "Error loading Assert modules: $($_.Exception.Message)" -Level "ERROR"
-    return $false
-  }
-}
-
 function Test-ProjectXmlV3Compatibility {
   param (
     [Parameter(Mandatory=$true)]
@@ -526,141 +471,51 @@ function Repair-ProjectXmlForV3 {
 
       if ($resolvedNeocorePath -and (Test-Path -Path $resolvedNeocorePath)) {
         Write-MigrationLog -Message "Resolved NeoCore path: $resolvedNeocorePath" -Level "INFO"
-        # Load Assert modules
-        Write-MigrationLog -Message "Attempting to load Assert modules for validation..." -Level "INFO"
-        if (Import-AssertModules -NeocorePath $resolvedNeocorePath) {
-          Write-MigrationLog -Message "Assert modules loaded successfully, running validation..." -Level "INFO"
 
-          # Verify the generated XML is valid before proceeding
-          if (-not $generatedXml) {
-            Write-MigrationLog -Message "Generated XML is null or invalid - skipping Assert-Project validation" -Level "ERROR"
-            throw "Generated XML is null or invalid"
-          }
+        # Load Assert modules directly (no function due to PowerShell scope issues)
+        $assertPath = Join-Path $resolvedNeocorePath "toolchain\scripts\modules\assert"
+        Write-MigrationLog -Message "Loading Assert modules from: $assertPath" -Level "INFO"
 
-          Write-MigrationLog -Message "Generated XML loaded successfully, proceeding with validation..." -Level "INFO"
+        if (Test-Path -Path $assertPath) {
+          $modules = @("path.ps1", "project\name.ps1", "project\gfx\dat.ps1", "project\compiler\systemFile.ps1", "project.ps1")
+          $loadedCount = 0
 
-          # Set the global Config variable that Assert-Project expects
-          $global:Config = $generatedXml
-          # Also set local Config for functions that expect it in local scope
-          $Config = $generatedXml
-
-          # Store the modules path for potential re-import
-          $assertModulesPath = "$resolvedNeocorePath\toolchain\scripts\modules\assert"
-
-          # Run Assert-Project validation immediately while modules are still in scope
-          Write-MigrationLog -Message "Executing Assert-Project validation..." -Level "INFO"
-          try {
-            # Verify XML document is valid
-            if (-not $generatedXml -or -not $generatedXml.DocumentElement) {
-              throw "Generated XML document is null or invalid"
-            }
-
-            Write-MigrationLog -Message "XML document validated - root element: $($generatedXml.DocumentElement.Name)" -Level "INFO"
-
-            # Try different approaches to execute Assert-Project
-            $validationResult = $null
-
-            # First try: Direct call without script block
-            if (Test-Path Function:\Assert-Project) {
-              Write-MigrationLog -Message "Assert-Project found as function, executing directly..." -Level "INFO"
-              Write-MigrationLog -Message "Using generated XML data for validation (type: $($generatedXml.GetType().Name))" -Level "INFO"
-
-              # Set global Config before calling
-              $global:Config = $generatedXml
-
+          foreach ($module in $modules) {
+            $fullPath = Join-Path $assertPath $module
+            if (Test-Path $fullPath) {
               try {
-                # Direct function call
-                $validationResult = Assert-Project -Config $generatedXml
-                Write-MigrationLog -Message "Direct Assert-Project call completed successfully" -Level "SUCCESS"
+                . $fullPath
+                $loadedCount++
+                Write-MigrationLog -Message "Loaded Assert module: $module" -Level "INFO"
               } catch {
-                Write-MigrationLog -Message "Direct Assert-Project call failed: $($_.Exception.Message)" -Level "WARN"
-                # Try with no parameters (some Assert functions expect global Config)
-                try {
-                  $validationResult = Assert-Project
-                  Write-MigrationLog -Message "Assert-Project call without parameters completed successfully" -Level "SUCCESS"
-                } catch {
-                  Write-MigrationLog -Message "Assert-Project call without parameters also failed: $($_.Exception.Message)" -Level "WARN"
-                  throw "Both Assert-Project call methods failed"
-                }
+                Write-MigrationLog -Message "Error loading $module : $($_.Exception.Message)" -Level "ERROR"
               }
             } else {
-              # Second try: Force re-import all dependencies and main module
-              Write-MigrationLog -Message "Re-importing all Assert modules for direct execution..." -Level "INFO"
-              . "$assertModulesPath\path.ps1"
-              . "$assertModulesPath\project\name.ps1"
-              . "$assertModulesPath\project\gfx\dat.ps1"
-              . "$assertModulesPath\project\compiler\systemFile.ps1"
-              . "$assertModulesPath\project.ps1"
-
-              if (Test-Path Function:\Assert-Project) {
-                # Verify all dependencies are available
-                $dependenciesOk = (Test-Path Function:\Assert-Path) -and
-                                  (Test-Path Function:\Assert-ProjectName) -and
-                                  (Test-Path Function:\Assert-ProjectGfxDat) -and
-                                  (Test-Path Function:\Assert-ProjectCompilerSystemFile)
-
-                if ($dependenciesOk) {
-                  Write-MigrationLog -Message "All Assert dependencies verified, executing validation..." -Level "INFO"
-                  Write-MigrationLog -Message "Using generated XML data for validation (type: $($generatedXml.GetType().Name))" -Level "INFO"
-
-                  # Set global Config before calling
-                  $global:Config = $generatedXml
-
-                  try {
-                    # Direct function call
-                    $validationResult = Assert-Project -Config $generatedXml
-                    Write-MigrationLog -Message "Direct Assert-Project call completed successfully after re-import" -Level "SUCCESS"
-                  } catch {
-                    Write-MigrationLog -Message "Direct Assert-Project call failed after re-import: $($_.Exception.Message)" -Level "WARN"
-                    # Try with no parameters
-                    try {
-                      $validationResult = Assert-Project
-                      Write-MigrationLog -Message "Assert-Project call without parameters completed successfully after re-import" -Level "SUCCESS"
-                    } catch {
-                      Write-MigrationLog -Message "Assert-Project call without parameters also failed after re-import: $($_.Exception.Message)" -Level "WARN"
-                      throw "Both Assert-Project call methods failed after re-import"
-                    }
-                  }
-                } else {
-                  Write-MigrationLog -Message "Assert dependencies missing, skipping validation" -Level "WARN"
-                  throw "Missing Assert dependencies - Path: $(Test-Path Function:\Assert-Path), ProjectName: $(Test-Path Function:\Assert-ProjectName), ProjectGfxDat: $(Test-Path Function:\Assert-ProjectGfxDat), ProjectCompilerSystemFile: $(Test-Path Function:\Assert-ProjectCompilerSystemFile)"
-                }
-              } else {
-                throw "Assert-Project function still not available after full re-import"
-              }
-            }
-
-            # If we get here, Assert-Project executed successfully
-            Write-MigrationLog -Message "[OK] Generated project.xml passed Assert-Project validation" -Level "SUCCESS"
-            Write-Host "  - Generated XML validated with Assert-Project" -ForegroundColor Green
-          } catch {
-            Write-MigrationLog -Message "Error executing Assert-Project: $($_.Exception.Message)" -Level "WARN"
-            Write-Host "  - Warning: Assert-Project validation skipped: $($_.Exception.Message)" -ForegroundColor Yellow
-
-            # Fallback: Basic XML structure validation
-            Write-MigrationLog -Message "Performing fallback XML structure validation..." -Level "INFO"
-            try {
-              [xml]$xmlDoc = Get-Content -Path $ProjectXmlPath
-              $basicValidation = @{
-                hasName = [bool]$xmlDoc.SelectSingleNode("//name")
-                hasPlatform = [bool]$xmlDoc.SelectSingleNode("//platform")
-                hasCompiler = [bool]$xmlDoc.SelectSingleNode("//compiler")
-              }
-
-              if ($basicValidation.hasName -and $basicValidation.hasPlatform -and $basicValidation.hasCompiler) {
-                Write-MigrationLog -Message "[OK] Basic XML structure validation passed" -Level "SUCCESS"
-                Write-Host "  - Basic XML structure validation: PASSED" -ForegroundColor Green
-              } else {
-                Write-MigrationLog -Message "[WARN] Basic XML structure validation failed" -Level "WARN"
-                Write-Host "  - Warning: Basic XML structure validation failed" -ForegroundColor Yellow
-              }
-            } catch {
-              Write-MigrationLog -Message "Fallback validation also failed: $($_.Exception.Message)" -Level "ERROR"
+              Write-MigrationLog -Message "Assert module not found: $fullPath" -Level "WARN"
             }
           }
+
+          Write-MigrationLog -Message "Loaded $loadedCount/$($modules.Count) Assert modules" -Level "INFO"
+
+          # Test and execute Assert-Project validation
+          if (Get-Command "Assert-Project" -ErrorAction SilentlyContinue) {
+            Write-MigrationLog -Message "Assert-Project function is available, validating XML..." -Level "SUCCESS"
+
+            try {
+              Assert-Project -Config $generatedXml
+              Write-MigrationLog -Message "[OK] Generated project.xml passed Assert-Project validation" -Level "SUCCESS"
+              Write-Host "  - Generated XML validated with Assert-Project" -ForegroundColor Green
+            } catch {
+              Write-MigrationLog -Message "Assert-Project validation failed: $($_.Exception.Message)" -Level "WARN"
+              Write-Host "  - Warning: Assert-Project validation failed: $($_.Exception.Message)" -ForegroundColor Yellow
+            }
+          } else {
+            Write-MigrationLog -Message "Assert-Project function not available after module loading" -Level "WARN"
+            Write-Host "  - Warning: Assert-Project function not available - skipping validation" -ForegroundColor Yellow
+          }
         } else {
-          Write-MigrationLog -Message "Could not load Assert modules - skipping validation" -Level "WARN"
-          Write-Host "  - Warning: Could not load Assert modules - skipping validation" -ForegroundColor Yellow
+          Write-MigrationLog -Message "Assert modules path not found: $assertPath" -Level "WARN"
+          Write-Host "  - Warning: Assert modules not found - skipping validation" -ForegroundColor Yellow
         }
       } else {
         Write-MigrationLog -Message "NeoCore path not resolved ($existingNeocorePath) - skipping Assert-Project validation" -Level "WARN"
