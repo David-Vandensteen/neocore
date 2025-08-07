@@ -1,18 +1,13 @@
 ## 3.0.0
 
   - **MAJOR RELEASE** - DATLib 0.3, toolchain refactoring and quality improvement
-    - refactor PowerShell toolchain modules
-    - improve error handling and return values across all scripts
-    - add comprehensive error propagation in all critical functions
-    - improve robustness of Set-EnvPath, Stop-Emulators, and Watch-Folder modules
-    - fix infinite loops and blocking risks in build scripts
-    - **Embedded headers**: neodev and DATlib headers are now embedded in NeoCore instead of being installed as external dependencies
-  - **TOOLCHAIN ROBUSTNESS IMPROVEMENTS**:
-    - **Enhanced Build Error Handling**:
+  - **TOOLCHAIN IMPROVEMENTS**:
+    - **PowerShell Refactoring**: Complete refactoring of PowerShell toolchain modules with improved error handling and return values
+    - **Enhanced Build System**:
       - Real-time BuildChar output monitoring with immediate process termination on color overload errors
       - Comprehensive error parsing and propagation across all build scripts
-      - Improved robocopy error handling with detailed logging and validation
       - Enhanced make process execution with separate output/error log files
+      - Improved robocopy error handling with detailed logging and validation
     - **Build System Optimization**:
       - **CRT Configuration System**: Added configurable `crtPath` in project.xml for flexible runtime file management
       - **Embedded CRT Runtime**: Runtime files (crt0_cd.s, common_crt0_cd.s, etc.) are now automatically embedded in each build from centralized `src-lib/crt/` source
@@ -20,6 +15,8 @@
       - **SFX Audio Integration**: Sound effects files (PCM/Z80) are now automatically copied during program build for immediate availability
       - **Environment Variable Fixes**: Corrected PROJECT_PATH to point to build directory for proper assembler include resolution
       - **Makefile Improvements**: Added `-I$(PROJECT_PATH)` to ASFLAGS for correct assembler include path handling
+    - **Module Robustness**: Improved robustness of Set-EnvPath, Stop-Emulators, and Watch-Folder modules with fixed infinite loops and blocking risks
+    - **Embedded Dependencies**: Neodev and DATlib headers are now embedded in NeoCore instead of being installed as external dependencies
     - **Configuration Validation**:
       - Enhanced Assert-Project function to validate new crtPath configuration
       - Improved XML path resolution and template variable handling
@@ -29,11 +26,11 @@
       - Clearer error messages with actionable feedback
       - Robust file detection and validation throughout build pipeline
   - **DOCUMENTATION IMPROVEMENTS**:
-    - **Doxygen integration**: Added comprehensive documentation tags throughout neocore.h
-    - **API documentation**: Complete documentation for all major structures (Position, Box, RGB16, GFX_*)
-    - **Function documentation**: Detailed parameter descriptions, return values, and usage notes
-    - **Neo Geo specific documentation**: Hardware constraints, memory addresses, and platform-specific optimizations documented
-    - **Code review**: Complete security and quality analysis with actionable recommendations in review/lib/.3, toolchain refactoring and quality improvement
+    - **Doxygen Integration**: Added comprehensive documentation tags throughout neocore.h
+    - **API Documentation**: Complete documentation for all major structures (Position, Box, RGB16, GFX_*)
+    - **Function Documentation**: Detailed parameter descriptions, return values, and usage notes
+    - **Neo Geo Specific Documentation**: Hardware constraints, memory addresses, and platform-specific optimizations documented
+    - **Code Review**: Complete security and quality analysis with actionable recommendations in docs/review/lib/
   - **BREAKING CHANGES**:
     - **PowerShell Toolchain**:
       - **Command deprecations**: mak mame and mak raine deprecated (use mak run:mame and mak run:raine instead)
@@ -84,13 +81,6 @@
       - nc_log_next_line() - Move to next log line
       - nc_init_log() - Initialize logging system
       - nc_set_position_log() - Set log cursor position
-  - **TOOLCHAIN IMPROVEMENTS**:
-    - refactor PowerShell toolchain modules
-    - improve error handling and return values across all scripts
-    - add comprehensive error propagation in all critical functions
-    - improve robustness of Set-EnvPath, Stop-Emulators, and Watch-Folder modules
-    - fix infinite loops and blocking risks in build scripts
-    - **Embedded headers**: Neodev and DATlib headers are now embedded in NeoCore instead of being installed as external dependencies
   - **MIGRATION TOOLS ENHANCEMENTS**:
     - **Enhanced Migration Safety**: Added automatic project backup to `%TEMP%\[UUID]` before v2→v3 migration
     - **Improved User Experience**: Clear migration warnings with ASCII-compatible prompts (Y/N confirmation)
