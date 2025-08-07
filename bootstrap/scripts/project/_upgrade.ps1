@@ -677,46 +677,7 @@ function Test-CFileV3Compatibility {
   return $issues
 }
 
-function Update-ProjectManifestVersion {
-  param (
-    [Parameter(Mandatory=$true)]
-    [string]$ProjectManifestPath,
-    [Parameter(Mandatory=$true)]
-    [string]$NewVersion
-  )
 
-  Write-MigrationLog -Message "Updating project manifest version to $NewVersion" -Level "INFO"
-
-  if (Test-Path -Path $ProjectManifestPath) {
-    try {
-      [xml]$projectManifest = Get-Content -Path $ProjectManifestPath
-      $oldVersion = $projectManifest.manifest.version
-      Write-MigrationLog -Message "Current manifest version: $oldVersion" -Level "INFO"
-
-      if ($oldVersion -ne $NewVersion) {
-        # Update version
-        $projectManifest.manifest.version = $NewVersion
-        $projectManifest.Save($ProjectManifestPath)
-
-        Write-MigrationLog -Message "Updated manifest version: $oldVersion -> $NewVersion" -Level "SUCCESS"
-        Write-Host "  - Updated project manifest.xml version: $oldVersion to $NewVersion" -ForegroundColor Green
-        return $true
-      } else {
-        Write-MigrationLog -Message "Manifest version already up to date ($NewVersion)" -Level "INFO"
-        Write-Host "  - Project manifest.xml version is already up to date ($NewVersion)" -ForegroundColor Green
-        return $false
-      }
-    } catch {
-      Write-MigrationLog -Message "Error updating project manifest: $($_.Exception.Message)" -Level "ERROR"
-      Write-Host "Warning: Could not update project manifest.xml: $($_.Exception.Message)" -ForegroundColor Yellow
-      return $false
-    }
-  } else {
-    Write-MigrationLog -Message "Project manifest.xml not found at $ProjectManifestPath" -Level "ERROR"
-    Write-Host "Warning: Project manifest.xml not found at $ProjectManifestPath" -ForegroundColor Yellow
-    return $false
-  }
-}
 
 # Read version from manifest.xml
 $manifestPath = Resolve-Path -Path "..\..\..\manifest.xml"
@@ -888,18 +849,10 @@ if (Test-Path -Path $projectXmlPath) {
     Write-MigrationLog -Message "v2 detected - migration to v3 required" -Level "WARN"
     Write-Host "Migration from v2 to v3 is required!" -ForegroundColor Red
 
-    # Always update manifest version when migrating from v2 to v3
-    Write-MigrationLog -Message "Updating project manifest from $projectNeocoreVersion to $version" -Level "INFO"
-    Write-Host "Updating project manifest to v3..." -ForegroundColor Cyan
-    $null = Update-ProjectManifestVersion -ProjectManifestPath $projectManifestPath -NewVersion $version
-    $projectNeocoreVersion = $version # Update the displayed version
-
   } elseif ($projectNeocoreVersion -like "3.*" -and $projectNeocoreVersion -ne $version) {
     Write-MigrationLog -Message "v3 detected but version differs: $projectNeocoreVersion -> $version" -Level "INFO"
     Write-Host "Project is using NeoCore v3 but version differs from current" -ForegroundColor Yellow
-    Write-Host "Updating to latest v3 version..." -ForegroundColor Cyan
-    $null = Update-ProjectManifestVersion -ProjectManifestPath $projectManifestPath -NewVersion $version
-    $projectNeocoreVersion = $version
+    Write-Host "Version will be updated by file sync..." -ForegroundColor Cyan
     $migrationRequired = $false # No structural migration needed, just version update
 
   } elseif ($projectNeocoreVersion -eq $version) {
