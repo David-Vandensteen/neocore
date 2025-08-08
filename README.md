@@ -43,6 +43,7 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
 - [🛠️ Advanced Development](#advanced-development)
   - [♻️ Hot Reload](#hot-reload)
   - [🔧 Compile Library](#compiling-the-lib)
+  - [🧪 Migration Testing](#migration-testing)
   - [🌿 Branches & Versions](#pull-or-checkout-another-branches)
 - [🤝 Contribution](#contribute)
   - [📅 Roadmap](#roadmap)
@@ -260,18 +261,30 @@ cd <neocore>\bootstrap\scripts\project
 # 1. Remove build folder
 rd /S /Q C:\temp\MyGame\build
 
-# 2. Run upgrade
+# 2. Run upgrade script
 cd <neocore>\bootstrap\scripts\project
 .\upgrade.bat -projectSrcPath C:\temp\MyGame\src -projectNeocorePath C:\temp\MyGame\neocore
 ```
 
+The upgrade script performs comprehensive validation and updates:
+
+**Automatic validation:**
+- 📋 Verifies project structure and required files (including Makefile)
+- 🔍 Analyzes C code for breaking changes and deprecated patterns
+- 💾 Creates automatic backup before making changes
+- 📝 Generates detailed migration logs
+
 **What gets updated:**
-- ✅ Neocore toolchain
-- ✅ Neocore C library
-- ✅ mak.bat and mak.ps1 scripts
-- ❌ Your source code (manual migration needed)
-- ❌ XML project definition
+- ✅ Neocore toolchain and C library
+- ✅ Build scripts (mak.bat and mak.ps1)
+- ✅ Project structure validation
+- ❌ Your source code (manual migration needed - see logs for guidance)
+- ❌ XML project definition (manual review recommended)
 - ❌ Project assets
+
+> 💡 **Tip**: The script generates detailed logs showing breaking changes found in your code. Review these logs to understand what manual changes may be needed.
+
+> 🔒 **Security Note**: Migration logs may contain absolute paths from your system. Review generated logs before sharing them publicly and consider adding `*.log` to your `.gitignore` if needed.
 
 ### 📤 Release a Project<a name="release-a-project"></a>
 
@@ -295,6 +308,7 @@ From your project's `src` folder:
 
 - **[Complete Doxygen Documentation](http://azertyvortex.free.fr/neocore-doxy/r11/neocore_8h.html)**
 - **[Migration Guide](docs/MIGRATION_GUIDE_v2Tov3.md)** - Breaking changes and migration from previous versions
+- **[Consolidated Code Review](docs/neocore_review.md)** - Comprehensive technical analysis and improvement recommendations
 - **[Detailed Changelog](CHANGELOG.md)** - Version history
 
 ### 🎨 DATlib Assets<a name="datlib-assets"></a>
@@ -445,6 +459,23 @@ Necessary if you modify Neocore source code:
 .\mak.bat clean
 .\mak.bat lib
 ```
+
+### 🧪 Migration Testing<a name="migration-testing"></a>
+
+The `test_v2tov3` sample demonstrates migration scenarios and breaking changes:
+
+```cmd
+cd <neocore>\samples\test_v2tov3
+.\mak.bat clean
+.\mak.bat run:raine
+```
+
+This sample includes:
+- **Breaking change patterns** from v2 to v3
+- **Deprecated API usage** examples
+- **Migration validation** test case
+
+Use this sample to test the upgrade script and understand migration requirements.
 
 ### 🌿 Branches & Versions<a name="pull-or-checkout-another-branches"></a>
 
