@@ -943,28 +943,6 @@ if (Test-Path -Path $projectXmlPath) {
     [xml]$projectXml = Get-Content -Path $projectXmlPath
     Write-MigrationLog -Message "Project.xml loaded successfully, running compatibility test..." -Level "INFO"
 
-    # CRITICAL: Check if Makefile exists before proceeding with migration
-    Write-MigrationLog -Message "Checking for required Makefile before migration..." -Level "INFO"
-    $makefilePath = $projectXml.project.makefile
-    if (-not [System.IO.Path]::IsPathRooted($makefilePath)) {
-      $makefilePath = Join-Path $ProjectSrcPath $makefilePath
-    }
-    $makefileExists = Test-Path -Path $makefilePath
-    Write-MigrationLog -Message "Makefile check: Path='$makefilePath', Exists=$makefileExists" -Level "INFO"
-
-    if (-not $makefileExists) {
-      Write-Host ""
-      Write-Host "[CRITICAL ERROR] Pre-migration validation failed:" -ForegroundColor Red
-      Write-Host "  Makefile not found at: $makefilePath" -ForegroundColor Red
-      Write-Host ""
-      Write-Host "The project structure is incomplete and cannot be migrated." -ForegroundColor Red
-      Write-Host "Please ensure your project has all required files before attempting migration." -ForegroundColor Red
-      Write-Host ""
-      Write-MigrationLog -Message "MIGRATION ABORTED: Makefile not found at '$makefilePath'" -Level "ERROR"
-      Write-MigrationLog -Message "=== NeoCore v2->v3 Migration FAILED ===" -Level "ERROR"
-      exit 1
-    }
-
     # Evaluate all migration requirements
     Write-MigrationLog -Message "Evaluating all migration requirements..." -Level "INFO"
 
@@ -1484,7 +1462,7 @@ $migrationStats = @{
   TotalIssues = if ($totalIssues) { $totalIssues } else { 0 }
   ProjectXmlMigrated = (Test-Path -Path $projectXmlPath)
   BackupCreated = ($tempBackupPath -and (Test-Path -Path $tempBackupPath))
-  StartTime = if ($global:MigrationStartTime) { $global:MigrationStartTime } else { Get-Date }
+  StartTime = $MigrationStartTime
 }
 
 # Final migration summary
