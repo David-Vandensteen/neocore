@@ -592,7 +592,29 @@ void clearFixLayer3();
    - Update project.xml using steps above
    - Update build system references
 
-#### 1.3 Backup Your Project
+#### 1.3 Remove Deprecated Files
+
+⚠️ **Important**: The following files are no longer needed in NeoCore v3 and will be automatically removed:
+
+**Files automatically removed:**
+- `common_crt0_cd.s` - Deprecated startup file
+- `crt0_cd.s` - Deprecated startup file
+
+**Automatic removal by migration script:**
+The official migration script (`_upgrade.ps1`) automatically detects and removes these files during migration. You will see log entries like:
+```
+[SUCCESS] Successfully deleted deprecated file: ...\common_crt0_cd.s
+[SUCCESS] Successfully deleted deprecated file: ...\crt0_cd.s
+```
+
+**Manual removal (if not using migration script):**
+```bash
+# Remove from your project directory manually if needed
+rm src/common_crt0_cd.s
+rm src/crt0_cd.s
+```
+
+#### 1.4 Backup Your Project
    ```bash
    git tag pre-neocore-v3-migration
    git commit -am "Pre-migration backup"
@@ -698,6 +720,32 @@ void clearFixLayer3();
    - Test under different load conditions
 
 ## Migration Tools and Scripts
+
+### Official Migration Script (Recommended)
+
+NeoCore v3 includes an official migration script that automates many migration tasks:
+
+```powershell
+# Location: bootstrap/scripts/project/_upgrade.ps1
+# Usage:
+.\bootstrap\scripts\project\_upgrade.ps1 -ProjectSrcPath "path\to\your\src" -ProjectNeocorePath "path\to\neocore"
+```
+
+**What the script does automatically:**
+- ✅ **Project.xml migration**: Automatically updates structure for v3 compatibility
+- ✅ **Code analysis**: Scans C files for v2/v3 compatibility issues
+- ✅ **Deprecated file cleanup**: Automatically removes obsolete files:
+  - `common_crt0_cd.s` (no longer needed)
+  - `crt0_cd.s` (no longer needed)
+- ✅ **Validation**: Checks .gitignore patterns and project structure
+- ✅ **Backup creation**: Creates automatic backup in temp directory
+- ✅ **Detailed logging**: Comprehensive migration log for debugging
+
+**Migration process:**
+1. Run the script with your project paths
+2. Review compatibility warnings for C code
+3. Manually update C code based on analysis results
+4. Test your migrated project
 
 ### Automated Search & Replace Script
 ```bash

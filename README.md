@@ -271,13 +271,15 @@ The upgrade script performs comprehensive validation and updates:
 **Automatic validation:**
 - 📋 Verifies project structure and required files (including Makefile)
 - 🔍 Analyzes C code for breaking changes and deprecated patterns
-- 💾 Creates automatic backup before making changes
+- �️ Removes deprecated files (common_crt0_cd.s, crt0_cd.s)
+- �💾 Creates automatic backup before making changes
 - 📝 Generates detailed migration logs
 
 **What gets updated:**
 - ✅ Neocore toolchain and C library
 - ✅ Build scripts (mak.bat and mak.ps1)
 - ✅ Project structure validation
+- ✅ Deprecated file cleanup (automatic removal)
 - ❌ Your source code (manual migration needed - see logs for guidance)
 - ❌ XML project definition (manual review recommended)
 - ❌ Project assets

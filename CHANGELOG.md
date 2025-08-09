@@ -83,6 +83,7 @@
       - nc_set_position_log() - Set log cursor position
   - **MIGRATION TOOLS ENHANCEMENTS**:
     - **Enhanced Migration Safety**: Added automatic project backup to `%TEMP%\[UUID]` before v2→v3 migration
+    - **Deprecated File Cleanup**: Automatically removes obsolete files (common_crt0_cd.s, crt0_cd.s) during migration
     - **Improved User Experience**: Clear migration warnings with ASCII-compatible prompts (Y/N confirmation)
     - **Comprehensive Logging**: Detailed migration logging with colored output and persistent log files
     - **Post-Migration Validation**: Automatic Assert-Project validation after project.xml generation
