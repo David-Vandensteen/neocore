@@ -7,15 +7,15 @@ param (
 )
 
 # Initialize logging
-$global:MigrationLogPath = "$ProjectSrcPath\..\migration.log"
-$global:MigrationStartTime = Get-Date
+$MigrationLogPath = "$ProjectSrcPath\..\migration.log"
+$MigrationStartTime = Get-Date
 
 # Test log file creation immediately
 try {
-  "=== Migration Log Test ===" | Out-File -FilePath $global:MigrationLogPath -Encoding UTF8
-  Write-Host "Log file test: SUCCESS - File created at $global:MigrationLogPath" -ForegroundColor Green
+  "=== Migration Log Test ===" | Out-File -FilePath $MigrationLogPath -Encoding UTF8
+  Write-Host "Log file test: SUCCESS - File created at $MigrationLogPath" -ForegroundColor Green
 } catch {
-  Write-Host "Log file test: FAILED - Cannot create file at $global:MigrationLogPath" -ForegroundColor Red
+  Write-Host "Log file test: FAILED - Cannot create file at $MigrationLogPath" -ForegroundColor Red
   Write-Host "Error: $($_.Exception.Message)" -ForegroundColor Red
   exit 1
 }
@@ -31,14 +31,14 @@ function Write-MigrationLog {
   # Only write to log file (no console output for logs)
   try {
     # Ensure the parent directory exists
-    $logDir = Split-Path -Parent $global:MigrationLogPath
+    $logDir = Split-Path -Parent $MigrationLogPath
     if (-not (Test-Path -Path $logDir)) {
       New-Item -ItemType Directory -Path $logDir -Force | Out-Null
     }
 
-    $logEntry | Out-File -FilePath $global:MigrationLogPath -Append -Encoding UTF8
+    $logEntry | Out-File -FilePath $MigrationLogPath -Append -Encoding UTF8
   } catch {
-    Write-Host "Warning: Could not write to log file '$global:MigrationLogPath': $($_.Exception.Message)" -ForegroundColor Yellow
+    Write-Host "Warning: Could not write to log file '$MigrationLogPath': $($_.Exception.Message)" -ForegroundColor Yellow
   }
 }
 
@@ -83,6 +83,11 @@ function Show-MigrationWarning {
       Write-Host "   * $issue" -ForegroundColor Gray
     }
     Write-Host ""
+  } else {
+    Write-Host "[STATUS] PROJECT.XML COMPATIBILITY:" -ForegroundColor Green
+    Write-Host "   * Your project.xml appears to be v3 compatible" -ForegroundColor Gray
+    Write-Host "   * Migration will still perform full analysis and validation" -ForegroundColor Gray
+    Write-Host ""
   }
 
   Write-Host "[ANALYSIS] AUTOMATIC COMPATIBILITY CHECKS:" -ForegroundColor Cyan
@@ -107,6 +112,7 @@ function Show-MigrationWarning {
   Write-Host "[CRITICAL] IMPORTANT: This migration will permanently modify your files!" -ForegroundColor Red
   Write-Host "           - project.xml will be automatically migrated" -ForegroundColor Red
   Write-Host "           - C files will only be analyzed (manual changes required)" -ForegroundColor Red
+  Write-Host "           - Deprecated files (common_crt0_cd.s, crt0_cd.s) will be automatically removed" -ForegroundColor Red
   Write-Host "           - Automatic backups do not replace a complete project backup" -ForegroundColor Red
   Write-Host ""
   Write-Host "================================================================" -ForegroundColor Yellow
@@ -132,6 +138,49 @@ function Show-MigrationWarning {
       Write-Host "Please answer 'Y' or 'N'." -ForegroundColor Red
     }
   } while ($true)
+}
+
+function Get-CIssueCategories {
+  param (
+    [Parameter(Mandatory=$true)]
+    [array]$AllIssues
+  )
+
+  $categories = @{
+    Vec2short = @()
+    PositionGetters = @()
+    LoggingFunctions = @()
+    PaletteFunctions = @()
+    SpriteLoading = @()
+    DATlibTypes = @()
+    DATlibFunctions = @()
+    DeprecatedFunctions = @()
+    Other = @()
+  }
+
+  foreach ($issue in $AllIssues) {
+    if ($issue -match "Vec2short|Position") {
+      $categories.Vec2short += $issue
+    } elseif ($issue -match "nc_get_position|position getter") {
+      $categories.PositionGetters += $issue
+    } elseif ($issue -match "nc_log|logging") {
+      $categories.LoggingFunctions += $issue
+    } elseif ($issue -match "palette|color") {
+      $categories.PaletteFunctions += $issue
+    } elseif ($issue -match "sprite|gfx") {
+      $categories.SpriteLoading += $issue
+    } elseif ($issue -match "WORD|DWORD|BYTE|palCount") {
+      $categories.DATlibTypes += $issue
+    } elseif ($issue -match "Init\s*\(|DATlib") {
+      $categories.DATlibFunctions += $issue
+    } elseif ($issue -match "deprecated") {
+      $categories.DeprecatedFunctions += $issue
+    } else {
+      $categories.Other += $issue
+    }
+  }
+
+  return $categories
 }
 
 function Test-ProjectXmlV3Compatibility {
@@ -760,7 +809,9 @@ function Test-MigrationSuccess {
     [Parameter(Mandatory=$true)]
     [string]$ProjectXmlPath,
     [Parameter(Mandatory=$true)]
-    [int]$TotalCIssues
+    [int]$TotalCIssues,
+    [Parameter(Mandatory=$false)]
+    [bool]$HasGitignoreIssues = $false
   )
 
   Write-MigrationLog -Message "Evaluating migration success criteria..." -Level "INFO"
@@ -790,12 +841,18 @@ function Test-MigrationSuccess {
     $warnings += "$TotalCIssues C code compatibility issues require manual review"
   }
 
+  # Evaluate .gitignore issues
+  if ($HasGitignoreIssues) {
+    $warnings += ".gitignore patterns need manual correction"
+  }
+
   Write-MigrationLog -Message "Migration success evaluation: Success=$success, Warnings=$($warnings.Count)" -Level "INFO"
 
   return @{
     Success = $success
     Warnings = $warnings
     HasCIssues = ($TotalCIssues -gt 0)
+    HasGitignoreIssues = $HasGitignoreIssues
   }
 }
 
@@ -816,25 +873,10 @@ try {
 }
 
 if (Test-Path -Path $ProjectNeocorePath) {
-  $srcLib = Resolve-Path -Path "..\..\..\src-lib"
-  $toolchain = Resolve-Path -Path "..\..\..\toolchain"
-  $manifest = Resolve-Path -Path "..\..\..\manifest.xml"
-
-  if (-Not(Test-Path -Path $srcLib)) { Show-Error "$srcLib not found" }
-  if (-Not(Test-Path -Path $toolchain)) { Show-Error "$toolchain not found" }
-  if (-Not(Test-Path -Path $manifest)) { Show-Error "$manifest not found" }
+  Write-MigrationLog -Message "NeoCore path verified: $ProjectNeocorePath" -Level "INFO"
 
   if (-Not(Test-Path -Path "$ProjectNeocorePath\src-lib")) { Show-Error "$ProjectNeocorePath\src-lib not found" }
   if (-Not(Test-Path -Path "$ProjectNeocorePath\toolchain")) { Show-Error "$ProjectNeocorePath\toolchain not found" }
-
-  try {
-    robocopy /MIR "$srcLib" "$ProjectNeocorePath\src-lib"
-    Copy-Item -Path $manifest -Destination $ProjectNeocorePath -Force
-    robocopy /MIR "$toolchain" "$ProjectNeocorePath\toolchain"
-    Write-Host "files copied successfully to $ProjectNeocorePath"
-  } catch {
-    Show-Error "failed to copy some files"
-  }
 } else {
   Show-Error "$ProjectNeocorePath not found"
 }
@@ -842,10 +884,12 @@ if (Test-Path -Path $ProjectNeocorePath) {
 if (Test-Path -Path $ProjectSrcPath) {
   $makBat = Resolve-Path -Path "..\..\..\bootstrap\standalone\mak.bat"
   $makPs1 = Resolve-Path -Path "..\..\..\bootstrap\standalone\mak.ps1"
+  $makefile = Resolve-Path -Path "..\..\..\bootstrap\standalone\Makefile"
 
   try {
     Copy-Item -Path $makBat -Destination $ProjectSrcPath -Force
     Copy-Item -Path $makPs1 -Destination $ProjectSrcPath -Force
+    Copy-Item -Path $makefile -Destination $ProjectSrcPath -Force
     Write-Host "files copied successfully to $ProjectSrcPath"
   } catch {
     Show-Error "failed to copy some files"
@@ -921,14 +965,43 @@ if (Test-Path -Path $projectXmlPath) {
       exit 1
     }
 
-    $result = Test-ProjectXmlV3Compatibility -ProjectXml $projectXml -ProjectPath $ProjectSrcPath
+    # Evaluate all migration requirements
+    Write-MigrationLog -Message "Evaluating all migration requirements..." -Level "INFO"
 
+    $result = Test-ProjectXmlV3Compatibility -ProjectXml $projectXml -ProjectPath $ProjectSrcPath
+    $detectedIssues = @()
+    $migrationRequired = $false
+
+    # Check 1: project.xml compatibility issues
     if ($result.issues.Count -gt 0) {
       $migrationRequired = $true
-      $detectedIssues = $result.issues
-      Write-MigrationLog -Message "Migration required: $($result.issues.Count) compatibility issues detected" -Level "WARN"
+      $detectedIssues += $result.issues
+      Write-MigrationLog -Message "Migration required: $($result.issues.Count) project.xml compatibility issues detected" -Level "WARN"
+    }
+
+    # Check 2: Deprecated files presence
+    $commonCrt0Path = "$ProjectSrcPath\common_crt0_cd.s"
+    $crt0Path = "$ProjectSrcPath\crt0_cd.s"
+
+    if (Test-Path -Path $commonCrt0Path) {
+      $migrationRequired = $true
+      $detectedIssues += "Remove deprecated file: common_crt0_cd.s"
+      Write-MigrationLog -Message "Migration required: Found deprecated file common_crt0_cd.s" -Level "WARN"
+    }
+
+    if (Test-Path -Path $crt0Path) {
+      $migrationRequired = $true
+      $detectedIssues += "Remove deprecated file: crt0_cd.s"
+      Write-MigrationLog -Message "Migration required: Found deprecated file crt0_cd.s" -Level "WARN"
+    }
+
+    # Note: C code analysis and .gitignore checks will be done later in the process
+    # These preliminary checks determine if we need user confirmation for structural changes
+
+    if ($migrationRequired) {
+      Write-MigrationLog -Message "Migration required: Total issues detected: $($detectedIssues.Count)" -Level "WARN"
     } else {
-      Write-MigrationLog -Message "No compatibility issues detected in preliminary analysis" -Level "INFO"
+      Write-MigrationLog -Message "No structural migration issues detected in preliminary analysis" -Level "INFO"
     }
   } catch {
     Write-MigrationLog -Message "Error analyzing project.xml: $($_.Exception.Message)" -Level "WARN"
@@ -936,7 +1009,7 @@ if (Test-Path -Path $projectXmlPath) {
     $detectedIssues = @("Unable to analyze project.xml file (possibly corrupted)")
   }
 
-  # Show warning and get user confirmation BEFORE any migration
+  # Show warning and get user confirmation BEFORE any migration (if needed)
   Write-MigrationLog -Message "Evaluating if migration warning should be displayed..." -Level "INFO"
   Write-MigrationLog -Message "Migration required: $migrationRequired, Detected issues count: $($detectedIssues.Count)" -Level "INFO"
 
@@ -974,9 +1047,40 @@ if (Test-Path -Path $projectXmlPath) {
       Write-MigrationLog -Message "User declined migration - exiting script" -Level "INFO"
       exit 0
     }
-    Write-MigrationLog -Message "User confirmed migration - proceeding with analysis..." -Level "INFO"
+    Write-MigrationLog -Message "User confirmed migration - proceeding with file updates and analysis..." -Level "INFO"
+
+    # Now that user confirmed, update NeoCore files (src-lib, toolchain, manifest)
+    Write-Host ""
+    Write-Host "Updating NeoCore files..." -ForegroundColor Cyan
+    Write-MigrationLog -Message "Starting NeoCore files update..." -Level "INFO"
+
+    $srcLib = Resolve-Path -Path "..\..\..\src-lib"
+    $toolchain = Resolve-Path -Path "..\..\..\toolchain"
+    $manifest = Resolve-Path -Path "..\..\..\manifest.xml"
+
+    if (-Not(Test-Path -Path $srcLib)) { Show-Error "$srcLib not found" }
+    if (-Not(Test-Path -Path $toolchain)) { Show-Error "$toolchain not found" }
+    if (-Not(Test-Path -Path $manifest)) { Show-Error "$manifest not found" }
+
+    try {
+      Write-Host "  - Updating src-lib..." -ForegroundColor Gray
+      robocopy /MIR "$srcLib" "$ProjectNeocorePath\src-lib" /NFL /NDL /NJH /NJS | Out-Null
+
+      Write-Host "  - Updating manifest..." -ForegroundColor Gray
+      Copy-Item -Path $manifest -Destination $ProjectNeocorePath -Force
+
+      Write-Host "  - Updating toolchain..." -ForegroundColor Gray
+      robocopy /MIR "$toolchain" "$ProjectNeocorePath\toolchain" /NFL /NDL /NJH /NJS | Out-Null
+
+      Write-MigrationLog -Message "NeoCore files updated successfully to $ProjectNeocorePath" -Level "SUCCESS"
+      Write-Host "  - NeoCore files updated successfully" -ForegroundColor Green
+    } catch {
+      Write-MigrationLog -Message "Failed to update NeoCore files: $($_.Exception.Message)" -Level "ERROR"
+      Show-Error "failed to update NeoCore files: $($_.Exception.Message)"
+    }
   } else {
-    Write-MigrationLog -Message "No migration required based on preliminary analysis" -Level "INFO"
+    Write-MigrationLog -Message "No structural migration required, but will perform full analysis" -Level "INFO"
+    Write-Host "Project appears to be v3 compatible, performing validation analysis..." -ForegroundColor Green
   }
 
   Write-Host ""
@@ -1183,6 +1287,7 @@ if ($cFiles.Count -gt 0) {
 
   $totalIssues = 0
   $filesWithIssues = 0
+  $allCIssues = @()  # Collect all issues for dynamic reporting
 
   foreach ($file in $cFiles) {
     Write-MigrationLog -Message "Analyzing file: $($file.FullName)" -Level "INFO"
@@ -1197,6 +1302,7 @@ if ($cFiles.Count -gt 0) {
       if ($issues.Count -gt 0) {
         $filesWithIssues++
         $totalIssues += $issues.Count
+        $allCIssues += $issues  # Collect all issues
 
         Write-Host ""
         Write-Host "Issues found in: $relativePath" -ForegroundColor Red
@@ -1251,55 +1357,46 @@ if ($cFiles.Count -gt 0) {
 # Check .gitignore file
 Write-MigrationLog -Message "Checking .gitignore configuration..." -Level "INFO"
 $gitignorePath = "$ProjectSrcPath\..\.gitignore"
+$hasGitignoreIssues = $false
+$allGitignoreIssues = @()
 
 if (Test-Path -Path $gitignorePath) {
   Write-MigrationLog -Message "Found .gitignore file, checking build/ and dist/ patterns..." -Level "INFO"
   $gitignoreContent = Get-Content -Path $gitignorePath
   $gitignoreNeedsUpdate = $false
-  $gitignoreUpdates = @()
 
   if ($gitignoreContent -contains "build/") {
     Write-MigrationLog -Message ".gitignore contains 'build/' - should be '/build/'" -Level "WARN"
     $gitignoreNeedsUpdate = $true
-    $gitignoreUpdates += @{ Old = "build/"; New = "/build/"; Description = "Fix build/ pattern to be root-relative" }
+    $hasGitignoreIssues = $true
+    $allGitignoreIssues += @{
+      File = ".gitignore"
+      Issue = "Incorrect pattern: 'build/'"
+      Action = "Change 'build/' to '/build/'"
+      Description = "Fix build/ pattern to be root-relative"
+    }
   }
 
   if ($gitignoreContent -contains "dist/") {
     Write-MigrationLog -Message ".gitignore contains 'dist/' - should be '/dist/'" -Level "WARN"
     $gitignoreNeedsUpdate = $true
-    $gitignoreUpdates += @{ Old = "dist/"; New = "/dist/"; Description = "Fix dist/ pattern to be root-relative" }
+    $hasGitignoreIssues = $true
+    $allGitignoreIssues += @{
+      File = ".gitignore"
+      Issue = "Incorrect pattern: 'dist/'"
+      Action = "Change 'dist/' to '/dist/'"
+      Description = "Fix dist/ pattern to be root-relative"
+    }
   }
 
   if ($gitignoreNeedsUpdate) {
     Write-Host ""
-    Write-Host "WARNING: .gitignore Issues Detected" -ForegroundColor Yellow
-    Write-Host "=====================================" -ForegroundColor Yellow
-    Write-Host ""
-    Write-Host "The following issues were found in your .gitignore file:" -ForegroundColor White
-    Write-Host "  File: $gitignorePath" -ForegroundColor Gray
-    Write-Host ""
-
-    foreach ($update in $gitignoreUpdates) {
-      Write-Host "  * Change '$($update.Old)' -> '$($update.New)'" -ForegroundColor Yellow
-      Write-Host "    Reason: $($update.Description)" -ForegroundColor Gray
-    }
-
-    Write-Host ""
-    Write-Host "Without leading slash, these patterns would ignore directories named 'build' or 'dist'" -ForegroundColor Red
-    Write-Host "anywhere in your project, not just at the root level." -ForegroundColor Red
-    Write-Host ""
-    Write-Host "Please manually update your .gitignore file to fix these patterns." -ForegroundColor Yellow
-    Write-Host ""
-
-    # Pause and ask user to acknowledge the warnings
-    Write-Host "Press Enter to acknowledge these .gitignore warnings and continue..." -ForegroundColor Cyan -NoNewline
-    $userAcknowledgment = Read-Host
-    Write-MigrationLog -Message "User acknowledged .gitignore warnings" -Level "INFO"
+    Write-Host "Found .gitignore pattern issues - will be included in migration report." -ForegroundColor Yellow
 
     # Log the issues for the migration report
     Write-MigrationLog -Message ".gitignore patterns need manual correction" -Level "WARN"
-    foreach ($update in $gitignoreUpdates) {
-      Write-MigrationLog -Message ".gitignore issue: '$($update.Old)' should be '$($update.New)' - $($update.Description)" -Level "WARN"
+    foreach ($issue in $allGitignoreIssues) {
+      Write-MigrationLog -Message ".gitignore issue: '$($issue.Issue)' - $($issue.Action)" -Level "WARN"
     }
   } else {
     Write-MigrationLog -Message ".gitignore patterns are correctly configured" -Level "SUCCESS"
@@ -1309,12 +1406,76 @@ if (Test-Path -Path $gitignorePath) {
   Show-Error "$gitignorePath not found"
 }
 
+# Check and remove deprecated common_crt0_cd.s file
+Write-MigrationLog -Message "Checking for deprecated common_crt0_cd.s file..." -Level "INFO"
+$commonCrt0Path = "$ProjectSrcPath\common_crt0_cd.s"
+
+if (Test-Path -Path $commonCrt0Path) {
+  Write-MigrationLog -Message "Found deprecated file: $commonCrt0Path" -Level "WARN"
+  Write-Host ""
+  Write-Host "Removing deprecated file: common_crt0_cd.s" -ForegroundColor Yellow
+  Write-Host "This file is no longer needed in NeoCore v3." -ForegroundColor Gray
+
+  try {
+    Remove-Item -Path $commonCrt0Path -Force
+    Write-MigrationLog -Message "Successfully deleted deprecated file: $commonCrt0Path" -Level "SUCCESS"
+    Write-Host "File successfully removed: common_crt0_cd.s" -ForegroundColor Green
+  } catch {
+    Write-MigrationLog -Message "Failed to delete file: $($_.Exception.Message)" -Level "ERROR"
+    Write-Host "Error: Failed to remove file: $($_.Exception.Message)" -ForegroundColor Red
+    Write-Host "Please manually delete the file after migration." -ForegroundColor Yellow
+  }
+} else {
+  Write-MigrationLog -Message "No common_crt0_cd.s file found - good!" -Level "INFO"
+}
+
+# Check and remove deprecated crt0_cd.s file
+Write-MigrationLog -Message "Checking for deprecated crt0_cd.s file..." -Level "INFO"
+$crt0Path = "$ProjectSrcPath\crt0_cd.s"
+
+if (Test-Path -Path $crt0Path) {
+  Write-MigrationLog -Message "Found deprecated file: $crt0Path" -Level "WARN"
+  Write-Host ""
+  Write-Host "Removing deprecated file: crt0_cd.s" -ForegroundColor Yellow
+  Write-Host "This file is no longer needed in NeoCore v3." -ForegroundColor Gray
+
+  try {
+    Remove-Item -Path $crt0Path -Force
+    Write-MigrationLog -Message "Successfully deleted deprecated file: $crt0Path" -Level "SUCCESS"
+    Write-Host "File successfully removed: crt0_cd.s" -ForegroundColor Green
+  } catch {
+    Write-MigrationLog -Message "Failed to delete file: $($_.Exception.Message)" -Level "ERROR"
+    Write-Host "Error: Failed to remove file: $($_.Exception.Message)" -ForegroundColor Red
+    Write-Host "Please manually delete the file after migration." -ForegroundColor Yellow
+  }
+} else {
+  Write-MigrationLog -Message "No crt0_cd.s file found - good!" -Level "INFO"
+}
+
+# Final evaluation: Was migration actually required based on all checks?
+Write-MigrationLog -Message "Final migration requirement evaluation..." -Level "INFO"
+$finalMigrationRequired = $migrationRequired  # Start with initial assessment
+
+# Add C code issues to requirement evaluation
+if ($totalIssues -and $totalIssues -gt 0) {
+  $finalMigrationRequired = $true
+  Write-MigrationLog -Message "Final evaluation: Found $totalIssues C code compatibility issues" -Level "INFO"
+}
+
+# Add .gitignore issues to requirement evaluation
+if ($hasGitignoreIssues) {
+  $finalMigrationRequired = $true
+  Write-MigrationLog -Message "Final evaluation: Found .gitignore pattern issues" -Level "INFO"
+}
+
+Write-MigrationLog -Message "Final migration requirement evaluation: $finalMigrationRequired" -Level "INFO"
+
 # Migration completed
 Write-MigrationLog -Message "=== NeoCore v2->v3 Migration Completed ===" -Level "SUCCESS"
-Write-MigrationLog -Message "Log file saved at: $global:MigrationLogPath" -Level "INFO"
+Write-MigrationLog -Message "Log file saved at: $MigrationLogPath" -Level "INFO"
 
 # Evaluate migration success
-$migrationResult = Test-MigrationSuccess -ProjectXmlPath $projectXmlPath -TotalCIssues $(if ($totalIssues) { $totalIssues } else { 0 })
+$migrationResult = Test-MigrationSuccess -ProjectXmlPath $projectXmlPath -TotalCIssues $(if ($totalIssues) { $totalIssues } else { 0 }) -HasGitignoreIssues $hasGitignoreIssues
 
 # Calculate migration statistics
 $migrationStats = @{
@@ -1356,24 +1517,52 @@ Write-Host "   * Total compatibility issues: $($migrationStats.TotalIssues)" -Fo
 Write-Host "   * Backup created: $(if ($migrationStats.BackupCreated) { "[OK] Yes" } else { "[ERROR] No" })" -ForegroundColor White
 
 # Next steps based on results
-if ($migrationResult.HasCIssues) {
+if ($migrationResult.HasCIssues -or $migrationResult.HasGitignoreIssues) {
   Write-Host ""
   Write-Host "[ACTION] REQUIRED ACTIONS:" -ForegroundColor Yellow
-  Write-Host "   The migration detected v2 code patterns that need manual updates:" -ForegroundColor White
-  Write-Host ""
-  Write-Host "   [1] Review compatibility issues ($($migrationStats.TotalIssues) issues in $($migrationStats.FilesWithIssues) files)" -ForegroundColor White
-  Write-Host "       See detailed analysis in: $global:MigrationLogPath" -ForegroundColor Gray
-  Write-Host ""
-  Write-Host "   [2] Update C code for v3 compatibility:" -ForegroundColor White
-  Write-Host "       * Replace Vec2short with Position" -ForegroundColor Gray
-  Write-Host "       * Update function signatures (add output parameters)" -ForegroundColor Gray
-  Write-Host "       * Replace deprecated logging functions" -ForegroundColor Gray
-  Write-Host "       * Update palette/sprite loading calls" -ForegroundColor Gray
-  Write-Host ""
-  Write-Host "   [3] Test your updated project:" -ForegroundColor White
-  Write-Host "       mak build     # Compile your project" -ForegroundColor Gray
-  Write-Host "       mak run       # Test runtime" -ForegroundColor Gray
-  Write-Host ""
+
+  $actionNumber = 1
+
+  # Dynamic C code issues
+  if ($migrationResult.HasCIssues -and $allCIssues.Count -gt 0) {
+    Write-Host "   [$actionNumber] Review and fix C code compatibility issues:" -ForegroundColor White
+    $actionNumber++
+
+    # Group and display issues by category
+    $categorizedIssues = Get-CIssueCategories -AllIssues $allCIssues
+
+    foreach ($category in $categorizedIssues.Keys | Sort-Object) {
+      $categoryIssues = $categorizedIssues[$category]
+      Write-Host "       [$category] ($($categoryIssues.Count) issues):" -ForegroundColor Yellow
+
+      # Show unique patterns for this category
+      $uniquePatterns = $categoryIssues | Group-Object -Property Issue | Select-Object Name, Count
+      foreach ($pattern in $uniquePatterns) {
+        Write-Host "         * $($pattern.Name) ($($pattern.Count) occurrence$(if($pattern.Count -gt 1){"s"}))" -ForegroundColor Gray
+      }
+      Write-Host ""
+    }
+
+    Write-Host "       See detailed file-by-file analysis in: $MigrationLogPath" -ForegroundColor Gray
+    Write-Host ""
+    Write-Host "   [$actionNumber] Test your updated project:" -ForegroundColor White
+    Write-Host "       mak build     # Compile your project" -ForegroundColor Gray
+    Write-Host "       mak run       # Test runtime" -ForegroundColor Gray
+    Write-Host ""
+    $actionNumber++
+  }
+
+  # Dynamic .gitignore issues
+  if ($migrationResult.HasGitignoreIssues -and $allGitignoreIssues.Count -gt 0) {
+    Write-Host "   [$actionNumber] Fix .gitignore patterns:" -ForegroundColor White
+    foreach ($issue in $allGitignoreIssues) {
+      Write-Host "       * $($issue.Action)" -ForegroundColor Gray
+      Write-Host "         File: $($issue.File)" -ForegroundColor DarkGray
+      Write-Host "         Reason: $($issue.Description)" -ForegroundColor DarkGray
+    }
+    Write-Host ""
+    $actionNumber++
+  }
 } else {
   Write-Host ""
   Write-Host "[SUCCESS] GREAT NEWS!" -ForegroundColor Green
@@ -1387,7 +1576,7 @@ if ($migrationResult.HasCIssues) {
 
 # Additional resources and backup info
 Write-Host "[RESOURCES] RESOURCES AND INFORMATION:" -ForegroundColor Cyan
-Write-Host "   * Migration log: $global:MigrationLogPath" -ForegroundColor White
+Write-Host "   * Migration log: $MigrationLogPath" -ForegroundColor White
 Write-Host "   * NeoCore v3 docs: Check updated README files in your project" -ForegroundColor White
 if ($tempBackupPath) {
   Write-Host "   * Project backup: $tempBackupPath" -ForegroundColor White
