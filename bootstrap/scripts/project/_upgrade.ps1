@@ -10,9 +10,6 @@ param (
 $global:MigrationLogPath = "$ProjectSrcPath\..\migration.log"
 $global:MigrationStartTime = Get-Date
 
-# Display log path for debugging
-Write-Host "Migration log will be written to: $global:MigrationLogPath" -ForegroundColor Cyan
-
 # Test log file creation immediately
 try {
   "=== Migration Log Test ===" | Out-File -FilePath $global:MigrationLogPath -Encoding UTF8
@@ -463,129 +460,10 @@ function Repair-ProjectXmlForV3 {
     $newXmlContent | Out-File -FilePath $ProjectXmlPath -Encoding UTF8 -Force
     Write-MigrationLog -Message "Successfully wrote v3 project.xml with preserved user data" -Level "SUCCESS"
 
-    # Post-generation validation with Assert-Project
-    Write-MigrationLog -Message "Validating generated project.xml with Assert-Project module" -Level "INFO"
-    try {
-      # Load the generated XML for validation
-      [xml]$generatedXml = Get-Content -Path $ProjectXmlPath
-
-      # Determine NeoCore path for Assert modules
-      $resolvedNeocorePath = if ($existingNeocorePath -like "*neocore*") {
-        if ([System.IO.Path]::IsPathRooted($existingNeocorePath)) {
-          $existingNeocorePath
-        } else {
-          Resolve-Path -Path (Join-Path (Split-Path -Parent $ProjectXmlPath) $existingNeocorePath) -ErrorAction SilentlyContinue
-        }
-      } else { $null }
-
-      if ($resolvedNeocorePath -and (Test-Path -Path $resolvedNeocorePath)) {
-        Write-MigrationLog -Message "Resolved NeoCore path: $resolvedNeocorePath" -Level "INFO"
-
-        # Load Assert modules directly (no function due to PowerShell scope issues)
-        $assertPath = Join-Path $resolvedNeocorePath "toolchain\scripts\modules\assert"
-        Write-MigrationLog -Message "Loading Assert modules from: $assertPath" -Level "INFO"
-
-        if (Test-Path -Path $assertPath) {
-          $modules = @("path.ps1", "project\name.ps1", "project\gfx\dat.ps1", "project\compiler\systemFile.ps1", "project.ps1")
-          $loadedCount = 0
-
-          foreach ($module in $modules) {
-            $fullPath = Join-Path $assertPath $module
-            if (Test-Path $fullPath) {
-              try {
-                . $fullPath
-                $loadedCount++
-                Write-MigrationLog -Message "Loaded Assert module: $module" -Level "INFO"
-              } catch {
-                Write-MigrationLog -Message "Error loading $module : $($_.Exception.Message)" -Level "ERROR"
-              }
-            } else {
-              Write-MigrationLog -Message "Assert module not found: $fullPath" -Level "WARN"
-            }
-          }
-
-          Write-MigrationLog -Message "Loaded $loadedCount/$($modules.Count) Assert modules" -Level "INFO"
-
-          # Test and execute Assert-Project validation
-          if (Get-Command "Assert-Project" -ErrorAction SilentlyContinue) {
-            Write-MigrationLog -Message "Assert-Project function is available, validating XML..." -Level "SUCCESS"
-
-            try {
-              $validationResult = Assert-Project -Config $generatedXml
-
-              Write-MigrationLog -Message "Assert-Project returned: $validationResult" -Level "INFO"
-              Write-Host "DEBUG: Assert-Project result = $validationResult" -ForegroundColor Magenta
-
-              if ($validationResult -eq $false) {
-                $errorMessage = "Assert-Project validation failed - check console output above"
-                Write-MigrationLog -Message $errorMessage -Level "ERROR"
-
-                $makefilePath = $generatedXml.project.makefile
-                if (-not [System.IO.Path]::IsPathRooted($makefilePath)) {
-                    $makefilePath = Join-Path $ProjectPath $makefilePath
-                }
-                $makefileExists = Test-Path -Path $makefilePath
-                Write-Host "DEBUG: Checking Makefile at: $makefilePath (from project.xml)" -ForegroundColor Magenta
-                Write-Host "DEBUG: Makefile exists: $makefileExists" -ForegroundColor Magenta
-
-                # For critical errors that should stop migration, we check if the project is missing essential files
-                if (-not $makefileExists) {
-                  Write-Host ""
-                  Write-Host "[CRITICAL ERROR] Project validation failed:" -ForegroundColor Red
-                  Write-Host "  Makefile not found - project structure is incomplete" -ForegroundColor Red
-                  Write-Host ""
-                  Write-Host "The project structure is incomplete and cannot be migrated." -ForegroundColor Red
-                  Write-Host "Please ensure your project has all required files before attempting migration." -ForegroundColor Red
-                  Write-MigrationLog -Message "MIGRATION ABORTED: Critical validation error - Makefile not found" -Level "ERROR"
-                  Write-MigrationLog -Message "=== NeoCore v2->v3 Migration FAILED ===" -Level "ERROR"
-
-                  # Exit the script with error code
-                  exit 1
-                } else {
-                  Write-Host "  - Warning: Assert-Project validation failed: $errorMessage" -ForegroundColor Yellow
-                }
-              } else {
-                Write-MigrationLog -Message "[OK] Generated project.xml passed Assert-Project validation" -Level "SUCCESS"
-                Write-Host "  - Generated XML validated with Assert-Project" -ForegroundColor Green
-              }
-            } catch {
-              $errorMessage = $_.Exception.Message
-              Write-MigrationLog -Message "Assert-Project validation error: $errorMessage" -Level "ERROR"
-
-              # Check if this is a critical Makefile error from console output
-              if ($errorMessage -match "Cannot bind argument to parameter 'Path'" -or $errorMessage -match "Makefile not found") {
-                Write-Host ""
-                Write-Host "[CRITICAL ERROR] Project validation failed:" -ForegroundColor Red
-                Write-Host "  Makefile not found - project structure is incomplete" -ForegroundColor Red
-                Write-Host ""
-                Write-Host "The project structure is incomplete and cannot be migrated." -ForegroundColor Red
-                Write-Host "Please ensure your project has all required files before attempting migration." -ForegroundColor Red
-                Write-MigrationLog -Message "MIGRATION ABORTED: Critical validation error - Makefile not found" -Level "ERROR"
-                Write-MigrationLog -Message "=== NeoCore v2->v3 Migration FAILED ===" -Level "ERROR"
-
-                # Exit the script with error code
-                exit 1
-              } else {
-                Write-Host "  - Warning: Assert-Project validation failed: $errorMessage" -ForegroundColor Yellow
-              }
-            }
-          } else {
-            Write-MigrationLog -Message "Assert-Project function not available after module loading" -Level "WARN"
-            Write-Host "  - Warning: Assert-Project function not available - skipping validation" -ForegroundColor Yellow
-          }
-        } else {
-          Write-MigrationLog -Message "Assert modules path not found: $assertPath" -Level "WARN"
-          Write-Host "  - Warning: Assert modules not found - skipping validation" -ForegroundColor Yellow
-        }
-      } else {
-        Write-MigrationLog -Message "NeoCore path not resolved ($existingNeocorePath) - skipping Assert-Project validation" -Level "WARN"
-        Write-Host "  - Warning: NeoCore path not resolved - skipping validation" -ForegroundColor Yellow
-      }
-    } catch {
-      Write-MigrationLog -Message "Error during Assert-Project validation: $($_.Exception.Message)" -Level "WARN"
-      Write-Host "  - Warning: Could not validate with Assert-Project: $($_.Exception.Message)" -ForegroundColor Yellow
-    }
-
+    Write-Host "  - Project.xml rewritten with complete v3 structure" -ForegroundColor Green
+    Write-Host "  - Preserved existing name: '$existingName'" -ForegroundColor Green
+    Write-Host "  - Preserved existing version: '$existingVersion'" -ForegroundColor Green
+    Write-Host "  - Preserved existing neocorePath: '$existingNeocorePath'" -ForegroundColor Green
     Write-Host "  - Project.xml rewritten with complete v3 structure" -ForegroundColor Green
     Write-Host "  - Preserved existing name: '$existingName'" -ForegroundColor Green
     Write-Host "  - Preserved existing version: '$existingVersion'" -ForegroundColor Green
@@ -1020,6 +898,29 @@ if (Test-Path -Path $projectXmlPath) {
   try {
     [xml]$projectXml = Get-Content -Path $projectXmlPath
     Write-MigrationLog -Message "Project.xml loaded successfully, running compatibility test..." -Level "INFO"
+
+    # CRITICAL: Check if Makefile exists before proceeding with migration
+    Write-MigrationLog -Message "Checking for required Makefile before migration..." -Level "INFO"
+    $makefilePath = $projectXml.project.makefile
+    if (-not [System.IO.Path]::IsPathRooted($makefilePath)) {
+      $makefilePath = Join-Path $ProjectSrcPath $makefilePath
+    }
+    $makefileExists = Test-Path -Path $makefilePath
+    Write-MigrationLog -Message "Makefile check: Path='$makefilePath', Exists=$makefileExists" -Level "INFO"
+
+    if (-not $makefileExists) {
+      Write-Host ""
+      Write-Host "[CRITICAL ERROR] Pre-migration validation failed:" -ForegroundColor Red
+      Write-Host "  Makefile not found at: $makefilePath" -ForegroundColor Red
+      Write-Host ""
+      Write-Host "The project structure is incomplete and cannot be migrated." -ForegroundColor Red
+      Write-Host "Please ensure your project has all required files before attempting migration." -ForegroundColor Red
+      Write-Host ""
+      Write-MigrationLog -Message "MIGRATION ABORTED: Makefile not found at '$makefilePath'" -Level "ERROR"
+      Write-MigrationLog -Message "=== NeoCore v2->v3 Migration FAILED ===" -Level "ERROR"
+      exit 1
+    }
+
     $result = Test-ProjectXmlV3Compatibility -ProjectXml $projectXml -ProjectPath $ProjectSrcPath
 
     if ($result.issues.Count -gt 0) {
@@ -1229,19 +1130,13 @@ if (Test-Path -Path $projectXmlPath) {
 
 # Check C files for v2/v3 compatibility issues
 Write-MigrationLog -Message "Checking C files for v2/v3 compatibility issues..." -Level "INFO"
-# Search for C files in the project source directory only to focus on user code
-Write-MigrationLog -Message "DEBUG: ProjectSrcPath = '$ProjectSrcPath'" -Level "INFO"
-Write-MigrationLog -Message "DEBUG: Testing ProjectSrcPath exists: $(Test-Path $ProjectSrcPath)" -Level "INFO"
 
 # Primary search: only in project source directory (user code)
 $srcCFiles = Get-ChildItem -Path $ProjectSrcPath -Filter "*.c" -Recurse -ErrorAction SilentlyContinue
-Write-MigrationLog -Message "DEBUG: Found $($srcCFiles.Count) C files in project source directory" -Level "INFO"
 
 # Secondary search: project root but exclude neocore directory entirely
 $projectRootPath = Split-Path -Parent $ProjectSrcPath
 $excludeDirs = @("build", "dist", ".git", "node_modules", "temp", "tmp", "neocore")
-Write-MigrationLog -Message "DEBUG: projectRootPath = '$projectRootPath'" -Level "INFO"
-Write-MigrationLog -Message "DEBUG: Exclude directories: $($excludeDirs -join ', ')" -Level "INFO"
 
 $rootCFiles = Get-ChildItem -Path $projectRootPath -Filter "*.c" -Recurse -ErrorAction SilentlyContinue |
   Where-Object {
@@ -1250,23 +1145,14 @@ $rootCFiles = Get-ChildItem -Path $projectRootPath -Filter "*.c" -Recurse -Error
     # Get the relative path from the project root to avoid excluding based on absolute path
     $relativePath = $filePath.Replace($projectRootPath, "").TrimStart('\', '/')
 
-    Write-MigrationLog -Message "DEBUG: Processing file: $filePath" -Level "INFO"
-    Write-MigrationLog -Message "DEBUG: Relative path: '$relativePath'" -Level "INFO"
-
     # Split on both Windows and Unix path separators
     $pathSegments = $relativePath -split '[\\/]' | Where-Object { $_ -ne "" }
-    Write-MigrationLog -Message "DEBUG: Path segments: [$($pathSegments -join ', ')]" -Level "INFO"
 
     foreach ($dir in $excludeDirs) {
-      Write-MigrationLog -Message "DEBUG: Checking if segment '$dir' is in segments" -Level "INFO"
       if ($pathSegments -contains $dir) {
         $exclude = $true
-        Write-MigrationLog -Message "DEBUG: Excluding file $($_.FullName) (contains directory: $dir in relative path: $relativePath)" -Level "INFO"
         break
       }
-    }
-    if (-not $exclude) {
-      Write-MigrationLog -Message "DEBUG: Including file from root search $($_.FullName) (relative path: $relativePath)" -Level "INFO"
     }
     -not $exclude
   }
@@ -1288,7 +1174,6 @@ foreach ($rootFile in $rootCFiles) {
 }
 
 $cFiles = $allCFiles
-Write-MigrationLog -Message "DEBUG: Final count after deduplication: $($cFiles.Count) C files" -Level "INFO"
 
 if ($cFiles.Count -gt 0) {
   Write-Host ""
@@ -1361,15 +1246,6 @@ if ($cFiles.Count -gt 0) {
 } else {
   Write-Host "No C files found in project directory" -ForegroundColor Yellow
   Write-MigrationLog -Message "No C files found to analyze in $projectRootPath" -Level "INFO"
-  Write-MigrationLog -Message "DEBUG: C files search returned $($cFiles.Count) files" -Level "INFO"
-
-  # Let's also try a direct search in the src directory as a fallback
-  Write-MigrationLog -Message "DEBUG: Trying direct search in src directory..." -Level "INFO"
-  $srcCFiles = Get-ChildItem -Path $ProjectSrcPath -Filter "*.c" -ErrorAction SilentlyContinue
-  Write-MigrationLog -Message "DEBUG: Found $($srcCFiles.Count) C files directly in src directory" -Level "INFO"
-  foreach ($srcFile in $srcCFiles) {
-    Write-MigrationLog -Message "DEBUG: Direct src file: $($srcFile.FullName)" -Level "INFO"
-  }
 }
 
 # Check .gitignore file
