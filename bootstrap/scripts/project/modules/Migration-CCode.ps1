@@ -52,24 +52,35 @@ function Test-CFileV3Compatibility {
         }
     }
 
-    # Scan for patterns
+    # Scan for patterns with line number detection
     foreach ($patternName in $BreakingPatterns.Keys) {
         $patternInfo = $BreakingPatterns[$patternName]
         $pattern = $patternInfo.Pattern
 
         if ($FileContent -match $pattern) {
-            # Count occurrences
-            $matches = [regex]::Matches($FileContent, $pattern, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase)
-            $count = $matches.Count
+            # Find all matches with line numbers
+            $lines = $FileContent -split "`r?`n"
+            $matchedLines = @()
 
-            $issueDescription = "$($patternInfo.Issue) ($count occurrence$(if($count -gt 1){'s'}))"
+            for ($i = 0; $i -lt $lines.Count; $i++) {
+                if ($lines[$i] -match $pattern) {
+                    $matchedLines += ($i + 1)  # Line numbers are 1-based
+                }
+            }
+
+            $count = $matchedLines.Count
+            $lineInfo = if ($count -eq 1) { "line $($matchedLines[0])" }
+                       elseif ($count -le 3) { "lines $($matchedLines -join ', ')" }
+                       else { "lines $($matchedLines[0]), $($matchedLines[1]), ... (+$($count-2) more)" }
+
+            $issueDescription = "$($patternInfo.Issue) ($count occurrence$(if($count -gt 1){'s'}) at $lineInfo)"
             $issues += $issueDescription
 
             Write-MigrationLog -Message "Found pattern '$patternName' in $FilePath`: $issueDescription" -Level "WARN"
         }
     }
 
-    # Check for common v2 includes that changed in v3
+    # Check for common v2 includes that changed in v3 with line numbers
     $DeprecatedIncludes = @(
         "#include\s+[""<]neocore_v2\.h["">\s]",
         "#include\s+[""<]datlib_v2\.h["">\s]"
@@ -77,15 +88,40 @@ function Test-CFileV3Compatibility {
 
     foreach ($includePattern in $DeprecatedIncludes) {
         if ($FileContent -match $includePattern) {
-            $issues += "Deprecated include found - update to v3 headers"
-            Write-MigrationLog -Message "Deprecated include pattern found in $FilePath" -Level "WARN"
+            # Find line numbers for deprecated includes
+            $lines = $FileContent -split "`r?`n"
+            $matchedLines = @()
+
+            for ($i = 0; $i -lt $lines.Count; $i++) {
+                if ($lines[$i] -match $includePattern) {
+                    $matchedLines += ($i + 1)
+                }
+            }
+
+            $lineInfo = if ($matchedLines.Count -eq 1) { "line $($matchedLines[0])" }
+                       else { "lines $($matchedLines -join ', ')" }
+
+            $issues += "Deprecated include found - update to v3 headers (at $lineInfo)"
+            Write-MigrationLog -Message "Deprecated include pattern found in $FilePath at $lineInfo" -Level "WARN"
         }
     }
 
-    # Check for hardcoded version references
+    # Check for hardcoded version references with line numbers
     if ($FileContent -match "(?i)(neocore|datlib)\s*(version\s*)?2\.\d+") {
-        $issues += "Hardcoded v2 version references found"
-        Write-MigrationLog -Message "Hardcoded v2 version references in $FilePath" -Level "WARN"
+        $lines = $FileContent -split "`r?`n"
+        $matchedLines = @()
+
+        for ($i = 0; $i -lt $lines.Count; $i++) {
+            if ($lines[$i] -match "(?i)(neocore|datlib)\s*(version\s*)?2\.\d+") {
+                $matchedLines += ($i + 1)
+            }
+        }
+
+        $lineInfo = if ($matchedLines.Count -eq 1) { "line $($matchedLines[0])" }
+                   else { "lines $($matchedLines -join ', ')" }
+
+        $issues += "Hardcoded v2 version references found (at $lineInfo)"
+        Write-MigrationLog -Message "Hardcoded v2 version references in $FilePath at $lineInfo" -Level "WARN"
     }
 
     if ($issues.Count -eq 0) {

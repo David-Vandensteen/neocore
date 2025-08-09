@@ -89,10 +89,10 @@ function Main {
 
     # Check .gitignore issues (MANUAL)
     $gitignorePath = "$ProjectSrcPath\..\.gitignore"
+    $gitignoreIssues = @()
     if (Test-Path $gitignorePath) {
         $gitignoreContent = Get-Content $gitignorePath -ErrorAction SilentlyContinue
         # Check for specific incorrect patterns that need manual fix
-        $gitignoreIssues = @()
         if ($gitignoreContent -contains "build/") {
             $gitignoreIssues += "Change 'build/' to '/build/'"
         }
@@ -221,10 +221,6 @@ function Main {
 
     # Step 8: Generate summary report
     Write-Host ""
-    Write-Host "========================================" -ForegroundColor Green
-    Write-Host "           MIGRATION COMPLETED          " -ForegroundColor Green
-    Write-Host "========================================" -ForegroundColor Green
-    Write-Host ""
 
     # Generate comprehensive summary
     $migrationData = @{
@@ -252,25 +248,47 @@ function Main {
         Write-Host "1. Review C code issues found:" -ForegroundColor White
         Write-Host "   - Files with issues: $($codeAnalysis.FilesWithIssues)" -ForegroundColor Gray
         Write-Host "   - Total issues: $($codeAnalysis.TotalIssues)" -ForegroundColor Gray
-        Write-Host "2. Test your project:" -ForegroundColor White
-        Write-Host "   mak sprite && mak && mak run:raine" -ForegroundColor Gray
         Write-Host ""
+        Write-Host "   Detailed issues:" -ForegroundColor White
+        foreach ($issue in $codeAnalysis.Issues) {
+            Write-Host "   - $($issue.File): $($issue.Issue)" -ForegroundColor Gray
+        }
+        Write-Host ""
+        Write-Host "2. Test your project:" -ForegroundColor White
+        Write-Host "   mak sprite" -ForegroundColor Gray
+        Write-Host "   mak" -ForegroundColor Gray
+        Write-Host "   mak run:raine" -ForegroundColor Gray
+        Write-Host ""
+        if ($gitignoreResult.HasIssues -or $gitignoreIssues.Count -gt 0) {
+            Write-Host "3. Check .gitignore:" -ForegroundColor White
+            if ($gitignoreIssues.Count -gt 0) {
+                foreach ($issue in $gitignoreIssues) {
+                    Write-Host "   $issue" -ForegroundColor Gray
+                }
+            } else {
+                Write-Host "   Review .gitignore patterns" -ForegroundColor Gray
+            }
+            Write-Host ""
+        }
     } else {
         Write-Host "[SUCCESS] Your project is ready!" -ForegroundColor Green
         Write-Host "Test commands:" -ForegroundColor White
-        Write-Host "   mak sprite && mak && mak run:raine" -ForegroundColor Gray
+        Write-Host "   mak sprite" -ForegroundColor Gray
+        Write-Host "   mak" -ForegroundColor Gray
+        Write-Host "   mak run:raine" -ForegroundColor Gray
         Write-Host ""
+        if ($gitignoreResult.HasIssues -or $gitignoreIssues.Count -gt 0) {
+            Write-Host "Don't forget to check .gitignore:" -ForegroundColor White
+            if ($gitignoreIssues.Count -gt 0) {
+                foreach ($issue in $gitignoreIssues) {
+                    Write-Host "   $issue" -ForegroundColor Gray
+                }
+            } else {
+                Write-Host "   Review .gitignore patterns" -ForegroundColor Gray
+            }
+            Write-Host ""
+        }
     }
-
-    Write-Host "[SUMMARY] Migration Statistics:" -ForegroundColor Cyan
-    Write-Host "* Files updated: $($updatedFiles.Count)" -ForegroundColor White
-    Write-Host "* Files removed: $($removedFiles.Count)" -ForegroundColor White
-    Write-Host "* Artifacts cleaned: $($cleanedArtifacts.Count)" -ForegroundColor White
-    Write-Host "* XML issues resolved: $($detectedIssues.Count)" -ForegroundColor White
-    Write-Host "* .gitignore checked: $(if(-not $gitignoreResult.HasIssues){'OK'}else{'Needs manual fix'})" -ForegroundColor White
-    Write-Host "* NeoCore library updated: $(if($neocoreLibUpdated){'Yes'}else{'No'})" -ForegroundColor White
-    Write-Host "* Toolchain updated: $(if($toolchainUpdated){'Yes'}else{'No'})" -ForegroundColor White
-    Write-Host ""
 
     Write-Host "[RESOURCES]" -ForegroundColor Cyan
     Write-Host "* Migration log: $(Get-MigrationLogPath)" -ForegroundColor White

@@ -158,7 +158,7 @@ function ConvertTo-ProjectXmlV3 {
           <mapfile>out\charMaps.s</mapfile>
           <palfile>out\charPals.s</palfile>
           <incfile>out\charData.h</incfile>
-          <incprefix>CHARDATA</incprefix>
+          <incprefix>../</incprefix>
         </setup>
         <import bank="0">
           <file>assets\sprites\sprites.bmp</file>
