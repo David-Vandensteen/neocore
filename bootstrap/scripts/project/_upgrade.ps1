@@ -66,7 +66,8 @@ function Show-MigrationWarning {
   Write-Host "                    [WARNING] MIGRATION ALERT [WARNING]         " -ForegroundColor Red
   Write-Host "================================================================" -ForegroundColor Yellow
   Write-Host ""
-  Write-Host "This script will perform an automatic migration of your NeoCore project." -ForegroundColor White
+  Write-Host "This script will perform a comprehensive migration of your NeoCore project." -ForegroundColor White
+  Write-Host "Some issues may require manual corrections after the migration." -ForegroundColor White
   Write-Host ""
   Write-Host "[PROJECT] PROJECT TO MIGRATE:" -ForegroundColor Cyan
   Write-Host "   * Source folder: $ProjectSrcPath" -ForegroundColor Gray
@@ -1562,14 +1563,15 @@ $migrationStats = @{
 # Final migration summary
 Write-Host ""
 Write-Host "================================================================" -ForegroundColor Green
-Write-Host "                  [MIGRATION COMPLETED]                         " -ForegroundColor Green
+Write-Host "                  [MIGRATION PHASE COMPLETED]                   " -ForegroundColor Green
 Write-Host "================================================================" -ForegroundColor Green
 
 # Migration status
 if ($migrationResult.Success) {
   Write-Host ""
-  Write-Host "[SUCCESS] MIGRATION SUCCESSFUL" -ForegroundColor Green
-  Write-Host "   Your NeoCore project has been successfully migrated to v3!" -ForegroundColor White
+  Write-Host "[SUCCESS] STRUCTURAL MIGRATION COMPLETED" -ForegroundColor Green
+  Write-Host "   Your NeoCore project structure has been migrated to v3!" -ForegroundColor White
+  Write-Host "   Review the analysis report for any manual code corrections needed." -ForegroundColor Gray
 } else {
   Write-Host ""
   Write-Host "[WARNING] MIGRATION COMPLETED WITH ISSUES" -ForegroundColor Yellow
@@ -1649,18 +1651,11 @@ if ($migrationResult.HasCIssues -or $migrationResult.HasGitignoreIssues) {
 # Additional resources and backup info
 Write-Host "[RESOURCES] RESOURCES AND INFORMATION:" -ForegroundColor Cyan
 Write-Host "   * Migration log: $MigrationLogPath" -ForegroundColor White
-Write-Host "   * NeoCore v3 docs: Check updated README files in your project" -ForegroundColor White
 if ($tempBackupPath) {
   Write-Host "   * Project backup: $tempBackupPath" -ForegroundColor White
   Write-Host "     (automatic backup - consider making additional manual backups)" -ForegroundColor Gray
 }
 Write-Host ""
-
-# Final tips
-Write-Host "[TIPS] DEVELOPMENT TIPS:" -ForegroundColor Cyan
-Write-Host "   * Keep the migration log for reference during development" -ForegroundColor White
-Write-Host "   * If you encounter build errors, check the log for specific line numbers" -ForegroundColor White
-Write-Host "   * The backup can be used to compare changes if needed" -ForegroundColor White
 
 Write-Host ""
 Write-Host "================================================================" -ForegroundColor Green
