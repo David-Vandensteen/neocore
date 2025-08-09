@@ -90,6 +90,22 @@ function Show-MigrationWarning {
     Write-Host ""
   }
 
+  if ($deprecatedFiles -and $deprecatedFiles.Count -gt 0) {
+    Write-Host "[CLEANUP] DEPRECATED FILES WILL BE REMOVED:" -ForegroundColor Magenta
+    foreach ($file in $deprecatedFiles) {
+      Write-Host "   * $file" -ForegroundColor Gray
+    }
+    Write-Host ""
+  }
+
+  if ($filesToUpdate -and $filesToUpdate.Count -gt 0) {
+    Write-Host "[UPDATE] NEOCORE FILES WILL BE REPLACED:" -ForegroundColor Blue
+    foreach ($file in $filesToUpdate) {
+      Write-Host "   * $file" -ForegroundColor Gray
+    }
+    Write-Host ""
+  }
+
   Write-Host "[ANALYSIS] AUTOMATIC COMPATIBILITY CHECKS:" -ForegroundColor Cyan
   Write-Host "   * project.xml structure migration (automatic fixes)" -ForegroundColor Gray
   Write-Host "   * C files v2/v3 compatibility analysis (detection only)" -ForegroundColor Gray
@@ -311,6 +327,22 @@ function Test-ProjectXmlV3Compatibility {
     Write-MigrationLog -Message "No compiler node found" -Level "INFO"
   }
 
+  # Check for sound section migration (v3 format)
+  Write-MigrationLog -Message "Checking sound configuration..." -Level "INFO"
+  $soundNode = $ProjectXml.SelectSingleNode("//sound")
+  if ($soundNode) {
+    # Check if sound is already in v3 format (has cd element)
+    $soundCdNode = $soundNode.SelectSingleNode("cd")
+    if (-not $soundCdNode) {
+      $issues += "Migrate sound section to v3 format (move content to sound/cd structure)"
+      Write-MigrationLog -Message "Issue detected: Sound section needs migration to v3 format" -Level "WARN"
+    } else {
+      Write-MigrationLog -Message "Sound section already in v3 format" -Level "INFO"
+    }
+  } else {
+    Write-MigrationLog -Message "No sound section found" -Level "INFO"
+  }
+
   # Note: With complete rewrite approach, most legacy pattern detection is unnecessary
   # The new v3 template will automatically use the correct structure and paths
 
@@ -423,6 +455,37 @@ function Repair-ProjectXmlForV3 {
     Write-MigrationLog -Message "Preserving MAME executable: $existingMameExe" -Level "INFO"
   }
 
+  # Preserve existing sound section (migrate to v3 cd format)
+  $existingSoundSection = ""
+  $soundNode = $ProjectXml.SelectSingleNode("//sound")
+  if ($soundNode) {
+    Write-MigrationLog -Message "Found existing sound section, preserving for v3 migration" -Level "INFO"
+
+    # Create a new XML document to properly format the sound content
+    $tempDoc = New-Object System.Xml.XmlDocument
+    $tempDoc.LoadXml("<temp>" + $soundNode.InnerXml + "</temp>")
+
+    # Use StringWriter with proper formatting
+    $stringWriter = New-Object System.IO.StringWriter
+    $xmlWriter = New-Object System.Xml.XmlTextWriter($stringWriter)
+    $xmlWriter.Formatting = [System.Xml.Formatting]::Indented
+    $xmlWriter.Indentation = 2
+    $xmlWriter.IndentChar = ' '
+
+    # Write each child node of the temp element
+    foreach ($childNode in $tempDoc.DocumentElement.ChildNodes) {
+      $childNode.WriteTo($xmlWriter)
+    }
+
+    $xmlWriter.Close()
+    $stringWriter.Close()
+
+    $existingSoundSection = $stringWriter.ToString()
+    Write-MigrationLog -Message "Preserved sound section content with proper formatting" -Level "INFO"
+  } else {
+    Write-MigrationLog -Message "No existing sound section found" -Level "INFO"
+  }
+
   # Create completely new v3 structure
   $newXmlContent = @"
 <?xml version="1.0" encoding="UTF-8"?>
@@ -500,8 +563,31 @@ function Repair-ProjectXmlForV3 {
       <cartridge>{{neocore}}\src-lib\system\neocart.x</cartridge>
     </systemFile>
   </compiler>
-</project>
 "@
+
+  # Add sound section if it existed in v2 format
+  if ($existingSoundSection -ne "") {
+    Write-MigrationLog -Message "Adding preserved sound section in v3 format (cd wrapper)" -Level "INFO"
+
+    # Add proper indentation to each line of the sound content (4 spaces for cd level)
+    $indentedSoundContent = ""
+    $soundLines = $existingSoundSection -split "`r?`n"
+    foreach ($line in $soundLines) {
+      if ($line.Trim() -ne "") {
+        $indentedSoundContent += "      $line`n"
+      }
+    }
+
+    $soundSectionV3 = @"
+  <sound>
+    <cd>
+$indentedSoundContent    </cd>
+  </sound>
+"@
+    $newXmlContent = $newXmlContent.TrimEnd() + "`n" + $soundSectionV3 + "`n</project>"
+  } else {
+    $newXmlContent = $newXmlContent + "</project>"
+  }
 
   # Write the new content to file
   try {
@@ -900,7 +986,7 @@ if (Test-Path -Path $ProjectSrcPath) {
 
 # Project XML Migration Logic
 $projectXmlPath = "$ProjectSrcPath\project.xml"
-$projectManifestPath = "$ProjectSrcPath\..\manifest.xml"
+$projectManifestPath = "$ProjectNeocorePath\manifest.xml"
 
 # Initialize migration logging
 Write-MigrationLog -Message "=== NeoCore v2->v3 Migration Started ===" -Level "INFO"
@@ -923,12 +1009,12 @@ if (Test-Path -Path $projectXmlPath) {
     Write-MigrationLog -Message "Project manifest found, reading version information..." -Level "INFO"
     try {
       [xml]$manifestXml = Get-Content -Path $projectManifestPath
-      $versionNode = $manifestXml.SelectSingleNode("//neocore")
-      if ($versionNode -and $versionNode.version) {
-        $projectNeocoreVersion = $versionNode.version
+      $versionNode = $manifestXml.SelectSingleNode("//version")
+      if ($versionNode -and $versionNode.InnerText) {
+        $projectNeocoreVersion = $versionNode.InnerText
         Write-MigrationLog -Message "Found project manifest with NeoCore version: $projectNeocoreVersion" -Level "INFO"
       } else {
-        Write-MigrationLog -Message "Project manifest found but no neocore version node detected" -Level "WARN"
+        Write-MigrationLog -Message "Project manifest found but no version node detected" -Level "WARN"
       }
     } catch {
       Write-MigrationLog -Message "Error reading project manifest: $($_.Exception.Message)" -Level "WARN"
@@ -960,18 +1046,26 @@ if (Test-Path -Path $projectXmlPath) {
     # Check 2: Deprecated files presence
     $commonCrt0Path = "$ProjectSrcPath\common_crt0_cd.s"
     $crt0Path = "$ProjectSrcPath\crt0_cd.s"
+    $deprecatedFiles = @()
 
     if (Test-Path -Path $commonCrt0Path) {
       $migrationRequired = $true
-      $detectedIssues += "Remove deprecated file: common_crt0_cd.s"
+      $deprecatedFiles += "common_crt0_cd.s"
       Write-MigrationLog -Message "Migration required: Found deprecated file common_crt0_cd.s" -Level "WARN"
     }
 
     if (Test-Path -Path $crt0Path) {
       $migrationRequired = $true
-      $detectedIssues += "Remove deprecated file: crt0_cd.s"
+      $deprecatedFiles += "crt0_cd.s"
       Write-MigrationLog -Message "Migration required: Found deprecated file crt0_cd.s" -Level "WARN"
     }
+
+    # Files that will be updated/replaced during migration
+    $filesToUpdate = @()
+    $filesToUpdate += "NeoCore library (src-lib/)"
+    $filesToUpdate += "Toolchain (toolchain/)"
+    $filesToUpdate += "NeoCore manifest (manifest.xml)"
+    $filesToUpdate += "Build scripts (Makefile, mak.bat, mak.ps1)"
 
     # Note: C code analysis and .gitignore checks will be done later in the process
     # These preliminary checks determine if we need user confirmation for structural changes

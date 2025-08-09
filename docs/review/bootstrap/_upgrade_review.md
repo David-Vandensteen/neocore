@@ -69,6 +69,7 @@ The `_upgrade.ps1` script is an **enterprise-grade migration tool** that automat
 - **Conditional execution**: Only migrates when actually needed
 - **Post-migration validation**: Comprehensive compatibility verification
 - **Data preservation**: Maintains all user-specific project data
+- **Sound section migration**: Automatically migrates `<sound>` sections to v3 format (`<sound><cd>` structure) with proper XML formatting
 - **Automatic file updates**: Makefile, mak.bat, mak.ps1 automatically updated
 - **Deprecated file cleanup**: Automatic removal of common_crt0_cd.s and crt0_cd.s files
 

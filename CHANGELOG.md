@@ -84,6 +84,7 @@
   - **MIGRATION TOOLS ENHANCEMENTS**:
     - **Enhanced Migration Safety**: Added automatic project backup to `%TEMP%\[UUID]` before v2→v3 migration
     - **Deprecated File Cleanup**: Automatically removes obsolete files (common_crt0_cd.s, crt0_cd.s) during migration
+    - **Sound Section Migration**: Automatically migrates `<sound>` sections to v3 format (`<sound><cd>` structure) while preserving content and formatting
     - **Improved User Experience**: Clear migration warnings with ASCII-compatible prompts (Y/N confirmation)
     - **Comprehensive Logging**: Detailed migration logging with colored output and persistent log files
     - **Post-Migration Validation**: Automatic Assert-Project validation after project.xml generation

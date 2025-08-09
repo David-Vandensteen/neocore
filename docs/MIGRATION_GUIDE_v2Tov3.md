@@ -733,6 +733,9 @@ NeoCore v3 includes an official migration script that automates many migration t
 
 **What the script does automatically:**
 - ✅ **Project.xml migration**: Automatically updates structure for v3 compatibility
+  - Adds missing v3 elements (`<platform>`, DAT setup, fixdata, emulator configs)
+  - Updates compiler configuration with v3 paths
+  - **Migrates `<sound>` section**: Automatically wraps existing sound content in `<cd>` structure
 - ✅ **Code analysis**: Scans C files for v2/v3 compatibility issues
 - ✅ **Deprecated file cleanup**: Automatically removes obsolete files:
   - `common_crt0_cd.s` (no longer needed)
