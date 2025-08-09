@@ -24,28 +24,57 @@ function Test-CFileV3Compatibility {
         }
 
         # Function signature changes
-        "nc_get_position_gfx_animated_sprite\s*\(" = @{
+        "nc_get_position_gfx_animated_sprite()" = @{
             Pattern = "nc_get_position_gfx_animated_sprite\s*\("
             Issue = "nc_get_position_gfx_animated_sprite() signature changed in v3"
             Suggestion = "Update function call to use Position* parameter"
         }
 
-        # Deprecated functions
-        "nc_log_" = @{
-            Pattern = "nc_log_"
-            Issue = "nc_log_* functions deprecated in v3"
-            Suggestion = "Replace with new logging API"
+        "nc_get_position_gfx_picture()" = @{
+            Pattern = "nc_get_position_gfx_picture\s*\("
+            Issue = "nc_get_position_gfx_picture() signature changed in v3"
+            Suggestion = "Update function call to use Position* parameter"
         }
 
-        # Memory management changes
-        "nc_malloc" = @{
-            Pattern = "nc_malloc"
-            Issue = "nc_malloc deprecated in v3"
-            Suggestion = "Use standard malloc or new memory management functions"
+        "nc_get_position_gfx_scroller()" = @{
+            Pattern = "nc_get_position_gfx_scroller\s*\("
+            Issue = "nc_get_position_gfx_scroller() signature changed in v3"
+            Suggestion = "Update function call to use Position* parameter"
+        }
+
+        # Deprecated functions
+        "nc_log()" = @{
+            Pattern = "nc_log\s*\("
+            Issue = "nc_log() function deprecated in v3"
+            Suggestion = "Replace with nc_log_info_line()"
+        }
+
+        "nc_log_word() with label" = @{
+            Pattern = "nc_log_word\s*\(\s*`".*`"\s*,"
+            Issue = "nc_log_word() signature changed in v3 (label parameter removed)"
+            Suggestion = "Remove label parameter, use separate nc_log_info() call"
+        }
+
+        "nc_log_int() with label" = @{
+            Pattern = "nc_log_int\s*\(\s*`".*`"\s*,"
+            Issue = "nc_log_int() signature changed in v3 (label parameter removed)"
+            Suggestion = "Remove label parameter, use separate nc_log_info() call"
+        }
+
+        "nc_log_short() with label" = @{
+            Pattern = "nc_log_short\s*\(\s*`".*`"\s*,"
+            Issue = "nc_log_short() signature changed in v3 (label parameter removed)"
+            Suggestion = "Remove label parameter, use separate nc_log_info() call"
+        }
+
+        "nc_log_vec2short()" = @{
+            Pattern = "nc_log_vec2short\s*\("
+            Issue = "nc_log_vec2short() replaced with nc_log_position() in v3"
+            Suggestion = "Replace with nc_log_position() and update parameter type"
         }
 
         # Sprite system changes
-        "DATlib\s+0\.2" = @{
+        "DATlib 0.2" = @{
             Pattern = "DATlib\s+0\.2"
             Issue = "DATlib 0.2 references found (v3 uses DATlib 0.3)"
             Suggestion = "Update DATlib references to 0.3"
@@ -77,32 +106,6 @@ function Test-CFileV3Compatibility {
             $issues += $issueDescription
 
             Write-MigrationLog -Message "Found pattern '$patternName' in $FilePath`: $issueDescription" -Level "WARN"
-        }
-    }
-
-    # Check for common v2 includes that changed in v3 with line numbers
-    $DeprecatedIncludes = @(
-        "#include\s+[""<]neocore_v2\.h["">\s]",
-        "#include\s+[""<]datlib_v2\.h["">\s]"
-    )
-
-    foreach ($includePattern in $DeprecatedIncludes) {
-        if ($FileContent -match $includePattern) {
-            # Find line numbers for deprecated includes
-            $lines = $FileContent -split "`r?`n"
-            $matchedLines = @()
-
-            for ($i = 0; $i -lt $lines.Count; $i++) {
-                if ($lines[$i] -match $includePattern) {
-                    $matchedLines += ($i + 1)
-                }
-            }
-
-            $lineInfo = if ($matchedLines.Count -eq 1) { "line $($matchedLines[0])" }
-                       else { "lines $($matchedLines -join ', ')" }
-
-            $issues += "Deprecated include found - update to v3 headers (at $lineInfo)"
-            Write-MigrationLog -Message "Deprecated include pattern found in $FilePath at $lineInfo" -Level "WARN"
         }
     }
 
@@ -170,7 +173,7 @@ function Get-CFilesInProject {
         return $shouldInclude
     }
 
-    Write-MigrationLog -Message "Found $($filteredFiles.Count) C/C++ files to analyze" -Level "INFO"
+    Write-MigrationLog -Message "Found $($filteredFiles.Count) C files to analyze" -Level "INFO"
     return $filteredFiles
 }
 
