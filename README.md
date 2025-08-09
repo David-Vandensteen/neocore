@@ -127,7 +127,6 @@ cd C:\temp\MyGame\src
 | `.\mak.bat clean` | Remove built resources |
 | `.\mak.bat clean:build` | Remove the entire build folder |
 | `.\mak.bat sprite` | Build sprites |
-| `.\mak.bat iso` | Generate ISO file |
 | `.\mak.bat run:raine` | Run with Raine emulator |
 | `.\mak.bat run:mame` | Run with MAME emulator |
 | `.\mak.bat serve:mame` | Run in hot reload mode |

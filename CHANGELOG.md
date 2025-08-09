@@ -34,6 +34,10 @@
   - **BREAKING CHANGES**:
     - **PowerShell Toolchain**:
       - **Command deprecations**: mak mame and mak raine deprecated (use mak run:mame and mak run:raine instead)
+      - **Rule removals**: `iso` and `only:iso` rules have been removed from the build system
+        - **Removed commands**: `mak iso`, `mak only:iso`
+        - **Alternative**: Use `mak dist:iso` for ISO distribution packaging
+        - **Reason**: Simplified build system by consolidating ISO-related commands
       - **Build workflow changes**: Build steps are now explicit and must be run manually instead of automatic execution
         - **Before**: `mak run:raine` or `mak run:mame` automatically executed all build steps
         - **Now**: Manual execution required: `mak sprite` → `mak` → `mak run:raine`

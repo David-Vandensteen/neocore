@@ -142,13 +142,6 @@ function Main {
     }
     return $true
   }
-  if ($Rule -eq "iso") {
-    if (-Not(MakISO)) {
-      Write-Host "ISO build failed" -ForegroundColor Red
-      return $false
-    }
-    return $true
-  }
   if ($Rule -eq "run:raine" -or $Rule -eq "raine" -or $Rule -like "run:raine:*") {
     if (-Not(MakRunRaine)) {
       Write-Host "Raine run failed" -ForegroundColor Red
@@ -212,13 +205,6 @@ function Main {
   if ($Rule -eq "only:program") {
     if (-Not(Build-Program)) {
       Write-Host "Program build failed" -ForegroundColor Red
-      return $false
-    }
-    return $true
-  }
-  if ($Rule -eq "only:iso") {
-    if (-Not(Build-ISO)) {
-      Write-Host "ISO build failed" -ForegroundColor Red
       return $false
     }
     return $true
