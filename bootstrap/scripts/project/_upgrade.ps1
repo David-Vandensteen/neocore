@@ -87,7 +87,6 @@ function Show-MigrationWarning {
   } else {
     Write-Host "[STATUS] PROJECT.XML COMPATIBILITY:" -ForegroundColor Green
     Write-Host "   * Your project.xml appears to be v3 compatible" -ForegroundColor Gray
-    Write-Host "   * Migration will still perform full analysis and validation" -ForegroundColor Gray
     Write-Host ""
   }
 
@@ -107,12 +106,6 @@ function Show-MigrationWarning {
     Write-Host ""
   }
 
-  Write-Host "[ANALYSIS] AUTOMATIC COMPATIBILITY CHECKS:" -ForegroundColor Cyan
-  Write-Host "   * project.xml structure migration (automatic fixes)" -ForegroundColor Gray
-  Write-Host "   * C files v2/v3 compatibility analysis (detection only)" -ForegroundColor Gray
-  Write-Host "   * .gitignore patterns validation" -ForegroundColor Gray
-  Write-Host ""
-
   Write-Host "[BACKUP] AUTOMATIC BACKUPS:" -ForegroundColor Green
   if ($BackupPath -and $BackupPath -ne "") {
     Write-Host "   * Complete project -> $BackupPath" -ForegroundColor Gray
@@ -126,11 +119,7 @@ function Show-MigrationWarning {
   Write-Host "   1. Backup your ENTIRE project to another folder" -ForegroundColor Yellow
   Write-Host "   2. Close your editor/IDE before continuing" -ForegroundColor Yellow
   Write-Host ""
-  Write-Host "[CRITICAL] IMPORTANT: This migration will permanently modify your files!" -ForegroundColor Red
-  Write-Host "           - project.xml will be automatically migrated" -ForegroundColor Red
-  Write-Host "           - C files will only be analyzed (manual changes required)" -ForegroundColor Red
-  Write-Host "           - Deprecated files (common_crt0_cd.s, crt0_cd.s) will be automatically removed" -ForegroundColor Red
-  Write-Host "           - Automatic backups do not replace a complete project backup" -ForegroundColor Red
+  Write-Host "[CRITICAL] This migration will permanently modify your files!" -ForegroundColor Red
   Write-Host ""
   Write-Host "================================================================" -ForegroundColor Yellow
 
@@ -216,7 +205,7 @@ function Test-ProjectXmlV3Compatibility {
   Write-MigrationLog -Message "Checking for platform element..." -Level "INFO"
   $platformNode = $ProjectXml.SelectSingleNode("//platform")
   if (-not $platformNode) {
-    $issues += "Add <platform> element if missing - required for v3 compatibility"
+    $issues += "Add <platform> element if missing"
     Write-MigrationLog -Message "Issue detected: Missing platform element" -Level "WARN"
   } elseif ([string]::IsNullOrWhiteSpace($platformNode.InnerText)) {
     $issues += "Update <platform> element - should specify target platform (e.g., 'cd')"
@@ -244,7 +233,7 @@ function Test-ProjectXmlV3Compatibility {
     }
 
     if ($missingDatElements.Count -gt 0) {
-      $issues += "Add DAT setup elements if missing: $($missingDatElements -join ', ') - required for v3 DAT processing"
+      $issues += "Add DAT setup elements if missing: $($missingDatElements -join ', ')"
       Write-MigrationLog -Message "Issue detected: Missing DAT elements: $($missingDatElements -join ', ')" -Level "WARN"
     }
   } else {
@@ -257,7 +246,7 @@ function Test-ProjectXmlV3Compatibility {
   if ($datNode) {
     $fixdataNode = $datNode.SelectSingleNode("fixdata")
     if (-not $fixdataNode) {
-      $issues += "Add fixdata section if missing - required for v3 fix font processing"
+      $issues += "Add fixdata section if missing"
       Write-MigrationLog -Message "Issue detected: Missing fixdata section" -Level "WARN"
     } else {
       Write-MigrationLog -Message "Fixdata section found" -Level "INFO"
@@ -272,7 +261,7 @@ function Test-ProjectXmlV3Compatibility {
   if ($raineNode) {
     $configNode = $raineNode.SelectSingleNode("config")
     if (-not $configNode) {
-      $issues += "Add RAINE config section if missing - required for v3 emulator configurations"
+      $issues += "Add RAINE config section if missing"
       Write-MigrationLog -Message "Issue detected: Missing RAINE config section" -Level "WARN"
     } else {
       Write-MigrationLog -Message "RAINE config section found" -Level "INFO"
@@ -287,7 +276,7 @@ function Test-ProjectXmlV3Compatibility {
   if ($mameNode) {
     $profileNode = $mameNode.SelectSingleNode("profile")
     if (-not $profileNode) {
-      $issues += "Add MAME profile section if missing - required for v3 emulator configurations"
+      $issues += "Add MAME profile section if missing"
       Write-MigrationLog -Message "Issue detected: Missing MAME profile section" -Level "WARN"
     } else {
       Write-MigrationLog -Message "MAME profile section found" -Level "INFO"
@@ -302,7 +291,7 @@ function Test-ProjectXmlV3Compatibility {
   if ($compilerNode) {
     $crtPathNode = $compilerNode.SelectSingleNode("crtPath")
     if (-not $crtPathNode) {
-      $issues += "Add compiler <crtPath> element if missing - required for v3 compilation"
+      $issues += "Add compiler <crtPath> element if missing"
       Write-MigrationLog -Message "Issue detected: Missing compiler crtPath element" -Level "WARN"
     } else {
       Write-MigrationLog -Message "Compiler crtPath found: '$($crtPathNode.InnerText)'" -Level "INFO"
@@ -311,14 +300,14 @@ function Test-ProjectXmlV3Compatibility {
     # Check systemFile structure (v3 format)
     $systemFileNode = $compilerNode.SelectSingleNode("systemFile")
     if (-not $systemFileNode) {
-      $issues += "Add systemFile section if missing - required for v3 compilation"
+      $issues += "Add systemFile section if missing"
       Write-MigrationLog -Message "Issue detected: Missing systemFile section" -Level "WARN"
     } else {
       Write-MigrationLog -Message "SystemFile section found, checking cd/cartridge elements..." -Level "INFO"
       $cdNode = $systemFileNode.SelectSingleNode("cd")
       $cartridgeNode = $systemFileNode.SelectSingleNode("cartridge")
       if (-not $cdNode -or -not $cartridgeNode) {
-        $issues += "Update systemFile structure to v3 format (add cd/cartridge elements if missing)"
+        $issues += "Update systemFile structure (add cd/cartridge elements if missing)"
         Write-MigrationLog -Message "Issue detected: SystemFile missing cd/cartridge elements" -Level "WARN"
       } else {
         Write-MigrationLog -Message "SystemFile cd and cartridge elements found" -Level "INFO"
@@ -597,15 +586,7 @@ $indentedSoundContent    </cd>
     Write-MigrationLog -Message "Successfully wrote v3 project.xml with preserved user data" -Level "SUCCESS"
 
     Write-Host "  - Project.xml rewritten with complete v3 structure" -ForegroundColor Green
-    Write-Host "  - Preserved existing name: '$existingName'" -ForegroundColor Green
-    Write-Host "  - Preserved existing version: '$existingVersion'" -ForegroundColor Green
-    Write-Host "  - Preserved existing neocorePath: '$existingNeocorePath'" -ForegroundColor Green
-    Write-Host "  - Project.xml rewritten with complete v3 structure" -ForegroundColor Green
-    Write-Host "  - Preserved existing name: '$existingName'" -ForegroundColor Green
-    Write-Host "  - Preserved existing version: '$existingVersion'" -ForegroundColor Green
-    Write-Host "  - Preserved existing neocorePath: '$existingNeocorePath'" -ForegroundColor Green
-    Write-Host "  - Preserved existing buildPath: '$existingBuildPath'" -ForegroundColor Green
-    Write-Host "  - Preserved existing compiler paths" -ForegroundColor Green
+    Write-Host "  - Preserved project configuration and paths" -ForegroundColor Green
     return $true
   } catch {
     Write-MigrationLog -Message "Error writing project.xml: $($_.Exception.Message)" -Level "ERROR"
@@ -731,11 +712,11 @@ function Test-CFileV3Compatibility {
 
     # Check for DATlib 0.2 patterns
     if ($line -match '\bGFX_AnimatedSprite_\w+_physic\b') {
-      $issues += "Line $lineNumber`: Uses DATlib 0.2 physic sprite patterns (DATlib 0.3 required for v3)"
+      $issues += "Line $lineNumber`: Uses DATlib 0.2 physic sprite patterns (upgrade to DATlib 0.3)"
     }
 
     if ($line -match '\bnc_\w*_gfx_animated_sprite_\w*_physic\b') {
-      $issues += "Line $lineNumber`: Uses DATlib 0.2 physic function patterns (DATlib 0.3 API required)"
+      $issues += "Line $lineNumber`: Uses DATlib 0.2 physic function patterns (upgrade to DATlib 0.3 API)"
     }
 
     # Check for old include patterns
@@ -1562,13 +1543,9 @@ $migrationStats = @{
 
 # Final migration summary
 Write-Host ""
-Write-Host "================================================================" -ForegroundColor Green
-Write-Host "                  [MIGRATION PHASE COMPLETED]                   " -ForegroundColor Green
-Write-Host "================================================================" -ForegroundColor Green
 
 # Migration status
 if ($migrationResult.Success) {
-  Write-Host ""
   Write-Host "[SUCCESS] STRUCTURAL MIGRATION COMPLETED" -ForegroundColor Green
   Write-Host "   Your NeoCore project structure has been migrated to v3!" -ForegroundColor White
   Write-Host "   Review the analysis report for any manual code corrections needed." -ForegroundColor Gray
@@ -1621,7 +1598,7 @@ if ($migrationResult.HasCIssues -or $migrationResult.HasGitignoreIssues) {
     Write-Host ""
     Write-Host "   [$actionNumber] Test your updated project:" -ForegroundColor White
     Write-Host "       mak build     # Compile your project" -ForegroundColor Gray
-    Write-Host "       mak run       # Test runtime" -ForegroundColor Gray
+    Write-Host "       mak run:raine # Test runtime with Raine emulator" -ForegroundColor Gray
     Write-Host ""
     $actionNumber++
   }
