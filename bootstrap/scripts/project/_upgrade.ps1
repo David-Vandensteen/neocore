@@ -199,7 +199,6 @@ function Test-ProjectXmlV3Compatibility {
 
   Write-MigrationLog -Message "Starting v3 compatibility analysis..." -Level "INFO"
   $issues = @()
-  $warnings = @()
 
   # Check for missing platform element (v3 requirement)
   Write-MigrationLog -Message "Checking for platform element..." -Level "INFO"
@@ -336,17 +335,13 @@ function Test-ProjectXmlV3Compatibility {
   # Note: With complete rewrite approach, most legacy pattern detection is unnecessary
   # The new v3 template will automatically use the correct structure and paths
 
-  Write-MigrationLog -Message "Compatibility analysis completed: $($issues.Count) issues, $($warnings.Count) warnings" -Level "INFO"
+  Write-MigrationLog -Message "Compatibility analysis completed: $($issues.Count) issues" -Level "INFO"
   if ($issues.Count -gt 0) {
     Write-MigrationLog -Message "Detected issues: $($issues -join '; ')" -Level "WARN"
-  }
-  if ($warnings.Count -gt 0) {
-    Write-MigrationLog -Message "Detected warnings: $($warnings -join '; ')" -Level "WARN"
   }
 
   return @{
     Issues = $issues
-    Warnings = $warnings
     IsCompatible = ($issues.Count -eq 0)
   }
 }
@@ -885,40 +880,25 @@ function Test-MigrationSuccess {
   Write-MigrationLog -Message "Evaluating migration success criteria..." -Level "INFO"
 
   $success = $true
-  $warnings = @()
 
   # Check if project.xml exists and is valid
   if (-not (Test-Path -Path $ProjectXmlPath)) {
     $success = $false
-    $warnings += "project.xml not found"
   } else {
     try {
       [xml]$testXml = Get-Content -Path $ProjectXmlPath
       if (-not $testXml.project) {
         $success = $false
-        $warnings += "project.xml structure appears invalid"
       }
     } catch {
       $success = $false
-      $warnings += "project.xml cannot be parsed as valid XML"
     }
   }
 
-  # Evaluate C code issues
-  if ($TotalCIssues -gt 0) {
-    $warnings += "$TotalCIssues C code compatibility issues require manual review"
-  }
-
-  # Evaluate .gitignore issues
-  if ($HasGitignoreIssues) {
-    $warnings += ".gitignore patterns need manual correction"
-  }
-
-  Write-MigrationLog -Message "Migration success evaluation: Success=$success, Warnings=$($warnings.Count)" -Level "INFO"
+  Write-MigrationLog -Message "Migration success evaluation: Success=$success" -Level "INFO"
 
   return @{
     Success = $success
-    Warnings = $warnings
     HasCIssues = ($TotalCIssues -gt 0)
     HasGitignoreIssues = $HasGitignoreIssues
   }
@@ -1192,7 +1172,7 @@ if (Test-Path -Path $projectXmlPath) {
         Write-MigrationLog -Message "Re-using previous compatibility analysis result" -Level "INFO"
       }
 
-      Write-MigrationLog -Message "Compatibility check completed: $($result.Issues.Count) issues, $($result.Warnings.Count) warnings" -Level "INFO"
+      Write-MigrationLog -Message "Compatibility check completed: $($result.Issues.Count) issues found" -Level "INFO"
 
       if ($result.Issues.Count -gt 0) {
         Write-MigrationLog -Message "Migration required - found $($result.Issues.Count) blocking issues" -Level "WARN"
@@ -1227,16 +1207,6 @@ if (Test-Path -Path $projectXmlPath) {
       } else {
         Write-MigrationLog -Message "Project is fully v3 compatible - no migration needed" -Level "SUCCESS"
         Write-Host "  - project.xml is v3 compatible (no migration needed)" -ForegroundColor Green
-      }
-    }
-
-    if ($result.Warnings.Count -gt 0) {
-      Write-MigrationLog -Message "Found $($result.Warnings.Count) warnings for manual review" -Level "WARN"
-      Write-Host ""
-      Write-Host "Warnings (manual review recommended):" -ForegroundColor Yellow
-      foreach ($warning in $result.Warnings) {
-        Write-MigrationLog -Message "Warning: $warning" -Level "WARN"
-        Write-Host "  * $warning" -ForegroundColor Yellow
       }
     }
 
@@ -1552,10 +1522,7 @@ if ($migrationResult.Success) {
 } else {
   Write-Host ""
   Write-Host "[WARNING] MIGRATION COMPLETED WITH ISSUES" -ForegroundColor Yellow
-  Write-Host "   The migration process completed but requires attention:" -ForegroundColor White
-  foreach ($warning in $migrationResult.Warnings) {
-    Write-Host "   * $warning" -ForegroundColor Yellow
-  }
+  Write-Host "   The migration process completed but requires manual attention." -ForegroundColor White
 }
 
 # Migration statistics
@@ -1597,7 +1564,8 @@ if ($migrationResult.HasCIssues -or $migrationResult.HasGitignoreIssues) {
     Write-Host "       See detailed file-by-file analysis in: $MigrationLogPath" -ForegroundColor Gray
     Write-Host ""
     Write-Host "   [$actionNumber] Test your updated project:" -ForegroundColor White
-    Write-Host "       mak build     # Compile your project" -ForegroundColor Gray
+    Write-Host "       mak sprite    # Generate sprite data files" -ForegroundColor Gray
+    Write-Host "       mak           # Compile your project" -ForegroundColor Gray
     Write-Host "       mak run:raine # Test runtime with Raine emulator" -ForegroundColor Gray
     Write-Host ""
     $actionNumber++
@@ -1620,8 +1588,9 @@ if ($migrationResult.HasCIssues -or $migrationResult.HasGitignoreIssues) {
   Write-Host "   Your project appears to be fully v3 compatible!" -ForegroundColor White
   Write-Host ""
   Write-Host "   [READY] You can immediately use your migrated project:" -ForegroundColor White
-  Write-Host "       mak build     # Compile your project" -ForegroundColor Gray
-  Write-Host "       mak run       # Run your project" -ForegroundColor Gray
+  Write-Host "       mak sprite    # Generate sprite data files" -ForegroundColor Gray
+  Write-Host "       mak           # Compile your project" -ForegroundColor Gray
+  Write-Host "       mak run:raine # Test runtime with Raine emulator" -ForegroundColor Gray
   Write-Host ""
 }
 
