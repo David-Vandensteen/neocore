@@ -49,7 +49,32 @@ function Main {
 
     # Step 2: Get version information
     $currentVersion = Get-ProjectVersion -ProjectNeocorePath $ProjectNeocorePath
-    $targetVersion = "3.0.0-rc"
+
+    # Get target version dynamically from source NeoCore
+    $sourceNeocorePath = (Resolve-Path "$PSScriptRoot\..\..\..").Path
+    $targetVersion = Get-ProjectVersion -ProjectNeocorePath $sourceNeocorePath
+    if ($targetVersion -eq "Unknown") {
+        $targetVersion = "3.0.0-rc"  # Fallback if source version cannot be determined
+        Write-MigrationLog -Message "Could not determine source NeoCore version, using fallback: $targetVersion" -Level "WARN"
+    }
+
+    # Step 2.1: Check minimum version support
+    Write-MigrationLog -Message "Checking version compatibility..." -Level "INFO"
+    Write-MigrationLog -Message "Current NeoCore version: $currentVersion" -Level "INFO"
+
+    if (-not (Test-MinimumVersionSupport -CurrentVersion $currentVersion -MinimumVersion "2.0.0")) {
+        Write-Host ""
+        Write-Host "*** UNSUPPORTED VERSION ***" -ForegroundColor Red -BackgroundColor Black
+        Write-Host ""
+        Write-Host "This migration script only supports NeoCore v2.0.0 and above." -ForegroundColor Red
+        Write-Host "Current project version: $currentVersion" -ForegroundColor Yellow
+        Write-Host "Minimum supported version: 2.0.0" -ForegroundColor Green
+        Write-Host ""
+        Write-MigrationLog -Message "Migration stopped: Unsupported version $currentVersion (minimum: 2.0.0)" -Level "ERROR"
+        exit 1
+    }
+
+    Write-MigrationLog -Message "Version check passed: $currentVersion >= 2.0.0" -Level "SUCCESS"
 
     # Step 2.5: Analyze project structure
     $structureAnalysis = Analyze-ProjectStructure -ProjectSrcPath $ProjectSrcPath

@@ -137,6 +137,54 @@ function Get-ProjectVersion {
     return "Unknown"
 }
 
+function Test-MinimumVersionSupport {
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]$CurrentVersion,
+
+        [Parameter(Mandatory=$false)]
+        [string]$MinimumVersion = "2.0.0"
+    )
+
+    if ($CurrentVersion -eq "Unknown") {
+        Write-MigrationLog -Message "Cannot determine project version - assuming migration is possible" -Level "WARN"
+        return $true
+    }
+
+    try {
+        # Parse version strings (handle versions like "2.0.0", "2.1.0-rc", etc.)
+        $currentVersionParts = $CurrentVersion -split '\.' | ForEach-Object { ($_ -split '-')[0] }
+        $minimumVersionParts = $MinimumVersion -split '\.'
+
+        # Ensure we have at least major.minor.patch
+        while ($currentVersionParts.Count -lt 3) { $currentVersionParts += "0" }
+        while ($minimumVersionParts.Count -lt 3) { $minimumVersionParts += "0" }
+
+        # Convert to integers for comparison
+        $currentMajor = [int]$currentVersionParts[0]
+        $currentMinor = [int]$currentVersionParts[1]
+        $currentPatch = [int]$currentVersionParts[2]
+
+        $minimumMajor = [int]$minimumVersionParts[0]
+        $minimumMinor = [int]$minimumVersionParts[1]
+        $minimumPatch = [int]$minimumVersionParts[2]
+
+        # Compare versions
+        if ($currentMajor -gt $minimumMajor) { return $true }
+        if ($currentMajor -lt $minimumMajor) { return $false }
+
+        if ($currentMinor -gt $minimumMinor) { return $true }
+        if ($currentMinor -lt $minimumMinor) { return $false }
+
+        if ($currentPatch -ge $minimumPatch) { return $true }
+
+        return $false
+    } catch {
+        Write-MigrationLog -Message "Error comparing versions: $($_.Exception.Message)" -Level "WARN"
+        return $true  # If we can't compare, allow migration to proceed
+    }
+}
+
 function Test-FileExists {
     param(
         [Parameter(Mandatory=$true)]

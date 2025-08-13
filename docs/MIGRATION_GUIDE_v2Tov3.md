@@ -63,6 +63,9 @@ Vec2short pos = nc_get_position_gfx_animated_sprite(player);
 Vec2short pic_pos = nc_get_position_gfx_picture(picture);
 Vec2short scroll_pos = nc_get_position_gfx_scroller(scroller);
 
+// Get relative position (returns by value)
+Vec2short relative_pos = nc_get_relative_position(box, world_coord);
+
 if (pos.x > 100 && pos.y < 50) {
     // Do something
 }
@@ -76,6 +79,10 @@ Position pic_pos;
 nc_get_position_gfx_picture(&picture, &pic_pos);
 Position scroll_pos;
 nc_get_position_gfx_scroller(&scroller, &scroll_pos);
+
+// Get relative position (now uses output parameter)
+Position relative_pos;
+nc_get_relative_position(&relative_pos, box, world_coord);
 
 if (pos.x > 100 && pos.y < 50) {
     // Do something - usage remains the same
@@ -144,10 +151,16 @@ char hex_packed[5] = "7FFF";     // Manual array declaration
 ```c
 void nc_update_mask(short x, short y, Vec2short vec[], Vec2short offset[], BYTE vector_max);
 BOOL nc_vectors_collide(Box *box, Vec2short vec[], BYTE vector_max);
-Vec2short relative = nc_get_relative_position(box, world_coord); // REMOVED
+Vec2short relative = nc_get_relative_position(box, world_coord); // Returns by value
 ```
 
 **NEW (v3.0):**
+```c
+void nc_update_mask(short x, short y, Position vec[], Position offset[], BYTE vector_max);
+BOOL nc_vectors_collide(Box *box, Position vec[], BYTE vector_max);
+Position relative;
+nc_get_relative_position(&relative, box, world_coord); // Uses output parameter
+```
 ```c
 void nc_update_mask(short x, short y, Position vec[], Position offset[], BYTE vector_max);
 BOOL nc_vectors_collide(Box *box, Position vec[], BYTE vector_max);
@@ -350,6 +363,35 @@ void spritePoolInit(spritePool *sp, ushort baseSprite, ushort size, bool clearSp
 3. **Add new parameters:**
    - `aSpriteInit`: gained `flags` parameter
    - `spritePoolInit`: gained `clearSprites` parameter
+
+#### 4.2 NeoCore Utility Function Changes
+
+**CRITICAL**: `nc_get_relative_position` signature changed completely
+
+**OLD (v2.x):**
+```c
+// Function returned Position by value
+Vec2short nc_get_relative_position(Box box, Vec2short world_coord);
+
+// Usage
+Vec2short relative_pos = nc_get_relative_position(player_box, world_position);
+```
+
+**NEW (v3.0):**
+```c
+// Function uses output parameter (Position* first)
+void nc_get_relative_position(Position *result, Box box, Position world_coord);
+
+// Usage
+Position relative_pos;
+nc_get_relative_position(&relative_pos, player_box, world_position);
+```
+
+**Breaking Changes:**
+- Return type changed from `Vec2short` to `void`
+- First parameter is now `Position *result` (output parameter)
+- Parameter types changed from `Vec2short` to `Position`
+- Function no longer returns a value - result is written to output parameter
 
 ### 5. New Features in DATlib 0.3
 

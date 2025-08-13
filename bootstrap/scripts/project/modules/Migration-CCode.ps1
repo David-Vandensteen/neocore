@@ -42,6 +42,12 @@ function Test-CFileV3Compatibility {
             Suggestion = "Update function call to use Position* parameter"
         }
 
+        "nc_get_relative_position()" = @{
+            Pattern = "nc_get_relative_position\s*\("
+            Issue = "nc_get_relative_position() signature changed in v3"
+            Suggestion = "Update function call to use Position* as first parameter"
+        }
+
         # Deprecated functions
         "nc_log()" = @{
             Pattern = "nc_log\s*\("
