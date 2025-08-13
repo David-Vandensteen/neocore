@@ -800,7 +800,7 @@ DWORD nc_frame_to_second(DWORD frame);
 DWORD nc_second_to_frame(DWORD second);
 void nc_init_system();
 void nc_reset();
-// Position nc_get_relative_position(Box box, Position world_coord); // TODO
+void nc_get_relative_position(Position *position, Box box, Position world_coord); // TODO
 void nc_pause(BOOL (*exitFunc)());
 void nc_sleep(DWORD frame);
 BOOL nc_each_frame(DWORD frame);

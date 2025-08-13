@@ -1104,14 +1104,10 @@ void nc_reset() {
   nc_init_system();
 }
 
-// TODO
-// Position nc_get_relative_position(Box box, Position world_coord) {
-//   Position coord = {
-//     world_coord.x - box.p0.x,
-//     nc_negative(world_coord.y - box.p3.y)
-//   };
-//   return coord;
-// }
+void nc_get_relative_position(Position *position, Box box, Position world_coord) {
+  position->x = world_coord.x - box.p0.x;
+  position->y = nc_negative(world_coord.y - box.p3.y);
+}
 
 void nc_pause(BOOL (*exitFunc)()) {
   nc_update_joypad(0);
