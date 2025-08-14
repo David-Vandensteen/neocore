@@ -3,12 +3,10 @@
   - **MAJOR RELEASE** - DATLib 0.3, toolchain refactoring and quality improvement
   - **TOOLCHAIN IMPROVEMENTS**:
     - **PowerShell Refactoring**: Complete refactoring of PowerShell toolchain modules with improved error handling and return values
-    - **Enhanced Build System**:
-      - Real-time BuildChar output monitoring with immediate process termination on color overload errors
-      - Comprehensive error parsing and propagation across all build scripts
-      - Enhanced make process execution with separate output/error log files
-      - Improved robocopy error handling with detailed logging and validation
-    - **Build System Optimization**:
+    - **Build System Enhancements**:
+      - **Real-time Monitoring**: BuildChar output monitoring with immediate process termination on color overload errors
+      - **Error Handling**: Comprehensive error parsing and propagation across all build scripts with detailed logging
+      - **Process Execution**: Enhanced make process execution with separate output/error log files
       - **CRT Configuration System**: Added configurable `crtPath` in project.xml for flexible runtime file management
       - **Embedded CRT Runtime**: Runtime files (crt0_cd.s, common_crt0_cd.s, etc.) are now automatically embedded in each build from centralized `src-lib/crt/` source
       - **CRT Cleanup**: Removed duplicate CRT files from samples/ directory - now sourced from single authoritative location
@@ -21,10 +19,7 @@
       - Enhanced Assert-Project function to validate new crtPath configuration
       - Improved XML path resolution and template variable handling
       - Better error messages for missing or invalid project configurations
-    - **Developer Experience**:
-      - More transparent build process with detailed logging and progress indicators
-      - Clearer error messages with actionable feedback
-      - Robust file detection and validation throughout build pipeline
+    - **Developer Experience**: More transparent build process with progress indicators, clearer error messages with actionable feedback, and robust file detection throughout build pipeline
   - **DOCUMENTATION IMPROVEMENTS**:
     - **Doxygen Integration**: Added comprehensive documentation tags throughout neocore.h
     - **API Documentation**: Complete documentation for all major structures (Position, Box, RGB16, GFX_*)
@@ -86,10 +81,11 @@
       - nc_set_position_log() - Set log cursor position
   - **MIGRATION TOOLS ENHANCEMENTS**:
     - **Enhanced Migration Safety**: Added automatic project backup to `%TEMP%\[UUID]` before v2→v3 migration
-    - **Deprecated File Cleanup**: Automatically removes obsolete files (common_crt0_cd.s, crt0_cd.s) during migration
+    - **Build Directory Validation**: Migration script now checks for existing build directory and requires manual cleanup before proceeding to prevent conflicts
+    - **C Code Analysis**: Automatic scanning of C files for v2/v3 compatibility issues with detailed reporting of deprecated patterns and breaking changes
+    - **Automated Cleanup**: Automatically removes obsolete files (common_crt0_cd.s, crt0_cd.s) during migration
     - **Sound Section Migration**: Automatically migrates `<sound>` sections to v3 format (`<sound><cd>` structure) while preserving content and formatting
-    - **Streamlined User Experience**: Removed redundant messaging, verbose banners, and "required for v3" repetitions for cleaner output
-    - **Honest Communication**: Messages accurately reflect migration scope and manual correction requirements
+    - **Streamlined User Experience**: Removed redundant messaging, verbose banners, and "required for v3" repetitions for cleaner output with honest communication about migration scope
     - **Comprehensive Logging**: Detailed migration logging with colored output and persistent log files
     - **Post-Migration Validation**: Automatic Assert-Project validation after project.xml generation
     - **Full XML Rewrite**: Complete project.xml rewrite using v3 template structure while preserving user data
