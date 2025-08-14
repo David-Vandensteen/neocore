@@ -75,21 +75,6 @@ function Main {
         exit 1
     }
 
-    # Step 2.05: Early check if project is already fully migrated to target version
-    if ($currentVersion -eq $targetVersion) {
-        Write-Host ""
-        Write-Host "*** PROJECT ALREADY MIGRATED ***" -ForegroundColor Green -BackgroundColor Black
-        Write-Host ""
-        Write-Host "Your project is already running NeoCore v$targetVersion." -ForegroundColor Green
-        Write-Host "No migration is required." -ForegroundColor Green
-        Write-Host ""
-        Write-Host "Current version: $currentVersion" -ForegroundColor Yellow
-        Write-Host "Target version: $targetVersion" -ForegroundColor Yellow
-        Write-Host ""
-        Write-MigrationLog -Message "Migration skipped: Project already at target version $targetVersion" -Level "INFO"
-        exit 0
-    }
-
     # Step 2.1: Check minimum version support
     Write-MigrationLog -Message "Checking version compatibility..." -Level "INFO"
     Write-MigrationLog -Message "Current NeoCore version: $currentVersion" -Level "INFO"
@@ -184,7 +169,6 @@ function Main {
     }
 
     # Check if NeoCore library needs update (AUTOMATIC)
-    $sourceNeocorePath = (Resolve-Path "$PSScriptRoot\..\..\..").Path
     $sourceSrcLib = "$sourceNeocorePath\src-lib"
     $targetSrcLib = "$ProjectNeocorePath\src-lib"
     if (Test-Path $sourceSrcLib) {
@@ -237,12 +221,9 @@ function Main {
             }
         }
         exit 0
-    } else {
-        Write-Host "Project is fully v3 compatible - no migration needed!" -ForegroundColor Green
-        Write-Host ""
     }
 
-    # Step 5: Create backup
+    # Step 5: Creating backup and performing migration
     Write-Host "Step 5: Creating backup..." -ForegroundColor Yellow
     $backupPath = Backup-ProjectFiles -ProjectSrcPath $ProjectSrcPath
     if (-not $backupPath) {
@@ -408,7 +389,7 @@ function Main {
     Write-Host "[RESOURCES]" -ForegroundColor Cyan
     Write-Host "* Migration log: $(Get-MigrationLogPath)" -ForegroundColor White
     Write-Host "* Backup location: $backupPath" -ForegroundColor White
-    Write-Host "* Migration guide: https://github.com/David-Vandensteen/neocore/blob/feat/neocore-3/docs/MIGRATION_GUIDE_v2Tov3.md" -ForegroundColor White
+    Write-Host "* Migration guide: See the NeoCore repository on GitHub for migration documentation" -ForegroundColor White
     Write-Host ""
 
     Write-MigrationLog -Message "Migration completed successfully" -Level "SUCCESS"
