@@ -1,5 +1,4 @@
 .DS_Store
-.specstory
 *.png_reject.png
 /dist/
 /build/
@@ -20,8 +19,6 @@ neocore_migration_sample_1_0_0
 neocore_migration_sample_1_0_2
 neocore_migration_sample_2_0_0
 samples/ngcd-flamble-003
-samples/ngcd-music-disk
-samples/geowave
 samples/**/out/fix.bin
 samples/**/out/char.bin
 synchro.sh
