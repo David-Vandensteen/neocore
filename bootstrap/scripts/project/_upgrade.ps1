@@ -1,7 +1,3 @@
-# _upgrade.ps1
-# NeoCore v2 to v3 migration script (modular version)
-# Comprehensive migration with all original features and enhanced modularity
-
 param (
   [Parameter(Mandatory=$true)]
   [string]$ProjectSrcPath,
@@ -54,8 +50,15 @@ function Main {
     $sourceNeocorePath = (Resolve-Path "$PSScriptRoot\..\..\..").Path
     $targetVersion = Get-ProjectVersion -ProjectNeocorePath $sourceNeocorePath
     if ($targetVersion -eq "Unknown") {
-        $targetVersion = "3.0.0-rc"  # Fallback if source version cannot be determined
-        Write-MigrationLog -Message "Could not determine source NeoCore version, using fallback: $targetVersion" -Level "WARN"
+        Write-Host ""
+        Write-Host "*** CONFIGURATION ERROR ***" -ForegroundColor Red -BackgroundColor Black
+        Write-Host ""
+        Write-Host "Could not determine target NeoCore version from source." -ForegroundColor Red
+        Write-Host "Source path: $sourceNeocorePath" -ForegroundColor Yellow
+        Write-Host "Expected manifest.xml at: $sourceNeocorePath\manifest.xml" -ForegroundColor Yellow
+        Write-Host ""
+        Write-MigrationLog -Message "Migration stopped: Could not determine target NeoCore version" -Level "ERROR"
+        exit 1
     }
 
     # Step 2.1: Check minimum version support
