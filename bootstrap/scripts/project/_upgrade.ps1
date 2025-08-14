@@ -24,6 +24,161 @@ try {
     exit 1
 }
 
+function Get-MigrationActions {
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]$ProjectSrcPath,
+
+        [Parameter(Mandatory=$true)]
+        [string]$ProjectNeocorePath,
+
+        [Parameter(Mandatory=$true)]
+        [string]$SourceNeocorePath,
+
+        [Parameter(Mandatory=$false)]
+        [array]$DetectedIssues = @(),
+
+        [Parameter(Mandatory=$false)]
+        [object]$CodeAnalysis
+    )
+
+    $automaticActions = @()
+    $manualActions = @()
+
+    # Add XML compatibility issues to automatic actions
+    if ($DetectedIssues -and $DetectedIssues.Count -gt 0) {
+        foreach ($issue in $DetectedIssues) {
+            $automaticActions += "[PROJECT.XML] $issue"
+        }
+    }
+
+    # Check .gitignore issues (MANUAL)
+    $gitignorePath = "$ProjectSrcPath\..\.gitignore"
+    $gitignoreIssues = @()
+    if (Test-Path $gitignorePath) {
+        $gitignoreContent = Get-Content $gitignorePath -ErrorAction SilentlyContinue
+        if ($gitignoreContent -contains "build/") {
+            $gitignoreIssues += "Change 'build/' to '/build/'"
+        }
+        if ($gitignoreContent -contains "dist/") {
+            $gitignoreIssues += "Change 'dist/' to '/dist/'"
+        }
+        if ($gitignoreIssues.Count -gt 0) {
+            $manualActions += "[GITIGNORE] Manual fix needed: $($gitignoreIssues -join ', ')"
+        }
+    } else {
+        $manualActions += "[GITIGNORE] File not found at expected location: $gitignorePath"
+    }
+
+    # Check for deprecated .s files (AUTOMATIC)
+    $deprecatedSFiles = @("$ProjectSrcPath\common_crt0_cd.s", "$ProjectSrcPath\crt0_cd.s")
+    $foundDeprecatedS = @()
+    foreach ($sFile in $deprecatedSFiles) {
+        if (Test-Path $sFile) {
+            $foundDeprecatedS += Split-Path $sFile -Leaf
+        }
+    }
+    if ($foundDeprecatedS.Count -gt 0) {
+        $automaticActions += "[DEPRECATED FILES] Remove deprecated files: $($foundDeprecatedS -join ', ')"
+    }
+
+    # Check if Makefile will be overwritten (AUTOMATIC)
+    if (Test-Path "$ProjectSrcPath\Makefile") {
+        if (-not (Test-MakefileUpToDate -ProjectSrcPath $ProjectSrcPath -SourceNeocorePath $SourceNeocorePath)) {
+            $automaticActions += "[MAKEFILE] Overwrite existing Makefile with v3 version"
+        }
+    }
+
+    # Check if NeoCore library needs update (AUTOMATIC)
+    $sourceSrcLib = "$SourceNeocorePath\src-lib"
+    $targetSrcLib = "$ProjectNeocorePath\src-lib"
+    if (Test-Path $sourceSrcLib) {
+        if (-not (Test-NeocoreLibraryUpToDate -ProjectNeocorePath $ProjectNeocorePath -SourceNeocorePath $SourceNeocorePath)) {
+            if (Test-Path $targetSrcLib) {
+                $automaticActions += "[NEOCORE LIB] Replace NeoCore library (src-lib) with v3 version"
+            } else {
+                $automaticActions += "[NEOCORE LIB] Install NeoCore library (src-lib) v3"
+            }
+        }
+    }
+
+    # Check if toolchain needs update (AUTOMATIC)
+    $sourceToolchain = "$SourceNeocorePath\toolchain"
+    $targetToolchain = "$ProjectNeocorePath\toolchain"
+    if (Test-Path $sourceToolchain) {
+        if (-not (Test-ToolchainUpToDate -ProjectNeocorePath $ProjectNeocorePath -SourceNeocorePath $SourceNeocorePath)) {
+            if (Test-Path $targetToolchain) {
+                $automaticActions += "[TOOLCHAIN] Replace toolchain with v3 version"
+            } else {
+                $automaticActions += "[TOOLCHAIN] Install toolchain v3"
+            }
+        }
+    }
+
+    # Add C code analysis results to manual actions if issues found
+    if ($CodeAnalysis -and $CodeAnalysis.HasIssues) {
+        $manualActions += "[C CODE REVIEW] $($CodeAnalysis.TotalIssues) compatibility issues found in $($CodeAnalysis.FilesWithIssues) files - details provided after migration"
+    }
+
+    return @{
+        AutomaticActions = $automaticActions
+        ManualActions = $manualActions
+        GitignoreIssues = $gitignoreIssues
+    }
+}
+
+function Test-MigrationRequired {
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]$ProjectSrcPath,
+
+        [Parameter(Mandatory=$true)]
+        [string]$ProjectNeocorePath,
+
+        [Parameter(Mandatory=$true)]
+        [string]$CurrentVersion,
+
+        [Parameter(Mandatory=$true)]
+        [string]$TargetVersion,
+
+        [Parameter(Mandatory=$true)]
+        [bool]$MigrationNeeded,
+
+        [Parameter(Mandatory=$false)]
+        [array]$AutomaticActions = @(),
+
+        [Parameter(Mandatory=$false)]
+        [array]$ManualActions = @()
+    )
+
+    # Check if project is already fully migrated to v3
+    $isAlreadyMigrated = Test-MinimumVersionSupport -CurrentVersion $CurrentVersion -MinimumVersion $TargetVersion
+
+    # Show migration warning only if migration is actually needed
+    if (($MigrationNeeded -or $AutomaticActions.Count -gt 0 -or $ManualActions.Count -gt 0) -and -not $isAlreadyMigrated) {
+        $proceed = Show-MigrationWarning -ProjectSrcPath $ProjectSrcPath -ProjectNeocorePath $ProjectNeocorePath -CurrentVersion $CurrentVersion -TargetVersion $TargetVersion -AutomaticActions $AutomaticActions -ManualActions $ManualActions
+
+        if (-not $proceed) {
+            Write-MigrationLog -Message "Migration cancelled by user" -Level "INFO"
+            exit 0
+        }
+        return $true
+    } elseif ($isAlreadyMigrated) {
+        Write-Host "Project is already migrated to version $TargetVersion or higher." -ForegroundColor Green
+        Write-MigrationLog -Message "Project already migrated to version $TargetVersion or higher" -Level "INFO"
+        if ($ManualActions.Count -gt 0) {
+            Write-Host ""
+            Write-Host "Note: Some manual actions were detected but won't be processed since the project is already migrated:" -ForegroundColor Yellow
+            foreach ($action in $ManualActions) {
+                Write-Host "  * $action" -ForegroundColor Yellow
+            }
+        }
+        exit 0
+    }
+
+    return $false
+}
+
 function Main {
     # Initialize logging
     if (-not (Initialize-MigrationLogging -ProjectSrcPath $ProjectSrcPath)) {
@@ -116,111 +271,18 @@ function Main {
     # Step 3.5: Analyze C code for compatibility
     $codeAnalysis = Invoke-CCodeAnalysis -ProjectSrcPath $ProjectSrcPath -Silent
 
+    # Step 4: Detect all migration actions needed
+    $migrationActions = Get-MigrationActions -ProjectSrcPath $ProjectSrcPath -ProjectNeocorePath $ProjectNeocorePath -SourceNeocorePath $sourceNeocorePath -DetectedIssues $detectedIssues -CodeAnalysis $codeAnalysis
+
+    $automaticActions = $migrationActions.AutomaticActions
+    $manualActions = $migrationActions.ManualActions
+    $gitignoreIssues = $migrationActions.GitignoreIssues
+
     # Step 4: Show migration warning and get user confirmation
+    $migrationRequired = Test-MigrationRequired -ProjectSrcPath $ProjectSrcPath -ProjectNeocorePath $ProjectNeocorePath -CurrentVersion $currentVersion -TargetVersion $targetVersion -MigrationNeeded $migrationNeeded -AutomaticActions $automaticActions -ManualActions $manualActions
 
-    # Pre-check all potential issues before showing warning
-    $automaticActions = @()
-    $manualActions = @()
-
-    # Add XML compatibility issues to automatic actions
-    if ($detectedIssues -and $detectedIssues.Count -gt 0) {
-        foreach ($issue in $detectedIssues) {
-            $automaticActions += "[PROJECT.XML] $issue"
-        }
-    }
-
-    # Check .gitignore issues (MANUAL)
-    $gitignorePath = "$ProjectSrcPath\..\.gitignore"
-    $gitignoreIssues = @()
-    if (Test-Path $gitignorePath) {
-        $gitignoreContent = Get-Content $gitignorePath -ErrorAction SilentlyContinue
-        # Check for specific incorrect patterns that need manual fix
-        if ($gitignoreContent -contains "build/") {
-            $gitignoreIssues += "Change 'build/' to '/build/'"
-        }
-        if ($gitignoreContent -contains "dist/") {
-            $gitignoreIssues += "Change 'dist/' to '/dist/'"
-        }
-        if ($gitignoreIssues.Count -gt 0) {
-            $manualActions += "[GITIGNORE] Manual fix needed: $($gitignoreIssues -join ', ')"
-        }
-    } else {
-        $manualActions += "[GITIGNORE] File not found at expected location: $gitignorePath"
-    }
-
-    # Check for deprecated .s files (AUTOMATIC)
-    $deprecatedSFiles = @("$ProjectSrcPath\common_crt0_cd.s", "$ProjectSrcPath\crt0_cd.s")
-    $foundDeprecatedS = @()
-    foreach ($sFile in $deprecatedSFiles) {
-        if (Test-Path $sFile) {
-            $foundDeprecatedS += Split-Path $sFile -Leaf
-        }
-    }
-    if ($foundDeprecatedS.Count -gt 0) {
-        $automaticActions += "[DEPRECATED FILES] Remove deprecated files: $($foundDeprecatedS -join ', ')"
-    }
-
-
-    # Check if Makefile will be overwritten (AUTOMATIC)
-    if (Test-Path "$ProjectSrcPath\Makefile") {
-        if (-not (Test-MakefileUpToDate -ProjectSrcPath $ProjectSrcPath -SourceNeocorePath $sourceNeocorePath)) {
-            $automaticActions += "[MAKEFILE] Overwrite existing Makefile with v3 version"
-        }
-    }
-
-    # Check if NeoCore library needs update (AUTOMATIC)
-    $sourceSrcLib = "$sourceNeocorePath\src-lib"
-    $targetSrcLib = "$ProjectNeocorePath\src-lib"
-    if (Test-Path $sourceSrcLib) {
-        if (-not (Test-NeocoreLibraryUpToDate -ProjectNeocorePath $ProjectNeocorePath -SourceNeocorePath $sourceNeocorePath)) {
-            if (Test-Path $targetSrcLib) {
-                $automaticActions += "[NEOCORE LIB] Replace NeoCore library (src-lib) with v3 version"
-            } else {
-                $automaticActions += "[NEOCORE LIB] Install NeoCore library (src-lib) v3"
-            }
-        }
-    }
-
-    # Check if toolchain needs update (AUTOMATIC)
-    $sourceToolchain = "$sourceNeocorePath\toolchain"
-    $targetToolchain = "$ProjectNeocorePath\toolchain"
-    if (Test-Path $sourceToolchain) {
-        if (-not (Test-ToolchainUpToDate -ProjectNeocorePath $ProjectNeocorePath -SourceNeocorePath $sourceNeocorePath)) {
-            if (Test-Path $targetToolchain) {
-                $automaticActions += "[TOOLCHAIN] Replace toolchain with v3 version"
-            } else {
-                $automaticActions += "[TOOLCHAIN] Install toolchain v3"
-            }
-        }
-    }
-
-    # Add C code analysis results to manual actions if issues found
-    if ($codeAnalysis.HasIssues) {
-        $manualActions += "[C CODE REVIEW] $($codeAnalysis.TotalIssues) compatibility issues found in $($codeAnalysis.FilesWithIssues) files - details provided after migration"
-    }
-
-    # Check if project is already fully migrated to v3
-    $isAlreadyMigrated = Test-MinimumVersionSupport -CurrentVersion $currentVersion -MinimumVersion $targetVersion
-
-    # Show migration warning only if migration is actually needed
-    if (($migrationNeeded -or $automaticActions.Count -gt 0 -or $manualActions.Count -gt 0) -and -not $isAlreadyMigrated) {
-        $proceed = Show-MigrationWarning -ProjectSrcPath $ProjectSrcPath -ProjectNeocorePath $ProjectNeocorePath -CurrentVersion $currentVersion -TargetVersion $targetVersion -AutomaticActions $automaticActions -ManualActions $manualActions
-
-        if (-not $proceed) {
-            Write-MigrationLog -Message "Migration cancelled by user" -Level "INFO"
-            exit 0
-        }
-    } elseif ($isAlreadyMigrated) {
-        Write-Host "Project is already migrated to version $targetVersion or higher." -ForegroundColor Green
-        Write-MigrationLog -Message "Project already migrated to version $targetVersion or higher" -Level "INFO"
-        if ($manualActions.Count -gt 0) {
-            Write-Host ""
-            Write-Host "Note: Some manual actions were detected but won't be processed since the project is already migrated:" -ForegroundColor Yellow
-            foreach ($action in $manualActions) {
-                Write-Host "  * $action" -ForegroundColor Yellow
-            }
-        }
-        exit 0
+    if (-not $migrationRequired) {
+        return  # Migration not needed or already completed
     }
 
     # Step 5: Creating backup and performing migration
