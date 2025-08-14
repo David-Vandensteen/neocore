@@ -43,6 +43,20 @@ function Main {
         exit 1
     }
 
+    # Step 1.5: Check for existing build directory
+    $projectRootPath = (Get-Item $ProjectSrcPath).Parent.FullName
+    $buildPath = "$projectRootPath\build"
+    if (Test-Path $buildPath) {
+        Write-Host ""
+        Write-Host "*** BUILD DIRECTORY EXISTS ***" -ForegroundColor Red -BackgroundColor Black
+        Write-Host ""
+        Write-Host "A build directory already exists and must be removed before migration." -ForegroundColor Red
+        Write-Host "Build directory: $buildPath" -ForegroundColor Yellow
+        Write-Host ""
+        Write-MigrationLog -Message "Migration stopped: Build directory exists at $buildPath" -Level "ERROR"
+        exit 1
+    }
+
     # Step 2: Get version information
     $currentVersion = Get-ProjectVersion -ProjectNeocorePath $ProjectNeocorePath
 
