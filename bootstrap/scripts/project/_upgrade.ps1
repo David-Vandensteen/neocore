@@ -75,6 +75,21 @@ function Main {
         exit 1
     }
 
+    # Step 2.05: Early check if project is already fully migrated to target version
+    if ($currentVersion -eq $targetVersion) {
+        Write-Host ""
+        Write-Host "*** PROJECT ALREADY MIGRATED ***" -ForegroundColor Green -BackgroundColor Black
+        Write-Host ""
+        Write-Host "Your project is already running NeoCore v$targetVersion." -ForegroundColor Green
+        Write-Host "No migration is required." -ForegroundColor Green
+        Write-Host ""
+        Write-Host "Current version: $currentVersion" -ForegroundColor Yellow
+        Write-Host "Target version: $targetVersion" -ForegroundColor Yellow
+        Write-Host ""
+        Write-MigrationLog -Message "Migration skipped: Project already at target version $targetVersion" -Level "INFO"
+        exit 0
+    }
+
     # Step 2.1: Check minimum version support
     Write-MigrationLog -Message "Checking version compatibility..." -Level "INFO"
     Write-MigrationLog -Message "Current NeoCore version: $currentVersion" -Level "INFO"
@@ -163,7 +178,9 @@ function Main {
 
     # Check if Makefile will be overwritten (AUTOMATIC)
     if (Test-Path "$ProjectSrcPath\Makefile") {
-        $automaticActions += "[MAKEFILE] Overwrite existing Makefile with v3 version"
+        if (-not (Test-MakefileUpToDate -ProjectSrcPath $ProjectSrcPath -SourceNeocorePath $sourceNeocorePath)) {
+            $automaticActions += "[MAKEFILE] Overwrite existing Makefile with v3 version"
+        }
     }
 
     # Check if NeoCore library needs update (AUTOMATIC)
@@ -171,10 +188,12 @@ function Main {
     $sourceSrcLib = "$sourceNeocorePath\src-lib"
     $targetSrcLib = "$ProjectNeocorePath\src-lib"
     if (Test-Path $sourceSrcLib) {
-        if (Test-Path $targetSrcLib) {
-            $automaticActions += "[NEOCORE LIB] Replace NeoCore library (src-lib) with v3 version"
-        } else {
-            $automaticActions += "[NEOCORE LIB] Install NeoCore library (src-lib) v3"
+        if (-not (Test-NeocoreLibraryUpToDate -ProjectNeocorePath $ProjectNeocorePath -SourceNeocorePath $sourceNeocorePath)) {
+            if (Test-Path $targetSrcLib) {
+                $automaticActions += "[NEOCORE LIB] Replace NeoCore library (src-lib) with v3 version"
+            } else {
+                $automaticActions += "[NEOCORE LIB] Install NeoCore library (src-lib) v3"
+            }
         }
     }
 
@@ -182,23 +201,42 @@ function Main {
     $sourceToolchain = "$sourceNeocorePath\toolchain"
     $targetToolchain = "$ProjectNeocorePath\toolchain"
     if (Test-Path $sourceToolchain) {
-        if (Test-Path $targetToolchain) {
-            $automaticActions += "[TOOLCHAIN] Replace toolchain with v3 version"
-        } else {
-            $automaticActions += "[TOOLCHAIN] Install toolchain v3"
+        if (-not (Test-ToolchainUpToDate -ProjectNeocorePath $ProjectNeocorePath -SourceNeocorePath $sourceNeocorePath)) {
+            if (Test-Path $targetToolchain) {
+                $automaticActions += "[TOOLCHAIN] Replace toolchain with v3 version"
+            } else {
+                $automaticActions += "[TOOLCHAIN] Install toolchain v3"
+            }
         }
     }
 
     # Add C code analysis results to manual actions if issues found
     if ($codeAnalysis.HasIssues) {
         $manualActions += "[C CODE REVIEW] $($codeAnalysis.TotalIssues) compatibility issues found in $($codeAnalysis.FilesWithIssues) files - details provided after migration"
-    }    if ($migrationNeeded -or $automaticActions.Count -gt 0 -or $manualActions.Count -gt 0) {
+    }
+
+    # Check if project is already fully migrated to v3
+    $isAlreadyMigrated = Test-MinimumVersionSupport -CurrentVersion $currentVersion -MinimumVersion $targetVersion
+
+    # Show migration warning only if migration is actually needed
+    if (($migrationNeeded -or $automaticActions.Count -gt 0 -or $manualActions.Count -gt 0) -and -not $isAlreadyMigrated) {
         $proceed = Show-MigrationWarning -ProjectSrcPath $ProjectSrcPath -ProjectNeocorePath $ProjectNeocorePath -CurrentVersion $currentVersion -TargetVersion $targetVersion -AutomaticActions $automaticActions -ManualActions $manualActions
 
         if (-not $proceed) {
             Write-MigrationLog -Message "Migration cancelled by user" -Level "INFO"
             exit 0
         }
+    } elseif ($isAlreadyMigrated) {
+        Write-Host "Project is already migrated to version $targetVersion or higher." -ForegroundColor Green
+        Write-MigrationLog -Message "Project already migrated to version $targetVersion or higher" -Level "INFO"
+        if ($manualActions.Count -gt 0) {
+            Write-Host ""
+            Write-Host "Note: Some manual actions were detected but won't be processed since the project is already migrated:" -ForegroundColor Yellow
+            foreach ($action in $manualActions) {
+                Write-Host "  * $action" -ForegroundColor Yellow
+            }
+        }
+        exit 0
     } else {
         Write-Host "Project is fully v3 compatible - no migration needed!" -ForegroundColor Green
         Write-Host ""
@@ -214,6 +252,25 @@ function Main {
 
     # Step 6: Update project files
     Write-Host "Step 6: Updating project files..." -ForegroundColor Yellow
+
+    # Check and update Makefile if needed
+    if (Test-Path "$ProjectSrcPath\Makefile") {
+        if (Test-MakefileUpToDate -ProjectSrcPath $ProjectSrcPath -SourceNeocorePath (Resolve-Path "$PSScriptRoot\..\..\..").Path) {
+            Write-Host "   Makefile is already up to date" -ForegroundColor Green
+        } else {
+            Write-Host "   Updating Makefile to v3 version..." -ForegroundColor Yellow
+            $sourceMakefile = (Resolve-Path "$PSScriptRoot\..\..\..").Path + "\bootstrap\standalone\Makefile"
+            $targetMakefile = "$ProjectSrcPath\Makefile"
+            try {
+                Copy-Item -Path $sourceMakefile -Destination $targetMakefile -Force
+                Write-Host "   Makefile updated successfully" -ForegroundColor Green
+            } catch {
+                Write-Host "   Failed to update Makefile: $($_.Exception.Message)" -ForegroundColor Red
+            }
+        }
+    }
+
+    # Update other project files (mak.bat, mak.ps1)
     $updatedFiles = Update-ProjectFiles -ProjectSrcPath $ProjectSrcPath -NeocorePath (Resolve-Path "$PSScriptRoot\..\..\..").Path
     Write-Host "Updated files: $($updatedFiles -join ', ')" -ForegroundColor Green
 
@@ -242,11 +299,27 @@ function Main {
     # Step 6.9: Update NeoCore library (src-lib)
     Write-Host "Step 6.9: Updating NeoCore library..." -ForegroundColor Yellow
     $sourceNeocorePath = (Resolve-Path "$PSScriptRoot\..\..\..").Path
-    $neocoreLibUpdated = Update-NeocoreLibrary -ProjectNeocorePath $ProjectNeocorePath -SourceNeocorePath $sourceNeocorePath -Silent
+    if (Test-NeocoreLibraryUpToDate -ProjectNeocorePath $ProjectNeocorePath -SourceNeocorePath $sourceNeocorePath) {
+        Write-Host "   NeoCore library is already up to date" -ForegroundColor Green
+        $neocoreLibUpdated = $true
+    } else {
+        $neocoreLibUpdated = Update-NeocoreLibrary -ProjectNeocorePath $ProjectNeocorePath -SourceNeocorePath $sourceNeocorePath -Silent
+        if (-not $neocoreLibUpdated) {
+            Show-Error "Failed to update NeoCore library"
+        }
+    }
 
     # Step 6.10: Update toolchain
     Write-Host "Step 6.10: Updating toolchain..." -ForegroundColor Yellow
-    $toolchainUpdated = Update-Toolchain -ProjectNeocorePath $ProjectNeocorePath -SourceNeocorePath $sourceNeocorePath -Silent
+    if (Test-ToolchainUpToDate -ProjectNeocorePath $ProjectNeocorePath -SourceNeocorePath $sourceNeocorePath) {
+        Write-Host "   Toolchain is already up to date" -ForegroundColor Green
+        $toolchainUpdated = $true
+    } else {
+        $toolchainUpdated = Update-Toolchain -ProjectNeocorePath $ProjectNeocorePath -SourceNeocorePath $sourceNeocorePath -Silent
+        if (-not $toolchainUpdated) {
+            Show-Error "Failed to update toolchain"
+        }
+    }
 
     # Step 7: Migrate project.xml if needed
     if ($migrationNeeded) {

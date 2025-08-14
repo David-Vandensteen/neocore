@@ -154,7 +154,7 @@ function Test-MinimumVersionSupport {
     try {
         # Parse version strings (handle versions like "2.0.0", "2.1.0-rc", etc.)
         $currentVersionParts = $CurrentVersion -split '\.' | ForEach-Object { ($_ -split '-')[0] }
-        $minimumVersionParts = $MinimumVersion -split '\.'
+        $minimumVersionParts = $MinimumVersion -split '\.' | ForEach-Object { ($_ -split '-')[0] }
 
         # Ensure we have at least major.minor.patch
         while ($currentVersionParts.Count -lt 3) { $currentVersionParts += "0" }

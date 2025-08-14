@@ -51,11 +51,10 @@ function Update-ProjectFiles {
 
     Write-MigrationLog -Message "Updating project files..." -Level "INFO"
 
-    # Source files from NeoCore bootstrap
+    # Source files from NeoCore bootstrap (excluding Makefile which is handled separately)
     $sourceFiles = @{
         "mak.bat" = "$NeocorePath\bootstrap\standalone\mak.bat"
         "mak.ps1" = "$NeocorePath\bootstrap\standalone\mak.ps1"
-        "Makefile" = "$NeocorePath\bootstrap\standalone\Makefile"
     }
 
     $updated = @()
@@ -67,19 +66,6 @@ function Update-ProjectFiles {
 
         if (Test-Path $sourcePath) {
             try {
-                # Special handling for Makefile - warn about overwrite
-                if ($fileName -eq "Makefile" -and (Test-Path $destPath)) {
-                    Write-Host "   [WARNING] Makefile will be overwritten" -ForegroundColor Yellow
-                    Write-Host "   Your current Makefile will be replaced with v3 version" -ForegroundColor Gray
-                    Write-Host "   Do you want to overwrite the Makefile? (Y/n): " -ForegroundColor Yellow -NoNewline
-                    $response = Read-Host
-
-                    if ($response -eq 'n' -or $response -eq 'N') {
-                        Write-MigrationLog -Message "User chose not to overwrite Makefile" -Level "INFO"
-                        Write-Host "   Makefile update skipped" -ForegroundColor Yellow
-                        continue
-                    }
-                }
 
                 Copy-Item -Path $sourcePath -Destination $destPath -Force
                 Write-MigrationLog -Message "Updated: $fileName" -Level "INFO"

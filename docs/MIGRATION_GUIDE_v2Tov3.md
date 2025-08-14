@@ -39,6 +39,7 @@ NeoCore v3 includes an official migration script that automates many migration t
   - Adds missing v3 elements (`<platform>`, DAT setup, fixdata, emulator configs)
   - Updates compiler configuration with v3 paths
   - **Migrates `<sound>` section**: Automatically wraps existing sound content in `<cd>` structure
+- ✅ **Build directory validation**: Checks for existing build directory and requires cleanup before proceeding
 - ✅ **Code analysis**: Scans C files for v2/v3 compatibility issues
 - ✅ **Deprecated file cleanup**: Automatically removes obsolete files:
   - `common_crt0_cd.s` (no longer needed)
@@ -804,7 +805,21 @@ void clearFixLayer3();
 
 ## Common Issues and Solutions
 
-### Issue 1: Compilation Errors with Position Getters
+### Issue 1: Build Directory Exists Error
+**Problem:** Migration script stops with "BUILD DIRECTORY EXISTS" error
+
+**Root Cause:** An existing build directory from previous builds conflicts with migration process
+
+**Solution:** Remove the build directory before running migration:
+```bash
+# Windows
+rmdir /s /q "path\to\your\project\build"
+
+# Linux/macOS
+rm -rf path/to/your/project/build
+```
+
+### Issue 2: Compilation Errors with Position Getters
 **Problem:**
 ```c
 Vec2short pos = nc_get_position_gfx_animated_sprite(player); // Error
@@ -816,7 +831,7 @@ Position pos;
 nc_get_position_gfx_animated_sprite(&player, &pos);
 ```
 
-### Issue 2: Job Meter Colors Look Wrong
+### Issue 3: Job Meter Colors Look Wrong
 **Problem:** Colors appear different after migration
 
 **Root Cause:** Job meter color constants have completely different values
@@ -828,14 +843,14 @@ nc_get_position_gfx_animated_sprite(&player, &pos);
 jobMeterColor(JOB_RED); // This is now a different red!
 ```
 
-### Issue 3: Scroller System Crashes
+### Issue 4: Scroller System Crashes
 **Problem:** Scroller code causes crashes or displays incorrectly
 
 **Root Cause:** Scroller structures completely redesigned
 
 **Solution:** Complete rewrite required - the old API is incompatible
 
-### Issue 4: Animation System Not Working
+### Issue 5: Animation System Not Working
 **Problem:** Sprite animations don't play correctly
 
 **Root Cause:** `animation` structure removed, `aSprite` structure changed
@@ -845,7 +860,7 @@ jobMeterColor(JOB_RED); // This is now a different red!
 2. Update `aSprite` member access patterns
 3. Use new animation control functions
 
-### Issue 5: Logging Output Missing or Incorrect
+### Issue 6: Logging Output Missing or Incorrect
 **Problem:** Log messages don't appear or format incorrectly
 
 **Solution:**

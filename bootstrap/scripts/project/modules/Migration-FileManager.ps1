@@ -289,6 +289,131 @@ function Generate-MigrationSummary {
     return $summary
 }
 
+function Test-MakefileUpToDate {
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]$ProjectSrcPath,
+
+        [Parameter(Mandatory=$true)]
+        [string]$SourceNeocorePath
+    )
+
+    $targetMakefile = "$ProjectSrcPath\Makefile"
+    $sourceMakefile = "$SourceNeocorePath\bootstrap\standalone\Makefile"
+
+    # If target doesn't exist, definitely not up to date
+    if (-not (Test-Path $targetMakefile)) {
+        return $false
+    }
+
+    # Check if source exists
+    if (-not (Test-Path $sourceMakefile)) {
+        return $false
+    }
+
+    # Compare file hashes
+    $sourceHash = (Get-FileHash $sourceMakefile -Algorithm MD5).Hash
+    $targetHash = (Get-FileHash $targetMakefile -Algorithm MD5).Hash
+
+    return ($sourceHash -eq $targetHash)
+}
+
+function Test-NeocoreLibraryUpToDate {
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]$ProjectNeocorePath,
+
+        [Parameter(Mandatory=$true)]
+        [string]$SourceNeocorePath
+    )
+
+    $sourceSrcLib = "$SourceNeocorePath\src-lib"
+    $targetSrcLib = "$ProjectNeocorePath\src-lib"
+
+    # If target doesn't exist, definitely not up to date
+    if (-not (Test-Path $targetSrcLib)) {
+        return $false
+    }
+
+    # Check if source exists
+    if (-not (Test-Path $sourceSrcLib)) {
+        return $false
+    }
+
+    # Compare key files to determine if up to date
+    $keyFiles = @(
+        "neocore.h",
+        "neocore.c",
+        "crt\crt0_cd.s",
+        "system\neocd.x"
+    )
+
+    foreach ($file in $keyFiles) {
+        $sourceFile = "$sourceSrcLib\$file"
+        $targetFile = "$targetSrcLib\$file"
+
+        if ((Test-Path $sourceFile) -and (Test-Path $targetFile)) {
+            $sourceHash = (Get-FileHash $sourceFile -Algorithm MD5).Hash
+            $targetHash = (Get-FileHash $targetFile -Algorithm MD5).Hash
+
+            if ($sourceHash -ne $targetHash) {
+                return $false
+            }
+        } elseif ((Test-Path $sourceFile) -and (-not (Test-Path $targetFile))) {
+            return $false
+        }
+    }
+
+    return $true
+}
+
+function Test-ToolchainUpToDate {
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]$ProjectNeocorePath,
+
+        [Parameter(Mandatory=$true)]
+        [string]$SourceNeocorePath
+    )
+
+    $sourceToolchain = "$SourceNeocorePath\toolchain"
+    $targetToolchain = "$ProjectNeocorePath\toolchain"
+
+    # If target doesn't exist, definitely not up to date
+    if (-not (Test-Path $targetToolchain)) {
+        return $false
+    }
+
+    # Check if source exists
+    if (-not (Test-Path $sourceToolchain)) {
+        return $false
+    }
+
+    # Compare key files to determine if up to date
+    $keyFiles = @(
+        "scripts\Builder-Manager.ps1",
+        "scripts\modules\Build-Module.ps1"
+    )
+
+    foreach ($file in $keyFiles) {
+        $sourceFile = "$sourceToolchain\$file"
+        $targetFile = "$targetToolchain\$file"
+
+        if ((Test-Path $sourceFile) -and (Test-Path $targetFile)) {
+            $sourceHash = (Get-FileHash $sourceFile -Algorithm MD5).Hash
+            $targetHash = (Get-FileHash $targetFile -Algorithm MD5).Hash
+
+            if ($sourceHash -ne $targetHash) {
+                return $false
+            }
+        } elseif ((Test-Path $sourceFile) -and (-not (Test-Path $targetFile))) {
+            return $false
+        }
+    }
+
+    return $true
+}
+
 function Update-NeocoreLibrary {
     param(
         [Parameter(Mandatory=$true)]
@@ -320,17 +445,39 @@ function Update-NeocoreLibrary {
 
         # Remove existing and copy new
         if (Test-Path $targetSrcLib) {
-            Remove-Item -Path $targetSrcLib -Recurse -Force
+            Write-MigrationLog -Message "Removing existing src-lib directory..." -Level "INFO"
+            Remove-Item -Path $targetSrcLib -Recurse -Force -ErrorAction Stop
         }
-        Copy-Item -Path $sourceSrcLib -Destination $targetSrcLib -Recurse -Force
+
+        Write-MigrationLog -Message "Copying new src-lib from: $sourceSrcLib" -Level "INFO"
+        Copy-Item -Path $sourceSrcLib -Destination $targetSrcLib -Recurse -Force -ErrorAction Stop
 
         Write-MigrationLog -Message "NeoCore library updated successfully" -Level "SUCCESS"
         if (-not $Silent) {
             Write-Host "   NeoCore library updated to v3" -ForegroundColor Green
         }
+
+        # Also update the manifest.xml file
+        $sourceManifest = "$SourceNeocorePath\manifest.xml"
+        $targetManifest = "$ProjectNeocorePath\manifest.xml"
+        if (Test-Path $sourceManifest) {
+            Write-MigrationLog -Message "Updating manifest.xml..." -Level "INFO"
+            Copy-Item -Path $sourceManifest -Destination $targetManifest -Force -ErrorAction Stop
+            Write-MigrationLog -Message "Manifest.xml updated successfully" -Level "SUCCESS"
+            if (-not $Silent) {
+                Write-Host "   Manifest.xml updated to v3" -ForegroundColor Green
+            }
+        } else {
+            Write-MigrationLog -Message "Source manifest.xml not found: $sourceManifest" -Level "WARN"
+        }
+
         return $true
     } catch {
         Write-MigrationLog -Message "Failed to update NeoCore library: $($_.Exception.Message)" -Level "ERROR"
+        Write-MigrationLog -Message "Stack trace: $($_.ScriptStackTrace)" -Level "ERROR"
+        if (-not $Silent) {
+            Write-Host "   Failed to update NeoCore library: $($_.Exception.Message)" -ForegroundColor Red
+        }
         return $false
     }
 }
@@ -366,9 +513,12 @@ function Update-Toolchain {
 
         # Remove existing and copy new
         if (Test-Path $targetToolchain) {
-            Remove-Item -Path $targetToolchain -Recurse -Force
+            Write-MigrationLog -Message "Removing existing toolchain directory..." -Level "INFO"
+            Remove-Item -Path $targetToolchain -Recurse -Force -ErrorAction Stop
         }
-        Copy-Item -Path $sourceToolchain -Destination $targetToolchain -Recurse -Force
+
+        Write-MigrationLog -Message "Copying new toolchain from: $sourceToolchain" -Level "INFO"
+        Copy-Item -Path $sourceToolchain -Destination $targetToolchain -Recurse -Force -ErrorAction Stop
 
         Write-MigrationLog -Message "Toolchain updated successfully" -Level "SUCCESS"
         if (-not $Silent) {
@@ -377,6 +527,10 @@ function Update-Toolchain {
         return $true
     } catch {
         Write-MigrationLog -Message "Failed to update toolchain: $($_.Exception.Message)" -Level "ERROR"
+        Write-MigrationLog -Message "Stack trace: $($_.ScriptStackTrace)" -Level "ERROR"
+        if (-not $Silent) {
+            Write-Host "   Failed to update toolchain: $($_.Exception.Message)" -ForegroundColor Red
+        }
         return $false
     }
 }
