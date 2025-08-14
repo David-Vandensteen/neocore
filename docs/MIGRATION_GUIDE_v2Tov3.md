@@ -161,11 +161,6 @@ BOOL nc_vectors_collide(Box *box, Position vec[], BYTE vector_max);
 Position relative;
 nc_get_relative_position(&relative, box, world_coord); // Uses output parameter
 ```
-```c
-void nc_update_mask(short x, short y, Position vec[], Position offset[], BYTE vector_max);
-BOOL nc_vectors_collide(Box *box, Position vec[], BYTE vector_max);
-// nc_get_relative_position is no longer available
-```
 
 ## DATlib Migration
 

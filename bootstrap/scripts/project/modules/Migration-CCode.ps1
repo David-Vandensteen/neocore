@@ -1,5 +1,10 @@
 # Migration-CCode.ps1
-# C code analysis functions for v2 to v3 migration
+# C code analysis for v2 to v3 migration
+
+# Import dependencies
+if (-not (Get-Command Write-MigrationLog -ErrorAction SilentlyContinue)) {
+    . "$PSScriptRoot\Migration-Logging.ps1"
+}
 
 function Test-CFileV3Compatibility {
     param(
@@ -10,80 +15,72 @@ function Test-CFileV3Compatibility {
         [string]$FileContent
     )
 
-    Write-MigrationLog -Message "Analyzing C file: $FilePath" -Level "INFO"
-
     $issues = @()
 
-    # Define v2 to v3 breaking changes patterns
+    # Define breaking patterns for v2->v3 migration (REAL patterns only)
     $BreakingPatterns = @{
-        # Type system changes
-        "Vec2short" = @{
-            Pattern = "Vec2short"
-            Issue = "Vec2short type replaced with Position in v3"
+        # Position return type changes (v2 returns Vec2short, v3 uses Position* output parameter)
+        "nc_get_position_gfx_animated_sprite() return value" = @{
+            Pattern = "Vec2short\s+\w+\s*=\s*nc_get_position_gfx_animated_sprite\s*\("
+            Issue = "nc_get_position_gfx_animated_sprite() signature changed in v3 (now uses output parameter)"
+            Suggestion = "Change to: Position pos; nc_get_position_gfx_animated_sprite(&sprite, &pos);"
+        }
+
+        "nc_get_position_gfx_picture() return value" = @{
+            Pattern = "Vec2short\s+\w+\s*=\s*nc_get_position_gfx_picture\s*\("
+            Issue = "nc_get_position_gfx_picture() signature changed in v3 (now uses output parameter)"
+            Suggestion = "Change to: Position pos; nc_get_position_gfx_picture(&picture, &pos);"
+        }
+
+        "nc_get_position_gfx_scroller() return value" = @{
+            Pattern = "Vec2short\s+\w+\s*=\s*nc_get_position_gfx_scroller\s*\("
+            Issue = "nc_get_position_gfx_scroller() signature changed in v3 (now uses output parameter)"
+            Suggestion = "Change to: Position pos; nc_get_position_gfx_scroller(&scroller, &pos);"
+        }
+
+        # Breaking change: nc_get_relative_position signature
+        "nc_get_relative_position() old signature" = @{
+            Pattern = "Vec2short\s+\w+\s*=\s*nc_get_relative_position\s*\(\s*[^,]*,\s*[^)]*\s*\)"
+            Issue = "nc_get_relative_position() signature changed in v3 (now takes Position* as first parameter)"
+            Suggestion = "Change to: Position pos; nc_get_relative_position(&pos, box, world_coord);"
+        }
+
+        # Vec2short type usage (replaced with Position in v3)
+        "Vec2short type usage" = @{
+            Pattern = "Vec2short\s+\w+"
+            Issue = "Vec2short type deprecated in v3, replaced with Position"
             Suggestion = "Replace Vec2short with Position type"
         }
 
-        # Function signature changes
-        "nc_get_position_gfx_animated_sprite()" = @{
-            Pattern = "nc_get_position_gfx_animated_sprite\s*\("
-            Issue = "nc_get_position_gfx_animated_sprite() signature changed in v3"
-            Suggestion = "Update function call to use Position* parameter"
-        }
-
-        "nc_get_position_gfx_picture()" = @{
-            Pattern = "nc_get_position_gfx_picture\s*\("
-            Issue = "nc_get_position_gfx_picture() signature changed in v3"
-            Suggestion = "Update function call to use Position* parameter"
-        }
-
-        "nc_get_position_gfx_scroller()" = @{
-            Pattern = "nc_get_position_gfx_scroller\s*\("
-            Issue = "nc_get_position_gfx_scroller() signature changed in v3"
-            Suggestion = "Update function call to use Position* parameter"
-        }
-
-        "nc_get_relative_position()" = @{
-            Pattern = "nc_get_relative_position\s*\("
-            Issue = "nc_get_relative_position() signature changed in v3"
-            Suggestion = "Update function call to use Position* as first parameter"
-        }
-
-        # Deprecated functions
-        "nc_log()" = @{
-            Pattern = "nc_log\s*\("
-            Issue = "nc_log() function deprecated in v3"
+        # REAL deprecated logging functions from v2 (only the ones that actually existed)
+        "nc_log() function" = @{
+            Pattern = "nc_log\s*\(\s*`"[^`"]*`"\s*\)\s*;"
+            Issue = "nc_log() function removed in v3"
             Suggestion = "Replace with nc_log_info_line()"
-        }
-
-        "nc_log_word() with label" = @{
-            Pattern = "nc_log_word\s*\(\s*`".*`"\s*,"
-            Issue = "nc_log_word() signature changed in v3 (label parameter removed)"
-            Suggestion = "Remove label parameter, use separate nc_log_info() call"
-        }
-
-        "nc_log_int() with label" = @{
-            Pattern = "nc_log_int\s*\(\s*`".*`"\s*,"
-            Issue = "nc_log_int() signature changed in v3 (label parameter removed)"
-            Suggestion = "Remove label parameter, use separate nc_log_info() call"
-        }
-
-        "nc_log_short() with label" = @{
-            Pattern = "nc_log_short\s*\(\s*`".*`"\s*,"
-            Issue = "nc_log_short() signature changed in v3 (label parameter removed)"
-            Suggestion = "Remove label parameter, use separate nc_log_info() call"
         }
 
         "nc_log_vec2short()" = @{
             Pattern = "nc_log_vec2short\s*\("
-            Issue = "nc_log_vec2short() replaced with nc_log_position() in v3"
-            Suggestion = "Replace with nc_log_position() and update parameter type"
+            Issue = "nc_log_vec2short() function removed in v3"
+            Suggestion = "Replace with nc_log_position() and update parameter type from Vec2short to Position"
         }
 
-        # Sprite system changes
-        "DATlib 0.2" = @{
-            Pattern = "DATlib\s+0\.2"
-            Issue = "DATlib 0.2 references found (v3 uses DATlib 0.3)"
-            Suggestion = "Update DATlib references to 0.3"
+        "nc_log_word() with label" = @{
+            Pattern = "nc_log_word\s*\(\s*`"[^`"]*`"\s*,"
+            Issue = "nc_log_word() signature changed in v3 (label parameter removed)"
+            Suggestion = "Remove label parameter: nc_log_word(value) or use nc_log_info() first"
+        }
+
+        "nc_log_int() with label" = @{
+            Pattern = "nc_log_int\s*\(\s*`"[^`"]*`"\s*,"
+            Issue = "nc_log_int() signature changed in v3 (label parameter removed)"
+            Suggestion = "Remove label parameter: nc_log_int(value) or use nc_log_info() first"
+        }
+
+        "nc_log_short() with label" = @{
+            Pattern = "nc_log_short\s*\(\s*`"[^`"]*`"\s*,"
+            Issue = "nc_log_short() signature changed in v3 (label parameter removed)"
+            Suggestion = "Remove label parameter: nc_log_short(value) or use nc_log_info() first"
         }
     }
 
