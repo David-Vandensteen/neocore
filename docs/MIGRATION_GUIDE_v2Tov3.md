@@ -4,10 +4,10 @@ This comprehensive guide will help you migrate your NeoCore v2.x projects to Neo
 
 ## Table of Contents
 1. [Migration Overview](#migration-overview)
-2. [NeoCore Framework Migration](#neocore-framework-migration)
-3. [DATlib Migration](#datlib-migration)
-4. [Step-by-Step Migration Process](#step-by-step-migration-process)
-5. [Migration Tools and Scripts](#migration-tools-and-scripts)
+2. [Migration Tools and Scripts](#migration-tools-and-scripts)
+3. [NeoCore Framework Migration](#neocore-framework-migration)
+4. [DATlib Migration](#datlib-migration)
+5. [Step-by-Step Migration Process](#step-by-step-migration-process)
 6. [Testing Your Migration](#testing-your-migration)
 7. [Common Issues and Solutions](#common-issues-and-solutions)
 
@@ -21,7 +21,343 @@ This comprehensive guide will help you migrate your NeoCore v2.x projects to Neo
 ### Compatibility Status
 - **Binary Compatibility**: ❌ Completely broken - full recompilation required
 - **Source Compatibility**: ❌ Heavily broken - extensive code changes required
-- **Migration Complexity**: 🔴 High - expect significant development time
+
+## Migration Tools and Scripts
+
+### Official Migration Script (Recommended)
+
+NeoCore v3 includes an official migration script that automates many migration tasks:
+
+```bash
+# Location: bootstrap/scripts/project/upgrade.bat
+# Usage:
+.\bootstrap\scripts\project\upgrade.bat -projectSrcPath "path\to\your\src" -projectNeocorePath "path\to\neocore"
+```
+
+**What the script does automatically:**
+- ✅ **Project.xml migration**: Automatically updates structure for v3 compatibility
+  - Adds missing v3 elements (`<platform>`, DAT setup, fixdata, emulator configs)
+  - Updates compiler configuration with v3 paths
+  - **Migrates `<sound>` section**: Automatically wraps existing sound content in `<cd>` structure
+- ✅ **Code analysis**: Scans C files for v2/v3 compatibility issues
+- ✅ **Deprecated file cleanup**: Automatically removes obsolete files:
+  - `common_crt0_cd.s` (no longer needed)
+  - `crt0_cd.s` (no longer needed)
+- ✅ **Validation**: Checks .gitignore patterns and project structure
+- ✅ **Backup creation**: Creates automatic backup in temp directory
+- ✅ **Detailed logging**: Comprehensive migration log for debugging
+
+**Migration process:**
+1. Run the script with your project paths
+2. Review compatibility warnings for C code
+3. Manually update C code based on analysis results
+4. Test your migrated project
+
+### Manual Migration Procedure (Fallback)
+
+If the automatic script fails or encounters issues, you can perform the migration manually. This section provides a complete step-by-step manual procedure.
+
+#### Prerequisites for Manual Migration
+
+1. **Backup your project:**
+   ```bash
+   # Create a full backup
+   cp -r your_project your_project_backup
+
+   # Or use git
+   git tag pre-neocore-v3-migration
+   git commit -am "Pre-migration backup"
+   ```
+
+2. **Ensure you have NeoCore v3 source:**
+   - Download or clone NeoCore v3.0.0
+   - Verify the version in `manifest.xml`
+
+#### Step 1: Manual NeoCore Library Update
+
+**Replace the NeoCore library files:**
+
+1. **Backup your complete project** (create a full copy or git commit)
+2. **Replace with the new v3 library** from your NeoCore v3 installation
+3. **Update the toolchain** if you have custom modifications
+4. **Replace any other NeoCore-specific folders** as needed
+
+#### Step 2: Manual Project.xml Migration
+
+**Update your `project.xml` file manually:**
+
+1. **Add platform specification (after `<version>`):**
+   ```xml
+   <platform>cd</platform>
+   ```
+
+2. **Move `<neocorePath>` to top level (after `<distPath>`):**
+   ```xml
+   <!-- Move this element from bottom to top level -->
+   <neocorePath>..\neocore</neocorePath>
+   ```
+
+3. **Update path templates:**
+   ```xml
+   <!-- Change these paths -->
+   <buildPath>{{neocore}}\build</buildPath>
+   <distPath>{{neocore}}\dist</distPath>
+   ```
+
+4. **Add DAT output specifications in chardata setup:**
+   ```xml
+   <setup>
+     <starting_tile>256</starting_tile>
+     <!-- ADD THESE LINES -->
+     <charfile>out\char.bin</charfile>
+     <mapfile>out\charMaps.s</mapfile>
+     <palfile>out\charPals.s</palfile>
+     <incfile>out\charInclude.h</incfile>
+     <incprefix>../</incprefix>
+   </setup>
+   ```
+
+5. **Wrap sound section in `<cd>` element:**
+   ```xml
+   <!-- OLD -->
+   <sound>
+     <sfx>...</sfx>
+     <cdda>...</cdda>
+   </sound>
+
+   <!-- NEW -->
+   <sound>
+     <cd>
+       <sfx>...</sfx>
+       <cdda>...</cdda>
+     </cd>
+   </sound>
+   ```
+
+6. **Update compiler configuration:**
+   ```xml
+   <compiler>
+     <name>gcc</name>
+     <version>2.95.2</version>
+     <path>{{build}}\gcc\gcc-2.95.2</path>
+     <!-- UPDATE THESE -->
+     <includePath>{{neocore}}\src-lib\include</includePath>
+     <libraryPath>{{build}}\lib</libraryPath>
+     <!-- ADD THIS -->
+     <crtPath>{{neocore}}\src-lib\crt</crtPath>
+     <!-- UPDATE THIS -->
+     <systemFile>
+       <cd>{{neocore}}\src-lib\system\neocd.x</cd>
+       <cartridge>{{neocore}}\src-lib\system\neocart.x</cartridge>
+     </systemFile>
+   </compiler>
+   ```
+
+#### Step 3: Manual File Cleanup
+
+**Remove deprecated files:**
+
+```bash
+# Remove deprecated startup files
+rm src/common_crt0_cd.s 2>/dev/null || true
+rm src/crt0_cd.s 2>/dev/null || true
+
+# Clean build artifacts
+rm -rf build/* 2>/dev/null || true
+rm -rf dist/* 2>/dev/null || true
+rm src/*.o 2>/dev/null || true
+rm src/*.iso 2>/dev/null || true
+```
+
+#### Step 4: Manual Makefile Update
+
+**Replace your project's Makefile:**
+
+```bash
+# Backup current Makefile
+cp src/Makefile src/Makefile_v2_backup
+
+# Copy new v3 Makefile from NeoCore standalone template
+cp path/to/neocore_v3/bootstrap/standalone/Makefile src/Makefile
+```
+
+#### Step 5: Manual C Code Migration
+
+**Search and replace operations (use your IDE's find/replace):**
+
+1. **Type system changes:**
+   ```bash
+   # Global replacements in all .c and .h files:
+   Vec2short → Position
+   ```
+
+2. **Position getter functions:**
+   ```bash
+   # Find patterns like:
+   Vec2short pos = nc_get_position_gfx_animated_sprite(sprite);
+
+   # Replace with:
+   Position pos;
+   nc_get_position_gfx_animated_sprite(&sprite, &pos);
+   ```
+
+3. **Relative position function:**
+   ```bash
+   # Find patterns like:
+   Vec2short relative = nc_get_relative_position(box, world_coord);
+
+   # Replace with:
+   Position relative;
+   nc_get_relative_position(&relative, box, world_coord);
+   ```
+
+4. **Logging system migration:**
+   ```bash
+   # Replace basic logging:
+   nc_log("message") → nc_log_info_line("message")
+
+   # Replace labeled logging:
+   nc_log_word("Label", value) → nc_log_info("Label: "); nc_log_word(value); nc_log_next_line();
+   nc_log_vec2short("Pos", pos) → nc_log_position(pos);
+   ```
+
+5. **DATlib type changes:**
+   ```bash
+   # Global replacements:
+   paletteInfo->palCount → paletteInfo->count
+   sprite->currentStepNum → sprite->stepNum
+   ```
+
+#### Step 6: Manual Validation
+
+**Check for common issues:**
+
+1. **Verify project.xml syntax:**
+   ```bash
+   # Test XML parsing (if you have xmllint)
+   xmllint --noout src/project.xml
+   ```
+
+2. **Check for missed patterns:**
+   ```bash
+   # Search for old patterns that might have been missed
+   grep -r "Vec2short\|nc_log(" src/ --include="*.c" --include="*.h"
+   grep -r "= nc_get_position_" src/ --include="*.c"
+   grep -r "->palCount\|->currentStepNum" src/ --include="*.c"
+   ```
+
+3. **Compilation test:**
+   ```bash
+   cd src
+   make clean
+   make
+   ```
+
+#### Step 7: Manual .gitignore Check
+
+**Review and fix .gitignore patterns:**
+
+1. **Check for incorrect patterns:**
+   ```bash
+   # Look for patterns that should be absolute
+   grep "^build/\|^dist/" ../.gitignore
+   ```
+
+2. **Fix patterns manually:**
+   ```bash
+   # Edit .gitignore to use absolute paths
+   build/ → /build/
+   dist/ → /dist/
+   ```
+
+#### Troubleshooting Manual Migration
+
+**Common manual migration issues:**
+
+1. **XML parsing errors:**
+   - Check for unclosed tags
+   - Verify proper nesting
+   - Ensure `<cd>` wrapper around sound elements
+
+2. **Compilation errors:**
+   - Missing `Position` declarations
+   - Old function call patterns
+   - Incorrect parameter counts
+
+3. **Linking errors:**
+   - Wrong library paths in project.xml
+   - Missing CRT path configuration
+   - Incorrect system file paths
+
+4. **Runtime issues:**
+   - Color values changed (check JOB_* constants)
+   - Animation system behavior changes
+   - Scroller system compatibility (may need rewrite)
+
+**Manual verification checklist:**
+
+- [ ] `project.xml` has `<platform>cd</platform>`
+- [ ] `<neocorePath>` moved to top level
+- [ ] Path templates use `{{neocore}}`
+- [ ] Sound section wrapped in `<cd>`
+- [ ] Compiler paths updated for v3
+- [ ] Deprecated files removed
+- [ ] All `Vec2short` replaced with `Position`
+- [ ] Position getters use output parameters
+- [ ] Logging calls updated
+- [ ] Project compiles without errors
+- [ ] .gitignore patterns use absolute paths
+
+### Automated Search & Replace Script
+```bash
+#!/bin/bash
+# migration-helper.sh
+
+echo "NeoCore v2 to v3 Migration Helper"
+
+# NeoCore Framework migrations
+find . -name "*.c" -o -name "*.h" | xargs sed -i 's/Vec2short/Position/g'
+find . -name "*.c" -o -name "*.h" | xargs sed -i 's/nc_log_vec2short/nc_log_position/g'
+
+# DATlib migrations
+find . -name "*.c" -o -name "*.h" | xargs sed -i 's/->palCount/->count/g'
+find . -name "*.c" -o -name "*.h" | xargs sed -i 's/->colNumber/\/\* MIGRATION NEEDED: colNumber removed \*\//g'
+find . -name "*.c" -o -name "*.h" | xargs sed -i 's/->topBk/\/\* MIGRATION NEEDED: topBk removed \*\//g'
+find . -name "*.c" -o -name "*.h" | xargs sed -i 's/->botBk/\/\* MIGRATION NEEDED: botBk removed \*\//g'
+find . -name "*.c" -o -name "*.h" | xargs sed -i 's/->currentStepNum/->stepNum/g'
+
+echo "Automated replacements completed. Manual review required for:"
+echo "- Position getter function calls"
+echo "- Logging function calls"
+echo "- Scroller system (complete rewrite needed)"
+echo "- Animation system (manual updates needed)"
+```
+
+### Validation Script
+```bash
+#!/bin/bash
+# validate-migration.sh
+
+echo "Checking for common migration issues..."
+
+# Check for old function patterns
+echo "=== Checking for old position getter patterns ==="
+grep -r "= nc_get_position_" . --include="*.c" && echo "⚠️  Found old position getter patterns"
+
+# Check for old logging patterns
+echo "=== Checking for old logging patterns ==="
+grep -r "nc_log(" . --include="*.c" && echo "⚠️  Found old nc_log() calls"
+
+# Check for removed structures
+echo "=== Checking for removed structures ==="
+grep -r "animation \*" . --include="*.c" --include="*.h" && echo "⚠️  Found animation* usage"
+
+# Check for removed members
+echo "=== Checking for removed members ==="
+grep -r "->colNumber\|->topBk\|->botBk\|->maxStep\|->currentAnimation" . --include="*.c" && echo "⚠️  Found removed member access"
+
+echo "Validation complete. Review warnings above."
+```
 
 ## NeoCore Framework Migration
 
@@ -416,326 +752,36 @@ void clearFixLayer3();
 
 ## Step-by-Step Migration Process
 
-### Phase 1: Project Setup
+### Phase 1: Prerequisites and Backup
 
-#### 1.1 Project Configuration Migration (CRITICAL)
-
-**⚠️ BREAKING:** The `project.xml` structure has significant changes that require manual updates.
-
-**OLD (v2.x):**
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<project>
-  <name></name>
-  <version>1.0.0</version>
-  <makefile>Makefile</makefile>
-  <gfx>
-    <DAT>
-      <chardata>
-        <setup>
-          <starting_tile>256</starting_tile>
-        </setup>
-        <pict id="logo">
-          <file>assets\gfx\logo.png</file>
-        </pict>
-      </chardata>
-    </DAT>
-  </gfx>
-  <sound>
-    <sfx>
-      <pcm>assets\sounds\sfx\click.V1</pcm>
-      <z80>assets\sounds\sfx\click.M1</z80>
-    </sfx>
-    <cdda>
-      <!-- cdda configuration -->
-    </cdda>
-  </sound>
-  <!-- emulator config unchanged -->
-  <neocorePath>..\neocore</neocorePath>
-  <buildPath>..\build</buildPath>
-  <distPath>..\dist</distPath>
-  <compiler>
-    <name>gcc</name>
-    <version>2.95.2</version>
-    <path>{{build}}\gcc\gcc-2.95.2</path>
-    <includePath>{{build}}\include</includePath>
-    <libraryPath>{{build}}\lib</libraryPath>
-    <systemFile>{{build}}\system\neocd.x</systemFile>
-  </compiler>
-</project>
-```
-
-**NEW (v3.0):**
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<project>
-  <name></name>
-  <version>1.0.0</version>
-  <platform>cd</platform>                                    <!-- NEW: Platform specification -->
-  <makefile>Makefile</makefile>
-  <neocorePath>..\neocore</neocorePath>                      <!-- MOVED: Now at top level -->
-  <buildPath>{{neocore}}\build</buildPath>                   <!-- CHANGED: Now uses template variables -->
-  <distPath>{{neocore}}\dist</distPath>                      <!-- CHANGED: Now uses template variables -->
-  <gfx>
-    <DAT>
-      <chardata>
-        <setup>
-          <starting_tile>256</starting_tile>
-          <charfile>out\char.bin</charfile>                   <!-- NEW: Output file specifications -->
-          <mapfile>out\charMaps.s</mapfile>                   <!-- NEW -->
-          <palfile>out\charPals.s</palfile>                   <!-- NEW -->
-          <incfile>out\charInclude.h</incfile>                <!-- NEW -->
-          <incprefix>../</incprefix>                          <!-- NEW -->
-        </setup>
-        <pict id="logo">
-          <file>assets\gfx\logo.png</file>
-        </pict>
-      </chardata>
-      <fixdata>                                               <!-- NEW: Fix data section -->
-        <chardata>
-          <setup fileType="fix">
-            <charfile>out\fix.bin</charfile>
-            <palfile>out\fixPals.s</palfile>
-            <incfile>out\fixData.h</incfile>
-          </setup>
-          <import bank="0">
-            <file>{{build}}\fix\systemFont.bin</file>
-          </import>
-        </chardata>
-      </fixdata>
-    </DAT>
-  </gfx>
-  <sound>
-    <cd>                                                      <!-- NEW: Wrapped in <cd> element -->
-      <sfx>                                                   <!-- MOVED: Now under <cd> -->
-        <pcm>assets\sounds\sfx\click.V1</pcm>
-        <z80>assets\sounds\sfx\click.M1</z80>
-      </sfx>
-      <cdda>
-        <!-- cdda configuration -->
-      </cdda>
-    </cd>
-  </sound>
-  <!-- emulator config unchanged -->
-  <compiler>
-    <name>gcc</name>
-    <version>2.95.2</version>
-    <path>{{build}}\gcc\gcc-2.95.2</path>
-    <includePath>{{neocore}}\src-lib\include</includePath>    <!-- CHANGED: Now points to neocore -->
-    <libraryPath>{{build}}\lib</libraryPath>
-    <crtPath>{{neocore}}\src-lib\crt</crtPath>                <!-- NEW: CRT path configuration -->
-    <systemFile>
-      <cd>{{neocore}}\src-lib\system\neocd.x</cd>             <!-- CHANGED: Now nested structure -->
-      <cartridge>{{neocore}}\src-lib\system\neocart.x</cartridge> <!-- NEW: Cartridge support -->
-    </systemFile>
-  </compiler>
-</project>
-```
-
-**Migration Steps:**
-
-1. **Add new required elements:**
-   ```xml
-   <platform>cd</platform>  <!-- Add after <version> -->
-   ```
-
-2. **Move neocorePath to top level:**
-   ```xml
-   <!-- Move from bottom of file to after <distPath> -->
-   <neocorePath>..\neocore</neocorePath>
-   ```
-
-3. **Update path templates:**
-   ```xml
-   <!-- OLD -->
-   <buildPath>..\build</buildPath>
-   <distPath>..\dist</distPath>
-
-   <!-- NEW -->
-   <buildPath>{{neocore}}\build</buildPath>
-   <distPath>{{neocore}}\dist</distPath>
-   ```
-
-4. **Add chardata output specifications:**
-   ```xml
-   <setup>
-     <starting_tile>256</starting_tile>
-     <!-- ADD THESE -->
-     <charfile>out\char.bin</charfile>
-     <mapfile>out\charMaps.s</mapfile>
-     <palfile>out\charPals.s</palfile>
-     <incfile>out\charInclude.h</incfile>
-     <incprefix>../</incprefix>
-   </setup>
-   ```
-
-5. **Add fixdata section (optional but recommended):**
-   ```xml
-   <gfx>
-     <DAT>
-       <chardata>...</chardata>
-       <!-- ADD THIS SECTION -->
-       <fixdata>
-         <chardata>
-           <setup fileType="fix">
-             <charfile>out\fix.bin</charfile>
-             <palfile>out\fixPals.s</palfile>
-             <incfile>out\fixData.h</incfile>
-           </setup>
-           <import bank="0">
-             <file>{{build}}\fix\systemFont.bin</file>
-           </import>
-         </chardata>
-       </fixdata>
-     </DAT>
-   </gfx>
-   ```
-
-6. **Wrap sound elements in cd:**
-   ```xml
-   <!-- OLD -->
-   <sound>
-     <sfx>...</sfx>
-     <cdda>...</cdda>
-   </sound>
-
-   <!-- NEW -->
-   <sound>
-     <cd>
-       <sfx>...</sfx>
-       <cdda>...</cdda>
-     </cd>
-   </sound>
-   ```
-
-7. **Update compiler configuration:**
-   ```xml
-   <compiler>
-     <!-- UPDATE -->
-     <includePath>{{neocore}}\src-lib\include</includePath>
-
-     <!-- ADD -->
-     <crtPath>{{neocore}}\src-lib\crt</crtPath>
-
-     <!-- CHANGE -->
-     <systemFile>
-       <cd>{{neocore}}\src-lib\system\neocd.x</cd>
-       <cartridge>{{neocore}}\src-lib\system\neocart.x</cartridge>
-     </systemFile>
-   </compiler>
-   ```
-
-#### 1.2 Update NeoCore Version
-   - Update project.xml using steps above
-   - Update build system references
-
-#### 1.3 Remove Deprecated Files
-
-⚠️ **Important**: The following files are no longer needed in NeoCore v3 and will be automatically removed:
-
-**Files automatically removed:**
-- `common_crt0_cd.s` - Deprecated startup file
-- `crt0_cd.s` - Deprecated startup file
-
-**Automatic removal by migration script:**
-The official migration script (`_upgrade.ps1`) automatically detects and removes these files during migration. You will see log entries like:
-```
-[SUCCESS] Successfully deleted deprecated file: ...\common_crt0_cd.s
-[SUCCESS] Successfully deleted deprecated file: ...\crt0_cd.s
-```
-
-**Manual removal (if not using migration script):**
-```bash
-# Remove from your project directory manually if needed
-rm src/common_crt0_cd.s
-rm src/crt0_cd.s
-```
-
-#### 1.4 Backup Your Project
+1. **Backup Your Project**
    ```bash
    git tag pre-neocore-v3-migration
    git commit -am "Pre-migration backup"
    ```
 
-### Phase 2: NeoCore Framework Migration
+2. **Choose Migration Method**
+   - **Recommended**: Use the official migration script (see next section)
+   - **Fallback**: Manual migration procedure (see Manual Migration section)
 
-1. **Type System Migration**
-   ```bash
-   # Global search and replace (use your IDE)
-   Vec2short → Position
-   ```
+### Phase 2: Core Migration Steps
 
-2. **Position Getter Functions**
-   ```c
-   // Find all instances of:
-   Vec2short pos = nc_get_position_*()
+1. **Update NeoCore Framework**
+   - Replace `Vec2short` with `Position`
+   - Update position getter function calls
+   - Migrate logging system calls
 
-   // Replace with:
-   Position pos;
-   nc_get_position_*(&object, &pos);
-   ```
+2. **Update DATlib Code**
+   - Update type system (`WORD` → `ushort`, etc.)
+   - Migrate palette structure access
+   - Handle breaking changes in sprite/scroller systems
 
-3. **Logging System Migration**
-   ```c
-   // Replace basic logging:
-   nc_log("message") → nc_log_info_line("message")
+3. **Update Project Configuration**
+   - Migrate `project.xml` to v3 format
+   - Remove deprecated files
+   - Update build configuration
 
-   // Replace labeled logging:
-   nc_log_word("Label", value) → nc_log_info("Label: "); nc_log_word(value); nc_log_next_line()
-   ```
-
-4. **Type Removals Migration**
-   ```c
-   // Replace removed typedefs:
-   Hex_Color → char[3] or char*
-   Hex_Packed_Color → char[5] or char*
-
-   // Example:
-   Hex_Color myColor;     // OLD
-   char myColor[3];       // NEW
-   ```
-
-### Phase 3: DATlib Migration
-
-1. **Palette Structure Migration**
-   ```c
-   // Replace all instances:
-   paletteInfo->palCount → paletteInfo->count
-   ```
-
-2. **Type Migration**
-   ```c
-   // Global replacements:
-   WORD → ushort
-   DWORD → uint
-   BYTE → uchar (where appropriate)
-   ```
-
-3. **Scroller System Rewrite** ⚠️ **CRITICAL**
-   - **Complete rewrite required** for all scroller code
-   - Remove `colNumber`, `topBk`, `botBk` usage
-   - Implement new `config[32]` system
-   - Convert to strip-based system
-
-4. **Animated Sprite Migration**
-   ```c
-   // Remove animation structures:
-   animation *myAnims; // REMOVE
-
-   // Update aSprite member access:
-   sprite->currentStepNum → sprite->stepNum
-   sprite->currentAnimation → use sprite->currentAnim index
-   // Remove: maxStep, frames access
-   ```
-
-5. **Function Signature Updates**
-   ```c
-   // Add new parameters:
-   aSpriteInit(as, si, baseSprite, basePalette, x, y, anim, flip, flags);
-   spritePoolInit(sp, baseSprite, size, clearSprites);
-   ```
-
-### Phase 4: Testing and Validation
+### Phase 3: Testing and Validation
 
 1. **Compilation Test**
    ```bash
@@ -755,88 +801,6 @@ rm src/crt0_cd.s
    - Check memory usage (structure sizes changed)
    - Verify frame rate performance
    - Test under different load conditions
-
-## Migration Tools and Scripts
-
-### Official Migration Script (Recommended)
-
-NeoCore v3 includes an official migration script that automates many migration tasks:
-
-```powershell
-# Location: bootstrap/scripts/project/_upgrade.ps1
-# Usage:
-.\bootstrap\scripts\project\_upgrade.ps1 -ProjectSrcPath "path\to\your\src" -ProjectNeocorePath "path\to\neocore"
-```
-
-**What the script does automatically:**
-- ✅ **Project.xml migration**: Automatically updates structure for v3 compatibility
-  - Adds missing v3 elements (`<platform>`, DAT setup, fixdata, emulator configs)
-  - Updates compiler configuration with v3 paths
-  - **Migrates `<sound>` section**: Automatically wraps existing sound content in `<cd>` structure
-- ✅ **Code analysis**: Scans C files for v2/v3 compatibility issues
-- ✅ **Deprecated file cleanup**: Automatically removes obsolete files:
-  - `common_crt0_cd.s` (no longer needed)
-  - `crt0_cd.s` (no longer needed)
-- ✅ **Validation**: Checks .gitignore patterns and project structure
-- ✅ **Backup creation**: Creates automatic backup in temp directory
-- ✅ **Detailed logging**: Comprehensive migration log for debugging
-
-**Migration process:**
-1. Run the script with your project paths
-2. Review compatibility warnings for C code
-3. Manually update C code based on analysis results
-4. Test your migrated project
-
-### Automated Search & Replace Script
-```bash
-#!/bin/bash
-# migration-helper.sh
-
-echo "NeoCore v2 to v3 Migration Helper"
-
-# NeoCore Framework migrations
-find . -name "*.c" -o -name "*.h" | xargs sed -i 's/Vec2short/Position/g'
-find . -name "*.c" -o -name "*.h" | xargs sed -i 's/nc_log_vec2short/nc_log_position/g'
-
-# DATlib migrations
-find . -name "*.c" -o -name "*.h" | xargs sed -i 's/->palCount/->count/g'
-find . -name "*.c" -o -name "*.h" | xargs sed -i 's/->colNumber/\/\* MIGRATION NEEDED: colNumber removed \*\//g'
-find . -name "*.c" -o -name "*.h" | xargs sed -i 's/->topBk/\/\* MIGRATION NEEDED: topBk removed \*\//g'
-find . -name "*.c" -o -name "*.h" | xargs sed -i 's/->botBk/\/\* MIGRATION NEEDED: botBk removed \*\//g'
-find . -name "*.c" -o -name "*.h" | xargs sed -i 's/->currentStepNum/->stepNum/g'
-
-echo "Automated replacements completed. Manual review required for:"
-echo "- Position getter function calls"
-echo "- Logging function calls"
-echo "- Scroller system (complete rewrite needed)"
-echo "- Animation system (manual updates needed)"
-```
-
-### Validation Script
-```bash
-#!/bin/bash
-# validate-migration.sh
-
-echo "Checking for common migration issues..."
-
-# Check for old function patterns
-echo "=== Checking for old position getter patterns ==="
-grep -r "= nc_get_position_" . --include="*.c" && echo "⚠️  Found old position getter patterns"
-
-# Check for old logging patterns
-echo "=== Checking for old logging patterns ==="
-grep -r "nc_log(" . --include="*.c" && echo "⚠️  Found old nc_log() calls"
-
-# Check for removed structures
-echo "=== Checking for removed structures ==="
-grep -r "animation \*" . --include="*.c" --include="*.h" && echo "⚠️  Found animation* usage"
-
-# Check for removed members
-echo "=== Checking for removed members ==="
-grep -r "->colNumber\|->topBk\|->botBk\|->maxStep\|->currentAnimation" . --include="*.c" && echo "⚠️  Found removed member access"
-
-echo "Validation complete. Review warnings above."
-```
 
 ## Common Issues and Solutions
 
