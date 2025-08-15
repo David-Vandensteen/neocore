@@ -14,6 +14,8 @@ param (
 . "$PSScriptRoot\upgrade\modules\get\project\versions.ps1"
 . "$PSScriptRoot\upgrade\modules\compare\project\versions.ps1"
 . "$PSScriptRoot\upgrade\modules\write\projectXML.ps1"
+. "$PSScriptRoot\upgrade\modules\copy\makefile.ps1"
+. "$PSScriptRoot\upgrade\modules\copy\neocore\files.ps1"
 
 function Main {
     # Initialize log file
@@ -91,8 +93,24 @@ function Main {
             Write-Host ""
             Write-Host "WARNING: The following files will be modified:" -ForegroundColor Red
             Write-Host "  - project.xml (will be rewritten to match NeoCore v3 format)" -ForegroundColor Yellow
+            Write-Host "  - Makefile (will be overwritten with NeoCore v3 version)" -ForegroundColor Yellow
+            Write-Host "  - NeoCore files will be copied (src-lib, manifest.xml, toolchain)" -ForegroundColor Yellow
             Write-Host ""
-            Write-Log -File $logFile -Level "WARNING" -Message "Starting migration process - project.xml will be rewritten"
+            Write-Log -File $logFile -Level "WARNING" -Message "Starting migration process - project.xml and Makefile will be rewritten, NeoCore files copied"
+
+            # Copy NeoCore files (src-lib, toolchain, etc.)
+            if (-not (Copy-NeocoreFiles -SourceNeocorePath $sourceNeocorePath -ProjectNeocorePath $ProjectNeocorePath -LogFile $logFile)) {
+                Write-Host "Migration failed during NeoCore files copy" -ForegroundColor Red
+                Write-Log -File $logFile -Level "ERROR" -Message "Migration failed during NeoCore files copy"
+                return $false
+            }
+
+            # Overwrite Makefile with NeoCore v3 version
+            if (-not (Copy-Makefile -ProjectSrcPath $ProjectSrcPath -SourceNeocorePath $sourceNeocorePath -LogFile $logFile)) {
+                Write-Host "Migration failed during Makefile update" -ForegroundColor Red
+                Write-Log -File $logFile -Level "ERROR" -Message "Migration failed during Makefile update"
+                return $false
+            }
 
             # Migrate project.xml to NeoCore v3 format
             if (-not (Write-ProjectXML -ProjectSrcPath $ProjectSrcPath -TargetVersion $versions.Target -LogFile $logFile)) {
