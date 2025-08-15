@@ -84,7 +84,7 @@ function Main {
 
     # Handle comparison result
     switch ($comparisonResult) {
-        "uptodate" { return $true }
+        "uptodate" { }
         "conflict" { return $false }
         "error" { return $false }
         "migrate" {

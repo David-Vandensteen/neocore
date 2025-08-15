@@ -80,7 +80,7 @@ function Assert-Manifest {
         Write-Host "Current version: $currentVersion" -ForegroundColor White
         Write-Host ""
         Write-Log -File $LogFile -Level "INFO" -Message "Project already migrated to version $targetVersion or higher (current: $currentVersion)"
-        return $false
+        return $true
     }
 
     Write-Host "Version check passed:" -ForegroundColor Green

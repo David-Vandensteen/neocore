@@ -50,7 +50,7 @@ function Compare-ProjectVersions {
             return "migrate"
         } elseif ($currentVer -eq $targetVer) {
             Write-Host ""
-            Write-Host "*** PROJECT UP TO DATE ***" -ForegroundColor Green -BackgroundColor Black
+            Write-Host "*** PROJECT XML UP TO DATE ***" -ForegroundColor Green -BackgroundColor Black
             Write-Host ""
             Write-Host "Your project is already using the target version:" -ForegroundColor Green
             Write-Host "  Current version: $CurrentVersion" -ForegroundColor Green
