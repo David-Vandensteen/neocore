@@ -17,6 +17,7 @@ param (
 . "$PSScriptRoot\upgrade\modules\copy\makefile.ps1"
 . "$PSScriptRoot\upgrade\modules\copy\neocore\files.ps1"
 . "$PSScriptRoot\upgrade\modules\remove\obsolete\files.ps1"
+. "$PSScriptRoot\upgrade\modules\analyze\ccode\legacy.ps1"
 
 function Main {
     # Initialize log file
@@ -126,6 +127,17 @@ function Main {
                 Write-Host "Migration completed with warnings during obsolete files removal" -ForegroundColor Yellow
                 Write-Log -File $logFile -Level "WARNING" -Message "Migration completed with warnings during obsolete files removal"
                 # Continue execution - obsolete files removal failures are not critical
+            }
+
+            # Analyze C code for legacy patterns
+            Write-Host ""
+            if (-not (Analyze-CCodeLegacy -ProjectSrcPath $ProjectSrcPath -LogFile $logFile)) {
+                Write-Host ""
+                Write-Host "*** MANUAL REVIEW REQUIRED ***" -ForegroundColor Yellow -BackgroundColor Black
+                Write-Host "Legacy code patterns were detected that require manual updates." -ForegroundColor Yellow
+                Write-Host "Please review the analysis above and update your code accordingly." -ForegroundColor Yellow
+                Write-Host "Migration files have been updated, but code changes are needed." -ForegroundColor Yellow
+                Write-Log -File $logFile -Level "WARNING" -Message "Migration completed but manual code review required for legacy patterns"
             }
 
         }
