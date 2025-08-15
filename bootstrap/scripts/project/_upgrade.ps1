@@ -13,6 +13,7 @@ param (
 . "$PSScriptRoot\upgrade\modules\get\manifest\version.ps1"
 . "$PSScriptRoot\upgrade\modules\get\project\versions.ps1"
 . "$PSScriptRoot\upgrade\modules\compare\project\versions.ps1"
+. "$PSScriptRoot\upgrade\modules\write\projectXML.ps1"
 
 function Main {
     # Initialize log file
@@ -84,7 +85,22 @@ function Main {
         "error" { return $false }
         "migrate" {
             Write-Host ""
-            # Continue with migration process...
+            Write-Host "*** MIGRATION PROCESS ***" -ForegroundColor Yellow -BackgroundColor Black
+            Write-Host ""
+            Write-Host "The migration will now proceed with the following changes:" -ForegroundColor Yellow
+            Write-Host ""
+            Write-Host "WARNING: The following files will be modified:" -ForegroundColor Red
+            Write-Host "  - project.xml (will be rewritten to match NeoCore v3 format)" -ForegroundColor Yellow
+            Write-Host ""
+            Write-Log -File $logFile -Level "WARNING" -Message "Starting migration process - project.xml will be rewritten"
+
+            # Migrate project.xml to NeoCore v3 format
+            if (-not (Write-ProjectXML -ProjectSrcPath $ProjectSrcPath -TargetVersion $versions.Target -LogFile $logFile)) {
+                Write-Host "Migration failed during project.xml update" -ForegroundColor Red
+                Write-Log -File $logFile -Level "ERROR" -Message "Migration failed during project.xml update"
+                return $false
+            }
+
         }
     }
 
