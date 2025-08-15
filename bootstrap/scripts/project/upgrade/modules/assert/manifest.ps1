@@ -102,10 +102,15 @@ function Test-VersionGreaterOrEqual {
     )
 
     try {
-        $ver = [System.Version]::Parse($Version)
-        $minVer = [System.Version]::Parse($MinVersion)
+        # Extract numeric part from version (remove suffixes like -rc, -alpha, -beta)
+        $versionNumeric = $Version -replace '-.*$', ''
+        $minVersionNumeric = $MinVersion -replace '-.*$', ''
+
+        $ver = [System.Version]::Parse($versionNumeric)
+        $minVer = [System.Version]::Parse($minVersionNumeric)
         return $ver -ge $minVer
     } catch {
+        Write-Log -File $LogFile -Level "WARNING" -Message "Failed to parse versions: '$Version' vs '$MinVersion' - $($_.Exception.Message)"
         return $false
     }
 }

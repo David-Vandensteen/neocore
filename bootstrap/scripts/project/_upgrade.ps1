@@ -128,22 +128,18 @@ function Main {
                 Write-Log -File $logFile -Level "WARNING" -Message "Migration completed with warnings during obsolete files removal"
                 # Continue execution - obsolete files removal failures are not critical
             }
-
-            # Analyze C code for legacy patterns
-            Write-Host ""
-            if (-not (Analyze-CCodeLegacy -ProjectSrcPath $ProjectSrcPath -LogFile $logFile)) {
-                Write-Host ""
-                Write-Host "*** MANUAL REVIEW REQUIRED ***" -ForegroundColor Yellow -BackgroundColor Black
-                Write-Host "Legacy code patterns were detected that require manual updates." -ForegroundColor Yellow
-                Write-Host "Please review the analysis above and update your code accordingly." -ForegroundColor Yellow
-                Write-Host "Migration files have been updated, but code changes are needed." -ForegroundColor Yellow
-                Write-Log -File $logFile -Level "WARNING" -Message "Migration completed but manual code review required for legacy patterns"
-            }
-
         }
     }
-
-
+    # Analyze C code for legacy patterns
+    Write-Host ""
+    if (-not (Analyze-CCodeLegacy -ProjectSrcPath $ProjectSrcPath -LogFile $logFile)) {
+        Write-Host ""
+        Write-Host "*** MANUAL REVIEW REQUIRED ***" -ForegroundColor Yellow -BackgroundColor Black
+        Write-Host "Legacy code patterns were detected that require manual updates." -ForegroundColor Yellow
+        Write-Host "Please review the analysis above and update your code accordingly." -ForegroundColor Yellow
+        Write-Host "Migration files have been updated, but code changes are needed." -ForegroundColor Yellow
+        Write-Log -File $logFile -Level "WARNING" -Message "Migration completed but manual code review required for legacy patterns"
+    }
 
     # If we reach here, migration can proceed
     Write-Log -File $logFile -Level "SUCCESS" -Message "Pre-migration checks passed"
