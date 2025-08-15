@@ -20,7 +20,10 @@ function Write-ProjectXML {
         ProjectName = "DefaultProject"
         ProjectVersion = "1.0.0"
         Platform = "cd"
-        NeocorePath = "{{neocore}}"
+        NeocorePath = "..\neocore"
+        BuildPath = "{{neocore}}\build"
+        Makefile = "Makefile"
+        DistPath = "{{neocore}}\dist"
         RaineExe = "{{build}}\raine\raine32.exe"
         MameExe = "{{build}}\mame\mame64.exe"
         CompilerPath = "{{build}}\gcc\gcc-2.95.2"
@@ -38,6 +41,9 @@ function Write-ProjectXML {
             $versionNode = $existingData.SelectSingleNode("//version")
             $platformNode = $existingData.SelectSingleNode("//platform")
             $neocorePathNode = $existingData.SelectSingleNode("//neocorePath")
+            $buildPathNode = $existingData.SelectSingleNode("//buildPath")
+            $makefileNode = $existingData.SelectSingleNode("//makefile")
+            $distPathNode = $existingData.SelectSingleNode("//distPath")
             $raineNode = $existingData.SelectSingleNode("//raine/exeFile")
             $mameNode = $existingData.SelectSingleNode("//mame/exeFile")
             $compilerPathNode = $existingData.SelectSingleNode("//compiler/path")
@@ -48,6 +54,9 @@ function Write-ProjectXML {
             if ($versionNode) { $existingValues.ProjectVersion = $versionNode.InnerText }
             if ($platformNode) { $existingValues.Platform = $platformNode.InnerText }
             if ($neocorePathNode) { $existingValues.NeocorePath = $neocorePathNode.InnerText }
+            if ($buildPathNode) { $existingValues.BuildPath = $buildPathNode.InnerText }
+            if ($makefileNode) { $existingValues.Makefile = $makefileNode.InnerText }
+            if ($distPathNode) { $existingValues.DistPath = $distPathNode.InnerText }
             if ($raineNode) { $existingValues.RaineExe = $raineNode.InnerText }
             if ($mameNode) { $existingValues.MameExe = $mameNode.InnerText }
             if ($compilerPathNode) { $existingValues.CompilerPath = $compilerPathNode.InnerText }
@@ -68,8 +77,9 @@ function Write-ProjectXML {
   <version>$($existingValues.ProjectVersion)</version>
   <platform>$($existingValues.Platform)</platform>
   <neocorePath>$($existingValues.NeocorePath)</neocorePath>
-  <buildPath>{{neocore}}\build</buildPath>
-  <makefile>..\Makefile</makefile>
+  <buildPath>$($existingValues.BuildPath)</buildPath>
+  <makefile>$($existingValues.Makefile)</makefile>
+  <distPath>$($existingValues.DistPath)</distPath>
   <gfx>
     <DAT>
       <chardata>
