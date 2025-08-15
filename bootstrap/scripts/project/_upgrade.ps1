@@ -144,9 +144,8 @@ function Main {
         Write-Host "Migration files have been updated, but code changes are needed." -ForegroundColor Yellow
         Write-Log -File $logFile -Level "WARNING" -Message "Migration completed but manual code review required for legacy patterns"
     }
+    Write-Host "Detailed log available at: $(Resolve-Path $logFile)" -ForegroundColor Cyan
 
-    # If we reach here, migration can proceed
-    Write-Log -File $logFile -Level "SUCCESS" -Message "Pre-migration checks passed"
     return $true
 }
 
