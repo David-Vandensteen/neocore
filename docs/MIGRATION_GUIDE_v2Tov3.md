@@ -5,11 +5,12 @@ This comprehensive guide will help you migrate your NeoCore v2.x projects to Neo
 ## Table of Contents
 1. [Migration Overview](#migration-overview)
 2. [Migration Tools and Scripts](#migration-tools-and-scripts)
-3. [NeoCore Framework Migration](#neocore-framework-migration)
-4. [DATlib Migration](#datlib-migration)
-5. [Step-by-Step Migration Process](#step-by-step-migration-process)
-6. [Testing Your Migration](#testing-your-migration)
-7. [Common Issues and Solutions](#common-issues-and-solutions)
+3. [Animator Export](#animator-export)
+4. [NeoCore Framework Migration](#neocore-framework-migration)
+5. [DATlib Migration](#datlib-migration)
+6. [Step-by-Step Migration Process](#step-by-step-migration-process)
+7. [Testing Your Migration](#testing-your-migration)
+8. [Common Issues and Solutions](#common-issues-and-solutions)
 
 ## Migration Overview
 
@@ -398,6 +399,92 @@ grep -r "->colNumber\|->topBk\|->botBk\|->maxStep\|->currentAnimation" . --inclu
 
 echo "Validation complete. Review warnings above."
 ```
+
+## Animator Export
+
+⚠️ **CRITICAL STEP - MANDATORY FOR PROJECTS WITH ANIMATED SPRITES** ⚠️
+
+**This step is REQUIRED if your NeoCore v2 project contains animated sprites.** Skipping this export will result in **runtime crashes** when running your migrated project on NeoCore v3.
+
+Before migrating your NeoCore v2 project, you **must** export your animations from the Animator tool to ensure compatibility with NeoCore v3. The animation data format has changed between v2 and v3, making this export step essential for projects using animated sprites.
+
+### When is this step required?
+
+✅ **Export Required:** Your project uses animated sprites (`.spr` files with animation data)
+❌ **Export Not Needed:** Your project only uses static sprites without animations
+
+### Export Process Overview
+
+The Animator export process involves three main steps:
+1. **Access the Animator menu**
+2. **Browse to your project directory**
+3. **Execute the export operation**
+
+### Step-by-Step Visual Guide
+
+#### Prerequisites: Launching the Animator
+
+Before you can export your animations, you need to launch the Animator tool from your project directory:
+
+1. **Navigate to your project source directory** (where your project files are located)
+2. **Open a terminal/command prompt** in this directory
+3. **Execute the command:**
+   ```bash
+   mak animator
+   ```
+
+#### Step 1: Access the Animator Menu
+
+<img src="images/migration/animator-menu.png" alt="Animator Menu" width="600">
+
+*Figure 1: Open the Animator menu to access export options*
+
+Navigate to the Animator application and access the main menu where the export functionality is located.
+
+#### Step 2: Browse to Project Directory
+
+<img src="images/migration/animator-browse.png" alt="Animator Browse" width="600">
+
+*Figure 2: Browse and select your project directory for export*
+
+Use the directory browser to navigate to your NeoCore v2 project directory. Ensure you select the correct project folder that contains your animation assets.
+
+#### Step 3: Execute Export Operation
+
+<img src="images/migration/animator-export.png" alt="Animator Export" width="600">
+
+*Figure 3: Execute the export process to generate compatible animation files*
+
+Initiate the export process. The Animator will generate the necessary files in a format compatible with NeoCore v3.
+
+### Export Completion
+
+Once the export process is complete:
+- ✅ Animation files are converted to v3 format
+- ✅ Asset references are updated for compatibility
+- ✅ Your project is ready for the migration script
+
+**Critical Notes:**
+- 🚨 **MANDATORY**: This export is **required** for projects with animated sprites - skipping will cause **runtime crashes**
+- 💾 **Always backup** your project before running the export
+- ✅ **Verify** that all animations export successfully
+- 📋 **Check the export logs** for any warnings or errors
+- 🔍 **Test animations** after export to ensure they work correctly
+
+### Consequences of Skipping This Step
+
+If you skip the Animator export for a project with animated sprites:
+- ❌ **Runtime crashes** when loading animation data
+- ❌ **Incompatible animation format** between v2 and v3
+- ❌ **Missing or corrupted sprite animations**
+- ❌ **Game will fail to start** or crash during sprite initialization
+
+### Next Steps
+
+After successfully exporting your animations:
+1. Proceed with the [Migration Tools and Scripts](#migration-tools-and-scripts)
+2. Run the official migration script
+3. Validate your migrated project
 
 ## NeoCore Framework Migration
 
