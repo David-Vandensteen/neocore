@@ -406,7 +406,7 @@ echo "Validation complete. Review warnings above."
 
 **This step is REQUIRED if your NeoCore v2 project contains animated sprites.** Skipping this export will result in **runtime crashes** when running your migrated project on NeoCore v3.
 
-Before migrating your NeoCore v2 project, you **must** export your animations from the Animator tool to ensure compatibility with NeoCore v3. The animation data format has changed between v2 and v3, making this export step essential for projects using animated sprites.
+After migrating your NeoCore v2 project, you **must** re-export your animations from the Animator tool to ensure compatibility with NeoCore v3. The animation data format has changed between v2 and v3, making this export step essential for projects using animated sprites.
 
 ### When is this step required?
 

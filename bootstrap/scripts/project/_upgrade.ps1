@@ -142,7 +142,8 @@ function Main {
             Write-Host "To export your animations:" -ForegroundColor Yellow
             Write-Host "  1. Navigate to your project source directory" -ForegroundColor White
             Write-Host "  2. Run: mak animator" -ForegroundColor Cyan
-            Write-Host "  3. Use the Animator menu to export your animation data" -ForegroundColor White
+            Write-Host "  3. Browse to your assets directory in the Animator" -ForegroundColor White
+            Write-Host "  4. Use the Animator menu to export your animation data" -ForegroundColor White
             Write-Host ""
             Write-Host " For detailed instructions, refer to the Migration Guide section 'Animator Export'" -ForegroundColor Cyan
             Write-Host ""
