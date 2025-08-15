@@ -21,9 +21,9 @@ function Write-ProjectXML {
         ProjectVersion = "1.0.0"
         Platform = "cd"
         NeocorePath = "..\neocore"
-        BuildPath = "{{neocore}}\build"
+        BuildPath = "..\build"
         Makefile = "Makefile"
-        DistPath = "{{neocore}}\dist"
+        DistPath = "..\dist"
         RaineExe = "..\build\raine\raine32.exe"
         MameExe = "..\build\mame\mame64.exe"
         CompilerPath = "..\build\gcc\gcc-2.95.2"
@@ -76,9 +76,9 @@ function Write-ProjectXML {
   <name>$($existingValues.ProjectName)</name>
   <version>$($existingValues.ProjectVersion)</version>
   <platform>$($existingValues.Platform)</platform>
+  <makefile>$($existingValues.Makefile)</makefile>
   <neocorePath>$($existingValues.NeocorePath)</neocorePath>
   <buildPath>$($existingValues.BuildPath)</buildPath>
-  <makefile>$($existingValues.Makefile)</makefile>
   <distPath>$($existingValues.DistPath)</distPath>
   <gfx>
     <DAT>
