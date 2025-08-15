@@ -7,25 +7,20 @@
       - **Real-time Monitoring**: BuildChar output monitoring with immediate process termination on color overload errors
       - **Error Handling**: Comprehensive error parsing and propagation across all build scripts with detailed logging
       - **Process Execution**: Enhanced make process execution with separate output/error log files
-      - **CRT Configuration System**: Added configurable `crtPath` in project.xml for flexible runtime file management
+      - **CRT Configuration System**: Added configurable `crtPath` in project.xml
       - **Embedded CRT Runtime**: Runtime files (crt0_cd.s, common_crt0_cd.s, etc.) are now automatically embedded in each build from centralized `src-lib/crt/` source
       - **CRT Cleanup**: Removed duplicate CRT files from samples/ directory - now sourced from single authoritative location
-      - **SFX Audio Integration**: Sound effects files (PCM/Z80) are now automatically copied during program build for immediate availability
-      - **Environment Variable Fixes**: Corrected PROJECT_PATH to point to build directory for proper assembler include resolution
       - **Makefile Improvements**: Added `-I$(PROJECT_PATH)` to ASFLAGS for correct assembler include path handling
     - **Module Robustness**: Improved robustness of Set-EnvPath, Stop-Emulators, and Watch-Folder modules with fixed infinite loops and blocking risks
     - **Embedded Dependencies**: Neodev and DATlib headers are now embedded in NeoCore instead of being installed as external dependencies
     - **Configuration Validation**:
-      - Enhanced Assert-Project function to validate new crtPath configuration
+      - Enhanced Assert-Project function
       - Improved XML path resolution and template variable handling
       - Better error messages for missing or invalid project configurations
-    - **Developer Experience**: More transparent build process with progress indicators, clearer error messages with actionable feedback, and robust file detection throughout build pipeline
   - **DOCUMENTATION IMPROVEMENTS**:
     - **Doxygen Integration**: Added comprehensive documentation tags throughout neocore.h
-    - **API Documentation**: Complete documentation for all major structures (Position, Box, RGB16, GFX_*)
+    - **API Documentation**: Documentation for major structures (Position, Box, RGB16, GFX_*)
     - **Function Documentation**: Detailed parameter descriptions, return values, and usage notes
-    - **Neo Geo Specific Documentation**: Hardware constraints, memory addresses, and platform-specific optimizations documented
-    - **Code Review**: Complete security and quality analysis with actionable recommendations in docs/review/lib/
   - **BREAKING CHANGES**:
     - **PowerShell Toolchain**:
       - **Command deprecations**: mak mame and mak raine deprecated (use mak run:mame and mak run:raine instead)
@@ -80,15 +75,11 @@
       - nc_init_log() - Initialize logging system
       - nc_set_position_log() - Set log cursor position
   - **MIGRATION TOOLS ENHANCEMENTS**:
-    - **Enhanced Migration Safety**: Added automatic project backup to `%TEMP%\[UUID]` before v2→v3 migration
-    - **Build Directory Validation**: Migration script now checks for existing build directory and requires manual cleanup before proceeding to prevent conflicts
     - **C Code Analysis**: Automatic scanning of C files for v2/v3 compatibility issues with detailed reporting of deprecated patterns and breaking changes
     - **Automated Cleanup**: Automatically removes obsolete files (common_crt0_cd.s, crt0_cd.s) during migration
     - **Sound Section Migration**: Automatically migrates `<sound>` sections to v3 format (`<sound><cd>` structure) while preserving content and formatting
-    - **Streamlined User Experience**: Removed redundant messaging, verbose banners, and "required for v3" repetitions for cleaner output with honest communication about migration scope
-    - **Comprehensive Logging**: Detailed migration logging with colored output and persistent log files
-    - **Post-Migration Validation**: Automatic Assert-Project validation after project.xml generation
-    - **Full XML Rewrite**: Complete project.xml rewrite using v3 template structure while preserving user data
+    - **Comprehensive Logging**: Detailed migration logging
+    - **Full XML Rewrite**: Complete project.xml rewrite using v3 template structure while preserving some user data
 
 ## 2.9.0
 
