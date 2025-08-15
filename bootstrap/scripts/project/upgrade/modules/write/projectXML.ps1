@@ -24,9 +24,9 @@ function Write-ProjectXML {
         BuildPath = "{{neocore}}\build"
         Makefile = "Makefile"
         DistPath = "{{neocore}}\dist"
-        RaineExe = "{{build}}\raine\raine32.exe"
-        MameExe = "{{build}}\mame\mame64.exe"
-        CompilerPath = "{{build}}\gcc\gcc-2.95.2"
+        RaineExe = "..\build\raine\raine32.exe"
+        MameExe = "..\build\mame\mame64.exe"
+        CompilerPath = "..\build\gcc\gcc-2.95.2"
         IncludePath = "{{neocore}}\src-lib\include"
         LibraryPath = "{{neocore}}\src-lib"
     }
