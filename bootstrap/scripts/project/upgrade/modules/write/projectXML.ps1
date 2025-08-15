@@ -24,8 +24,8 @@ function Write-ProjectXML {
         BuildPath = "..\build"
         Makefile = "Makefile"
         DistPath = "..\dist"
-        RaineExe = "..\build\raine\raine32.exe"
-        MameExe = "..\build\mame\mame64.exe"
+        RaineExe = "{{build}}\raine\raine32.exe"
+        MameExe = "{{build}}\mame\mame64.exe"
         CompilerPath = "..\build\gcc\gcc-2.95.2"
         IncludePath = "{{neocore}}\src-lib\include"
         LibraryPath = "{{neocore}}\src-lib"
@@ -131,7 +131,7 @@ function Write-ProjectXML {
     <name>gcc</name>
     <version>2.95.2</version>
     <path>$($existingValues.CompilerPath)</path>
-    <includePath>$($existingValues.IncludePath)</includePath>
+    <includePath>{{neocore}}\src-lib\include</includePath>
     <libraryPath>$($existingValues.LibraryPath)</libraryPath>
     <crtPath>{{neocore}}\src-lib\crt</crtPath>
     <systemFile>
