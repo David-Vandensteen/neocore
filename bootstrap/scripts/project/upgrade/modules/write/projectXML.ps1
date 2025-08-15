@@ -78,50 +78,102 @@ function Write-ProjectXML {
                     if ($sfxNode) {
                         $pcmNode = $sfxNode.SelectSingleNode("pcm")
                         $z80Node = $sfxNode.SelectSingleNode("z80")
-                        $existingSoundSection += "      <sfx>`n"
-                        if ($pcmNode) { $existingSoundSection += "        <pcm>$($pcmNode.InnerText)</pcm>`n" }
-                        if ($z80Node) { $existingSoundSection += "        <z80>$($z80Node.InnerText)</z80>`n" }
-                        $existingSoundSection += "      </sfx>`n"
+                        $existingSoundSection += '      <sfx>' + "`n"
+                        if ($pcmNode) { $existingSoundSection += '        <pcm>' + $pcmNode.InnerText + '</pcm>' + "`n" }
+                        if ($z80Node) { $existingSoundSection += '        <z80>' + $z80Node.InnerText + '</z80>' + "`n" }
+                        $existingSoundSection += '      </sfx>' + "`n"
                     }
 
                     if ($cddaNode) {
-                        $existingSoundSection += "      <cdda>`n"
+                        $existingSoundSection += '      <cdda>' + "`n"
                         $distNode = $cddaNode.SelectSingleNode("dist")
                         if ($distNode) {
                             $isoNode = $distNode.SelectSingleNode("iso")
                             if ($isoNode) {
                                 $formatNode = $isoNode.SelectSingleNode("format")
-                                $existingSoundSection += "        <dist>`n"
-                                $existingSoundSection += "          <iso>`n"
-                                if ($formatNode) { $existingSoundSection += "            <format>$($formatNode.InnerText)</format>`n" }
-                                $existingSoundSection += "          </iso>`n"
-                                $existingSoundSection += "        </dist>`n"
+                                $existingSoundSection += '        <dist>' + "`n"
+                                $existingSoundSection += '          <iso>' + "`n"
+                                if ($formatNode) { $existingSoundSection += '            <format>' + $formatNode.InnerText + '</format>' + "`n" }
+                                $existingSoundSection += '          </iso>' + "`n"
+                                $existingSoundSection += '        </dist>' + "`n"
                             }
                         }
                         $tracksNode = $cddaNode.SelectSingleNode("tracks")
                         if ($tracksNode) {
-                            $existingSoundSection += "        <tracks>`n"
+                            $existingSoundSection += '        <tracks>' + "`n"
                             $trackNodes = $tracksNode.SelectNodes("track")
                             foreach ($trackNode in $trackNodes) {
                                 $idNode = $trackNode.SelectSingleNode("id")
                                 $fileNode = $trackNode.SelectSingleNode("file")
                                 $pregapNode = $trackNode.SelectSingleNode("pregap")
-                                $existingSoundSection += "          <track>`n"
-                                if ($idNode) { $existingSoundSection += "            <id>$($idNode.InnerText)</id>`n" }
-                                if ($fileNode) { $existingSoundSection += "            <file>$($fileNode.InnerText)</file>`n" }
-                                if ($pregapNode) { $existingSoundSection += "            <pregap>$($pregapNode.InnerText)</pregap>`n" }
-                                $existingSoundSection += "          </track>`n"
+                                $existingSoundSection += '          <track>' + "`n"
+                                if ($idNode) { $existingSoundSection += '            <id>' + $idNode.InnerText + '</id>' + "`n" }
+                                if ($fileNode) { $existingSoundSection += '            <file>' + $fileNode.InnerText + '</file>' + "`n" }
+                                if ($pregapNode) { $existingSoundSection += '            <pregap>' + $pregapNode.InnerText + '</pregap>' + "`n" }
+                                $existingSoundSection += '          </track>' + "`n"
                             }
-                            $existingSoundSection += "        </tracks>`n"
+                            $existingSoundSection += '        </tracks>' + "`n"
                         }
-                        $existingSoundSection += "      </cdda>`n"
+                        $existingSoundSection += '      </cdda>' + "`n"
                     }
 
-                    $existingSoundSection += "    </cd>`n"
-                    $existingSoundSection += "  </sound>"
+                    $existingSoundSection += '    </cd>' + "`n"
+                    $existingSoundSection += '  </sound>'
 
-                    Write-Log -File $LogFile -Level "INFO" -Message "Found existing sound section, moving content to new <cd> structure"
+                    Write-Log -File $LogFile -Level "INFO" -Message "Found existing sound section, moving content to new cd structure"
                 }
+            }
+
+            # Check if chardata section exists and preserve it
+            $chardataNode = $existingData.SelectSingleNode("//gfx/DAT/chardata")
+            $existingChardataSection = $null
+            if ($chardataNode) {
+                # Preserve existing chardata structure and enhance setup
+                $existingChardataSection = '      <chardata>' + "`n"
+
+                # Process setup section with v3 enhancements
+                $setupNode = $chardataNode.SelectSingleNode("setup")
+                $existingChardataSection += '        <setup>' + "`n"
+
+                # Add starting_tile first if it exists in user's setup
+                if ($setupNode -and $setupNode.SelectSingleNode("starting_tile")) {
+                    $existingChardataSection += '          <starting_tile>' + $setupNode.SelectSingleNode("starting_tile").InnerText + '</starting_tile>' + "`n"
+                }
+
+                # Add v3 required elements
+                $existingChardataSection += '          <charfile>out\char.bin</charfile>' + "`n"
+                $existingChardataSection += '          <mapfile>out\charMaps.s</mapfile>' + "`n"
+                $existingChardataSection += '          <palfile>out\charPals.s</palfile>' + "`n"
+                $existingChardataSection += '          <incfile>out\charData.h</incfile>' + "`n"
+                $existingChardataSection += '          <incprefix>../</incprefix>' + "`n"
+
+                # Preserve existing setup elements (except v3 ones and starting_tile to avoid duplication)
+                if ($setupNode) {
+                    $v3Elements = @('charfile', 'mapfile', 'palfile', 'incfile', 'incprefix', 'starting_tile')
+                    foreach ($child in $setupNode.ChildNodes) {
+                        if ($child.NodeType -eq [System.Xml.XmlNodeType]::Element -and $v3Elements -notcontains $child.Name) {
+                            $existingChardataSection += '          <' + $child.Name + '>' + $child.InnerText + '</' + $child.Name + '>' + "`n"
+                        }
+                    }
+                }
+                $existingChardataSection += '        </setup>' + "`n"
+
+                # Preserve other chardata elements (pict, import, etc.)
+                foreach ($child in $chardataNode.ChildNodes) {
+                    if ($child.NodeType -eq [System.Xml.XmlNodeType]::Element -and $child.Name -ne 'setup') {
+                        $existingChardataSection += '        <' + $child.Name
+                        # Add attributes if any
+                        foreach ($attr in $child.Attributes) {
+                            $existingChardataSection += ' ' + $attr.Name + '="' + $attr.Value + '"'
+                        }
+                        $existingChardataSection += '>' + "`n"
+                        $existingChardataSection += '          <file>' + $child.SelectSingleNode('file').InnerText + '</file>' + "`n"
+                        $existingChardataSection += '        </' + $child.Name + '>' + "`n"
+                    }
+                }
+                $existingChardataSection += '      </chardata>'
+
+                Write-Log -File $LogFile -Level "INFO" -Message "Found existing chardata section, preserved and enhanced with v3 setup"
             }
 
         } catch {
@@ -143,18 +195,28 @@ function Write-ProjectXML {
   <distPath>$($existingValues.DistPath)</distPath>
   <gfx>
     <DAT>
+"@
+
+    # Add preserved chardata or default template
+    if ($existingChardataSection) {
+        $xmlContent += "`n" + $existingChardataSection + "`n"
+    } else {
+        # Default chardata template if none exists
+        $xmlContent += @"
+
       <chardata>
-        <setup fileType="char">
+        <setup>
           <charfile>out\char.bin</charfile>
           <mapfile>out\charMaps.s</mapfile>
           <palfile>out\charPals.s</palfile>
           <incfile>out\charData.h</incfile>
           <incprefix>../</incprefix>
         </setup>
-        <import bank="0">
-          <file>assets\sprites\sprites.bmp</file>
-        </import>
       </chardata>
+"@
+    }
+
+    $xmlContent += @"
       <fixdata>
         <chardata>
           <setup fileType="fix">
@@ -177,6 +239,7 @@ function Write-ProjectXML {
     }
 
     $xmlContent += @"
+
   <emulator>
     <raine>
       <exeFile>$($existingValues.RaineExe)</exeFile>
