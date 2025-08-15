@@ -132,8 +132,25 @@ function Main {
                 Write-Log -File $logFile -Level "WARNING" -Message "Migration completed with warnings during obsolete files removal"
                 # Continue execution - obsolete files removal failures are not critical
             }
+            # Important post-migration information about Animator export
+            Write-Host ""
+            Write-Host "*** IMPORTANT POST-MIGRATION STEP ***" -ForegroundColor Yellow -BackgroundColor Black
+            Write-Host ""
+            Write-Host "  CRITICAL: If your project contains ANIMATED SPRITES, you MUST re-export them" -ForegroundColor Red
+            Write-Host "    using the Animator tool. Skipping this will cause RUNTIME CRASHES!" -ForegroundColor Red
+            Write-Host ""
+            Write-Host "To export your animations:" -ForegroundColor Yellow
+            Write-Host "  1. Navigate to your project source directory" -ForegroundColor White
+            Write-Host "  2. Run: mak animator" -ForegroundColor Cyan
+            Write-Host "  3. Use the Animator menu to export your animation data" -ForegroundColor White
+            Write-Host ""
+            Write-Host " For detailed instructions, refer to the Migration Guide section 'Animator Export'" -ForegroundColor Cyan
+            Write-Host ""
+
+            Write-Host "Detailed log available at: $(Resolve-Path $logFile)" -ForegroundColor Cyan
         }
     }
+
     # Analyze C code for legacy patterns
     Write-Host ""
     if (-not (Analyze-CCodeLegacy -ProjectSrcPath $ProjectSrcPath -LogFile $logFile)) {
@@ -144,7 +161,6 @@ function Main {
         Write-Host "Migration files have been updated, but code changes are needed." -ForegroundColor Yellow
         Write-Log -File $logFile -Level "WARNING" -Message "Migration completed but manual code review required for legacy patterns"
     }
-    Write-Host "Detailed log available at: $(Resolve-Path $logFile)" -ForegroundColor Cyan
 
     return $true
 }
