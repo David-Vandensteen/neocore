@@ -16,6 +16,7 @@ param (
 . "$PSScriptRoot\upgrade\modules\write\projectXML.ps1"
 . "$PSScriptRoot\upgrade\modules\copy\makefile.ps1"
 . "$PSScriptRoot\upgrade\modules\copy\neocore\files.ps1"
+. "$PSScriptRoot\upgrade\modules\remove\obsolete\files.ps1"
 
 function Main {
     # Initialize log file
@@ -95,8 +96,9 @@ function Main {
             Write-Host "  - project.xml (will be rewritten to match NeoCore v3 format)" -ForegroundColor Yellow
             Write-Host "  - Makefile (will be overwritten with NeoCore v3 version)" -ForegroundColor Yellow
             Write-Host "  - NeoCore files will be copied (src-lib, manifest.xml, toolchain)" -ForegroundColor Yellow
+            Write-Host "  - Obsolete files will be removed (.h and .s files no longer needed)" -ForegroundColor Yellow
             Write-Host ""
-            Write-Log -File $logFile -Level "WARNING" -Message "Starting migration process - project.xml and Makefile will be rewritten, NeoCore files copied"
+            Write-Log -File $logFile -Level "WARNING" -Message "Starting migration process - project.xml and Makefile will be rewritten, NeoCore files copied, obsolete files removed"
 
             # Copy NeoCore files (src-lib, toolchain, etc.)
             if (-not (Copy-NeocoreFiles -SourceNeocorePath $sourceNeocorePath -ProjectNeocorePath $ProjectNeocorePath -LogFile $logFile)) {
@@ -117,6 +119,13 @@ function Main {
                 Write-Host "Migration failed during project.xml update" -ForegroundColor Red
                 Write-Log -File $logFile -Level "ERROR" -Message "Migration failed during project.xml update"
                 return $false
+            }
+
+            # Remove obsolete files
+            if (-not (Remove-ObsoleteFiles -ProjectSrcPath $ProjectSrcPath -LogFile $logFile)) {
+                Write-Host "Migration completed with warnings during obsolete files removal" -ForegroundColor Yellow
+                Write-Log -File $logFile -Level "WARNING" -Message "Migration completed with warnings during obsolete files removal"
+                # Continue execution - obsolete files removal failures are not critical
             }
 
         }
