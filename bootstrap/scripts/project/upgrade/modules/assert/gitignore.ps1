@@ -32,7 +32,7 @@ function Assert-Gitignore {
         # Check for problematic patterns that should be fixed in v3
         foreach ($line in $gitignoreContent) {
             $trimmedLine = $line.Trim()
-            
+
             # Skip empty lines and comments
             if ([string]::IsNullOrWhiteSpace($trimmedLine) -or $trimmedLine.StartsWith('#')) {
                 continue
