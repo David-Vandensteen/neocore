@@ -315,7 +315,7 @@ From your project's `src` folder:
 ### 🎨 DATlib Assets<a name="datlib-assets"></a>
 
 **DATlib Documentation:**
-- [DATlib Reference (PDF)](http://azertyvortex.free.fr/download/DATlib-LibraryReference.pdf)
+- [DATlib Reference (PDF)](http://azertyvortex.free.fr/download/neocore/datlib-0.3-LibraryReference.pdf)
 
 **Configuration in project.xml:**
 ```xml
