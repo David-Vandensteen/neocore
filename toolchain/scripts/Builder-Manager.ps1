@@ -264,6 +264,3 @@ if (-not $mainResult) {
   Write-Host "Build manager process failed" -ForegroundColor Red
   exit 1
 }
-
-Write-Host "Build manager process completed successfully" -ForegroundColor Green
-exit 0
