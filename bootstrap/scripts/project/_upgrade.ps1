@@ -10,6 +10,7 @@ param (
 . "$PSScriptRoot\upgrade\modules\write\log.ps1"
 . "$PSScriptRoot\upgrade\modules\assert\build\path.ps1"
 . "$PSScriptRoot\upgrade\modules\assert\manifest.ps1"
+. "$PSScriptRoot\upgrade\modules\assert\gitignore.ps1"
 . "$PSScriptRoot\upgrade\modules\get\manifest\version.ps1"
 . "$PSScriptRoot\upgrade\modules\get\project\versions.ps1"
 . "$PSScriptRoot\upgrade\modules\compare\project\versions.ps1"
@@ -47,6 +48,9 @@ function Main {
     if (-not (Assert-Manifest -ProjectNeocorePath $ProjectNeocorePath -SourceNeocorePath $sourceNeocorePath -LogFile $logFile)) {
         return $false
     }
+
+    # Check .gitignore configuration
+    Assert-Gitignore -ProjectSrcPath $ProjectSrcPath -LogFile $logFile | Out-Null
 
     # Confirm user has backup
     Write-Host ""
