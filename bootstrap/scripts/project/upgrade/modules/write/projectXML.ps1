@@ -31,6 +31,8 @@ function Write-ProjectXML {
         LibraryPath = "{{neocore}}\src-lib"
     }
 
+    $existingSoundSection = $null
+
     if (Test-Path $projectXmlPath) {
         try {
             [xml]$existingData = Get-Content -Path $projectXmlPath
@@ -62,6 +64,65 @@ function Write-ProjectXML {
             if ($compilerPathNode) { $existingValues.CompilerPath = $compilerPathNode.InnerText }
             if ($includePathNode) { $existingValues.IncludePath = $includePathNode.InnerText }
             if ($libraryPathNode) { $existingValues.LibraryPath = $libraryPathNode.InnerText }
+
+            # Check if sound section exists and preserve it
+            $soundNode = $existingData.SelectSingleNode("//sound")
+            if ($soundNode) {
+                # Move existing sound content into new <cd> structure
+                $sfxNode = $soundNode.SelectSingleNode("sfx")
+                $cddaNode = $soundNode.SelectSingleNode("cdda")
+
+                if ($sfxNode -or $cddaNode) {
+                    $existingSoundSection = "  <sound>`n    <cd>`n"
+
+                    if ($sfxNode) {
+                        $pcmNode = $sfxNode.SelectSingleNode("pcm")
+                        $z80Node = $sfxNode.SelectSingleNode("z80")
+                        $existingSoundSection += "      <sfx>`n"
+                        if ($pcmNode) { $existingSoundSection += "        <pcm>$($pcmNode.InnerText)</pcm>`n" }
+                        if ($z80Node) { $existingSoundSection += "        <z80>$($z80Node.InnerText)</z80>`n" }
+                        $existingSoundSection += "      </sfx>`n"
+                    }
+
+                    if ($cddaNode) {
+                        $existingSoundSection += "      <cdda>`n"
+                        $distNode = $cddaNode.SelectSingleNode("dist")
+                        if ($distNode) {
+                            $isoNode = $distNode.SelectSingleNode("iso")
+                            if ($isoNode) {
+                                $formatNode = $isoNode.SelectSingleNode("format")
+                                $existingSoundSection += "        <dist>`n"
+                                $existingSoundSection += "          <iso>`n"
+                                if ($formatNode) { $existingSoundSection += "            <format>$($formatNode.InnerText)</format>`n" }
+                                $existingSoundSection += "          </iso>`n"
+                                $existingSoundSection += "        </dist>`n"
+                            }
+                        }
+                        $tracksNode = $cddaNode.SelectSingleNode("tracks")
+                        if ($tracksNode) {
+                            $existingSoundSection += "        <tracks>`n"
+                            $trackNodes = $tracksNode.SelectNodes("track")
+                            foreach ($trackNode in $trackNodes) {
+                                $idNode = $trackNode.SelectSingleNode("id")
+                                $fileNode = $trackNode.SelectSingleNode("file")
+                                $pregapNode = $trackNode.SelectSingleNode("pregap")
+                                $existingSoundSection += "          <track>`n"
+                                if ($idNode) { $existingSoundSection += "            <id>$($idNode.InnerText)</id>`n" }
+                                if ($fileNode) { $existingSoundSection += "            <file>$($fileNode.InnerText)</file>`n" }
+                                if ($pregapNode) { $existingSoundSection += "            <pregap>$($pregapNode.InnerText)</pregap>`n" }
+                                $existingSoundSection += "          </track>`n"
+                            }
+                            $existingSoundSection += "        </tracks>`n"
+                        }
+                        $existingSoundSection += "      </cdda>`n"
+                    }
+
+                    $existingSoundSection += "    </cd>`n"
+                    $existingSoundSection += "  </sound>"
+
+                    Write-Log -File $LogFile -Level "INFO" -Message "Found existing sound section, moving content to new <cd> structure"
+                }
+            }
 
         } catch {
             Write-Host "WARNING: Failed to read existing project.xml: $($_.Exception.Message)" -ForegroundColor Yellow
@@ -108,6 +169,14 @@ function Write-ProjectXML {
       </fixdata>
     </DAT>
   </gfx>
+"@
+
+    # Add sound section if it exists in the original file
+    if ($existingSoundSection) {
+        $xmlContent += "`n$existingSoundSection`n"
+    }
+
+    $xmlContent += @"
   <emulator>
     <raine>
       <exeFile>$($existingValues.RaineExe)</exeFile>
