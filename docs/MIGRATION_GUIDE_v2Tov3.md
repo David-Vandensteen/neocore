@@ -37,8 +37,10 @@ NeoCore v3 includes an official migration script that automates many migration t
 **What the script does automatically:**
 - ✅ **Project.xml migration**: Automatically updates structure for v3 compatibility
   - Adds missing v3 elements (`<platform>`, DAT setup, fixdata, emulator configs)
+  - **Preserves user values**: Keeps existing values for `<name>`, `<version>`, `<makefile>`, `<neocorePath>`, `<buildPath>`, `<distPath>`, `<RaineExe>`, `<MameExe>`, `<CompilerPath>`
+  - **Always overwrites**: `<includePath>` with `{{neocore}}\src-lib\include` (required for v3 compatibility)
   - Updates compiler configuration with v3 paths
-  - **Migrates `<sound>` section**: Automatically wraps existing sound content in `<cd>` structure
+  - **Migrates `<sound>` section**: Automatically wraps existing sound content in `<cd>` structure, preserving all sound elements
 - ✅ **Build directory validation**: Checks for existing build directory and requires cleanup before proceeding
 - ✅ **Code analysis**: Scans C files for v2/v3 compatibility issues
 - ✅ **Deprecated file cleanup**: Automatically removes obsolete files:
@@ -120,20 +122,57 @@ If the automatic script fails or encounters issues, you can perform the migratio
 
 5. **Wrap sound section in `<cd>` element:**
    ```xml
-   <!-- OLD -->
+   <!-- OLD v2 structure -->
    <sound>
-     <sfx>...</sfx>
-     <cdda>...</cdda>
+     <sfx>
+       <pcm>assets\sounds\sfx\click.V1</pcm>
+       <z80>assets\sounds\sfx\click.M1</z80>
+     </sfx>
+     <cdda>
+       <dist>
+         <iso>
+           <format>mp3</format>
+         </iso>
+       </dist>
+       <tracks>
+         <track>
+           <id>2</id>
+           <file>assets\sounds\cdda\track_1.mp3</file>
+           <pregap>00:02:00</pregap>
+         </track>
+       </tracks>
+     </cdda>
    </sound>
 
-   <!-- NEW -->
+   <!-- NEW v3 structure -->
    <sound>
      <cd>
-       <sfx>...</sfx>
-       <cdda>...</cdda>
+       <sfx>
+         <pcm>assets\sounds\sfx\click.V1</pcm>
+         <z80>assets\sounds\sfx\click.M1</z80>
+       </sfx>
+       <cdda>
+         <dist>
+           <iso>
+             <format>mp3</format>
+           </iso>
+         </dist>
+         <tracks>
+           <track>
+             <id>2</id>
+             <file>assets\sounds\cdda\track_1.mp3</file>
+             <pregap>00:02:00</pregap>
+           </track>
+         </tracks>
+       </cdda>
      </cd>
    </sound>
    ```
+
+   **Note:**
+   - The migration script automatically handles this transformation and preserves all existing sound elements including `pcm`, `z80`, `format`, `tracks`, and track details (`id`, `file`, `pregap`).
+   - The `<sound>` section is automatically placed after `<gfx>` and before `<emulator>` in the correct XML order.
+   - If no sound section exists in the original project.xml, none will be added (conditional inclusion).
 
 6. **Update compiler configuration:**
    ```xml
