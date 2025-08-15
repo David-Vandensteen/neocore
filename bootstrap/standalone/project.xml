@@ -5,8 +5,8 @@
   <platform>cd</platform>
   <makefile>Makefile</makefile>
   <neocorePath>..\neocore</neocorePath>
-  <buildPath>{{neocore}}\build</buildPath>
-  <distPath>{{neocore}}\dist</distPath>
+  <buildPath>..\build</buildPath>
+  <distPath>..\dist</distPath>
   <gfx>
     <DAT>
       <chardata>
