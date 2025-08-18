@@ -38,6 +38,12 @@ function Assert-Gitignore {
                 continue
             }
 
+            # Remove obsolete externs.h entry (no longer needed in v3)
+            if ($trimmedLine -eq "externs.h") {
+                $issuesFound += "'externs.h' entry found - should be removed in gitignore"
+                continue
+            }
+
             # Check for patterns that should be absolute paths
             if ($trimmedLine -eq "build/") {
                 $issuesFound += "Line '$trimmedLine' should be '/build/' (absolute path from repository root)"
