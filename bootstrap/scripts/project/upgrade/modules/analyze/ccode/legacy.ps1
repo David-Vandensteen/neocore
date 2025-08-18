@@ -221,22 +221,6 @@ function Analyze-CCodeLegacy {
 
         Write-Log -File $LogFile -Level "WARNING" -Message "Legacy code analysis completed: $($allIssues.Count) patterns found in $filesWithIssues files requiring manual review"
 
-        # Log detailed summary of all issues found
-        Write-Log -File $LogFile -Level "INFO" -Message "=== DETAILED LEGACY PATTERNS SUMMARY ==="
-        $issuesByFile = $allIssues | Group-Object -Property File
-        foreach ($fileGroup in $issuesByFile) {
-            # Use the relative path that's already stored in File property
-            $relativePath = $fileGroup.Name
-
-            Write-Log -File $LogFile -Level "INFO" -Message "File: $relativePath ($($fileGroup.Count) patterns found)"
-            foreach ($issue in $fileGroup.Group) {
-                Write-Log -File $LogFile -Level "INFO" -Message "  Line $($issue.Line): $($issue.Issue)"
-                Write-Log -File $LogFile -Level "INFO" -Message "    Code: $($issue.Code)"
-                Write-Log -File $LogFile -Level "INFO" -Message "    Suggestion: $($issue.Suggestion)"
-            }
-        }
-        Write-Log -File $LogFile -Level "INFO" -Message "=== END LEGACY PATTERNS SUMMARY ==="
-
         return $false  # Manual intervention required
     } else {
         Write-Host "Legacy code analysis completed successfully:" -ForegroundColor Green
