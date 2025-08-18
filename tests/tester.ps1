@@ -36,12 +36,12 @@ function Main {
   BuildProject -Path "..\samples\collide_complex" -Rule $Rule -KillTime $KillTime
   BuildProject -Path "..\samples\collide_multiple" -Rule $Rule -KillTime $KillTime
   BuildProject -Path "..\samples\DATdemo" -Rule $Rule -KillTime $KillTime
+  BuildProject -Path "..\samples\hello" -Rule $Rule -KillTime $KillTime
+  BuildProject -Path "..\samples\joypad" -Rule $Rule -KillTime $KillTime
   BuildProject -Path "..\samples\math" -Rule $Rule -KillTime $KillTime
   BuildProject -Path "..\samples\pal_backdrop" -Rule $Rule -KillTime $KillTime
   BuildProject -Path "..\samples\pal_rgb" -Rule $Rule -KillTime $KillTime
   BuildProject -Path "..\samples\pal_rgb_mixer" -Rule $Rule -KillTime $KillTime
-  BuildProject -Path "..\samples\hello" -Rule $Rule -KillTime $KillTime
-  BuildProject -Path "..\samples\joypad" -Rule $Rule -KillTime $KillTime
   BuildProject -Path "..\samples\palette_swap" -Rule $Rule -KillTime $KillTime
   BuildProject -Path "..\samples\recurse" -Rule $Rule -KillTime $KillTime
   BuildProject -Path "..\samples\shrunk" -Rule $Rule -KillTime $KillTime
@@ -49,6 +49,7 @@ function Main {
   BuildProject -Path "..\samples\soundFX" -Rule $Rule -KillTime $KillTime
   BuildProject -Path "..\samples\soundFX_poly" -Rule $Rule -KillTime $KillTime
   BuildProject -Path "..\samples\sprite" -Rule $Rule -KillTime $KillTime
+  BuildProject -Path "..\samples\test_copy_palettes" -Rule $Rule -KillTime $KillTime
   BuildProject -Path "..\samples\test_gas" -Rule $Rule -KillTime $KillTime
   BuildProject -Path "..\samples\test_gasp" -Rule $Rule -KillTime $KillTime
   BuildProject -Path "..\samples\test_gp" -Rule $Rule -KillTime $KillTime

@@ -1,6 +1,6 @@
 function MakRunRaine {
-  Build-Sprite
-  Build-Program
-  Build-ISO
-  Start-Raine
+  Write-Host "Mak run raine" -ForegroundColor Cyan
+  if (-not (Build-ISO)) { return $false }
+  if (-not (Start-Raine)) { return $false }
+  return $true
 }

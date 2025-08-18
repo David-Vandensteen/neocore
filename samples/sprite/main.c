@@ -1,10 +1,18 @@
 #include <neocore.h>
 #include "externs.h"
 
+static GFX_Animated_Sprite player;
+static GFX_Scroller background;
+static GFX_Picture planet;
+
 int main(void) {
-  GFX_Animated_Sprite player;
-  GFX_Scroller background;
-  GFX_Picture planet;
+  nc_init_display_gfx_scroller(
+    &background,
+    &background_sprite,
+    &background_sprite_Palettes,
+    0,
+    0
+  );
 
   nc_init_display_gfx_picture(
     &planet,
@@ -23,18 +31,10 @@ int main(void) {
     PLAYER_SPRITE_ANIM_IDLE
   );
 
-  nc_init_display_gfx_scroller(
-    &background,
-    &background_sprite,
-    &background_sprite_Palettes,
-    0,
-    0
-  );
-
   while(1) {
-    Vec2short position;
+    Position position, backgroundPosition;
     nc_update();
-    position = nc_get_position_gfx_animated_sprite(player);
+    nc_get_position_gfx_animated_sprite(&player, &position);
     if (nc_joypad_is_left(0) && position.x > 0) { nc_move_gfx_animated_sprite(&player, -1, 0); }
     if (nc_joypad_is_right(0) && position.y < 280) { nc_move_gfx_animated_sprite(&player, 1, 0); }
     if (nc_joypad_is_up(0) && position.y > 0) {
@@ -48,11 +48,12 @@ int main(void) {
     if (!nc_joypad_is_down(0) && !nc_joypad_is_up(0)) { nc_set_animation_gfx_animated_sprite(&player, PLAYER_SPRITE_ANIM_IDLE); }
 
     nc_move_gfx_scroller(&background, 1, 0);
-    if (nc_get_position_gfx_scroller(background).x > 512) {
+    nc_get_position_gfx_scroller(&background, &backgroundPosition);
+    if (backgroundPosition.x > 512) {
       nc_set_position_gfx_scroller(
         &background,
         0,
-        nc_get_position_gfx_scroller(background).y
+        backgroundPosition.y
       );
     }
     nc_update_animation_gfx_animated_sprite(&player);

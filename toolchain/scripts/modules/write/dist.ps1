@@ -11,56 +11,68 @@ function Write-Dist {
 
   if ($ISOFile -and (Test-Path -Path $ISOFile) -eq $false) {
     Write-Host "$ISOFile not found" -ForegroundColor Red
-    exit 1
+    return $false
   }
   if ($CUEFile -and (Test-Path -Path $CUEFile) -eq $false) {
     Write-Host "$CUEFile not found" -ForegroundColor Red
-    exit 1
+    return $false
   }
   if ($CHDFile -and (Test-Path -Path $CHDFile) -eq $false) {
     Write-Host "$CHDFile not found" -ForegroundColor Red
-    exit 1
+    return $false
   }
   if ($HashFile -and (Test-Path -Path $HashFile) -eq $false) {
     Write-Host "$HashFile not found" -ForegroundColor Red
-    exit 1
+    return $false
   }
 
+  # Always use cd subfolder structure
+  $hasCD = $true
+
   if ($ISOFile) {
-    if ((Test-Path -Path "$PathDestination\iso\$ProjectName.iso") -eq $false) {
-      New-Item -Path "$PathDestination\iso" -ItemType Directory -Force
+    $isoPath = if ($hasCD) { "$PathDestination\cd\iso" } else { "$PathDestination\iso" }
+    if ((Test-Path -Path "$isoPath\$ProjectName.iso") -eq $false) {
+      New-Item -Path $isoPath -ItemType Directory -Force
     } else {
-      Write-Host "$PathDestination\iso\$ProjectName.iso already exist" -ForegroundColor Red
-      exit 1
+      Write-Host "$isoPath\$ProjectName.iso already exist" -ForegroundColor Red
+      return $false
     }
   }
   if ($CHDFile) {
-    if ((Test-Path -Path "$PathDestination\mame\$CHDFile.chd") -eq $false) {
-      New-Item -Path "$PathDestination\mame" -ItemType Directory -Force
+    $mamePath = if ($hasCD) { "$PathDestination\cd\mame" } else { "$PathDestination\mame" }
+    if ((Test-Path -Path "$mamePath\$ProjectName.chd") -eq $false) {
+      New-Item -Path $mamePath -ItemType Directory -Force
     } else {
-      Write-Host "$PathDestination\mame\$ProjectName.chd already exist" -ForegroundColor Red
-      exit 1
+      Write-Host "$mamePath\$ProjectName.chd already exist" -ForegroundColor Red
+      return $false
     }
   }
   if ($ISOFile) {
-    Write-Host "Copy iso file $PathDestination\iso" -ForegroundColor Blue
-    Copy-Item -Path $ISOFile -Destination "$PathDestination\iso"
-    Copy-Item -Path $CUEFile -Destination "$PathDestination\iso"
+    $isoPath = if ($hasCD) { "$PathDestination\cd\iso" } else { "$PathDestination\iso" }
+    Write-Host "Copy iso file $isoPath" -ForegroundColor Cyan
+    Copy-Item -Path $ISOFile -Destination $isoPath
+    Copy-Item -Path $CUEFile -Destination $isoPath
   }
 
   if ($CHDFile) {
-    Write-Host "Copy chd file $PathDestination\mame" -ForegroundColor Blue
-    Copy-Item -Path $CHDFile -Destination "$PathDestination\mame"
-    Copy-Item -Path $HashFile -Destination "$PathDestination\mame"
+    $mamePath = if ($hasCD) { "$PathDestination\cd\mame" } else { "$PathDestination\mame" }
+    Write-Host "Copy chd file $mamePath" -ForegroundColor Cyan
+    Copy-Item -Path $CHDFile -Destination $mamePath
+    Copy-Item -Path $HashFile -Destination $mamePath
   }
 
-  if ($ISOFile -and $Config.project.sound.cdda.tracks.track) {
+  if ($Config.project.sound.cd.cdda.tracks.track) {
+    $cddaTracks = $Config.project.sound.cd.cdda.tracks.track
+    $cddaConfig = $Config.project.sound.cd.cdda
+  }
+
+  if ($ISOFile -and $cddaTracks) {
     Write-Host ""
-    Write-Host "copy sound tracks" -ForegroundColor Blue
+    Write-Host "copy sound tracks" -ForegroundColor Cyan
     Write-Host ""
     Write-Host "CUE file : $CUEFile"
     $content = [System.IO.File]::ReadAllText($CUEFile)
-    $Config.project.sound.cdda.tracks.track | ForEach-Object {
+    $cddaTracks | ForEach-Object {
       $file = $_.file
 
       $fileName = Split-Path -Path $file -Leaf -Resolve
@@ -68,46 +80,66 @@ function Write-Dist {
       $fileExt = [System.IO.Path]::GetExtension($File)
 
       if ($Rule -eq "dist:iso" ) {
-        $ext = $Config.project.sound.cdda.dist.iso.format
+        $ext = $cddaConfig.dist.iso.format
       } else {
         $ext = "wav"
       }
 
       $fileNameWithoutExt = [System.IO.Path]::GetFileNameWithoutExtension($fileName)
 
+      # Resolve template path for buildPath
+      $resolvedBuildPath = Get-TemplatePath -Path $Config.project.buildPath
+      # Resolve template path for distPath
+      $resolvedDistPath = Get-TemplatePath -Path $Config.project.distPath
+
       $source = Join-Path `
-                  -Path $Config.project.buildPath `
+                  -Path $resolvedBuildPath `
                   -ChildPath "$($Config.project.name)\$($filePath)\$($fileNameWithoutExt).$ext"
 
+      # Adjust destination path based on distribution type and CD content
+      $distSubPath = if ($Rule -eq "dist:iso") {
+        if ($hasCD) { "cd\iso" } else { "iso" }
+      } elseif ($Rule -eq "dist:mame") {
+        if ($hasCD) { "cd\mame" } else { "mame" }
+      } else {
+        "iso"
+      }
+
       $destination = Join-Path `
-                      -Path $Config.project.distPath `
-                      -ChildPath "$($Config.project.name)\$($Config.project.name)-$($Config.project.version)\iso"
+                      -Path $resolvedDistPath `
+                      -ChildPath "$($Config.project.name)\$($Config.project.name)-$($Config.project.version)\$distSubPath"
 
       Copy-Item -Path $source -Destination $destination
 
       $content = $content.Replace("$($filePath)\$($fileNameWithoutExt).wav", "$($fileNameWithoutExt).$ext")
       $content = $content.Replace("$($filePath)\$($fileNameWithoutExt).mp3", "$($fileNameWithoutExt).$ext")
     }
-    Write-Host "make the cue file" -ForegroundColor Blue
+    Write-Host "make the cue file" -ForegroundColor Cyan
     Write-Host $content
-    $content | Out-File -FilePath "$PathDestination\iso\$ProjectName.cue" -Encoding ascii -Force
+    $isoPath = if ($hasCD) { "$PathDestination\cd\iso" } else { "$PathDestination\iso" }
+    $content | Out-File -FilePath "$isoPath\$ProjectName.cue" -Encoding ascii -Force
   }
   Write-Host ""
   if ($ISOFile) {
-    if (((Test-Path -Path "$PathDestination\iso\$ProjectName.cue") -eq $true) -and ((Test-Path -Path "$PathDestination\iso\$ProjectName.cue") -eq $true)) {
-      Write-Host "ISO delivery $pathDestination\iso" -ForegroundColor Green
+    $isoPath = if ($hasCD) { "$PathDestination\cd\iso" } else { "$PathDestination\iso" }
+    if (((Test-Path -Path "$isoPath\$ProjectName.cue") -eq $true) -and ((Test-Path -Path "$isoPath\$ProjectName.iso") -eq $true)) {
+      Write-Host "ISO delivery $isoPath" -ForegroundColor Green
     } else {
       Write-Host "ISO dist failed" -ForegroundColor Red
-      exit 1
+      return $false
     }
   }
 
   if ($CHDFile) {
-    if ((Test-Path -Path "$pathDestination\mame\$ProjectName.chd") -eq $true) {
-      Write-Host "Mame delivery $PathDestination\mame" -ForegroundColor Green
+    $mamePath = if ($hasCD) { "$PathDestination\cd\mame" } else { "$PathDestination\mame" }
+    if ((Test-Path -Path "$mamePath\$ProjectName.chd") -eq $true) {
+      Write-Host "Mame delivery $mamePath" -ForegroundColor Green
     } else {
       Write-Host "Mame dist failed" -ForegroundColor Red
-      exit 1
+      return $false
     }
   }
+
+  # Distribution completed successfully
+  return $true
 }

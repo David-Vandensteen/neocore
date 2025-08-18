@@ -16,7 +16,8 @@ void asteroid_display() {
 
 void asteroid_update() {
   nc_init_log();
-  nc_log_byte("HIT", hit);
+  nc_log_info("HIT: ");
+  nc_log_byte(hit);
 }
 
 BOOL asteroid_collide(Box *b) {

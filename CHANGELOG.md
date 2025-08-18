@@ -1,5 +1,86 @@
 ## 3.0.0
 
+  - **MAJOR RELEASE** - DATLib 0.3, toolchain refactoring and quality improvement
+  - **TOOLCHAIN IMPROVEMENTS**:
+    - **PowerShell Refactoring**: Complete refactoring of PowerShell toolchain modules with improved error handling and return values
+    - **Build System Enhancements**:
+      - **Real-time Monitoring**: BuildChar output monitoring with immediate process termination on color overload errors
+      - **Error Handling**: Comprehensive error parsing and propagation across all build scripts with detailed logging
+      - **Process Execution**: Enhanced make process execution with separate output/error log files
+      - **CRT Configuration System**: Added configurable `crtPath` in project.xml
+      - **Embedded CRT Runtime**: Runtime files (crt0_cd.s, common_crt0_cd.s, etc.) are now automatically embedded in each build from centralized `src-lib/crt/` source
+      - **CRT Cleanup**: Removed duplicate CRT files from samples/ directory - now sourced from single authoritative location
+      - **Makefile Improvements**: Added `-I$(PROJECT_PATH)` to ASFLAGS for correct assembler include path handling
+    - **Module Robustness**: Improved robustness of Set-EnvPath, Stop-Emulators, and Watch-Folder modules with fixed infinite loops and blocking risks
+    - **Embedded Dependencies**: Neodev and DATlib headers are now embedded in NeoCore instead of being installed as external dependencies
+    - **Configuration Validation**:
+      - Enhanced Assert-Project function
+      - Improved XML path resolution and template variable handling
+      - Better error messages for missing or invalid project configurations
+  - **DOCUMENTATION IMPROVEMENTS**:
+    - **Doxygen Integration**: Added comprehensive documentation tags throughout neocore.h
+    - **API Documentation**: Documentation for major structures (Position, Box, RGB16, GFX_*)
+    - **Function Documentation**: Detailed parameter descriptions, return values, and usage notes
+  - **BREAKING CHANGES**:
+    - **PowerShell Toolchain**:
+      - **Command deprecations**: mak mame and mak raine deprecated (use mak run:mame and mak run:raine instead)
+      - **Rule removals**: `iso` and `only:iso` rules have been removed from the build system
+        - **Alternative**: Use `mak dist:iso` for ISO distribution packaging
+        - **Reason**: Simplified build system by consolidating ISO-related commands
+      - **Build workflow changes**: Build steps are now explicit and must be run manually instead of automatic execution
+        - **Before**: `mak run:raine` or `mak run:mame` automatically executed all build steps
+        - **Now**: Manual execution required: `mak sprite` → `mak` → `mak run:raine`
+        - **Reason**: Better control over build process, clearer separation of build phases, faster development cycle by leveraging cache (skip sprite generation when unchanged), and reduced build time
+        - **Usage examples**:
+          ```bash
+          # Initial development (do everything)
+          mak sprite && mak && mak run:raine
+
+          # Code-only modifications (sprites unchanged)
+          mak && mak run:raine  # ⚡ Faster!
+
+          # Quick test without recompilation
+          mak run:raine  # 🚀 Instant!
+          ```
+    - **Dependencies**:
+      - **DATlib upgraded to version 0.3** - Breaking compatibility with previous DATlib version
+      - **Package updates in manifest.xml**:
+        - Updated DATlib package
+        - Refreshed toolchain component packages (mame, raine, gcc, etc.)
+        - Updated build tools and runtime dependencies
+    - **Project Configuration**:
+      - **project.xml schema changes**: Enhanced structure - prepares cartridge compatibility for future version
+      - **Templated path system**: Build paths now use template variables ({{neocore}}, {{build}})
+      - **Sound structure changes**: Reorganized sound.cd.cdda hierarchy
+      - **Path resolution**: Improved neocorePath and buildPath handling mechanisms
+    - **C API Changes**:
+      - **Function removals**:
+        - nc_log() function removed - use nc_log_info() for logging functionality
+      - **Type removals**:
+        - typedef char Hex_Color[3]; removed - no longer supported
+        - typedef char Hex_Packed_Color[5]; removed - no longer supported
+      - **GFX getter functions**: Breaking signature changes - now require Position* parameter:
+        - nc_get_position_gfx_animated_sprite() now takes Position* instead of returning values
+        - nc_get_position_gfx_animated_sprite_physic() now takes Position* instead of returning values
+        - nc_get_position_gfx_picture() now takes Position* instead of returning values
+        - nc_get_position_gfx_picture_physic() now takes Position* instead of returning values
+        - nc_get_position_gfx_scroller() now takes Position* instead of returning values
+      - **Function signatures**: All coordinate-related functions standardized to short type
+      - **Logging behavior changes**: nc_log_info(), nc_log_short(), nc_log_word(), and other nc_log_* functions no longer automatically add line breaks - use nc_log_info_line() for automatic line breaks or nc_log_next_line() to manually control line breaks
+      - **Logging parameter changes**: Some logging functions no longer accept the `label` parameter - use simplified function signatures without label parameter
+  - **NEW C API FUNCTIONS**:
+    - **Logging Functions**:
+      - nc_log_info_line() - Log with automatic line break
+      - nc_log_next_line() - Move to next log line
+      - nc_init_log() - Initialize logging system
+      - nc_set_position_log() - Set log cursor position
+  - **MIGRATION TOOLS ENHANCEMENTS**:
+    - **C Code Analysis**: Automatic scanning of C files for v2/v3 compatibility issues with detailed reporting of deprecated patterns and breaking changes
+    - **Automated Cleanup**: Automatically removes obsolete files (common_crt0_cd.s, crt0_cd.s) during migration
+    - **Sound Section Migration**: Automatically migrates `<sound>` sections to v3 format (`<sound><cd>` structure) while preserving content and formatting
+    - **Comprehensive Logging**: Detailed migration logging
+    - **Full XML Rewrite**: Complete project.xml rewrite using v3 template structure while preserving some user data
+
 ## 2.9.0
 
   - add formatting arguments support in nc log info (check out samples\hello)

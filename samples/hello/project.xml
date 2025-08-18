@@ -2,46 +2,40 @@
 <project>
   <name>hello</name>
   <version>1.0.0</version>
+  <platform>cd</platform>
   <makefile>..\Makefile</makefile>
+  <neocorePath>..\..</neocorePath>
+  <buildPath>{{neocore}}\build</buildPath>
+  <distPath>{{neocore}}\dist</distPath>
   <gfx>
     <DAT>
       <chardata>
         <setup>
           <starting_tile>256</starting_tile>
+          <charfile>out\char.bin</charfile>
+          <mapfile>out\charMaps.s</mapfile>
+          <palfile>out\charPals.s</palfile>
+          <incfile>out\charInclude.h</incfile>
+          <incprefix>../</incprefix>
         </setup>
         <pict id="logo">
           <file>assets\gfx\logo.png</file>
         </pict>
       </chardata>
+      <fixdata>
+        <chardata>
+          <setup fileType="fix">
+            <charfile>out\fix.bin</charfile>
+            <palfile>out\fixPals.s</palfile>
+            <incfile>out\fixData.h</incfile>
+          </setup>
+          <import bank="0">
+            <file>{{build}}\fix\systemFont.bin</file>
+          </import>
+        </chardata>
+      </fixdata>
     </DAT>
   </gfx>
-  <!-- To use CDDA audio tracks, uncomment and set up your files.
-  Warning: Track ID 1 is reserved for the binary program.
-  <sound>
-    <sfx>
-      <pcm>assets\sounds\sfx\click.V1</pcm>
-      <z80>assets\sounds\sfx\click.M1</z80>
-    </sfx>
-    <cdda>
-      <tracks>
-        <track>
-          <id>2</id>
-          <file>assets\sounds\cdda\track-1.wav</file>
-          <pregap>00:02:00</pregap>
-        </track>
-        <track>
-          <id>3</id>
-          <file>assets\sounds\cdda\track-2.wav</file>
-          <pregap>00:02:00</pregap>
-        </track>
-        <track>
-          <id>4</id>
-          <file>assets\sounds\cdda\track-3.wav</file>
-          <pregap>00:02:00</pregap>
-        </track>
-      </tracks>
-    </cdda>
-  </sound> -->
   <emulator>
     <raine>
       <exeFile>{{build}}\raine\raine32.exe</exeFile>
@@ -67,15 +61,16 @@
       </profile>
     </mame>
   </emulator>
-  <neocorePath>..\..\</neocorePath>
-  <buildPath>..\..\build</buildPath>
-  <distPath>..\..\dist</distPath>
   <compiler>
     <name>gcc</name>
     <version>2.95.2</version>
     <path>{{build}}\gcc\gcc-2.95.2</path>
-    <includePath>{{build}}\include</includePath>
+    <includePath>{{neocore}}\src-lib\include</includePath>
     <libraryPath>{{build}}\lib</libraryPath>
-    <systemFile>{{build}}\system\neocd.x</systemFile>
+    <crtPath>{{neocore}}\src-lib\crt</crtPath>
+    <systemFile>
+      <cd>{{neocore}}\src-lib\system\neocd.x</cd>
+      <cartridge>{{neocore}}\src-lib\system\neocart.x</cartridge>
+    </systemFile>
   </compiler>
 </project>

@@ -2,64 +2,75 @@
 <project>
   <name>math</name>
   <version>1.0.0</version>
+  <platform>cd</platform>
   <makefile>..\Makefile</makefile>
-  <neocorePath>..\..\</neocorePath>
-  <buildPath>..\..\build</buildPath>
-  <distPath>..\..\dist</distPath>
+  <neocorePath>..\..</neocorePath>
+  <buildPath>{{neocore}}\build</buildPath>
+  <distPath>{{neocore}}\dist</distPath>
   <gfx>
     <DAT>
       <chardata>
         <setup>
           <starting_tile>256</starting_tile>
+          <charfile>out\char.bin</charfile>
+          <mapfile>out\charMaps.s</mapfile>
+          <palfile>out\charPals.s</palfile>
+          <incfile>out\charInclude.h</incfile>
+          <incprefix>../</incprefix>
         </setup>
         <pict id="logo">
           <file>assets\gfx\logo.png</file>
         </pict>
       </chardata>
+      <fixdata>
+        <chardata>
+          <setup fileType="fix">
+            <charfile>out\fix.bin</charfile>
+            <palfile>out\fixPals.s</palfile>
+            <incfile>out\fixData.h</incfile>
+          </setup>
+          <import bank="0">
+            <file>{{build}}\fix\systemFont.bin</file>
+          </import>
+        </chardata>
+      </fixdata>
     </DAT>
   </gfx>
   <emulator>
     <raine>
-      <exeFile>..\..\build\raine\raine32.exe</exeFile>
+      <exeFile>{{build}}\raine\raine32.exe</exeFile>
+      <config>
+        <!-- To use a named config, use mak run:raine:<configName>.
+        Example: mak run:raine:full to run RAINE in fullscreen.
+        You can add more custom configs. -->
+        <default>{{build}}\raine\config\default.cfg</default>
+        <full>{{build}}\raine\config\fullscreen.cfg</full>
+        <yuv>{{build}}\raine\config\yuv.cfg</yuv>
+      </config>
     </raine>
     <mame>
-      <exeFile>..\..\build\mame\mame64.exe</exeFile>
+      <exeFile>{{build}}\mame\mame64.exe</exeFile>
+      <profile>
+        <!-- To use a named profile, use mak run:mame:<profileName>.
+        Example: mak run:mame:full to run MAME in fullscreen.
+        You can add more custom profiles. -->
+        <default>-window -skip_gameinfo neocdz</default>
+        <full>-nowindow -skip_gameinfo neocdz</full>
+        <nosound>-sound none -window -skip_gameinfo neocdz</nosound>
+        <debug>-debug -window -skip_gameinfo neocdz</debug>
+      </profile>
     </mame>
   </emulator>
   <compiler>
     <name>gcc</name>
     <version>2.95.2</version>
-    <path>..\..\build\gcc\gcc-2.95.2</path>
-    <includePath>..\..\build\include</includePath>
-    <libraryPath>..\..\build\lib</libraryPath>
-    <systemFile>..\..\build\system\neocd.x</systemFile>
+    <path>{{build}}\gcc\gcc-2.95.2</path>
+    <includePath>{{neocore}}\src-lib\include</includePath>
+    <libraryPath>{{build}}\lib</libraryPath>
+    <crtPath>{{neocore}}\src-lib\crt</crtPath>
+    <systemFile>
+      <cd>{{neocore}}\src-lib\system\neocd.x</cd>
+      <cartridge>{{neocore}}\src-lib\system\neocart.x</cartridge>
+    </systemFile>
   </compiler>
-  <!-- for using cdda audio tracks, uncomment & set up your files
-  Warning: track id 1 is reserved for the binary program
-  <sound>
-    <sfx>
-      <pcm>assets\sounds\sfx\click.V1</pcm>
-      <z80>assets\sounds\sfx\click.M1</z80>
-    </sfx>
-    <cdda>
-      <tracks>
-        <track>
-          <id>2</id>
-          <file>assets\sounds\cdda\track-1.wav</file>
-          <pregap>00:02:00</pregap>
-        </track>
-        <track>
-          <id>3</id>
-          <file>assets\sounds\cdda\track-2.wav</file>
-          <pregap>00:02:00</pregap>
-        </track>
-        <track>
-          <id>4</id>
-          <file>assets\sounds\cdda\track-3.wav</file>
-          <pregap>00:02:00</pregap>
-        </track>
-      </tracks>
-    </cdda>
-  </sound>
--->
 </project>

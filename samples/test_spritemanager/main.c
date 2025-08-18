@@ -23,11 +23,11 @@ static void display() {
 
 static void update() {
   nc_init_log();
-  nc_log_word("P1 INDEX : ", planet01.pictureDAT.baseSprite);
-  nc_log_info("MUST BE : 1");
-  nc_log_word("P2 INDEX : ", planet02.pictureDAT.baseSprite);
-  nc_log_info("MUST BE : 9");
-  nc_log_word("P3 INDEX : ", planet03.pictureDAT.baseSprite);
+  nc_log_info_line("P1 INDEX : %04d", planet01.pictureDAT.baseSprite);
+  nc_log_info_line("MUST BE : 1");
+  nc_log_info_line("P2 INDEX : %04d", planet02.pictureDAT.baseSprite);
+  nc_log_info_line("MUST BE : 9");
+  nc_log_info_line("P3 INDEX : %04d", planet03.pictureDAT.baseSprite);
   nc_log_info("MUST BE : 17");
 
   if (nc_get_frame_counter() == 500) {
@@ -36,7 +36,7 @@ static void update() {
   }
 
   if (nc_get_frame_counter() > 500) {
-    nc_log_word("P4 INDEX : ", planet04.pictureDAT.baseSprite);
+    nc_log_info("P4 INDEX : %04d", planet04.pictureDAT.baseSprite);
     nc_log_info("MUST BE : 1");
   }
 }

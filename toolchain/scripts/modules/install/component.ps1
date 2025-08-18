@@ -5,7 +5,7 @@ function Install-Component {
     [Parameter(Mandatory=$true)][String] $PathInstall
   )
 
-  $pathInstall = $PathInstall.Replace("{{build}}", $Config.project.buildPath)
+  $pathInstall = Get-TemplatePath -Path $PathInstall
 
   if (-not($(Test-Path -Path $pathInstall))) {
     Write-Host "  create $pathInstall" -ForegroundColor Yellow
@@ -13,21 +13,27 @@ function Install-Component {
   }
 
   $fileName = Split-Path -Path $URL -Leaf
-  $pathDownload = Resolve-Path -Path $PathDownload
-  $pathInstall = Resolve-Path -Path $PathInstall
+  $pathDownload = Resolve-TemplatePath -Path $PathDownload
+  $pathInstall = Resolve-TemplatePath -Path $PathInstall
 
-  Write-Host "GET $fileName" -ForegroundColor Blue
+  Write-Host "GET $fileName" -ForegroundColor Cyan
   Start-Download -URL $URL -Path $pathDownload
 
   if (-not($(Test-Path -Path "$pathDownload\$fileName"))) {
     Write-Host "  error : download failed" -ForegroundColor Red
-    exit 1
+    return $false
   }
 
-  Expand-Archive -Path "$pathDownload\$fileName" -DestinationPath $pathInstall -Force -ErrorAction Stop
-
-  Write-Host "  expanded $filename $pathInstall" -ForegroundColor Yellow
+  try {
+    Expand-Archive -Path "$pathDownload\$fileName" -DestinationPath $pathInstall -Force -ErrorAction Stop
+    Write-Host "  expanded $filename $pathInstall" -ForegroundColor Yellow
+  } catch {
+    Write-Host "  error : failed to expand archive $fileName" -ForegroundColor Red
+    Write-Host "  error details: $($_.Exception.Message)" -ForegroundColor Red
+    return $false
+  }
   Write-Host ""
 
   Remove-Item -Path "$pathDownload\$fileName" -Force
+  return $true
 }

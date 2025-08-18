@@ -26,14 +26,15 @@ static void display() {
 }
 
 static void update() {
-  Vec2short position_spectrum02;
-  Vec2short position_k7;
+  Position position_spectrum02;
+  Position position_k7;
 
-  position_spectrum02 = nc_get_position_gfx_scroller(spectrum02);
-  position_k7 = nc_get_position_gfx_picture(k7);
+  nc_get_position_gfx_scroller(&spectrum02, &position_spectrum02);
+  nc_get_position_gfx_picture(&k7, &position_k7);
 
   nc_init_log();
-  nc_log_byte("AUDIO TRACK : ", track_num - 1);
+  nc_log_info("AUDIO TRACK : ");
+  nc_log_byte(track_num - 1);
   if (nc_get_frame_counter() % 2 == 0) {
     nc_move_gfx_scroller(&spectrum02, 1, 0);
     if (position_spectrum02.x > 960) nc_set_position_gfx_scroller(&spectrum02, 0, position_spectrum02.y);
