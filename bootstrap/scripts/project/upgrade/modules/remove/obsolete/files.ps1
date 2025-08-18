@@ -12,7 +12,6 @@ function Remove-ObsoleteFiles {
 
     # List of obsolete files to remove
     $obsoleteFiles = @(
-        @{ Path = "$ProjectSrcPath\externs.h"; Description = "Deprecated header file" },
         @{ Path = "$ProjectSrcPath\common_crt0_cd.s"; Description = "Deprecated assembly file - no longer needed in v3" },
         @{ Path = "$ProjectSrcPath\crt0_cd.s"; Description = "Deprecated assembly file - no longer needed in v3" }
     )

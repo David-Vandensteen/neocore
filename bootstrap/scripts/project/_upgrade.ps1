@@ -101,7 +101,8 @@ function Main {
             Write-Host "  - project.xml (will be rewritten to match NeoCore v3 format)" -ForegroundColor Yellow
             Write-Host "  - Makefile (will be overwritten with NeoCore v3 version)" -ForegroundColor Yellow
             Write-Host "  - NeoCore files will be copied (src-lib, manifest.xml, toolchain)" -ForegroundColor Yellow
-            Write-Host "  - Obsolete files will be removed (.h and .s files no longer needed)" -ForegroundColor Yellow
+            Write-Host "  - externs.h will be overwritten to NeoCore v3 version" -ForegroundColor Yellow
+            Write-Host "  - Obsolete files will be removed (deprecated .s assembly files)" -ForegroundColor Yellow
             Write-Host ""
             Write-Log -File $logFile -Level "WARNING" -Message "Starting migration process - project.xml and Makefile will be rewritten, NeoCore files copied, obsolete files removed"
 
@@ -117,6 +118,20 @@ function Main {
                 Write-Host "Migration failed during Makefile update" -ForegroundColor Red
                 Write-Log -File $logFile -Level "ERROR" -Message "Migration failed during Makefile update"
                 return $false
+            }
+
+            # Copy new externs.h file to project
+            $sourceExternsPath = "$sourceNeocorePath\bootstrap\standalone\externs.h"
+            $targetExternsPath = "$ProjectSrcPath\externs.h"
+
+            try {
+                Copy-Item -Path $sourceExternsPath -Destination $targetExternsPath -Force
+                Write-Host "Updated externs.h for NeoCore v3" -ForegroundColor Green
+                Write-Log -File $logFile -Level "SUCCESS" -Message "Copied new externs.h from: $sourceExternsPath to: $targetExternsPath"
+            } catch {
+                Write-Host "Warning: Could not copy externs.h: $($_.Exception.Message)" -ForegroundColor Yellow
+                Write-Log -File $logFile -Level "WARNING" -Message "Could not copy externs.h: $($_.Exception.Message)"
+                # Continue execution - externs.h copy failure is not critical
             }
 
             # Migrate project.xml to NeoCore v3 format
