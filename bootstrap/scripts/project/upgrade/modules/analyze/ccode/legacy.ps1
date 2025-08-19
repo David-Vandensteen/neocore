@@ -78,6 +78,55 @@ function Analyze-CCodeLegacy {
             Suggestion = "Replace Vec2short with Position type"
         }
 
+        # Direct member access on position functions (v3 signature change)
+        "nc_get_position_gfx_picture_physic().x access" = @{
+            Pattern = "nc_get_position_gfx_picture_physic\s*\([^)]*\)\s*\.\s*x"
+            Issue = "nc_get_position_gfx_picture_physic() signature changed in v3 (now uses output parameter)"
+            Suggestion = "Change to: Position pos; nc_get_position_gfx_picture_physic(&picture, &pos); then use pos.x"
+        }
+
+        "nc_get_position_gfx_picture_physic().y access" = @{
+            Pattern = "nc_get_position_gfx_picture_physic\s*\([^)]*\)\s*\.\s*y"
+            Issue = "nc_get_position_gfx_picture_physic() signature changed in v3 (now uses output parameter)"
+            Suggestion = "Change to: Position pos; nc_get_position_gfx_picture_physic(&picture, &pos); then use pos.y"
+        }
+
+        "nc_get_position_gfx_animated_sprite().x access" = @{
+            Pattern = "nc_get_position_gfx_animated_sprite\s*\([^)]*\)\s*\.\s*x"
+            Issue = "nc_get_position_gfx_animated_sprite() signature changed in v3 (now uses output parameter)"
+            Suggestion = "Change to: Position pos; nc_get_position_gfx_animated_sprite(&sprite, &pos); then use pos.x"
+        }
+
+        "nc_get_position_gfx_animated_sprite().y access" = @{
+            Pattern = "nc_get_position_gfx_animated_sprite\s*\([^)]*\)\s*\.\s*y"
+            Issue = "nc_get_position_gfx_animated_sprite() signature changed in v3 (now uses output parameter)"
+            Suggestion = "Change to: Position pos; nc_get_position_gfx_animated_sprite(&sprite, &pos); then use pos.y"
+        }
+
+        "nc_get_position_gfx_picture().x access" = @{
+            Pattern = "nc_get_position_gfx_picture\s*\([^)]*\)\s*\.\s*x"
+            Issue = "nc_get_position_gfx_picture() signature changed in v3 (now uses output parameter)"
+            Suggestion = "Change to: Position pos; nc_get_position_gfx_picture(&picture, &pos); then use pos.x"
+        }
+
+        "nc_get_position_gfx_picture().y access" = @{
+            Pattern = "nc_get_position_gfx_picture\s*\([^)]*\)\s*\.\s*y"
+            Issue = "nc_get_position_gfx_picture() signature changed in v3 (now uses output parameter)"
+            Suggestion = "Change to: Position pos; nc_get_position_gfx_picture(&picture, &pos); then use pos.y"
+        }
+
+        "nc_get_position_gfx_scroller().x access" = @{
+            Pattern = "nc_get_position_gfx_scroller\s*\([^)]*\)\s*\.\s*x"
+            Issue = "nc_get_position_gfx_scroller() signature changed in v3 (now uses output parameter)"
+            Suggestion = "Change to: Position pos; nc_get_position_gfx_scroller(&scroller, &pos); then use pos.x"
+        }
+
+        "nc_get_position_gfx_scroller().y access" = @{
+            Pattern = "nc_get_position_gfx_scroller\s*\([^)]*\)\s*\.\s*y"
+            Issue = "nc_get_position_gfx_scroller() signature changed in v3 (now uses output parameter)"
+            Suggestion = "Change to: Position pos; nc_get_position_gfx_scroller(&scroller, &pos); then use pos.y"
+        }
+
         # Deprecated logging functions from v2
         "nc_log() function" = @{
             Pattern = "nc_log\s*\(\s*`"[^`"]*`"\s*\)\s*;"

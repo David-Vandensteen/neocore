@@ -144,7 +144,7 @@ function Write-ProjectXML {
                 $existingChardataSection += '          <charfile>out\char.bin</charfile>' + "`n"
                 $existingChardataSection += '          <mapfile>out\charMaps.s</mapfile>' + "`n"
                 $existingChardataSection += '          <palfile>out\charPals.s</palfile>' + "`n"
-                $existingChardataSection += '          <incfile>out\charData.h</incfile>' + "`n"
+                $existingChardataSection += '          <incfile>out\charInclude.h</incfile>' + "`n"
                 $existingChardataSection += '          <incprefix>../</incprefix>' + "`n"
 
                 # Preserve existing setup elements (except v3 ones and starting_tile to avoid duplication)
@@ -209,7 +209,7 @@ function Write-ProjectXML {
           <charfile>out\char.bin</charfile>
           <mapfile>out\charMaps.s</mapfile>
           <palfile>out\charPals.s</palfile>
-          <incfile>out\charData.h</incfile>
+          <incfile>out\charInclude.h</incfile>
           <incprefix>../</incprefix>
         </setup>
       </chardata>

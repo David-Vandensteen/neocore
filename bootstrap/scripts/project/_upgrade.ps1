@@ -24,6 +24,11 @@ function Main {
     # Initialize log file
     $logFile = "$ProjectSrcPath\..\upgrade.log"
 
+    # Remove existing log file if it exists
+    if (Test-Path $logFile) {
+        Remove-Item -Path $logFile -Force
+    }
+
     Write-Host "NeoCore v2 to v3 Migration Tool" -ForegroundColor Cyan
     Write-Host "===============================" -ForegroundColor Cyan
     Write-Host ""
