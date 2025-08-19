@@ -84,7 +84,12 @@ If the automatic script fails or encounters issues, you can perform the migratio
 1. **Backup your complete project** (create a full copy or git commit)
 2. **Replace with the new v3 library** from your NeoCore v3 installation
 3. **Update the toolchain** if you have custom modifications
-4. **Replace any other NeoCore-specific folders** as needed
+4. **Copy new externs.h file:**
+   ```bash
+   # Copy the new v3 externs.h file to your project
+   copy neocore_v3_installation\bootstrap\standalone\externs.h your_project\src\externs.h
+   ```
+5. **Replace any other NeoCore-specific folders** as needed
 
 #### Step 2: Manual Project.xml Migration
 
