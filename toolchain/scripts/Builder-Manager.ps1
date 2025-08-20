@@ -17,6 +17,8 @@ function Main {
 
   Write-Host "Builder Manager" -ForegroundColor Cyan
 
+  # Set global variable for neocore path before importing modules
+  $global:neocorePathAbs = $Config.project.neocorePath
   Import-Module "$($Config.project.neocorePath)\toolchain\scripts\modules\import\neocore\modules.ps1"
 
   if (-Not(Assert-Project -Config $Config)) {

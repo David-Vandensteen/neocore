@@ -4,7 +4,13 @@
 # ============================================================================
 
 # Resolve NeoCore path once to avoid Import-Module issues with relative paths
-$neocorePathAbs = (Resolve-Path "$neocorePathAbs").Path
+# Use global variable if available, otherwise fallback to script location
+if ($global:neocorePathAbs) {
+    $neocorePathAbs = (Resolve-Path "$global:neocorePathAbs").Path
+} else {
+    # Fallback: Get the path to neocore from this script's location (go up 5 levels from modules/import/neocore/)
+    $neocorePathAbs = (Resolve-Path (Join-Path $PSScriptRoot "..\..\..\..\..")).Path
+}
 
 # ============================================================================
 # CORE UTILITIES
