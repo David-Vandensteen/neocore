@@ -29,6 +29,56 @@ function Assert-Gitignore {
         $gitignoreContent = Get-Content -Path $gitignorePath -ErrorAction Stop
         $issuesFound = @()
 
+        # Define required patterns for NeoCore v3 projects
+        $requiredPatterns = @(
+            "**/out/fix.bin",
+            "**/out/char.bin"
+        )
+
+        # Check for missing required patterns
+        $missingPatterns = @()
+        foreach ($requiredPattern in $requiredPatterns) {
+            $patternFound = $false
+            foreach ($line in $gitignoreContent) {
+                $trimmedLine = $line.Trim()
+                if ($trimmedLine -eq $requiredPattern) {
+                    $patternFound = $true
+                    break
+                }
+            }
+            if (-not $patternFound) {
+                $missingPatterns += $requiredPattern
+            }
+        }
+
+        # Check for build directories (with preference for absolute paths)
+        $hasBuildPattern = $false
+        $hasDistPattern = $false
+
+        foreach ($line in $gitignoreContent) {
+            $trimmedLine = $line.Trim()
+            if ($trimmedLine -eq "/build/" -or $trimmedLine -eq "build/") {
+                $hasBuildPattern = $true
+            }
+            if ($trimmedLine -eq "/dist/" -or $trimmedLine -eq "dist/") {
+                $hasDistPattern = $true
+            }
+        }
+
+        if (-not $hasBuildPattern) {
+            $missingPatterns += "/build/"
+        }
+        if (-not $hasDistPattern) {
+            $missingPatterns += "/dist/"
+        }
+
+        # Report missing patterns
+        if ($missingPatterns.Count -gt 0) {
+            foreach ($missingPattern in $missingPatterns) {
+                $issuesFound += "Missing recommended pattern: '$missingPattern'"
+            }
+        }
+
         # Check for problematic patterns that should be fixed in v3
         foreach ($line in $gitignoreContent) {
             $trimmedLine = $line.Trim()
@@ -59,11 +109,16 @@ function Assert-Gitignore {
         if ($issuesFound.Count -gt 0) {
             Write-Host "  Issues found in .gitignore:" -ForegroundColor Yellow
             foreach ($issue in $issuesFound) {
-                Write-Host "    - $issue" -ForegroundColor Red
+                if ($issue.StartsWith("Missing recommended pattern:")) {
+                    Write-Host "    - $issue" -ForegroundColor Yellow
+                } else {
+                    Write-Host "    - $issue" -ForegroundColor Red
+                }
                 Write-Log -File $LogFile -Level "WARNING" -Message ".gitignore issue: $issue"
             }
             Write-Host ""
-            Write-Host "  These issues should be manually fixed after migration." -ForegroundColor Yellow
+            Write-Host "  Recommendation: Update your .gitignore to include missing patterns." -ForegroundColor Yellow
+            Write-Host "  These patterns help ignore generated NeoCore v3 build artifacts." -ForegroundColor Yellow
             Write-Host "  Using absolute paths (starting with /) ensures patterns work correctly" -ForegroundColor Yellow
             Write-Host "  from any subdirectory in your repository." -ForegroundColor Yellow
             Write-Host ""

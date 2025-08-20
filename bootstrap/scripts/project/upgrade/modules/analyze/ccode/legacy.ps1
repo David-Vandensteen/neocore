@@ -157,6 +157,82 @@ function Analyze-CCodeLegacy {
             Issue = "nc_log_short() signature changed in v3 (label parameter removed)"
             Suggestion = "Remove label parameter: nc_log_short(value) or use nc_log_info() first"
         }
+
+        "nc_log_bool() with label" = @{
+            Pattern = "nc_log_bool\s*\(\s*`"[^`"]*`"\s*,"
+            Issue = "nc_log_bool() signature changed in v3 (label parameter removed)"
+            Suggestion = "Remove label parameter: nc_log_bool(value) or use nc_log_info() first"
+        }
+
+        "nc_log_byte() with label" = @{
+            Pattern = "nc_log_byte\s*\(\s*`"[^`"]*`"\s*,"
+            Issue = "nc_log_byte() signature changed in v3 (label parameter removed)"
+            Suggestion = "Remove label parameter: nc_log_byte(value) or use nc_log_info() first"
+        }
+
+        "nc_log_box() with label" = @{
+            Pattern = "nc_log_box\s*\(\s*`"[^`"]*`"\s*,"
+            Issue = "nc_log_box() signature changed in v3 (label parameter removed)"
+            Suggestion = "Remove label parameter: nc_log_box(value) or use nc_log_info() first"
+        }
+
+        "nc_log_dword() with label" = @{
+            Pattern = "nc_log_dword\s*\(\s*`"[^`"]*`"\s*,"
+            Issue = "nc_log_dword() signature changed in v3 (label parameter removed)"
+            Suggestion = "Remove label parameter: nc_log_dword(value) or use nc_log_info() first"
+        }
+
+        # Obsolete structure members from v2
+        "palCount structure member" = @{
+            Pattern = "\.\s*palCount\b"
+            Issue = "palCount member removed from NeoCore v3 structures"
+            Suggestion = "Remove palCount usage - palette counts are now handled internally"
+        }
+
+        "paletteMgr structure member" = @{
+            Pattern = "\.\s*paletteMgr\b"
+            Issue = "paletteMgr member removed from NeoCore v3 structures"
+            Suggestion = "Remove paletteMgr usage - palette management is now handled internally"
+        }
+
+        "spriteManager structure member" = @{
+            Pattern = "\.\s*spriteManager\b"
+            Issue = "spriteManager member removed from NeoCore v3 structures"
+            Suggestion = "Remove spriteManager usage - sprite management is now handled internally"
+        }
+
+        "fixMgrMemoryPool structure member" = @{
+            Pattern = "\.\s*fixMgrMemoryPool\b"
+            Issue = "fixMgrMemoryPool member removed from NeoCore v3 structures"
+            Suggestion = "Remove fixMgrMemoryPool usage - memory management is now handled internally"
+        }
+
+
+
+        "sprites structure member" = @{
+            Pattern = "\.\s*sprites\b"
+            Issue = "sprites member may have been removed or renamed in NeoCore v3 structures"
+            Suggestion = "Check NeoCore v3 documentation for updated structure members"
+        }
+
+        "frames structure member" = @{
+            Pattern = "\.\s*frames\b"
+            Issue = "frames member may have been removed or renamed in NeoCore v3 structures"
+            Suggestion = "Check NeoCore v3 documentation for updated structure members"
+        }
+
+        # C99 variable declarations (not supported in NeoCore C89/C90)
+        "C99 variable declaration" = @{
+            Pattern = "^[^/\*]*\w+\s+\w+\s*=[^;]*;.*\w+\s+\w+\s*[=;]"
+            Issue = "C99-style variable declaration (variables declared after code statements)"
+            Suggestion = "Move all variable declarations to the beginning of the function block (C89/C90 requirement)"
+        }
+
+        "Mixed declarations and code" = @{
+            Pattern = "(?<!\s*//.*)\w+\s+\w+\s*=.*;\s*\n.*\n.*\w+\s+\w+\s*[=;]"
+            Issue = "Mixed variable declarations and code statements (C99 feature not supported)"
+            Suggestion = "Move all variable declarations to the beginning of the function block"
+        }
     }
 
     # Get all C files in the project
