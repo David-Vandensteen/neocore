@@ -139,6 +139,13 @@ function Main {
                 # Continue execution - externs.h copy failure is not critical
             }
 
+            # Remove obsolete files
+            if (-not (Remove-ObsoleteFiles -ProjectSrcPath $ProjectSrcPath -LogFile $logFile)) {
+                Write-Host "Migration completed with warnings during obsolete files removal" -ForegroundColor Yellow
+                Write-Log -File $logFile -Level "WARNING" -Message "Migration completed with warnings during obsolete files removal"
+                # Continue execution - obsolete files removal failures are not critical
+            }
+
             # Migrate project.xml to NeoCore v3 format
             if (-not (Write-ProjectXML -ProjectSrcPath $ProjectSrcPath -TargetVersion $versions.Target -LogFile $logFile)) {
                 Write-Host "Migration failed during project.xml update" -ForegroundColor Red
@@ -146,12 +153,6 @@ function Main {
                 return $false
             }
 
-            # Remove obsolete files
-            if (-not (Remove-ObsoleteFiles -ProjectSrcPath $ProjectSrcPath -LogFile $logFile)) {
-                Write-Host "Migration completed with warnings during obsolete files removal" -ForegroundColor Yellow
-                Write-Log -File $logFile -Level "WARNING" -Message "Migration completed with warnings during obsolete files removal"
-                # Continue execution - obsolete files removal failures are not critical
-            }
             # Important post-migration information about Animator export
             Write-Host ""
             Write-Host "*** IMPORTANT POST-MIGRATION STEP ***" -ForegroundColor Yellow -BackgroundColor Black

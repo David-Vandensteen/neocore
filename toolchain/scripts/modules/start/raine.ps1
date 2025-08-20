@@ -59,7 +59,8 @@ function Invoke-Raine {
   Write-Host "Launching raine $FileName" -ForegroundColor Yellow
   $pathRaineAbs = Resolve-TemplatePath -Path $PathRaine
   $fullExePath = "$pathRaineAbs\$ExeName"
-  $fullCuePath = "$PathISO\$FileName"
+  $pathISOAbs = Resolve-TemplatePath -Path $PathISO
+  $fullCuePath = "$pathISOAbs\$FileName"
 
   Write-Host "Raine path: $pathRaineAbs" -ForegroundColor Cyan
   Write-Host "Exe name: $ExeName" -ForegroundColor Cyan

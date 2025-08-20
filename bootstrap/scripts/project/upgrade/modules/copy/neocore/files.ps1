@@ -28,31 +28,43 @@ function Copy-NeocoreFiles {
     $copiedFiles = @()
     $errors = @()
 
-    # Copy directories
+    # Copy directories using robocopy for better reliability
     foreach ($dir in $directoriesToCopy) {
         $sourceDir = "$SourceNeocorePath\$dir"
         $targetDir = "$ProjectNeocorePath\$dir"
 
         if (Test-Path $sourceDir) {
-            try {
-                Write-Host "  Copying directory: $dir..." -ForegroundColor White
+            Write-Host "  Copying directory: $dir..." -ForegroundColor White
 
-                # Remove target directory if it exists
-                if (Test-Path $targetDir) {
-                    Remove-Item -Path $targetDir -Recurse -Force
-                    Write-Log -File $LogFile -Level "INFO" -Message "Removed existing directory: $targetDir"
-                }
+            # Remove target directory if it exists
+            if (Test-Path $targetDir) {
+                Remove-Item -Path $targetDir -Recurse -Force -ErrorAction Stop
+                Write-Log -File $LogFile -Level "INFO" -Message "Removed existing directory: $targetDir"
+            }
 
-                # Copy source directory to target
-                Copy-Item -Path $sourceDir -Destination $targetDir -Recurse -Force
-                Write-Log -File $LogFile -Level "INFO" -Message "Copied directory: $sourceDir -> $targetDir"
-                $copiedDirs += $dir
+            # Use robocopy for reliable directory copying
+            $robocopyArgs = @(
+                $sourceDir,
+                $targetDir,
+                "/E",        # Copy subdirectories including empty ones
+                "/R:0",      # Number of retries on failed copies (0 = no retry)
+                "/W:0"       # Wait time between retries (0 seconds)
+            )
 
-            } catch {
-                $errorMsg = "Failed to copy directory $dir : $($_.Exception.Message)"
+            Write-Log -File $LogFile -Level "INFO" -Message "Running robocopy: $sourceDir -> $targetDir"
+            $robocopyResult = & robocopy @robocopyArgs
+            $robocopyExitCode = $LASTEXITCODE
+
+            # Robocopy exit codes: 0-3 are success, 4+ are errors
+            if ($robocopyExitCode -ge 4) {
+                $errorMsg = "Failed to copy directory $dir (robocopy exit code: $robocopyExitCode)"
                 Write-Host "  ERROR: $errorMsg" -ForegroundColor Red
                 Write-Log -File $LogFile -Level "ERROR" -Message $errorMsg
-                $errors += $errorMsg
+                Write-Log -File $LogFile -Level "ERROR" -Message "NeoCore files copy failed - stopping migration"
+                return $false
+            } else {
+                Write-Log -File $LogFile -Level "INFO" -Message "Successfully copied directory: $sourceDir -> $targetDir (exit code: $robocopyExitCode)"
+                $copiedDirs += $dir
             }
         } else {
             $errorMsg = "Source directory not found: $sourceDir"
@@ -69,7 +81,7 @@ function Copy-NeocoreFiles {
         if (Test-Path $sourceFile) {
             try {
                 Write-Host "  Copying file: $file..." -ForegroundColor White
-                Copy-Item -Path $sourceFile -Destination $targetFile -Force
+                Copy-Item -Path $sourceFile -Destination $targetFile -Force -ErrorAction Stop
                 Write-Log -File $LogFile -Level "INFO" -Message "Copied file: $sourceFile -> $targetFile"
                 $copiedFiles += $file
 
@@ -77,7 +89,8 @@ function Copy-NeocoreFiles {
                 $errorMsg = "Failed to copy file $file : $($_.Exception.Message)"
                 Write-Host "  ERROR: $errorMsg" -ForegroundColor Red
                 Write-Log -File $LogFile -Level "ERROR" -Message $errorMsg
-                $errors += $errorMsg
+                Write-Log -File $LogFile -Level "ERROR" -Message "NeoCore files copy failed - stopping migration"
+                return $false
             }
         } else {
             $errorMsg = "Source file not found: $sourceFile"
@@ -86,23 +99,14 @@ function Copy-NeocoreFiles {
         }
     }
 
-    # Report results
-    if ($errors.Count -eq 0) {
-        Write-Host "Successfully copied NeoCore files:" -ForegroundColor Green
-        if ($copiedDirs.Count -gt 0) {
-            Write-Host "  - Directories: $($copiedDirs -join ', ')" -ForegroundColor White
-        }
-        if ($copiedFiles.Count -gt 0) {
-            Write-Host "  - Files: $($copiedFiles -join ', ')" -ForegroundColor White
-        }
-        Write-Log -File $LogFile -Level "SUCCESS" -Message "NeoCore files copy completed successfully"
-        return $true
-    } else {
-        Write-Host "NeoCore copy completed with errors:" -ForegroundColor Yellow
-        foreach ($error in $errors) {
-            Write-Host "  - $error" -ForegroundColor Red
-        }
-        Write-Log -File $LogFile -Level "WARNING" -Message "NeoCore files copy completed with $($errors.Count) errors"
-        return $false
+    # If we reach here, all copies were successful
+    Write-Host "Successfully copied NeoCore files:" -ForegroundColor Green
+    if ($copiedDirs.Count -gt 0) {
+        Write-Host "  - Directories: $($copiedDirs -join ', ')" -ForegroundColor White
     }
+    if ($copiedFiles.Count -gt 0) {
+        Write-Host "  - Files: $($copiedFiles -join ', ')" -ForegroundColor White
+    }
+    Write-Log -File $LogFile -Level "SUCCESS" -Message "NeoCore files copy completed successfully"
+    return $true
 }
