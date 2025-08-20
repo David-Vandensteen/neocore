@@ -63,7 +63,8 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
 
 ### 🟡 Soon
 - [ ] Custom HUD / Fix layer
-  - [ ] Upgrade to Neocore v3 with DATlib 0.3 (**in progress**)
+  - [x] Upgrade to Neocore v3 with DATlib 0.3
+- [ ] AES / MVS support (**5% completed**)
 
 ### 🕓 Later
 - [ ] RGB palette handlers (**60% completed**)
@@ -76,7 +77,6 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
 ### 🧐 Maybe
 - [ ] XML WYSIWYG editor
 - [ ] Memory card support
-- [ ] AES / MVS support (limited)
 - [ ] CLI-based asset packager
 
 ---
