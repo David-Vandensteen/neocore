@@ -157,6 +157,58 @@ function Analyze-CCodeLegacy {
             Issue = "nc_log_short() signature changed in v3 (label parameter removed)"
             Suggestion = "Remove label parameter: nc_log_short(value) or use nc_log_info() first"
         }
+
+        # DATlib structure changes (palCount deprecated, replaced with count)
+        "DATlib palCount member access" = @{
+            Pattern = "\w+\s*\.\s*palCount\b"
+            Issue = "DATlib palCount member deprecated in v3, replaced with count"
+            Suggestion = "Replace .palCount with .count (e.g., palette_data.palCount becomes palette_data.count)"
+        }
+
+        "DATlib ->palCount member access" = @{
+            Pattern = "\w+\s*->\s*palCount\b"
+            Issue = "DATlib palCount member deprecated in v3, replaced with count"
+            Suggestion = "Replace ->palCount with ->count (e.g., paletteInfo->palCount becomes paletteInfo->count)"
+        }
+
+        # NeoCore object palette count access (different migration path)
+        "NeoCore object palCount access" = @{
+            Pattern = "\w+\s*\.\s*palInfo\s*->\s*palCount\b"
+            Issue = "NeoCore object palInfo->palCount deprecated in v3, replaced with palInfo->count"
+            Suggestion = "Replace .palInfo->palCount with .palInfo->count"
+        }
+
+        "NeoCore object ->palInfo->palCount access" = @{
+            Pattern = "\w+\s*->\s*palInfo\s*->\s*palCount\b"
+            Issue = "NeoCore object palInfo->palCount deprecated in v3, replaced with palInfo->count"
+            Suggestion = "Replace ->palInfo->palCount with ->palInfo->count"
+        }
+
+        # DATlib animated sprite changes
+        "currentStepNum member access" = @{
+            Pattern = "\w+\s*\.\s*currentStepNum\b"
+            Issue = "DATlib currentStepNum member renamed to stepNum in v3"
+            Suggestion = "Replace .currentStepNum with .stepNum"
+        }
+
+        "->currentStepNum member access" = @{
+            Pattern = "\w+\s*->\s*currentStepNum\b"
+            Issue = "DATlib currentStepNum member renamed to stepNum in v3"
+            Suggestion = "Replace ->currentStepNum with ->stepNum"
+        }
+
+        # DATlib type changes
+        "WORD type usage" = @{
+            Pattern = "\bWORD\s+\w+"
+            Issue = "DATlib WORD type replaced with ushort in v3"
+            Suggestion = "Replace WORD with ushort"
+        }
+
+        "DWORD type usage" = @{
+            Pattern = "\bDWORD\s+\w+"
+            Issue = "DATlib DWORD type replaced with uint in v3"
+            Suggestion = "Replace DWORD with uint"
+        }
     }
 
     # Get all C files in the project
