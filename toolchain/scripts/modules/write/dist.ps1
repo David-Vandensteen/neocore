@@ -34,8 +34,13 @@ function Write-Dist {
     if ((Test-Path -Path "$isoPath\$ProjectName.iso") -eq $false) {
       New-Item -Path $isoPath -ItemType Directory -Force
     } else {
-      Write-Host "$isoPath\$ProjectName.iso already exist" -ForegroundColor Red
-      return $false
+      Write-Host "$isoPath\$ProjectName.iso already exists" -ForegroundColor Yellow
+      $response = Read-Host "Do you want to overwrite it? (y/N)"
+      if ($response -ne 'y' -and $response -ne 'Y') {
+        Write-Host "Operation cancelled by user" -ForegroundColor Red
+        return $false
+      }
+      Write-Host "Overwriting existing ISO file..." -ForegroundColor Yellow
     }
   }
   if ($CHDFile) {
@@ -43,8 +48,13 @@ function Write-Dist {
     if ((Test-Path -Path "$mamePath\$ProjectName.chd") -eq $false) {
       New-Item -Path $mamePath -ItemType Directory -Force
     } else {
-      Write-Host "$mamePath\$ProjectName.chd already exist" -ForegroundColor Red
-      return $false
+      Write-Host "$mamePath\$ProjectName.chd already exists" -ForegroundColor Yellow
+      $response = Read-Host "Do you want to overwrite it? (y/N)"
+      if ($response -ne 'y' -and $response -ne 'Y') {
+        Write-Host "Operation cancelled by user" -ForegroundColor Red
+        return $false
+      }
+      Write-Host "Overwriting existing CHD file..." -ForegroundColor Yellow
     }
   }
   if ($ISOFile) {
