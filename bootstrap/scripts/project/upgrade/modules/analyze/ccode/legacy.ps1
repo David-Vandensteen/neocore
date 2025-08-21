@@ -64,6 +64,12 @@ function Analyze-CCodeLegacy {
             Suggestion = "Change to: Position pos; nc_get_position_gfx_scroller(&scroller, &pos);"
         }
 
+        "nc_get_position_gfx_animated_sprite_physic() return value" = @{
+            Pattern = "Vec2short\s+\w+\s*=\s*nc_get_position_gfx_animated_sprite_physic\s*\("
+            Issue = "nc_get_position_gfx_animated_sprite_physic() signature changed in v3 (now uses output parameter)"
+            Suggestion = "Change to: Position pos; nc_get_position_gfx_animated_sprite_physic(&sprite, &pos);"
+        }
+
         # Breaking change: nc_get_relative_position signature
         "nc_get_relative_position() old signature" = @{
             Pattern = "Vec2short\s+\w+\s*=\s*nc_get_relative_position\s*\(\s*[^,]*,\s*[^)]*\s*\)"
@@ -89,6 +95,18 @@ function Analyze-CCodeLegacy {
             Pattern = "nc_get_position_gfx_picture_physic\s*\([^)]*\)\s*\.\s*y"
             Issue = "nc_get_position_gfx_picture_physic() signature changed in v3 (now uses output parameter)"
             Suggestion = "Change to: Position pos; nc_get_position_gfx_picture_physic(&picture, &pos); then use pos.y"
+        }
+
+        "nc_get_position_gfx_animated_sprite_physic().x access" = @{
+            Pattern = "nc_get_position_gfx_animated_sprite_physic\s*\([^)]*\)\s*\.\s*x"
+            Issue = "nc_get_position_gfx_animated_sprite_physic() signature changed in v3 (now uses output parameter)"
+            Suggestion = "Change to: Position pos; nc_get_position_gfx_animated_sprite_physic(&sprite, &pos); then use pos.x"
+        }
+
+        "nc_get_position_gfx_animated_sprite_physic().y access" = @{
+            Pattern = "nc_get_position_gfx_animated_sprite_physic\s*\([^)]*\)\s*\.\s*y"
+            Issue = "nc_get_position_gfx_animated_sprite_physic() signature changed in v3 (now uses output parameter)"
+            Suggestion = "Change to: Position pos; nc_get_position_gfx_animated_sprite_physic(&sprite, &pos); then use pos.y"
         }
 
         "nc_get_position_gfx_animated_sprite().x access" = @{

@@ -44,7 +44,12 @@ NeoCore v3 includes an official migration script that automates many migration t
   - **Migrates `<sound>` section**: Automatically wraps existing sound content in `<cd>` structure, preserving all sound elements
 - ✅ **Build directory validation**: Checks for existing build directory and requires cleanup before proceeding
 - ✅ **Code analysis**: Scans C files for v2/v3 compatibility issues and legacy patterns:
-  - **Position function signatures**: Detects functions that return Vec2short instead of using output parameters
+  - **Position function signatures**: Detects functions that return Vec2short instead of using output parameters:
+    - `nc_get_position_gfx_animated_sprite()` return values and `.x/.y` access
+    - `nc_get_position_gfx_animated_sprite_physic()` return values and `.x/.y` access
+    - `nc_get_position_gfx_picture()` return values and `.x/.y` access
+    - `nc_get_position_gfx_picture_physic()` return values and `.x/.y` access
+    - `nc_get_position_gfx_scroller()` return values and `.x/.y` access
   - **Deprecated types**: Identifies Vec2short usage (replaced with Position)
   - **Legacy logging functions**: Detects old nc_log() patterns with label parameters:
     - `nc_log_word("label", value)` → Remove label parameter
