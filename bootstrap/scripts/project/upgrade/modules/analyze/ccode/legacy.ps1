@@ -207,8 +207,6 @@ function Analyze-CCodeLegacy {
             Suggestion = "Remove fixMgrMemoryPool usage - memory management is now handled internally"
         }
 
-
-
         "sprites structure member" = @{
             Pattern = "\.\s*sprites\b"
             Issue = "sprites member may have been removed or renamed in NeoCore v3 structures"
