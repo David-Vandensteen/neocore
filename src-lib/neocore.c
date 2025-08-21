@@ -732,18 +732,10 @@ void nc_init_gpu() {
   init_palette_manager_index();
 }
 
-void nc_clear_vram() {
-  WORD addr = 0x0000;
-  WORD addr_end = 0x8FFF;
-  disableIRQ();
-  for (addr = addr; addr <= addr_end; addr++) {
-    SC234Put(addr, 0);
-  }
-  enableIRQ();
-  SCClose();
-  nc_wait_vbl_max(10);
-  SCClose();
-  nc_wait_vbl_max(10);
+void nc_clear_display() {
+  clearFixLayer();
+  clearSprites(1, 447);
+  nc_update();
 }
 
   /*------------------------------*/
@@ -1098,10 +1090,11 @@ void nc_init_system() {
 
 void nc_reset() {
   nc_set_joypad_edge_mode(false);
-  nc_clear_vram();
+  nc_clear_display();
   nc_clear_sprite_index_table();
   nc_clear_palette_index_table();
   nc_init_system();
+  nc_update();
 }
 
 void nc_get_relative_position(Position *position, Box box, Position world_coord) {

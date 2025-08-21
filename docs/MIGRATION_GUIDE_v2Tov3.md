@@ -55,6 +55,8 @@ NeoCore v3 includes an official migration script that automates many migration t
     - `nc_log_box("label", value)` → Remove label parameter
     - `nc_log_dword("label", value)` → Remove label parameter
     - `nc_log_vec2short()` → Replace with nc_log_position()
+  - **Removed functions**: Detects calls to functions removed in v3:
+    - `nc_clear_vram()` → Replace with nc_clear_display() or nc_reset()
   - **Obsolete structure members**: Detects removed members from NeoCore v3:
     - `palCount` → Removed (handled internally)
     - `paletteMgr` → Removed (handled internally)
@@ -444,6 +446,10 @@ grep -r "= nc_get_position_" . --include="*.c" && echo "⚠️  Found old positi
 echo "=== Checking for old logging patterns ==="
 grep -r "nc_log(" . --include="*.c" && echo "⚠️  Found old nc_log() calls"
 
+# Check for removed functions
+echo "=== Checking for removed functions ==="
+grep -r "nc_clear_vram(" . --include="*.c" && echo "⚠️  Found nc_clear_vram() calls - replace with nc_clear_display() or nc_reset()"
+
 # Check for removed structures
 echo "=== Checking for removed structures ==="
 grep -r "animation \*" . --include="*.c" --include="*.h" && echo "⚠️  Found animation* usage"
@@ -636,6 +642,7 @@ All logging functions with label parameters have been removed:
 - `nc_log_int(char *label, int value)` → `nc_log_int(int value)`
 - `nc_log_short(char *label, short value)` → `nc_log_short(short value)`
 - `nc_log_vec2short(char *label, Vec2short vec)` → `nc_log_position(Position pos)`
+- `nc_clear_vram()` → Use `nc_clear_display()` or `nc_reset()` instead
 
 #### 2.3 Type Removals
 

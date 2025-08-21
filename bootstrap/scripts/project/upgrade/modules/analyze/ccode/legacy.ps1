@@ -182,6 +182,13 @@ function Analyze-CCodeLegacy {
             Suggestion = "Remove label parameter: nc_log_dword(value) or use nc_log_info() first"
         }
 
+        # Removed function - nc_clear_vram
+        "nc_clear_vram() function" = @{
+            Pattern = "nc_clear_vram\s*\("
+            Issue = "nc_clear_vram() function removed in v3"
+            Suggestion = "Replace with nc_clear_display() to clear display or nc_reset() for full reset"
+        }
+
         # Obsolete structure members from v2
         "palCount structure member" = @{
             Pattern = "\.\s*palCount\b"

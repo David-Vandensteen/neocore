@@ -56,6 +56,7 @@
     - **C API Changes**:
       - **Function removals**:
         - nc_log() function removed - use nc_log_info() for logging functionality
+        - nc_clear_vram() function removed - use nc_clear_display() to clear display or nc_reset() for full reset
       - **Type removals**:
         - typedef char Hex_Color[3]; removed - no longer supported
         - typedef char Hex_Packed_Color[5]; removed - no longer supported
