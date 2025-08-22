@@ -734,7 +734,7 @@ void nc_init_gpu() {
 
 void nc_clear_display() {
   WORD cur_addr = 0x8000;
-  const WORD sprite_max = 384;
+  const WORD sprite_max = 383;
   clearFixLayer();
   clearSprites(1, sprite_max);
   // reset shrunk
