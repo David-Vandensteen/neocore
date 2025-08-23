@@ -31,6 +31,8 @@
         - **Purpose**: Allows forcing a specific sprite ID for graphics display functions
         - **Behavior**: When `nc_display_gfx_with_sprite_id(sprite_id)` is called with a value different from 0xFFFF, all subsequent display functions (`nc_display_gfx_picture`, `nc_display_gfx_animated_sprite`, `nc_display_gfx_scroller`) will use the specified sprite ID instead of the automatic sprite manager
         - **Usage**: Call `nc_display_gfx_with_sprite_id(desired_sprite_id)` before displaying graphics to override automatic sprite allocation
+        - **Auto-reset**: The forced sprite ID is automatically reset to 0xFFFF after use, ensuring it only affects the next graphics allocation
+        - **Table management**: Forced sprite IDs are properly registered in the sprite manager table to prevent conflicts
       - **Display functions return sprite index**: Updated graphics display functions to return sprite index
         - **Functions affected**: `nc_display_gfx_picture()`, `nc_display_gfx_picture_physic()`, `nc_display_gfx_animated_sprite()`, `nc_display_gfx_animated_sprite_physic()`, `nc_display_gfx_scroller()`
         - **Functions affected**: `nc_init_display_gfx_picture()`, `nc_init_display_gfx_picture_physic()`, `nc_init_display_gfx_animated_sprite()`, `nc_init_display_gfx_animated_sprite_physic()`, `nc_init_display_gfx_scroller()`
