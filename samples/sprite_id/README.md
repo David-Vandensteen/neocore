@@ -16,6 +16,7 @@ This sample demonstrates and tests the new sprite ID management features introdu
 ### 2. **Forced Sprite ID Allocation**
 - Uses `nc_display_gfx_with_sprite_id(50)` to force the player sprite to use index 50
 - Demonstrates how to override automatic allocation for specific sprites
+- **Auto-reset feature**: The forced sprite ID automatically resets to `DISPLAY_GFX_WITH_SPRITE_ID_AUTO` after use
 
 ### 3. **Sprite Index Information Functions**
 - `nc_get_free_sprite_index()` - Gets the next available sprite index
@@ -26,6 +27,7 @@ This sample demonstrates and tests the new sprite ID management features introdu
 ### 4. **Dynamic Sprite Reallocation**
 - Press **START** to destroy and recreate the player sprite with a new sprite index
 - Tests dynamic sprite management and cleanup
+- Demonstrates proper sprite table management
 
 ## Controls
 
@@ -46,10 +48,17 @@ The sample displays:
 1. **Background**: Automatic allocation → displays assigned index
 2. **Planet**: Automatic allocation → displays assigned index
 3. **Player**: Forced to index 50 → confirms forced allocation
-4. **Reallocation**: Uses `nc_get_free_sprite_index()` for dynamic allocation
+4. **Reallocation**: Uses sprite cycling array for predictable testing
+
+### NeoCore v3.0.0 Improvements
+- **Auto-reset mechanism**: `nc_display_gfx_with_sprite_id()` automatically resets after use
+- **Sprite table management**: Forced sprite IDs are properly registered in the sprite manager
+- **No manual cleanup**: No need to manually reset `nc_display_gfx_with_sprite_id(DISPLAY_GFX_WITH_SPRITE_ID_AUTO)`
+- **Thread-safe allocation**: Prevents sprite ID conflicts and memory corruption
 
 ### Error Handling
-- Checks if `nc_get_free_sprite_index()` returns `0xFFFF` (no free sprites)
-- Displays appropriate message if sprite reallocation fails
+- Proper sprite table tracking prevents allocation conflicts
+- Sprite destruction properly frees indices for reuse
+- Robust sprite cycling prevents index collisions
 
 This sample serves as a comprehensive test and demonstration of NeoCore's enhanced sprite management capabilities.

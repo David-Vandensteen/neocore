@@ -36,8 +36,7 @@ int main(void) {
     PLAYER_SPRITE_ANIM_IDLE
   );
 
-  // Reset to automatic allocation for future sprites
-  nc_display_gfx_with_sprite_id(0xFFFF);
+  // Note: nc_display_gfx_with_sprite_id is automatically reset to DISPLAY_GFX_WITH_SPRITE_ID_AUTO after use
 
   // Display sprite allocation information
   nc_init_log();
@@ -96,7 +95,7 @@ int main(void) {
       // Destroy current player
       nc_destroy_gfx_animated_sprite(&player);
 
-      // Force new sprite ID
+      // Force new sprite ID (auto-reset after use)
       nc_display_gfx_with_sprite_id(new_sprite_id);
       player_sprite_id = nc_init_display_gfx_animated_sprite(
         &player,
@@ -110,8 +109,7 @@ int main(void) {
       nc_log_info_line("New sprite ID: %d", player_sprite_id);
       nc_log_info_line("Cycling to sprite ID: %d", sprite_cycle[cycle_index]);
 
-      // Reset to automatic allocation
-      nc_display_gfx_with_sprite_id(0xFFFF);
+      // Note: nc_display_gfx_with_sprite_id automatically reset to DISPLAY_GFX_WITH_SPRITE_ID_AUTO
     }
 
     nc_move_gfx_scroller(&background, 1, 0);
