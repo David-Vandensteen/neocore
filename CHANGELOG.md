@@ -21,6 +21,22 @@
     - **Doxygen Integration**: Added comprehensive documentation tags throughout neocore.h
     - **API Documentation**: Documentation for major structures (Position, Box, RGB16, GFX_*)
     - **Function Documentation**: Detailed parameter descriptions, return values, and usage notes
+  - **NEW FEATURES**:
+    - **NeoCore API Enhancements**:
+      - **New function**: `nc_get_free_sprite_index()` - Returns the first available sprite index for allocation
+        - **Purpose**: Provides direct access to next free sprite slot for manual sprite management
+        - **Return value**: First free sprite index (0-383) or 0xFFFF if no sprites available
+        - **Complement**: Works alongside existing `nc_get_max_free_sprite_index()` which counts total free sprites
+      - **Enhanced sprite management**: `nc_display_gfx_with_sprite_id()` integration
+        - **Purpose**: Allows forcing a specific sprite ID for graphics display functions
+        - **Behavior**: When `nc_display_gfx_with_sprite_id(sprite_id)` is called with a value different from 0xFFFF, all subsequent display functions (`nc_display_gfx_picture`, `nc_display_gfx_animated_sprite`, `nc_display_gfx_scroller`) will use the specified sprite ID instead of the automatic sprite manager
+        - **Usage**: Call `nc_display_gfx_with_sprite_id(desired_sprite_id)` before displaying graphics to override automatic sprite allocation
+      - **Display functions return sprite index**: Updated graphics display functions to return sprite index
+        - **Functions affected**: `nc_display_gfx_picture()`, `nc_display_gfx_picture_physic()`, `nc_display_gfx_animated_sprite()`, `nc_display_gfx_animated_sprite_physic()`, `nc_display_gfx_scroller()`
+        - **Functions affected**: `nc_init_display_gfx_picture()`, `nc_init_display_gfx_picture_physic()`, `nc_init_display_gfx_animated_sprite()`, `nc_init_display_gfx_animated_sprite_physic()`, `nc_init_display_gfx_scroller()`
+        - **Change**: Return type changed from `void` to `WORD`
+        - **Return value**: Sprite index used for display (either forced via `nc_display_gfx_with_sprite_id()` or automatically allocated)
+        - **Benefit**: Enables sprite index tracking and debugging, facilitates manual sprite management
   - **BREAKING CHANGES**:
     - **PowerShell Toolchain**:
       - **Command deprecations**: mak mame and mak raine deprecated (use mak run:mame and mak run:raine instead)

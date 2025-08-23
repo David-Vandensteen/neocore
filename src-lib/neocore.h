@@ -229,29 +229,91 @@ void nc_init_gfx_scroller(
  /*  GFX DISPLAY     */
 /*------------------*/
 
-void nc_display_gfx_animated_sprite(
+void nc_display_gfx_with_sprite_id(WORD sprite_id);
+
+/**
+ * @brief Display an animated sprite at specified position
+ * @param[in] animated_sprite Pointer to animated sprite object
+ * @param[in] x Horizontal position in pixels
+ * @param[in] y Vertical position in pixels
+ * @param[in] anim Animation frame index
+ * @return Sprite index used for display (either forced via nc_display_gfx_with_sprite_id or automatically allocated)
+ * @note Uses sprite manager for automatic allocation unless overridden by nc_display_gfx_with_sprite_id
+ * @since 3.0.0
+ */
+WORD nc_display_gfx_animated_sprite(
   GFX_Animated_Sprite *gfx_animated_sprite,
   short x,
   short y,
   WORD anim
 );
 
-void nc_display_gfx_animated_sprite_physic(
+/**
+ * @brief Display an animated sprite with physics at specified position
+ * @param[in] gfx_animated_sprite_physic Pointer to animated sprite with physics object
+ * @param[in] x Horizontal position in pixels
+ * @param[in] y Vertical position in pixels
+ * @param[in] anim Animation frame index
+ * @return Sprite index used for display (either forced via nc_display_gfx_with_sprite_id or automatically allocated)
+ * @note Updates collision box automatically after display
+ * @since 3.0.0
+ */
+WORD nc_display_gfx_animated_sprite_physic(
   GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic,
   short x,
   short y,
   WORD anim
 );
 
-void nc_display_gfx_picture(GFX_Picture *gfx_picture, short x, short y);
-void nc_display_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic, short x, short y);
-void nc_display_gfx_scroller(GFX_Scroller *gfx_scroller, short x, short y);
+/**
+ * @brief Display a picture at specified position
+ * @param[in] gfx_picture Pointer to picture object
+ * @param[in] x Horizontal position in pixels
+ * @param[in] y Vertical position in pixels
+ * @return Sprite index used for display (either forced via nc_display_gfx_with_sprite_id or automatically allocated)
+ * @note Uses sprite manager for automatic allocation unless overridden by nc_display_gfx_with_sprite_id
+ * @since 3.0.0
+ */
+WORD nc_display_gfx_picture(GFX_Picture *gfx_picture, short x, short y);
+
+/**
+ * @brief Display a picture with physics at specified position
+ * @param[in] gfx_picture_physic Pointer to picture with physics object
+ * @param[in] x Horizontal position in pixels
+ * @param[in] y Vertical position in pixels
+ * @return Sprite index used for display (either forced via nc_display_gfx_with_sprite_id or automatically allocated)
+ * @note Updates collision box automatically after display if autobox is enabled
+ * @since 3.0.0
+ */
+WORD nc_display_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic, short x, short y);
+
+/**
+ * @brief Display a scroller at specified position
+ * @param[in] gfx_scroller Pointer to scroller object
+ * @param[in] x Horizontal position in pixels
+ * @param[in] y Vertical position in pixels
+ * @return Sprite index used for display (either forced via nc_display_gfx_with_sprite_id or automatically allocated)
+ * @note Uses sprite manager for automatic allocation unless overridden by nc_display_gfx_with_sprite_id
+ * @since 3.0.0
+ */
+WORD nc_display_gfx_scroller(GFX_Scroller *gfx_scroller, short x, short y);
 
   /*-----------------------*/
  /*  GFX INIT DISPLAY     */
 /*-----------------------*/
 
-void nc_init_display_gfx_animated_sprite(
+/**
+ * @brief Initialize and display an animated sprite at specified position
+ * @param[in] gfx_animated_sprite Pointer to animated sprite object
+ * @param[in] spriteInfo Pointer to sprite metadata
+ * @param[in] paletteInfo Pointer to palette information
+ * @param[in] x Horizontal position in pixels
+ * @param[in] y Vertical position in pixels
+ * @param[in] anim Animation frame index
+ * @return Sprite index used for display
+ * @since 3.0.0
+ */
+WORD nc_init_display_gfx_animated_sprite(
   GFX_Animated_Sprite *gfx_animated_sprite,
   const spriteInfo *spriteInfo,
   const paletteInfo *paletteInfo,
@@ -260,7 +322,22 @@ void nc_init_display_gfx_animated_sprite(
   WORD anim
 );
 
-void nc_init_display_gfx_animated_sprite_physic(
+/**
+ * @brief Initialize and display an animated sprite with physics at specified position
+ * @param[in] gfx_animated_sprite_physic Pointer to animated sprite with physics object
+ * @param[in] spriteInfo Pointer to sprite metadata
+ * @param[in] paletteInfo Pointer to palette information
+ * @param[in] x Horizontal position in pixels
+ * @param[in] y Vertical position in pixels
+ * @param[in] box_witdh Collision box width
+ * @param[in] box_height Collision box height
+ * @param[in] box_width_offset Collision box horizontal offset
+ * @param[in] box_height_offset Collision box vertical offset
+ * @param[in] anim Animation frame index
+ * @return Sprite index used for display
+ * @since 3.0.0
+ */
+WORD nc_init_display_gfx_animated_sprite_physic(
   GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic,
   const spriteInfo *spriteInfo,
   const paletteInfo *paletteInfo,
@@ -273,7 +350,17 @@ void nc_init_display_gfx_animated_sprite_physic(
   WORD anim
 );
 
-void nc_init_display_gfx_picture(
+/**
+ * @brief Initialize and display a picture at specified position
+ * @param[in] gfx_picture Pointer to picture object
+ * @param[in] pictureInfo Pointer to picture metadata
+ * @param[in] paletteInfo Pointer to palette information
+ * @param[in] x Horizontal position in pixels
+ * @param[in] y Vertical position in pixels
+ * @return Sprite index used for display
+ * @since 3.0.0
+ */
+WORD nc_init_display_gfx_picture(
   GFX_Picture *gfx_picture,
   const pictureInfo *pictureInfo,
   const paletteInfo *paletteInfo,
@@ -281,7 +368,22 @@ void nc_init_display_gfx_picture(
   short y
 );
 
-void nc_init_display_gfx_picture_physic(
+/**
+ * @brief Initialize and display a picture with physics at specified position
+ * @param[in] gfx_picture_physic Pointer to picture with physics object
+ * @param[in] pictureInfo Pointer to picture metadata
+ * @param[in] paletteInfo Pointer to palette information
+ * @param[in] x Horizontal position in pixels
+ * @param[in] y Vertical position in pixels
+ * @param[in] box_witdh Collision box width
+ * @param[in] box_height Collision box height
+ * @param[in] box_width_offset Collision box horizontal offset
+ * @param[in] box_height_offset Collision box vertical offset
+ * @param[in] autobox_enabled Whether automatic box updates are enabled
+ * @return Sprite index used for display
+ * @since 3.0.0
+ */
+WORD nc_init_display_gfx_picture_physic(
   GFX_Picture_Physic *gfx_picture_physic,
   const pictureInfo *pictureInfo,
   const paletteInfo *paletteInfo,
@@ -294,7 +396,17 @@ void nc_init_display_gfx_picture_physic(
   BOOL autobox_enabled
 );
 
-void nc_init_display_gfx_scroller(
+/**
+ * @brief Initialize and display a scroller at specified position
+ * @param[in] gfx_scroller Pointer to scroller object
+ * @param[in] scrollerInfo Pointer to scroller metadata
+ * @param[in] paletteInfo Pointer to palette information
+ * @param[in] x Horizontal position in pixels
+ * @param[in] y Vertical position in pixels
+ * @return Sprite index used for display
+ * @since 3.0.0
+ */
+WORD nc_init_display_gfx_scroller(
   GFX_Scroller *gfx_scroller,
   const scrollerInfo *scrollerInfo,
   const paletteInfo *paletteInfo,
@@ -447,6 +559,7 @@ WORD nc_get_max_sprite_index_used();
 
 void nc_destroy_palette(const paletteInfo* paletteInfo);
 void nc_clear_palette_index_table();
+WORD nc_get_free_sprite_index();
 WORD nc_get_max_free_palette_index();
 WORD nc_get_max_palette_index_used();
 void nc_read_palette_rgb16(BYTE palette_number, BYTE palette_index, RGB16 *rgb_color);
