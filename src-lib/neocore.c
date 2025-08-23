@@ -733,15 +733,19 @@ void nc_init_gpu() {
 }
 
 void nc_clear_display() {
-  WORD cur_addr = 0x8000;
+  WORD i = 0;
   const WORD sprite_max = 383;
   clearFixLayer();
   clearSprites(1, sprite_max);
-  // reset shrunk
-  while (cur_addr < 0x8000 + sprite_max) {
-    SC234Put(cur_addr, 0xFFF);
-    cur_addr++;
+  disableIRQ();
+  for (i = 0; i <= sprite_max - 1; i++) {
+    /* SCB3: Y=496 (hidden) and break chaining */
+    // SC234Put(0x8200 + i, 0x01F0);  /* Y=496 (hidden) */
+    /* SCB4: Reset shrinking */
+    SC234Put(VRAM_SHRINK_ADDR(i), 0xFFF);  /* No shrinking */
+    /* DON'T touch SCB1 - causes crashes */
   }
+  enableIRQ();
   nc_update();
 }
 
