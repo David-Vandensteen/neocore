@@ -48,7 +48,7 @@
 static Adpcm_player adpcm_player;
 static BOOL is_init = false;
 static BOOL joypad_edge_mode = false;
-static WORD display_gfx_with_sprite_id = 0xFFFF;
+static WORD display_gfx_with_sprite_id = DISPLAY_GFX_WITH_SPRITE_ID_AUTO;
 
 static void init_adpcm_player() {
   adpcm_player.state = IDLE;
@@ -359,9 +359,16 @@ WORD nc_display_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic, short
 
 WORD nc_display_gfx_picture(GFX_Picture *gfx_picture, short x, short y) {
   WORD palette_index = use_palette_manager_index(gfx_picture->paletteInfoDAT);
-  WORD sprite_index = (display_gfx_with_sprite_id != 0xFFFF)
-    ? display_gfx_with_sprite_id
-    : use_sprite_manager_index(gfx_picture->pictureInfoDAT->tileWidth);
+  WORD sprite_index;
+
+  if (display_gfx_with_sprite_id != DISPLAY_GFX_WITH_SPRITE_ID_AUTO) {
+    sprite_index = display_gfx_with_sprite_id;
+    set_sprite_manager_index(sprite_index, gfx_picture->pictureInfoDAT->tileWidth);
+    display_gfx_with_sprite_id = DISPLAY_GFX_WITH_SPRITE_ID_AUTO; // Reset after use
+  } else {
+    sprite_index = use_sprite_manager_index(gfx_picture->pictureInfoDAT->tileWidth);
+  }
+
   pictureInit(
     &gfx_picture->pictureDAT,
     gfx_picture->pictureInfoDAT,
@@ -386,9 +393,16 @@ WORD nc_display_gfx_animated_sprite(
   WORD anim
   ) {
   WORD palette_index = use_palette_manager_index(animated_sprite->paletteInfoDAT);
-  WORD sprite_index = (display_gfx_with_sprite_id != 0xFFFF)
-    ? display_gfx_with_sprite_id
-    : use_sprite_manager_index(animated_sprite->spriteInfoDAT->maxWidth);
+  WORD sprite_index;
+
+  if (display_gfx_with_sprite_id != DISPLAY_GFX_WITH_SPRITE_ID_AUTO) {
+    sprite_index = display_gfx_with_sprite_id;
+    set_sprite_manager_index(sprite_index, animated_sprite->spriteInfoDAT->maxWidth);
+    display_gfx_with_sprite_id = DISPLAY_GFX_WITH_SPRITE_ID_AUTO; // Reset after use
+  } else {
+    sprite_index = use_sprite_manager_index(animated_sprite->spriteInfoDAT->maxWidth);
+  }
+
   aSpriteInit(
     &animated_sprite->aSpriteDAT,
     animated_sprite->spriteInfoDAT,
@@ -427,9 +441,16 @@ WORD nc_display_gfx_animated_sprite_physic(
 
 WORD nc_display_gfx_scroller(GFX_Scroller *gfx_scroller, short x, short y) {
   WORD palette_index = use_palette_manager_index(gfx_scroller->paletteInfoDAT);
-  WORD sprite_index = (display_gfx_with_sprite_id != 0xFFFF)
-    ? display_gfx_with_sprite_id
-    : use_sprite_manager_index(21);
+  WORD sprite_index;
+
+  if (display_gfx_with_sprite_id != DISPLAY_GFX_WITH_SPRITE_ID_AUTO) {
+    sprite_index = display_gfx_with_sprite_id;
+    set_sprite_manager_index(sprite_index, 21);
+    display_gfx_with_sprite_id = DISPLAY_GFX_WITH_SPRITE_ID_AUTO; // Reset after use
+  } else {
+    sprite_index = use_sprite_manager_index(21);
+  }
+
   scrollerInit(
     &gfx_scroller->scrollerDAT,
     gfx_scroller->scrollerInfoDAT,
@@ -807,7 +828,7 @@ WORD nc_get_free_sprite_index() {
       return i;
     }
   }
-  return 0xFFFF; // TODO : no zero return
+  return SPRITE_INDEX_NOT_FOUND; // TODO : no zero return
 }
 
 WORD nc_get_max_free_sprite_index() {
