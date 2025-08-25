@@ -48,6 +48,7 @@
 static Adpcm_player adpcm_player;
 static BOOL is_init = false;
 static BOOL joypad_edge_mode = false;
+static WORD display_gfx_with_sprite_id = DISPLAY_GFX_WITH_SPRITE_ID_AUTO;
 
 static void init_adpcm_player() {
   adpcm_player.state = IDLE;
@@ -153,20 +154,28 @@ static void set_free_sprite_manager_index(WORD index, WORD max) {
 }
 
 static WORD use_sprite_manager_index(WORD max) {
-  WORD i, j = 0;
-  WORD found = 0;
-  for( i = 0; i < SPRITE_INDEX_MANAGER_MAX; i++) {
+  WORD i, j;
+  WORD found;
+
+  // Quick check: if we don't have enough free sprites, return early
+  if (nc_get_max_free_sprite_index() < max) {
+    return 0; // TODO : no zero return
+  }
+
+  for (i = 0; i <= SPRITE_INDEX_MANAGER_MAX - max; i++) {
     if (!sprite_index_manager_status[i]) {
-      for (j = i; j < i + max; j++) {
-        if (!sprite_index_manager_status[j]) {
-          found++;
-          if (found >= max) {
-            set_sprite_manager_index(i, max);
-            return i;
-          }
-        } else {
+      found = 1;
+      for (j = i + 1; j < i + max; j++) {
+        if (sprite_index_manager_status[j]) {
           found = 0;
+          i = j; // Skip ahead to avoid redundant checks
+          break;
         }
+        found++;
+      }
+      if (found == max) {
+        set_sprite_manager_index(i, max);
+        return i;
       }
     }
   }
@@ -336,19 +345,34 @@ void nc_init_gfx_scroller(
  /*  GFX DISPLAY     */
 /*------------------*/
 
-void nc_display_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic, short x, short y) {
-  nc_display_gfx_picture(&gfx_picture_physic->gfx_picture, x, y);
+void nc_display_gfx_with_sprite_id(WORD sprite_id) {
+  display_gfx_with_sprite_id = sprite_id;
+}
+
+WORD nc_display_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic, short x, short y) {
+  WORD sprite_index = nc_display_gfx_picture(&gfx_picture_physic->gfx_picture, x, y);
   if (gfx_picture_physic->autobox_enabled) {
     nc_update_box(&gfx_picture_physic->box, x, y);
   }
+  return sprite_index;
 }
 
-void nc_display_gfx_picture(GFX_Picture *gfx_picture, short x, short y) {
+WORD nc_display_gfx_picture(GFX_Picture *gfx_picture, short x, short y) {
   WORD palette_index = use_palette_manager_index(gfx_picture->paletteInfoDAT);
+  WORD sprite_index;
+
+  if (display_gfx_with_sprite_id != DISPLAY_GFX_WITH_SPRITE_ID_AUTO) {
+    sprite_index = display_gfx_with_sprite_id;
+    set_sprite_manager_index(sprite_index, gfx_picture->pictureInfoDAT->tileWidth);
+    display_gfx_with_sprite_id = DISPLAY_GFX_WITH_SPRITE_ID_AUTO; // Reset after use
+  } else {
+    sprite_index = use_sprite_manager_index(gfx_picture->pictureInfoDAT->tileWidth);
+  }
+
   pictureInit(
     &gfx_picture->pictureDAT,
     gfx_picture->pictureInfoDAT,
-    use_sprite_manager_index(gfx_picture->pictureInfoDAT->tileWidth),
+    sprite_index,
     palette_index,
     x,
     y,
@@ -359,19 +383,30 @@ void nc_display_gfx_picture(GFX_Picture *gfx_picture, short x, short y) {
     gfx_picture->paletteInfoDAT->count,
     gfx_picture->paletteInfoDAT->data
   );
+  return sprite_index;
 }
 
-void nc_display_gfx_animated_sprite(
+WORD nc_display_gfx_animated_sprite(
   GFX_Animated_Sprite *animated_sprite,
   short x,
   short y,
   WORD anim
   ) {
   WORD palette_index = use_palette_manager_index(animated_sprite->paletteInfoDAT);
+  WORD sprite_index;
+
+  if (display_gfx_with_sprite_id != DISPLAY_GFX_WITH_SPRITE_ID_AUTO) {
+    sprite_index = display_gfx_with_sprite_id;
+    set_sprite_manager_index(sprite_index, animated_sprite->spriteInfoDAT->maxWidth);
+    display_gfx_with_sprite_id = DISPLAY_GFX_WITH_SPRITE_ID_AUTO; // Reset after use
+  } else {
+    sprite_index = use_sprite_manager_index(animated_sprite->spriteInfoDAT->maxWidth);
+  }
+
   aSpriteInit(
     &animated_sprite->aSpriteDAT,
     animated_sprite->spriteInfoDAT,
-    use_sprite_manager_index(animated_sprite->spriteInfoDAT->maxWidth),
+    sprite_index,
     palette_index,
     x,
     y,
@@ -385,29 +420,41 @@ void nc_display_gfx_animated_sprite(
     animated_sprite->paletteInfoDAT->data
   );
   aSpriteSetAnim(&animated_sprite->aSpriteDAT, anim);
+  return sprite_index;
 }
 
-void nc_display_gfx_animated_sprite_physic(
+WORD nc_display_gfx_animated_sprite_physic(
   GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic,
   short x,
   short y,
   WORD anim
   ) {
-  nc_display_gfx_animated_sprite(
+  WORD sprite_index = nc_display_gfx_animated_sprite(
     &gfx_animated_sprite_physic->gfx_animated_sprite,
     x,
     y,
     anim
   );
   nc_update_box(&gfx_animated_sprite_physic->box, x, y);
+  return sprite_index;
 }
 
-void nc_display_gfx_scroller(GFX_Scroller *gfx_scroller, short x, short y) {
+WORD nc_display_gfx_scroller(GFX_Scroller *gfx_scroller, short x, short y) {
   WORD palette_index = use_palette_manager_index(gfx_scroller->paletteInfoDAT);
+  WORD sprite_index;
+
+  if (display_gfx_with_sprite_id != DISPLAY_GFX_WITH_SPRITE_ID_AUTO) {
+    sprite_index = display_gfx_with_sprite_id;
+    set_sprite_manager_index(sprite_index, 21);
+    display_gfx_with_sprite_id = DISPLAY_GFX_WITH_SPRITE_ID_AUTO; // Reset after use
+  } else {
+    sprite_index = use_sprite_manager_index(21);
+  }
+
   scrollerInit(
     &gfx_scroller->scrollerDAT,
     gfx_scroller->scrollerInfoDAT,
-    use_sprite_manager_index(21),
+    sprite_index,
     palette_index,
     x,
     y
@@ -417,13 +464,14 @@ void nc_display_gfx_scroller(GFX_Scroller *gfx_scroller, short x, short y) {
     gfx_scroller->paletteInfoDAT->count,
     gfx_scroller->paletteInfoDAT->data
   );
+  return sprite_index;
 }
 
   /*-----------------------*/
  /*  GFX INIT DISPLAY     */
 /*-----------------------*/
 
-void nc_init_display_gfx_animated_sprite(
+WORD nc_init_display_gfx_animated_sprite(
   GFX_Animated_Sprite *gfx_animated_sprite,
   const spriteInfo *spriteInfo,
   const paletteInfo *paletteInfo,
@@ -432,10 +480,10 @@ void nc_init_display_gfx_animated_sprite(
   WORD anim
 ) {
   nc_init_gfx_animated_sprite(gfx_animated_sprite, spriteInfo, paletteInfo);
-  nc_display_gfx_animated_sprite(gfx_animated_sprite, x, y, anim);
+  return nc_display_gfx_animated_sprite(gfx_animated_sprite, x, y, anim);
 }
 
-void nc_init_display_gfx_animated_sprite_physic(
+WORD nc_init_display_gfx_animated_sprite_physic(
   GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic,
   const spriteInfo *spriteInfo,
   const paletteInfo *paletteInfo,
@@ -456,10 +504,10 @@ void nc_init_display_gfx_animated_sprite_physic(
     box_width_offset,
     box_height_offset
   );
-  nc_display_gfx_animated_sprite_physic(gfx_animated_sprite_physic, x, y, anim);
+  return nc_display_gfx_animated_sprite_physic(gfx_animated_sprite_physic, x, y, anim);
 }
 
-void nc_init_display_gfx_picture(
+WORD nc_init_display_gfx_picture(
   GFX_Picture *gfx_picture,
   const pictureInfo *pictureInfo,
   const paletteInfo *paletteInfo,
@@ -467,10 +515,10 @@ void nc_init_display_gfx_picture(
   short y
 ) {
   nc_init_gfx_picture(gfx_picture, pictureInfo, paletteInfo);
-  nc_display_gfx_picture(gfx_picture, x, y);
+  return nc_display_gfx_picture(gfx_picture, x, y);
 }
 
-void nc_init_display_gfx_picture_physic(
+WORD nc_init_display_gfx_picture_physic(
   GFX_Picture_Physic *gfx_picture_physic,
   const pictureInfo *pictureInfo,
   const paletteInfo *paletteInfo,
@@ -492,10 +540,10 @@ void nc_init_display_gfx_picture_physic(
     box_height_offset,
     autobox_enabled
   );
-  nc_display_gfx_picture_physic(gfx_picture_physic, x, y);
+  return nc_display_gfx_picture_physic(gfx_picture_physic, x, y);
 }
 
-void nc_init_display_gfx_scroller(
+WORD nc_init_display_gfx_scroller(
   GFX_Scroller *gfx_scroller,
   const scrollerInfo *scrollerInfo,
   const paletteInfo *paletteInfo,
@@ -503,7 +551,7 @@ void nc_init_display_gfx_scroller(
   short y
 ) {
   nc_init_gfx_scroller(gfx_scroller, scrollerInfo, paletteInfo);
-  nc_display_gfx_scroller(gfx_scroller, x, y);
+  return nc_display_gfx_scroller(gfx_scroller, x, y);
 }
 
   /*------------------*/
@@ -732,18 +780,21 @@ void nc_init_gpu() {
   init_palette_manager_index();
 }
 
-void nc_clear_vram() {
-  WORD addr = 0x0000;
-  WORD addr_end = 0x8FFF;
+void nc_clear_display() {
+  WORD i = 0;
+  const WORD sprite_max = 383;
+  clearFixLayer();
+  clearSprites(1, sprite_max);
   disableIRQ();
-  for (addr = addr; addr <= addr_end; addr++) {
-    SC234Put(addr, 0);
+  for (i = 0; i <= sprite_max - 1; i++) {
+    /* SCB3: Y=496 (hidden) and break chaining */
+    // SC234Put(0x8200 + i, 0x01F0);  /* Y=496 (hidden) */
+    /* SCB4: Reset shrinking */
+    SC234Put(VRAM_SHRINK_ADDR(i), 0xFFF);  /* No shrinking */
+    /* DON'T touch SCB1 - causes crashes */
   }
   enableIRQ();
-  SCClose();
-  nc_wait_vbl_max(10);
-  SCClose();
-  nc_wait_vbl_max(10);
+  nc_update();
 }
 
   /*------------------------------*/
@@ -769,6 +820,16 @@ DWORD nc_wait_vbl_max(WORD nb) {
 /*------------------------------*/
 
 void nc_clear_sprite_index_table() { init_sprite_manager_index(); }
+
+WORD nc_get_free_sprite_index() {
+  WORD i;
+  for (i = 0; i < SPRITE_INDEX_MANAGER_MAX; i++) {
+    if (sprite_index_manager_status[i] == false) {
+      return i;
+    }
+  }
+  return SPRITE_INDEX_NOT_FOUND; // TODO : no zero return
+}
 
 WORD nc_get_max_free_sprite_index() {
   WORD i, max = 0;
@@ -1098,10 +1159,11 @@ void nc_init_system() {
 
 void nc_reset() {
   nc_set_joypad_edge_mode(false);
-  nc_clear_vram();
+  nc_clear_display();
   nc_clear_sprite_index_table();
   nc_clear_palette_index_table();
   nc_init_system();
+  nc_update();
 }
 
 void nc_get_relative_position(Position *position, Box box, Position world_coord) {

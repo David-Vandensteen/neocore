@@ -43,11 +43,43 @@ NeoCore v3 includes an official migration script that automates many migration t
   - Updates compiler configuration with v3 paths
   - **Migrates `<sound>` section**: Automatically wraps existing sound content in `<cd>` structure, preserving all sound elements
 - ✅ **Build directory validation**: Checks for existing build directory and requires cleanup before proceeding
-- ✅ **Code analysis**: Scans C files for v2/v3 compatibility issues
+- ✅ **Code analysis**: Scans C files for v2/v3 compatibility issues and legacy patterns:
+  - **Position function signatures**: Detects functions that return Vec2short instead of using output parameters:
+    - `nc_get_position_gfx_animated_sprite()` return values and `.x/.y` access
+    - `nc_get_position_gfx_animated_sprite_physic()` return values and `.x/.y` access
+    - `nc_get_position_gfx_picture()` return values and `.x/.y` access
+    - `nc_get_position_gfx_picture_physic()` return values and `.x/.y` access
+    - `nc_get_position_gfx_scroller()` return values and `.x/.y` access
+  - **Deprecated types**: Identifies Vec2short usage (replaced with Position)
+  - **Legacy logging functions**: Detects old nc_log() patterns with label parameters:
+    - `nc_log_word("label", value)` → Remove label parameter
+    - `nc_log_int("label", value)` → Remove label parameter
+    - `nc_log_short("label", value)` → Remove label parameter
+    - `nc_log_bool("label", value)` → Remove label parameter
+    - `nc_log_byte("label", value)` → Remove label parameter
+    - `nc_log_box("label", value)` → Remove label parameter
+    - `nc_log_dword("label", value)` → Remove label parameter
+    - `nc_log_vec2short()` → Replace with nc_log_position()
+  - **Removed functions**: Detects calls to functions removed in v3:
+    - `nc_clear_vram()` → Replace with nc_clear_display() or nc_reset()
+  - **Obsolete structure members**: Detects removed members from NeoCore v3:
+    - `palCount` → Removed (handled internally)
+    - `paletteMgr` → Removed (handled internally)
+    - `spriteManager` → Removed (handled internally)
+    - `fixMgrMemoryPool` → Removed (handled internally)
+  - **C99 code patterns**: Detects variable declarations mixed with code (not supported in NeoCore C89/C90)
 - ✅ **Deprecated file cleanup**: Automatically removes obsolete files:
   - `common_crt0_cd.s` (no longer needed)
   - `crt0_cd.s` (no longer needed)
-- ✅ **Validation**: Checks .gitignore patterns and project structure
+- ✅ **Validation**: Checks .gitignore patterns and project structure:
+  - **Missing patterns**: Detects missing recommended .gitignore entries:
+    - `**/out/fix.bin` (generated build artifacts)
+    - `**/out/char.bin` (generated build artifacts)
+    - `/build/` or `build/` (build directory)
+    - `/dist/` or `dist/` (distribution directory)
+  - **Obsolete entries**: Identifies patterns that should be removed:
+    - `externs.h` (no longer needed in v3)
+  - **Path optimization**: Suggests absolute paths (`/build/` instead of `build/`) for better Git behavior
 - ✅ **Backup creation**: Creates automatic backup in temp directory
 - ✅ **Detailed logging**: Comprehensive migration log for debugging
 
@@ -262,12 +294,29 @@ cp path/to/neocore_v3/bootstrap/standalone/Makefile src/Makefile
    # Replace basic logging:
    nc_log("message") → nc_log_info_line("message")
 
-   # Replace labeled logging:
+   # Replace ALL labeled logging functions (label parameter removed in v3):
    nc_log_word("Label", value) → nc_log_info("Label: "); nc_log_word(value); nc_log_next_line();
+   nc_log_int("Label", value) → nc_log_info("Label: "); nc_log_int(value); nc_log_next_line();
+   nc_log_short("Label", value) → nc_log_info("Label: "); nc_log_short(value); nc_log_next_line();
+   nc_log_bool("Label", value) → nc_log_info("Label: "); nc_log_bool(value); nc_log_next_line();
+   nc_log_byte("Label", value) → nc_log_info("Label: "); nc_log_byte(value); nc_log_next_line();
+   nc_log_box("Label", value) → nc_log_info("Label: "); nc_log_box(value); nc_log_next_line();
+   nc_log_dword("Label", value) → nc_log_info("Label: "); nc_log_dword(value); nc_log_next_line();
+
+   # Replace type-specific logging:
    nc_log_vec2short("Pos", pos) → nc_log_position(pos);
    ```
 
-5. **DATlib type changes:**
+5. **Structure member changes:**
+   ```bash
+   # Remove obsolete structure members (handled internally in v3):
+   .palCount → Remove usage (palette count managed internally)
+   .paletteMgr → Remove usage (palette manager handled internally)
+   .spriteManager → Remove usage (sprite manager handled internally)
+   .fixMgrMemoryPool → Remove usage (memory management handled internally)
+   ```
+
+6. **DATlib type changes:**
    ```bash
    # Global replacements:
    paletteInfo->palCount → paletteInfo->count
@@ -289,6 +338,14 @@ cp path/to/neocore_v3/bootstrap/standalone/Makefile src/Makefile
    # Search for old patterns that might have been missed
    grep -r "Vec2short\|nc_log(" src/ --include="*.c" --include="*.h"
    grep -r "= nc_get_position_" src/ --include="*.c"
+
+   # Check for obsolete structure members
+   grep -r "\.palCount\|\.paletteMgr\|\.spriteManager\|\.fixMgrMemoryPool" src/ --include="*.c"
+
+   # Check for labeled logging functions
+   grep -r "nc_log_\w\+\s*(" src/ --include="*.c" | grep '\".*\"'
+
+   # DATlib legacy patterns
    grep -r "->palCount\|->currentStepNum" src/ --include="*.c"
    ```
 
@@ -393,6 +450,10 @@ grep -r "= nc_get_position_" . --include="*.c" && echo "⚠️  Found old positi
 # Check for old logging patterns
 echo "=== Checking for old logging patterns ==="
 grep -r "nc_log(" . --include="*.c" && echo "⚠️  Found old nc_log() calls"
+
+# Check for removed functions
+echo "=== Checking for removed functions ==="
+grep -r "nc_clear_vram(" . --include="*.c" && echo "⚠️  Found nc_clear_vram() calls - replace with nc_clear_display() or nc_reset()"
 
 # Check for removed structures
 echo "=== Checking for removed structures ==="
@@ -586,6 +647,7 @@ All logging functions with label parameters have been removed:
 - `nc_log_int(char *label, int value)` → `nc_log_int(int value)`
 - `nc_log_short(char *label, short value)` → `nc_log_short(short value)`
 - `nc_log_vec2short(char *label, Vec2short vec)` → `nc_log_position(Position pos)`
+- `nc_clear_vram()` → Use `nc_clear_display()` or `nc_reset()` instead
 
 #### 2.3 Type Removals
 

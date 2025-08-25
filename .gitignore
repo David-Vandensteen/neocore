@@ -19,6 +19,7 @@ neocore_migration_sample_1_0_0
 neocore_migration_sample_1_0_2
 neocore_migration_sample_2_0_0
 neocore_migration_sample_2_9_0
+neocore_migration_sample_3_0_0-rc1
 samples/ngcd-flamble-003
 samples/**/out/fix.bin
 samples/**/out/char.bin

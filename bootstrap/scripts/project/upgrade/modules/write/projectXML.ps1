@@ -158,23 +158,36 @@ function Write-ProjectXML {
                 }
                 $existingChardataSection += '        </setup>' + "`n"
 
-                # Preserve other chardata elements (pict, import, etc.)
+                # Preserve ALL other chardata elements (pict, sprt, scrl, import, etc.) with full content
                 foreach ($child in $chardataNode.ChildNodes) {
                     if ($child.NodeType -eq [System.Xml.XmlNodeType]::Element -and $child.Name -ne 'setup') {
                         $existingChardataSection += '        <' + $child.Name
-                        # Add attributes if any
+
+                        # Add attributes if any (like id)
                         foreach ($attr in $child.Attributes) {
                             $existingChardataSection += ' ' + $attr.Name + '="' + $attr.Value + '"'
                         }
                         $existingChardataSection += '>' + "`n"
-                        $existingChardataSection += '          <file>' + $child.SelectSingleNode('file').InnerText + '</file>' + "`n"
+
+                        # Preserve ALL child content (file, flips, frames, comments, etc.)
+                        foreach ($grandChild in $child.ChildNodes) {
+                            if ($grandChild.NodeType -eq [System.Xml.XmlNodeType]::Comment) {
+                                $existingChardataSection += '          <!-- ' + $grandChild.Value.Trim() + ' -->' + "`n"
+                            } elseif ($grandChild.NodeType -eq [System.Xml.XmlNodeType]::Element) {
+                                $existingChardataSection += '          <' + $grandChild.Name + '>' + $grandChild.InnerText + '</' + $grandChild.Name + '>' + "`n"
+                            }
+                        }
+
                         $existingChardataSection += '        </' + $child.Name + '>' + "`n"
                     }
                 }
                 $existingChardataSection += '      </chardata>'
 
-                Write-Log -File $LogFile -Level "INFO" -Message "Found existing chardata section, preserved and enhanced with v3 setup"
+                Write-Log -File $LogFile -Level "INFO" -Message "Found existing chardata section, preserved complete content including setup, sprites, pictures, scrollers and all custom elements"
             }
+
+            # Remove the old separate sprites section logic since it's now handled in chardata preservation
+            $existingSpritesSection = $null
 
         } catch {
             Write-Host "WARNING: Failed to read existing project.xml: $($_.Exception.Message)" -ForegroundColor Yellow

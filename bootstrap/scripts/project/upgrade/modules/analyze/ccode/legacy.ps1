@@ -64,6 +64,12 @@ function Analyze-CCodeLegacy {
             Suggestion = "Change to: Position pos; nc_get_position_gfx_scroller(&scroller, &pos);"
         }
 
+        "nc_get_position_gfx_animated_sprite_physic() return value" = @{
+            Pattern = "Vec2short\s+\w+\s*=\s*nc_get_position_gfx_animated_sprite_physic\s*\("
+            Issue = "nc_get_position_gfx_animated_sprite_physic() signature changed in v3 (now uses output parameter)"
+            Suggestion = "Change to: Position pos; nc_get_position_gfx_animated_sprite_physic(&sprite, &pos);"
+        }
+
         # Breaking change: nc_get_relative_position signature
         "nc_get_relative_position() old signature" = @{
             Pattern = "Vec2short\s+\w+\s*=\s*nc_get_relative_position\s*\(\s*[^,]*,\s*[^)]*\s*\)"
@@ -89,6 +95,18 @@ function Analyze-CCodeLegacy {
             Pattern = "nc_get_position_gfx_picture_physic\s*\([^)]*\)\s*\.\s*y"
             Issue = "nc_get_position_gfx_picture_physic() signature changed in v3 (now uses output parameter)"
             Suggestion = "Change to: Position pos; nc_get_position_gfx_picture_physic(&picture, &pos); then use pos.y"
+        }
+
+        "nc_get_position_gfx_animated_sprite_physic().x access" = @{
+            Pattern = "nc_get_position_gfx_animated_sprite_physic\s*\([^)]*\)\s*\.\s*x"
+            Issue = "nc_get_position_gfx_animated_sprite_physic() signature changed in v3 (now uses output parameter)"
+            Suggestion = "Change to: Position pos; nc_get_position_gfx_animated_sprite_physic(&sprite, &pos); then use pos.x"
+        }
+
+        "nc_get_position_gfx_animated_sprite_physic().y access" = @{
+            Pattern = "nc_get_position_gfx_animated_sprite_physic\s*\([^)]*\)\s*\.\s*y"
+            Issue = "nc_get_position_gfx_animated_sprite_physic() signature changed in v3 (now uses output parameter)"
+            Suggestion = "Change to: Position pos; nc_get_position_gfx_animated_sprite_physic(&sprite, &pos); then use pos.y"
         }
 
         "nc_get_position_gfx_animated_sprite().x access" = @{
@@ -208,6 +226,87 @@ function Analyze-CCodeLegacy {
             Pattern = "\bDWORD\s+\w+"
             Issue = "DATlib DWORD type replaced with uint in v3"
             Suggestion = "Replace DWORD with uint"
+        }
+
+        "nc_log_bool() with label" = @{
+            Pattern = "nc_log_bool\s*\(\s*`"[^`"]*`"\s*,"
+            Issue = "nc_log_bool() signature changed in v3 (label parameter removed)"
+            Suggestion = "Remove label parameter: nc_log_bool(value) or use nc_log_info() first"
+        }
+
+        "nc_log_byte() with label" = @{
+            Pattern = "nc_log_byte\s*\(\s*`"[^`"]*`"\s*,"
+            Issue = "nc_log_byte() signature changed in v3 (label parameter removed)"
+            Suggestion = "Remove label parameter: nc_log_byte(value) or use nc_log_info() first"
+        }
+
+        "nc_log_box() with label" = @{
+            Pattern = "nc_log_box\s*\(\s*`"[^`"]*`"\s*,"
+            Issue = "nc_log_box() signature changed in v3 (label parameter removed)"
+            Suggestion = "Remove label parameter: nc_log_box(value) or use nc_log_info() first"
+        }
+
+        "nc_log_dword() with label" = @{
+            Pattern = "nc_log_dword\s*\(\s*`"[^`"]*`"\s*,"
+            Issue = "nc_log_dword() signature changed in v3 (label parameter removed)"
+            Suggestion = "Remove label parameter: nc_log_dword(value) or use nc_log_info() first"
+        }
+
+        # Removed function - nc_clear_vram
+        "nc_clear_vram() function" = @{
+            Pattern = "nc_clear_vram\s*\("
+            Issue = "nc_clear_vram() function removed in v3"
+            Suggestion = "Replace with nc_clear_display() to clear display or nc_reset() for full reset"
+        }
+
+        # Obsolete structure members from v2
+        "palCount structure member" = @{
+            Pattern = "\.\s*palCount\b"
+            Issue = "palCount member removed from NeoCore v3 structures"
+            Suggestion = "Remove palCount usage - palette counts are now handled internally"
+        }
+
+        "paletteMgr structure member" = @{
+            Pattern = "\.\s*paletteMgr\b"
+            Issue = "paletteMgr member removed from NeoCore v3 structures"
+            Suggestion = "Remove paletteMgr usage - palette management is now handled internally"
+        }
+
+        "spriteManager structure member" = @{
+            Pattern = "\.\s*spriteManager\b"
+            Issue = "spriteManager member removed from NeoCore v3 structures"
+            Suggestion = "Remove spriteManager usage - sprite management is now handled internally"
+        }
+
+        "fixMgrMemoryPool structure member" = @{
+            Pattern = "\.\s*fixMgrMemoryPool\b"
+            Issue = "fixMgrMemoryPool member removed from NeoCore v3 structures"
+            Suggestion = "Remove fixMgrMemoryPool usage - memory management is now handled internally"
+        }
+
+        "sprites structure member" = @{
+            Pattern = "\.\s*sprites\b"
+            Issue = "sprites member may have been removed or renamed in NeoCore v3 structures"
+            Suggestion = "Check NeoCore v3 documentation for updated structure members"
+        }
+
+        "frames structure member" = @{
+            Pattern = "\.\s*frames\b"
+            Issue = "frames member may have been removed or renamed in NeoCore v3 structures"
+            Suggestion = "Check NeoCore v3 documentation for updated structure members"
+        }
+
+        # C99 variable declarations (not supported in NeoCore C89/C90)
+        "C99 variable declaration" = @{
+            Pattern = "^[^/\*]*\w+\s+\w+\s*=[^;]*;.*\w+\s+\w+\s*[=;]"
+            Issue = "C99-style variable declaration (variables declared after code statements)"
+            Suggestion = "Move all variable declarations to the beginning of the function block (C89/C90 requirement)"
+        }
+
+        "Mixed declarations and code" = @{
+            Pattern = "(?<!\s*//.*)\w+\s+\w+\s*=.*;\s*\n.*\n.*\w+\s+\w+\s*[=;]"
+            Issue = "Mixed variable declarations and code statements (C99 feature not supported)"
+            Suggestion = "Move all variable declarations to the beginning of the function block"
         }
     }
 
