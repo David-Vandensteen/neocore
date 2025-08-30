@@ -93,51 +93,11 @@ function Main {
 
     # Handle comparison result
     switch ($comparisonResult) {
-        "uptodate" { }
         "conflict" { return $false }
         "error" { return $false }
-        "migrate" {
-            Write-Host ""
-            Write-Host "*** MIGRATION PROCESS ***" -ForegroundColor Yellow -BackgroundColor Black
-            Write-Host ""
-            Write-Host "The migration will now proceed with the following changes:" -ForegroundColor Yellow
-            Write-Host ""
-            Write-Host "WARNING: The following files will be modified:" -ForegroundColor Red
-            Write-Host "  - project.xml (will be rewritten to match NeoCore v3 format)" -ForegroundColor Yellow
-            Write-Host "  - Makefile (will be overwritten with NeoCore v3 version)" -ForegroundColor Yellow
-            Write-Host "  - NeoCore files will be copied (src-lib, manifest.xml, toolchain)" -ForegroundColor Yellow
-            Write-Host "  - externs.h will be overwritten to NeoCore v3 version" -ForegroundColor Yellow
-            Write-Host "  - Obsolete files will be removed (deprecated .s assembly files)" -ForegroundColor Yellow
-            Write-Host ""
-            Write-Log -File $logFile -Level "WARNING" -Message "Starting migration process - project.xml and Makefile will be rewritten, NeoCore files copied, obsolete files removed"
-
-            # Copy NeoCore files (src-lib, toolchain, etc.)
-            if (-not (Copy-NeocoreFiles -SourceNeocorePath $sourceNeocorePath -ProjectNeocorePath $ProjectNeocorePath -LogFile $logFile)) {
-                Write-Host "Migration failed during NeoCore files copy" -ForegroundColor Red
-                Write-Log -File $logFile -Level "ERROR" -Message "Migration failed during NeoCore files copy"
-                return $false
-            }
-
-            # Overwrite Makefile with NeoCore v3 version
-            if (-not (Copy-Makefile -ProjectSrcPath $ProjectSrcPath -SourceNeocorePath $sourceNeocorePath -LogFile $logFile)) {
-                Write-Host "Migration failed during Makefile update" -ForegroundColor Red
-                Write-Log -File $logFile -Level "ERROR" -Message "Migration failed during Makefile update"
-                return $false
-            }
-
-            # Copy new externs.h file to project
-            $sourceExternsPath = "$sourceNeocorePath\bootstrap\standalone\externs.h"
-            $targetExternsPath = "$ProjectSrcPath\externs.h"
-
-            try {
-                Copy-Item -Path $sourceExternsPath -Destination $targetExternsPath -Force
-                Write-Host "Updated externs.h for NeoCore v3" -ForegroundColor Green
-                Write-Log -File $logFile -Level "SUCCESS" -Message "Copied new externs.h from: $sourceExternsPath to: $targetExternsPath"
-            } catch {
-                Write-Host "Warning: Could not copy externs.h: $($_.Exception.Message)" -ForegroundColor Yellow
-                Write-Log -File $logFile -Level "WARNING" -Message "Could not copy externs.h: $($_.Exception.Message)"
-                # Continue execution - externs.h copy failure is not critical
-            }
+        "minor" { Update-MinorVersion }
+        "major" {
+            Update-MajorVersion
 
             # Remove obsolete files
             if (-not (Remove-ObsoleteFiles -ProjectSrcPath $ProjectSrcPath -LogFile $logFile)) {
@@ -185,6 +145,72 @@ function Main {
     }
 
     return $true
+}
+
+function Copy-Toolchain {
+    # Copy NeoCore files (src-lib, toolchain, etc.)
+    if (-not (Copy-NeocoreFiles -SourceNeocorePath $sourceNeocorePath -ProjectNeocorePath $ProjectNeocorePath -LogFile $logFile)) {
+        Write-Host "Migration failed during NeoCore files copy" -ForegroundColor Red
+        Write-Log -File $logFile -Level "ERROR" -Message "Migration failed during NeoCore files copy"
+        return $false
+    }
+}
+
+function Copy-Makefile {
+    # Overwrite Makefile with NeoCore v3 version
+    if (-not (Copy-Makefile -ProjectSrcPath $ProjectSrcPath -SourceNeocorePath $sourceNeocorePath -LogFile $logFile)) {
+        Write-Host "Migration failed during Makefile update" -ForegroundColor Red
+        Write-Log -File $logFile -Level "ERROR" -Message "Migration failed during Makefile update"
+        return $false
+    }
+}
+
+function Copy-ExternsHeader {
+    # Copy new externs.h file to project
+    $sourceExternsPath = "$sourceNeocorePath\bootstrap\standalone\externs.h"
+    $targetExternsPath = "$ProjectSrcPath\externs.h"
+    try {
+        Copy-Item -Path $sourceExternsPath -Destination $targetExternsPath -Force
+        Write-Host "Updated externs.h for NeoCore v3" -ForegroundColor Green
+        Write-Log -File $logFile -Level "SUCCESS" -Message "Copied new externs.h from: $sourceExternsPath to: $targetExternsPath"
+        return $true
+    } catch {
+        Write-Host "Error: Could not copy externs.h: $($_.Exception.Message)" -ForegroundColor Red
+        Write-Log -File $logFile -Level "ERROR" -Message "Could not copy externs.h: $($_.Exception.Message)"
+        return $false
+    }
+}
+
+function Update-MajorVersion {
+    Write-Host ""
+    Write-Host "*** MIGRATION PROCESS ***" -ForegroundColor Yellow -BackgroundColor Black
+    Write-Host ""
+    Write-Host "The migration will now proceed with the following changes:" -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "WARNING: The following files will be modified:" -ForegroundColor Red
+    Write-Host "  - project.xml (will be rewritten to match NeoCore v3 format)" -ForegroundColor Yellow
+    Write-Host "  - Makefile (will be overwritten with NeoCore v3 version)" -ForegroundColor Yellow
+    Write-Host "  - NeoCore files will be copied (src-lib, manifest.xml, toolchain)" -ForegroundColor Yellow
+    Write-Host "  - externs.h will be overwritten to NeoCore v3 version" -ForegroundColor Yellow
+    Write-Host "  - Obsolete files will be removed (deprecated .s assembly files)" -ForegroundColor Yellow
+    Write-Host ""
+    Write-Log -File $logFile -Level "WARNING" -Message "Starting migration process - project.xml and Makefile will be rewritten, NeoCore files copied, obsolete files removed"
+
+    if (-not (Copy-Toolchain)) {
+        return $false
+    }
+    if (-not (Copy-Makefile)) {
+        return $false
+    }
+    if (-not (Copy-ExternsHeader)) {
+        return $false
+    }
+}
+
+function Update-MinorVersion {
+    if (-not (Copy-Toolchain)) {
+        return $false
+    }
 }
 
 # Execute main function and handle result

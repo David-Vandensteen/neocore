@@ -47,18 +47,17 @@ function Compare-ProjectVersions {
             Write-Host ""
             Write-Host "Migration will update your project to use NeoCore v$TargetVersion" -ForegroundColor White
             Write-Log -File $LogFile -Level "INFO" -Message "Migration required: $CurrentVersion -> $TargetVersion"
-            return "migrate"
+            return "major"
         } elseif ($currentVer -eq $targetVer) {
             Write-Host ""
             Write-Host "*** PROJECT XML UP TO DATE ***" -ForegroundColor Green -BackgroundColor Black
             Write-Host ""
-            Write-Host "Your project is already using the target version:" -ForegroundColor Green
+            Write-Host "Your project XML is already using the target version:" -ForegroundColor Green
             Write-Host "  Current version: $CurrentVersion" -ForegroundColor Green
             Write-Host "  Target version:  $TargetVersion" -ForegroundColor Green
             Write-Host ""
-            Write-Host "No migration needed." -ForegroundColor White
-            Write-Log -File $LogFile -Level "INFO" -Message "Project already at target version: $CurrentVersion"
-            return "uptodate"
+            Write-Log -File $LogFile -Level "INFO" -Message "Project XML already at target version: $CurrentVersion"
+            return "minor"
         } else {
             Write-Host ""
             Write-Host "*** VERSION CONFLICT ***" -ForegroundColor Red -BackgroundColor Black

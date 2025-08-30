@@ -9,6 +9,7 @@ param (
 )
 
 Import-Module "..\..\..\toolchain\scripts\modules\assert\project\name.ps1"
+Import-Module "..\..\..\toolchain\scripts\modules\assert\path.ps1"
 
 Write-Host "Creating new NeoCore project: $Name" -ForegroundColor Cyan
 Write-Host "Target path: $Path" -ForegroundColor Gray
@@ -21,6 +22,29 @@ if ((-not $Force) -and (Test-Path $Path)) {
 # Validate project name
 Write-Host "Validating project name..." -ForegroundColor Yellow
 Assert-ProjectName -Name $Name
+
+# Validate critical path lengths
+Write-Host "Validating path lengths..." -ForegroundColor Yellow
+$neocoreIncludePath = "$Path\neocore\src-lib\include"
+$buildPath = "$Path\build\$Name"
+
+if (-Not(Assert-PathLength -Path $neocoreIncludePath)) {
+  Write-Host "Error: NeoCore include path would be too long for GCC compatibility" -ForegroundColor Red
+  Write-Host "  Path: $neocoreIncludePath" -ForegroundColor Gray
+  Write-Host "  Length: $($neocoreIncludePath.Length) characters" -ForegroundColor Gray
+  Write-Host "  Solution: Use a shorter project path or move closer to drive root" -ForegroundColor Yellow
+  exit 1
+}
+
+if (-Not(Assert-PathLength -Path $buildPath)) {
+  Write-Host "Error: Build path would be too long for GCC compatibility" -ForegroundColor Red
+  Write-Host "  Path: $buildPath" -ForegroundColor Gray
+  Write-Host "  Length: $($buildPath.Length) characters" -ForegroundColor Gray
+  Write-Host "  Solution: Use a shorter project path or project name" -ForegroundColor Yellow
+  exit 1
+}
+
+Write-Host "  Path lengths are compatible with GCC 2.95.2" -ForegroundColor Green
 
 try {
   # Create project directory

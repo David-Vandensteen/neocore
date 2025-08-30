@@ -1,3 +1,13 @@
+## 3.0.0-rc2
+
+  - **BUG FIXES**:
+    - **Issue #165**: Identified and resolved bootstrap scaffolding compilation failure root cause
+      - **Problem**: Path length limitations in GCC 2.95.2 causing segmentation faults during compilation
+      - **Solution**: Added proactive path length validation to prevent projects with incompatible path lengths
+      - **Impact**: Bootstrap system now creates only compatible projects that compile successfully
+    - **Bootstrap System Fixes**:
+      - **Project creation validation**: Enhanced `_create.ps1` script with proactive path length validation
+
 ## 3.0.0
 
   - **MAJOR RELEASE** - DATLib 0.3, toolchain refactoring and quality improvement

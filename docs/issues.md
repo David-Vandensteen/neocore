@@ -8,7 +8,7 @@
 **Severity**: High
 **Affected Version**: NeoCore 3.0.0-rc1
 **Date Reported**: August 24, 2025
-**GitHub Issue**: [#85](https://github.com/David-Vandensteen/neocore/issues/85)
+**GitHub Issue**: [#165](https://github.com/David-Vandensteen/neocore/issues/165)
 
 #### Problem Description
 
@@ -52,13 +52,15 @@ Build manager process failed
 
 #### Potential Causes
 
-1. **Bootstrap Template Issues**: Scaffolded project templates may contain incompatible code patterns
-2. **GCC Version Compatibility**: gcc-2.95.2 may have compatibility issues with updated headers in scaffolded projects
-3. **Header File Issues**: New defines or structures in v3.0.0-rc1 scaffolding templates might trigger compiler bugs
-4. **Include Path Configuration**: Bootstrap may generate incorrect include path configurations:
-   - `-IC:\Users\davidv\Documents\github\neocore\samples\neocore_migration_sample_3_0_0-rc1\neocore\src-lib\include`
-   - `-IC:\Users\davidv\Documents\github\neocore\samples\neocore_migration_sample_3_0_0-rc1\neocore\src-lib`
-5. **Scaffolding System Regression**: Recent changes to bootstrap templates may have introduced breaking changes
+1. **🎯 Path Length Limitation**: **IDENTIFIED CAUSE** - The include paths exceed Windows/GCC path length limitations (87 characters vs 80 max):
+   - `-IC:\Users\davidv\Documents\github\neocore\samples\neocore_migration_sample_3_0_0-rc1\neocore\src-lib\include` (97 chars)
+   - `-IC:\Users\davidv\Documents\github\neocore\samples\neocore_migration_sample_3_0_0-rc1\neocore\src-lib` (89 chars)
+   - GCC may fail silently or crash when paths exceed system limitations
+2. **Bootstrap Template Issues**: Scaffolded project templates may contain incompatible code patterns
+3. **GCC Version Compatibility**: gcc-2.95.2 may have compatibility issues with updated headers in scaffolded projects
+4. **Header File Issues**: New defines or structures in v3.0.0-rc1 scaffolding templates might trigger compiler bugs
+5. **Include Path Configuration**: Bootstrap may generate incorrect include path configurations
+6. **Scaffolding System Regression**: Recent changes to bootstrap templates may have introduced breaking changes
 6. **New Define Constants**: Recently added defines in scaffolded templates might trigger compiler edge cases:
    - `DISPLAY_GFX_WITH_SPRITE_ID_AUTO`
    - `SPRITE_INDEX_NOT_FOUND`

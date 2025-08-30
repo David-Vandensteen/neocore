@@ -6,6 +6,12 @@ function Assert-Project {
     Write-Host "Path assertion failed" -ForegroundColor Red
     return $false
   }
+  $neocoreIncludeTemplate = Get-TemplatePath "$($Config.project.neocorePath)\src-lib\include"
+  $neocoreIncludeAbsolute = [System.IO.Path]::GetFullPath([System.IO.Path]::Combine((Get-Location).Path, $neocoreIncludeTemplate))
+  if (-Not(Assert-PathLength -Path $neocoreIncludeAbsolute)) {
+    Write-Host "NeoCore include path length assertion failed" -ForegroundColor Red
+    return $false
+  }
   if (-Not(Assert-ProjectName -Name $($Config.project.name))) {
     Write-Host "Project name assertion failed" -ForegroundColor Red
     return $false
