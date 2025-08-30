@@ -8,7 +8,7 @@
     - **Bootstrap System Fixes**:
       - **Project creation validation**: Enhanced `_create.ps1` script with proactive path length validation
 
-## 3.0.0
+## 3.0.0-r1
 
   - **MAJOR RELEASE** - DATLib 0.3, toolchain refactoring and quality improvement
   - **TOOLCHAIN IMPROVEMENTS**:
