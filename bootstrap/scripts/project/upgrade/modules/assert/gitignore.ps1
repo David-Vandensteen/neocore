@@ -28,6 +28,28 @@ function Assert-Gitignore {
     try {
         $gitignoreContent = Get-Content -Path $gitignorePath -ErrorAction Stop
         $issuesFound = @()
+        $missingEntries = @()
+
+        # Required v3 entries that should be in .gitignore
+        $requiredEntries = @(
+            "**/out/fix.bin",
+            "**/out/char.bin"
+        )
+
+        # Check for required v3 entries
+        foreach ($requiredEntry in $requiredEntries) {
+            $found = $false
+            foreach ($line in $gitignoreContent) {
+                $trimmedLine = $line.Trim()
+                if ($trimmedLine -eq $requiredEntry) {
+                    $found = $true
+                    break
+                }
+            }
+            if (-not $found) {
+                $missingEntries += $requiredEntry
+            }
+        }
 
         # Define required patterns for NeoCore v3 projects
         $requiredPatterns = @(
@@ -106,6 +128,14 @@ function Assert-Gitignore {
             }
         }
 
+        # Handle missing entries
+        if ($missingEntries.Count -gt 0) {
+            foreach ($entry in $missingEntries) {
+                $issuesFound += "Missing required v3 entry: '$entry'"
+                Write-Log -File $LogFile -Level "WARNING" -Message "Missing required .gitignore entry: $entry"
+            }
+        }
+
         if ($issuesFound.Count -gt 0) {
             Write-Host "  Issues found in .gitignore:" -ForegroundColor Yellow
             foreach ($issue in $issuesFound) {
@@ -121,6 +151,11 @@ function Assert-Gitignore {
             Write-Host "  These patterns help ignore generated NeoCore v3 build artifacts." -ForegroundColor Yellow
             Write-Host "  Using absolute paths (starting with /) ensures patterns work correctly" -ForegroundColor Yellow
             Write-Host "  from any subdirectory in your repository." -ForegroundColor Yellow
+            Write-Host ""
+            Write-Host "  Required v3 entries that should be added:" -ForegroundColor Yellow
+            Write-Host "    **/out/fix.bin" -ForegroundColor Cyan
+            Write-Host "    **/out/char.bin" -ForegroundColor Cyan
+            Write-Host "  These ignore generated binary files that shouldn't be committed." -ForegroundColor Yellow
             Write-Host ""
 
             Write-Log -File $LogFile -Level "WARNING" -Message ".gitignore check completed with $($issuesFound.Count) issues requiring manual review"
