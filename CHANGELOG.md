@@ -6,10 +6,20 @@
       - **Enhancement**: `nc_destroy_gfx_animated_sprite` and `nc_destroy_gfx_picture` now properly reset sprite shrinking to default value (0xFFF)
       - **Benefit**: Ensures clean sprite state after destruction, preventing visual artifacts from lingering shrink effects
   - **BUG FIXES**:
+    - **Sprite Index Manager Critical Fixes**:
+      - **Bug**: Sprite 0 was incorrectly marked as reserved during initialization, preventing proper allocation of sprite index 0
+      - **Fix**: Corrected `init_sprite_manager_index()` to properly initialize sprite 0 as available
+      - **Impact**: Sprite allocation now works correctly from index 0, fixing allocation conflicts and improving sprite management efficiency
+      - **Bug**: `use_sprite_manager_index()` returned incorrect error code (0x00) on allocation failure
+      - **Fix**: Function now returns proper error code (0xFFFF) when no sprites are available
+      - **Impact**: Error handling in display functions now works correctly, preventing undefined behavior
+      - **Bug**: Display functions (`nc_display_gfx_picture`, `nc_display_gfx_animated_sprite`) did not handle sprite allocation failures
+      - **Fix**: Added proper error checking and early return when sprite allocation fails
+      - **Impact**: Prevents attempting to display graphics with invalid sprite indices, improving stability
+    - **Bootstrap System Fixes**:
       - **Problem**: Path length limitations in GCC 2.95.2 causing segmentation faults during compilation
       - **Solution**: Added proactive path length validation to prevent projects with incompatible path lengths
       - **Impact**: Bootstrap system now creates only compatible projects that compile successfully
-    - **Bootstrap System Fixes**:
       - **Project creation validation**: Enhanced `_create.ps1` script with proactive path length validation
 
 ## 3.0.0-r1

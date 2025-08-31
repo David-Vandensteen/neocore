@@ -139,7 +139,6 @@ static int log_y_default = LOG_Y_INIT;
 
 static void init_sprite_manager_index() {
   WORD i = 0;
-  sprite_index_manager_status[0] = true;
   for (i = 0; i < SPRITE_INDEX_MANAGER_MAX; i++) sprite_index_manager_status[i] = false;
 }
 
@@ -159,7 +158,7 @@ static WORD use_sprite_manager_index(WORD max) {
 
   // Quick check: if we don't have enough free sprites, return early
   if (nc_get_max_free_sprite_index() < max) {
-    return 0; // TODO : no zero return
+    return SPRITE_INDEX_NOT_FOUND; // Return proper error code instead of 0
   }
 
   for (i = 0; i <= SPRITE_INDEX_MANAGER_MAX - max; i++) {
@@ -179,7 +178,7 @@ static WORD use_sprite_manager_index(WORD max) {
       }
     }
   }
-  return 0; // TODO : no zero return
+  return SPRITE_INDEX_NOT_FOUND; // Return proper error code instead of 0
 }
 
 static void init_palette_manager_index() {
@@ -367,6 +366,9 @@ WORD nc_display_gfx_picture(GFX_Picture *gfx_picture, short x, short y) {
     display_gfx_with_sprite_id = DISPLAY_GFX_WITH_SPRITE_ID_AUTO; // Reset after use
   } else {
     sprite_index = use_sprite_manager_index(gfx_picture->pictureInfoDAT->tileWidth);
+    if (sprite_index == SPRITE_INDEX_NOT_FOUND) {
+      return SPRITE_INDEX_NOT_FOUND; // Return error if no sprite available
+    }
   }
 
   pictureInit(
@@ -401,6 +403,9 @@ WORD nc_display_gfx_animated_sprite(
     display_gfx_with_sprite_id = DISPLAY_GFX_WITH_SPRITE_ID_AUTO; // Reset after use
   } else {
     sprite_index = use_sprite_manager_index(animated_sprite->spriteInfoDAT->maxWidth);
+    if (sprite_index == SPRITE_INDEX_NOT_FOUND) {
+      return SPRITE_INDEX_NOT_FOUND; // Return error if no sprite available
+    }
   }
 
   aSpriteInit(
