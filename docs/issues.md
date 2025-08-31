@@ -2,6 +2,94 @@
 
 ## NeoCore 3.0.0-rc1 Issues
 
+### Sprite Residual Artifacts When Using nc_shrunk() with Reused Sprite IDs
+
+**Status**: 🟡 Bug - Sprite Cleanup Issue
+**Severity**: Medium
+**Affected Version**: NeoCore 3.0.0-rc1
+**Date Reported**: August 31, 2025
+**GitHub Issue**: [#167](https://github.com/David-Vandensteen/neocore/issues/167)
+
+#### Problem Description
+
+When transitioning between scenes that reuse the same sprite ID and applying `nc_shrunk()` to sprites, residual sprite artifacts from the previous scene remain visible on screen. The sprite cleanup mechanism does not properly clear shrunk sprites when sprite IDs are reused across scene transitions.
+
+#### Symptoms
+
+- Sprite artifacts from previous scene visible in new scene
+- Only occurs when `nc_shrunk()` is applied to sprites
+- Problem does not occur without shrunk operations
+- Affects sprite ID reuse between scenes (e.g., menu → game transition)
+- Normal sprite rendering works correctly without shrunk
+
+#### Visual Evidence
+
+- **Menu Scene**: `docs/images/issues/167/menu.png` - Shows original menu scene
+- **Without Shrunk**: `docs/images/issues/167/unless_shrunk.png` - Clean transition, no residual sprites
+- **With Shrunk**: `docs/images/issues/167/with_shrunk.png` - Shows residual sprite artifacts from previous scene
+
+#### Expected Behavior
+
+When transitioning between scenes with sprite ID reuse, all previous sprite data should be completely cleared regardless of shrunk operations. The new scene should display only the current sprites without any residual artifacts.
+
+#### Actual Behavior
+
+When `nc_shrunk()` is used on sprites and sprite IDs are reused in a new scene, remnants of the previous scene's sprites remain visible, causing visual artifacts and incorrect display.
+
+#### Code Pattern That Triggers the Issue
+
+```c
+// Scene 1 (Menu)
+menu_sprite_id = nc_init_display_gfx_picture(/*...*/);
+
+// Scene transition
+nc_reset();
+
+// Scene 2 (Game) - reuses same sprite ID
+player_sprite_id = nc_init_display_gfx_animated_sprite_physic(/*...*/);
+nc_shrunk(player_sprite_id, width, shrunk_value); // Triggers residual artifacts
+```
+
+#### Root Cause Analysis
+
+The issue appears to be related to incomplete sprite cleanup in the shrunk system:
+- `nc_shrunk()` may modify sprite hardware registers that are not properly reset during scene transitions
+- Sprite index manager may be reusing IDs without fully clearing shrunk-related hardware state
+- The shrunk table or VRAM shrunk addresses may retain data from previous sprites
+
+#### Immediate Impact
+
+- **Visual Quality**: Unwanted sprite artifacts in new scenes
+- **Scene Transitions**: Inconsistent visual behavior between shrunk and non-shrunk sprites
+- **Sprite ID Reuse**: Limits ability to efficiently reuse sprite indices
+- **User Experience**: Visual glitches that affect game presentation
+
+#### Workaround
+
+Avoid using `nc_shrunk()` on sprites that will have their IDs reused in subsequent scenes, or ensure unique sprite IDs are used across scene transitions.
+
+#### Priority
+
+**🟡 MEDIUM** - Affects visual quality but has workarounds. Should be fixed for proper sprite management.
+
+#### Related Functions
+
+- `nc_shrunk(WORD base_sprite, WORD max_width, WORD value)`
+- `nc_reset()`
+- `nc_clear_display()`
+- `nc_init_display_gfx_picture()`
+- `nc_init_display_gfx_animated_sprite_physic()`
+- Sprite index management system
+
+#### Environment Details
+
+- **Platform**: Neo Geo hardware
+- **Sprite System**: NeoCore sprite index manager
+- **Scene Transition**: Menu to game transition
+- **Shrunk Values**: Various shrunk proportional table values
+
+---
+
 ### nc_set_position_log(0, 0) Displays Off-Screen
 
 **Status**: 🟡 Bug - Off-Screen Display
