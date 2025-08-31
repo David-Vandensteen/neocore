@@ -59,7 +59,7 @@ NeoCore v3 includes an official migration script that automates many migration t
     - `nc_log_byte("label", value)` → Remove label parameter
     - `nc_log_box("label", value)` → Remove label parameter
     - `nc_log_dword("label", value)` → Remove label parameter
-    - `nc_log_vec2short()` → Replace with nc_log_position()
+    - `nc_log_vec2short()` → Replace with nc_set_position_log(x, y) + nc_log_info()
   - **Removed functions**: Detects calls to functions removed in v3:
     - `nc_clear_vram()` → Replace with nc_clear_display() or nc_reset()
   - **Obsolete structure members**: Detects removed members from NeoCore v3:
@@ -304,7 +304,7 @@ cp path/to/neocore_v3/bootstrap/standalone/Makefile src/Makefile
    nc_log_dword("Label", value) → nc_log_info("Label: "); nc_log_dword(value); nc_log_next_line();
 
    # Replace type-specific logging:
-   nc_log_vec2short("Pos", pos) → nc_log_position(pos);
+   nc_log_vec2short("Pos", pos) → nc_set_position_log(pos.x, pos.y); nc_log_info("Pos");
    ```
 
 5. **Structure member changes:**
@@ -420,7 +420,8 @@ echo "NeoCore v2 to v3 Migration Helper"
 
 # NeoCore Framework migrations
 find . -name "*.c" -o -name "*.h" | xargs sed -i 's/Vec2short/Position/g'
-find . -name "*.c" -o -name "*.h" | xargs sed -i 's/nc_log_vec2short/nc_log_position/g'
+# NOTE: nc_log_vec2short has been removed. Replace with:
+# nc_log_vec2short("label", pos) → nc_set_position_log(pos.x, pos.y); nc_log_info("label");
 
 # DATlib migrations
 find . -name "*.c" -o -name "*.h" | xargs sed -i 's/->palCount/->count/g'
@@ -635,7 +636,7 @@ nc_log_vec2short("Position", player_pos);
 nc_log_info_line("Game started");
 nc_log_info("Player HP: "); nc_log_word(player_hp); nc_log_next_line();
 nc_log_info("Score: "); nc_log_int(current_score); nc_log_next_line();
-nc_log_position(player_pos);
+nc_set_position_log(player_pos.x, player_pos.y); nc_log_info("Position");
 ```
 
 #### 2.2 Label Removal Pattern
@@ -646,7 +647,7 @@ All logging functions with label parameters have been removed:
 - `nc_log_word(char *label, WORD value)` → `nc_log_word(WORD value)`
 - `nc_log_int(char *label, int value)` → `nc_log_int(int value)`
 - `nc_log_short(char *label, short value)` → `nc_log_short(short value)`
-- `nc_log_vec2short(char *label, Vec2short vec)` → `nc_log_position(Position pos)`
+- `nc_log_vec2short(char *label, Vec2short vec)` → `nc_set_position_log(short x, short y)` + `nc_log_info(char *text)`
 - `nc_clear_vram()` → Use `nc_clear_display()` or `nc_reset()` instead
 
 #### 2.3 Type Removals

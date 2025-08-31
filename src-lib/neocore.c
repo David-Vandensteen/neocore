@@ -1355,11 +1355,6 @@ void nc_log_pictureInfo(pictureInfo *pi) {
   nc_log_info("TILEHEIGHT : %04d", (WORD)pi->tileHeight);
 }
 
-void nc_log_position(Position position) {
-  nc_log_info_line("X: %d", position.x);
-  nc_log_info("Y: %d", position.y);
-}
-
 void nc_log_palette_info(paletteInfo *paletteInfo) {
   char buffer[16];
   BYTE i = 0;

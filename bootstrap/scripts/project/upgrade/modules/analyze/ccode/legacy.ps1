@@ -155,7 +155,7 @@ function Analyze-CCodeLegacy {
         "nc_log_vec2short()" = @{
             Pattern = "nc_log_vec2short\s*\("
             Issue = "nc_log_vec2short() function removed in v3"
-            Suggestion = "Replace with nc_log_position() and update parameter type from Vec2short to Position"
+            Suggestion = "Replace with nc_set_position_log(x, y)"
         }
 
         "nc_log_word() with label" = @{

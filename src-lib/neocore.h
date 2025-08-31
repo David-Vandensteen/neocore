@@ -1022,7 +1022,6 @@ void nc_log_bool(BOOL value);
 void nc_log_spriteInfo(spriteInfo *si);
 void nc_log_box(Box *b);
 void nc_log_pictureInfo(pictureInfo *pi);
-void nc_log_position(Position position);
 void nc_log_palette_info(paletteInfo *paletteInfo);
 void nc_log_packed_color16(WORD packed_color);
 void nc_log_rgb16(RGB16 *color);
