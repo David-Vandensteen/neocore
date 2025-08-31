@@ -72,6 +72,98 @@ Avoid using `nc_shrunk()` on sprites that will have their IDs reused in subseque
 
 **🟡 MEDIUM** - Affects visual quality but has workarounds. Should be fixed for proper sprite management.
 
+#### Root Cause Analysis
+
+After extensive debugging, the issue appears to be related to hardware-level persistence of shrunk register values:
+- `nc_shrunk()` modifies sprite hardware registers that persist between scene transitions
+- The Neo Geo hardware maintains shrunk values even after `nc_clear_display()` and `nc_reset()`
+- Standard clearing methods (`SC234Put(VRAM_SHRINK_ADDR(i), 0xFFF)` and `nc_shrunk_range()`) do not fully reset the hardware state
+- The problem occurs specifically when sprite IDs are reused between scenes with different shrunk requirements
+
+#### Technical Investigation Summary
+
+**Debugging Process Conducted:**
+
+1. **Initial Issue Confirmation**
+   - ✅ Confirmed artifacts appear only when `nc_shrunk()` is used
+   - ✅ Verified problem does not occur without shrunk operations
+   - ✅ Isolated issue to sprite ID reuse between scenes (menu → game transition)
+
+2. **Sprite Index Manager Analysis**
+   - 🔧 Fixed bug in `init_sprite_manager_index()` where sprite 0 reservation was overwritten
+   - 🔧 Corrected `use_sprite_manager_index()` to return `SPRITE_INDEX_NOT_FOUND` instead of 0
+   - 🔧 Added error handling in display functions for failed sprite allocations
+   - ✅ Confirmed sprite allocation works correctly after fixes
+
+3. **Shrunk Register Clearing Attempts**
+   - ❌ **Single clear**: `SC234Put(VRAM_SHRINK_ADDR(i), 0xFFF)` - Insufficient
+   - ❌ **Double clear**: Multiple writes to same address - No improvement
+   - ❌ **Triple clear**: Added extra safety writes - Still artifacts present
+   - ❌ **VBlank delays**: Added `waitVBlank()` between operations - Caused display issues
+   - ❌ **IRQ disable**: Protected clear operations - No change
+
+4. **Address Method Investigation**
+   - 🔍 **Discovery**: `VRAM_SHRINK_ADDR(i)` vs `0x8000 + i` addressing inconsistency
+   - 🔧 **Test**: Modified `nc_clear_display()` to use `0x8000 + i` method
+   - ❌ **Result**: Artifacts persisted with both addressing methods
+
+5. **Timing and Sequence Testing**
+   - ❌ **Pre-clear in nc_shrunk()**: Clear before applying new value - Display issues
+   - ❌ **Post-clear in nc_reset()**: Additional delays after reset - Display failures
+   - ❌ **Allocation-time clear**: Clear during sprite index allocation - No improvement
+
+6. **Hardware Register Scope Testing**
+   - ❌ **SCB2 (X position) clear**: `SC234Put(VRAM_POSX_ADDR(i), 0x0000)` - Display problems
+   - ❌ **SCB3 (Y position) clear**: `SC234Put(0x8200 + i, 0x01F0)` - Display failures
+   - ✅ **SCB4 (Shrunk) only**: Confirmed as the problematic register
+
+7. **Shrunk Application Method Analysis**
+   - ✅ **No shrunk**: Complete elimination of `nc_shrunk()` - Artifacts disappear
+   - ❌ **Direct application**: Original simple method - Artifacts present
+   - ❌ **Range-based clear**: Using `nc_shrunk_range()` for clearing - No improvement
+
+8. **Alternative Approaches Tested**
+   - ✅ **Sprite ID offset**: Avoiding reuse by using different ID ranges - Works but limiting
+   - ❌ **Delayed application**: Wait frames before shrunk - Still artifacts
+   - ❌ **Complete sprite clear**: `nc_clear_sprite_completely()` function - No change
+
+**Technical Findings:**
+
+- **Hardware Persistence**: Neo Geo shrunk registers exhibit persistence behavior not documented
+- **Clearing Ineffectiveness**: Standard DATlib clearing methods insufficient for shrunk data
+- **Address Independence**: Both `VRAM_SHRINK_ADDR()` and direct `0x8000+` addressing fail
+- **Timing Independence**: VBlank synchronization does not resolve the issue
+- **Scope Limitation**: Only SCB4 (shrunk) registers are problematic; other registers clear properly
+
+**Confirmed Non-Solutions:**
+- Multiple register writes (double/triple clearing)
+- VBlank timing synchronization
+- IRQ-protected operations
+- Alternative addressing methods
+- Pre-clearing before shrunk application
+- Comprehensive sprite register clearing
+
+#### Workaround Solutions
+
+**Option A: Avoid Sprite ID Reuse with Shrunk**
+```c
+// Use different sprite ID ranges for different scenes
+// Menu: sprites 0-49, Game: sprites 50-99, etc.
+```
+
+**Option B: Delay Shrunk Application**
+```c
+// Apply shrunk several frames after sprite initialization
+player_sprite_id = nc_init_display_gfx_animated_sprite_physic(...);
+for (int i = 0; i < 5; i++) { nc_update(); } // Wait 5 frames
+nc_shrunk(player_sprite_id, ...); // Apply after delay
+```
+
+**Option C: Use Non-Shrunk Alternatives**
+```c
+// Use scaled sprite graphics instead of hardware shrunk when possible
+```
+
 #### Related Functions
 
 - `nc_shrunk(WORD base_sprite, WORD max_width, WORD value)`
