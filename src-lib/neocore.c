@@ -140,7 +140,7 @@ static int log_y_default = LOG_Y_INIT;
 static void init_sprite_manager_index() {
   WORD i = 0;
   sprite_index_manager_status[0] = true;
-  for (i = 1; i < SPRITE_INDEX_MANAGER_MAX; i++) sprite_index_manager_status[i] = false;
+  for (i = 0; i < SPRITE_INDEX_MANAGER_MAX; i++) sprite_index_manager_status[i] = false;
 }
 
 static void set_sprite_manager_index(WORD index, WORD max) {

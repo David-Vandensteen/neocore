@@ -1,5 +1,7 @@
 ## 3.0.0-rc2
 
+  - **IMPROVEMENTS**:
+    - **Sprite index management**: Sprite index allocation now starts at 0 instead of 1
   - **BUG FIXES**:
     - **Issue #165**: Identified and resolved bootstrap scaffolding compilation failure root cause
       - **Problem**: Path length limitations in GCC 2.95.2 causing segmentation faults during compilation
