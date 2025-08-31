@@ -754,6 +754,7 @@ void nc_destroy_gfx_picture(GFX_Picture *gfx_picture) {
     gfx_picture->pictureDAT.baseSprite,
     gfx_picture->pictureInfoDAT->tileWidth
   );
+  nc_shrunk(gfx_picture->pictureDAT.baseSprite, gfx_picture->pictureInfoDAT->tileWidth, 0xFFF);
   clearSprites(gfx_picture->pictureDAT.baseSprite, gfx_picture->pictureInfoDAT->tileWidth);
 }
 
@@ -763,6 +764,7 @@ void nc_destroy_gfx_animated_sprite(GFX_Animated_Sprite *animated_sprite) {
     animated_sprite->aSpriteDAT.baseSprite,
     animated_sprite->spriteInfoDAT->maxWidth
   );
+  nc_shrunk(animated_sprite->aSpriteDAT.baseSprite, animated_sprite->aSpriteDAT.tileWidth, 0xFFF);
   clearSprites(animated_sprite->aSpriteDAT.baseSprite, animated_sprite->aSpriteDAT.tileWidth);
 }
 

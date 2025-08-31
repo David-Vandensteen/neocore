@@ -2,8 +2,10 @@
 
   - **IMPROVEMENTS**:
     - **Sprite index management**: Sprite index allocation now starts at 0 instead of 1
+    - **Graphics destroy functions optimization**: Improved sprite destruction with proper shrinking reset
+      - **Enhancement**: `nc_destroy_gfx_animated_sprite` and `nc_destroy_gfx_picture` now properly reset sprite shrinking to default value (0xFFF)
+      - **Benefit**: Ensures clean sprite state after destruction, preventing visual artifacts from lingering shrink effects
   - **BUG FIXES**:
-    - **Issue #165**: Identified and resolved bootstrap scaffolding compilation failure root cause
       - **Problem**: Path length limitations in GCC 2.95.2 causing segmentation faults during compilation
       - **Solution**: Added proactive path length validation to prevent projects with incompatible path lengths
       - **Impact**: Bootstrap system now creates only compatible projects that compile successfully
