@@ -2,6 +2,77 @@
 
 ## NeoCore 3.0.0-rc1 Issues
 
+### nc_set_position_log(0, 0) Displays Off-Screen
+
+**Status**: 🟡 Bug - Off-Screen Display
+**Severity**: Medium
+**Affected Version**: NeoCore 3.0.0-rc1
+**Date Reported**: August 31, 2025
+**GitHub Issue**: [#166](https://github.com/David-Vandensteen/neocore/issues/166)
+
+#### Problem Description
+
+The `nc_set_position_log(0, 0)` function call does not display text at the expected screen position. Instead, the text appears to be rendered off-screen, making it invisible to the user. The function likely has an off-by-one error in coordinate handling, where coordinates should be 1-based instead of 0-based.
+
+#### Symptoms
+
+- `nc_set_position_log(0, 0)` followed by `nc_log_info()` displays nothing visible on screen
+- `nc_set_position_log(1, 1)` works correctly and displays text at the top-left corner
+- Suggests coordinate system is 1-based rather than 0-based
+- No compilation errors or runtime crashes
+
+#### Expected Behavior
+
+`nc_set_position_log(0, 0)` should position the log cursor at the top-left corner of the screen, similar to how `nc_set_position_log(1, 1)` currently behaves.
+
+#### Actual Behavior
+
+Text logged after `nc_set_position_log(0, 0)` is not visible on screen, indicating the text is being rendered at an off-screen location.
+
+#### Code Example
+
+```c
+// This displays off-screen (invisible)
+nc_set_position_log(0, 0);
+nc_log_info("This text is invisible");
+
+// This displays correctly at top-left corner
+nc_set_position_log(1, 1);
+nc_log_info("This text is visible");
+```
+
+#### Root Cause Analysis
+
+The issue appears to be a coordinate system inconsistency where:
+- The logging system expects 1-based coordinates (1,1 = top-left)
+- But the API suggests 0-based coordinates (0,0 = top-left)
+- This likely affects the underlying DATlib `fixPrint`/`fixPrintf` coordinate handling
+
+#### Immediate Impact
+
+- **API Consistency**: Confusing coordinate system for developers
+- **Documentation**: Current documentation may be misleading about coordinate system
+- **User Experience**: Developers may experience invisible log output when using intuitive (0,0) coordinates
+
+#### Workaround
+
+Use 1-based coordinates instead of 0-based:
+- Replace `nc_set_position_log(0, 0)` with `nc_set_position_log(1, 1)`
+- Add 1 to both x and y coordinates when positioning logs
+
+#### Priority
+
+**🟡 MEDIUM** - Affects usability but has a simple workaround. Should be fixed for consistency.
+
+#### Related Functions
+
+- `nc_set_position_log(WORD x, WORD y)`
+- `nc_log_info(char *text, ...)`
+- `nc_log_info_line(char *text, ...)`
+- `nc_init_log()`
+
+---
+
 ### Bootstrap Scaffolding Compilation Failure
 
 **Status**: 🔴 Critical - Bootstrap System Failure
