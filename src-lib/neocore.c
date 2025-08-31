@@ -786,9 +786,9 @@ void nc_clear_display() {
   WORD i = 0;
   const WORD sprite_max = 383;
   clearFixLayer();
-  clearSprites(1, sprite_max);
+  clearSprites(0, sprite_max);
   disableIRQ();
-  for (i = 0; i <= sprite_max - 1; i++) {
+  for (i = 0; i <= sprite_max; i++) {
     /* SCB3: Y=496 (hidden) and break chaining */
     // SC234Put(0x8200 + i, 0x01F0);  /* Y=496 (hidden) */
     /* SCB4: Reset shrinking */
