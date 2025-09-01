@@ -1,13 +1,19 @@
-# Known Issues
+# Kn### Sprite Residual Artifacts When Using nc_shrunk() with Reused Sprite IDs
+
+**Status**: ❌ **OPEN - UNDER INVESTIGATION** (Attempted fix failed)
+**Severity**: High (visual artifacts affecting gameplay)
+**Priority**: Must fix before stable release
 
 ## NeoCore 3.0.0-rc1 Issues
 
 ### Sprite Residual Artifacts When Using nc_shrunk() with Reused Sprite IDs
 
-**Status**: 🟡 Bug - Sprite Cleanup Issue
+**Status**: � Resolved - Sprite 0 Reserved
 **Severity**: Medium
 **Affected Version**: NeoCore 3.0.0-rc1
+**Resolved Version**: NeoCore 3.0.0-rc2
 **Date Reported**: August 31, 2025
+**Date Resolved**: September 1, 2025
 **GitHub Issue**: [#167](https://github.com/David-Vandensteen/neocore/issues/167)
 
 #### Problem Description
@@ -148,7 +154,7 @@ After extensive debugging, the issue appears to be related to hardware-level per
 **Option A: Avoid Sprite ID Reuse with Shrunk**
 ```c
 // Use different sprite ID ranges for different scenes
-// Menu: sprites 0-49, Game: sprites 50-99, etc.
+// Menu: sprites 1-49, Game: sprites 50-99, etc.
 ```
 
 **Option B: Delay Shrunk Application**
@@ -159,7 +165,30 @@ for (int i = 0; i < 5; i++) { nc_update(); } // Wait 5 frames
 nc_shrunk(player_sprite_id, ...); // Apply after delay
 ```
 
-**Option C: Use Non-Shrunk Alternatives**
+#### Resolution Approach (Under Testing)
+
+**Root Cause Hypothesis**: The issue appears to stem from using sprite 0, which may have special hardware behavior on Neo Geo systems. SNK documentation refers to "sprites 1 to 380" and DATlib examples consistently avoid sprite 0.
+
+**Solution Implemented (Pending Validation)**:
+- Reserve sprite 0 in the sprite manager system
+- Start automatic allocation from sprite 1 (matching DATlib conventions)
+- Update all sprite counting functions to exclude sprite 0
+- This aligns with Neo Geo hardware specifications and may prevent shrunk-related conflicts
+
+**Testing Results**:
+- ❌ **Test Failed (September 1, 2025)**: Reserving sprite 0 and using sprite 1+ did not eliminate the residual artifacts
+- **Conclusion**: The issue is not specifically related to sprite 0 usage
+- **Status**: Root cause still unknown - hardware-level shrunk register persistence affects all sprite indices
+
+**Testing Required**:
+- ~~Verify that reserving sprite 0 eliminates the residual artifacts~~ ❌ **FAILED**
+- ~~Test scene transitions with shrunk operations using sprites 1+~~ ❌ **ARTIFACTS STILL PRESENT**
+- ✅ Confirmed no regression in normal sprite functionality
+
+**Next Investigation Steps**:
+- Explore alternative shrunk register clearing methods
+- Investigate timing-based solutions (longer delays, different VBlank synchronization)
+- Consider hardware-level workarounds or sprite pool isolation strategies**Option C: Use Non-Shrunk Alternatives**
 ```c
 // Use scaled sprite graphics instead of hardware shrunk when possible
 ```

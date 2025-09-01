@@ -1,7 +1,6 @@
 #include <neocore.h>
 #include "externs.h"
 
-
 static bool menu() {
   static GFX_Picture menu_anime_girl_darker8;
   static WORD menu_sprite_id;
@@ -23,7 +22,11 @@ static bool menu() {
     nc_log_next_line();
     nc_log_info("Menu Sprite ID: ");
     nc_log_word(menu_sprite_id);
-    if (nc_joypad_is_start(0)) return true;
+    if (nc_joypad_is_start(0)) {
+      nc_destroy_gfx_picture(&menu_anime_girl_darker8);
+      nc_update();
+      return true;
+    }
   }
 }
 
