@@ -17,7 +17,6 @@
 #define MANUALBOX 0
 #define AUTOBOX 1
 
-// Sprite management constants for NeoCore v3.0.0
 #define DISPLAY_GFX_WITH_SPRITE_ID_AUTO 0xFFFF
 #define SPRITE_INDEX_NOT_FOUND 0xFFFF
 
