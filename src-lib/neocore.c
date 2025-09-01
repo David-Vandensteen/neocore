@@ -140,6 +140,8 @@ static int log_y_default = LOG_Y_INIT;
 static void init_sprite_manager_index() {
   WORD i = 0;
   for (i = 0; i < SPRITE_INDEX_MANAGER_MAX; i++) sprite_index_manager_status[i] = false;
+  // Reserve sprite 0
+  sprite_index_manager_status[0] = true;
 }
 
 static void set_sprite_manager_index(WORD index, WORD max) {
@@ -161,7 +163,8 @@ static WORD use_sprite_manager_index(WORD max) {
     return SPRITE_INDEX_NOT_FOUND; // Return proper error code instead of 0
   }
 
-  for (i = 0; i <= SPRITE_INDEX_MANAGER_MAX - max; i++) {
+  // Start from sprite 1 since sprite 0 is reserved
+  for (i = 1; i <= SPRITE_INDEX_MANAGER_MAX - max; i++) {
     if (!sprite_index_manager_status[i]) {
       found = 1;
       for (j = i + 1; j < i + max; j++) {
@@ -789,11 +792,11 @@ void nc_init_gpu() {
 
 void nc_clear_display() {
   WORD i = 0;
-  const WORD sprite_max = 383;
+  const WORD sprite_max = 380;
   clearFixLayer();
-  clearSprites(0, sprite_max);
+  clearSprites(1, sprite_max);
   disableIRQ();
-  for (i = 0; i <= sprite_max; i++) {
+  for (i = 1; i <= sprite_max; i++) {
     /* SCB3: Y=496 (hidden) and break chaining */
     // SC234Put(0x8200 + i, 0x01F0);  /* Y=496 (hidden) */
     /* SCB4: Reset shrinking */
@@ -830,7 +833,8 @@ void nc_clear_sprite_index_table() { init_sprite_manager_index(); }
 
 WORD nc_get_free_sprite_index() {
   WORD i;
-  for (i = 0; i < SPRITE_INDEX_MANAGER_MAX; i++) {
+  // Start from sprite 1 since sprite 0 is reserved
+  for (i = 1; i < SPRITE_INDEX_MANAGER_MAX; i++) {
     if (sprite_index_manager_status[i] == false) {
       return i;
     }
@@ -840,7 +844,8 @@ WORD nc_get_free_sprite_index() {
 
 WORD nc_get_max_free_sprite_index() {
   WORD i, max = 0;
-  for (i = 0; i < SPRITE_INDEX_MANAGER_MAX; i++) {
+  // Start from sprite 1 since sprite 0 is reserved
+  for (i = 1; i < SPRITE_INDEX_MANAGER_MAX; i++) {
     if (sprite_index_manager_status[i] != true) max++;
   }
   return max;
@@ -848,7 +853,8 @@ WORD nc_get_max_free_sprite_index() {
 
 WORD nc_get_max_sprite_index_used() {
   WORD i, max = 0;
-  for (i = 0; i < SPRITE_INDEX_MANAGER_MAX; i++) {
+  // Start from sprite 1 since sprite 0 is reserved and always marked as used
+  for (i = 1; i < SPRITE_INDEX_MANAGER_MAX; i++) {
     if (sprite_index_manager_status[i] != false) max++;
   }
   return max;
