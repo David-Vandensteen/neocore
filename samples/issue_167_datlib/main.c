@@ -24,6 +24,7 @@ static bool menu() {
   clearFixLayer();
   initGfx();
   backgroundColor(0x0001); /* Fond noir */
+  LSPCmode=0x1c00;
 
   /* Charger la palette */
   palJobPut(
@@ -52,8 +53,10 @@ static bool menu() {
 
     /* Test des inputs pour passer au jeu - comme dans DATdemo */
     if (volMEMBYTE(PS_EDGE) & P1_START) {
+      // pictureSetPos(&menu_anime, 0, 240); /* Hors écran */
       pictureHide(&menu_anime);
       clearSprites(1, menu_anime_girl_darker8_img.tileWidth);
+      SCClose();
       waitVBlank();
       return true;
     }
@@ -64,14 +67,16 @@ static bool menu() {
 
 static void game() {
   aSprite player;
-  WORD sprite_index = 1;  /* Index de sprite différent du menu */
-  WORD palette_index = 17; /* Palette différente du menu */
+  WORD sprite_index = 40;  /* Index de sprite différent du menu */
+  WORD palette_index = 40; /* Palette différente du menu */
   short player_x = 100;
   short player_y = 100;
 
-  /* Initialisation */
+  /* Initialisation comme dans DATdemo */
   clearFixLayer();
+  initGfx();
   backgroundColor(0x0001); /* Fond noir */
+  LSPCmode=0x1c00;
 
   /* Charger la palette du player */
   palJobPut(
@@ -101,14 +106,14 @@ static void game() {
     WORD i;
 
     /* MÉTHODE DATLIB 0.3 (ACTUELLE) - DÉCOMMENTEZ CETTE LIGNE : */
-    // for (i = 0; i < sprite_width; i++) {
-    //   SC234Put(VRAM_SHRINK_ADDR(sprite_index + i), shrunk_value);
-    // }
+    for (i = 0; i < sprite_width; i++) {
+      SC234Put(VRAM_SHRINK_ADDR(sprite_index + i), shrunk_value);
+    }
 
     /* MÉTHODE NEOCORE ANCIENNE - DÉCOMMENTEZ CES LIGNES POUR TESTER : */
-    for (i = 0; i < sprite_width; i++) {
-      SC234Put(0x8000 + sprite_index + i, shrunk_value);
-    }
+    // for (i = 0; i < sprite_width; i++) {
+    //   SC234Put(0x8000 + sprite_index + i, shrunk_value);
+    // }
   }
 
   /* Boucle de jeu */
@@ -123,6 +128,7 @@ static void game() {
     if (volMEMBYTE(PS_EDGE) & P1_START) {
       aSpriteHide(&player);
       clearSprites(sprite_index, 4); /* 4 sprites pour un sprite animé typique */
+      SCClose();
       waitVBlank();
       break;
     }
