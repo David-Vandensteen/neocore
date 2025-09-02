@@ -67,7 +67,7 @@ static bool menu() {
 
 static void game() {
   aSprite player;
-  WORD sprite_index = 40;  /* Index de sprite différent du menu */
+  WORD sprite_index = 1;  /* Index de sprite différent du menu */
   WORD palette_index = 40; /* Palette différente du menu */
   short player_x = 100;
   short player_y = 100;
