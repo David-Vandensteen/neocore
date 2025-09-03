@@ -448,6 +448,7 @@ WORD nc_display_gfx_animated_sprite_physic(
     anim
   );
   nc_update_box(&gfx_animated_sprite_physic->box, x, y);
+  nc_update_animation_gfx_animated_sprite_physic(gfx_animated_sprite_physic);
   return sprite_index;
 }
 
