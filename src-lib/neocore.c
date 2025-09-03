@@ -49,6 +49,10 @@ static Adpcm_player adpcm_player;
 static BOOL is_init = false;
 static BOOL joypad_edge_mode = false;
 static WORD display_gfx_with_sprite_id = DISPLAY_GFX_WITH_SPRITE_ID_AUTO;
+static const ushort transparent_palette[16] = {
+	0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
+	0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000
+};
 
 static void init_adpcm_player() {
   adpcm_player.state = IDLE;
@@ -793,16 +797,22 @@ void nc_init_gpu() {
 void nc_clear_display() {
   WORD i = 0;
   const WORD sprite_max = 380;
+  const WORD palette_max = 256;
+
   clearFixLayer();
   clearSprites(1, sprite_max);
   disableIRQ();
+
+  /* Clear shrunk registers */
   for (i = 1; i <= sprite_max; i++) {
-    /* SCB3: Y=496 (hidden) and break chaining */
-    // SC234Put(0x8200 + i, 0x01F0);  /* Y=496 (hidden) */
-    /* SCB4: Reset shrinking */
     SC234Put(VRAM_SHRINK_ADDR(i), 0xFFF);  /* No shrinking */
-    /* DON'T touch SCB1 - causes crashes */
   }
+
+  /* Set all palettes to transparent */
+  for (i = 16; i < palette_max; i++) {
+    palJobPut(i, 1, transparent_palette);
+  }
+
   enableIRQ();
   nc_update();
 }
