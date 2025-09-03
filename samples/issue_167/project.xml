@@ -21,6 +21,9 @@
         <pict id="menu_anime_girl_darker8_img">
           <file>assets\gfx\menu_anime_girl_darker8_img.png</file>
         </pict>
+        <pict id="alpha_img">
+          <file>assets\gfx\alpha.png</file>
+        </pict>
         <sprt id="player_sprite">
           <file>assets\gfx\player.png</file>
           <frame>0,1:3,1</frame>
