@@ -49,10 +49,6 @@ static Adpcm_player adpcm_player;
 static BOOL is_init = false;
 static BOOL joypad_edge_mode = false;
 static WORD display_gfx_with_sprite_id = DISPLAY_GFX_WITH_SPRITE_ID_AUTO;
-static const ushort transparent_palette[16] = {
-	0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000,
-	0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000
-};
 
 static void init_adpcm_player() {
   adpcm_player.state = IDLE;
@@ -807,11 +803,6 @@ void nc_clear_display() {
   /* Clear shrunk registers */
   for (i = 1; i <= sprite_max; i++) {
     SC234Put(VRAM_SHRINK_ADDR(i), 0xFFF);  /* No shrinking */
-  }
-
-  /* Set all palettes to transparent */
-  for (i = 16; i < palette_max; i++) {
-    palJobPut(i, 1, transparent_palette);
   }
 
   enableIRQ();
