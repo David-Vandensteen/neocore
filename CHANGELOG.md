@@ -13,7 +13,7 @@
       - **Fix**: Added proper error checking and early return when sprite allocation fails
       - **Impact**: Prevents attempting to display graphics with invalid sprite indices, improving stability
     - **Bootstrap System Fixes**:
-      - **Problem**: Path length limitations in GCC 2.95.2 causing segmentation faults during compilation
+      - **Problem**: Path length limitations in GCC 2.95.2 causing segmentation faults during compilation (Bug #165: https://github.com/David-Vandensteen/neocore/issues/165)
       - **Solution**: Added proactive path length validation to prevent projects with incompatible path lengths
       - **Impact**: Bootstrap system now creates only compatible projects that compile successfully
       - **Project creation validation**: Enhanced `_create.ps1` script with proactive path length validation
