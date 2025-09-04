@@ -17,6 +17,11 @@
       - **Solution**: Added proactive path length validation to prevent projects with incompatible path lengths
       - **Impact**: Bootstrap system now creates only compatible projects that compile successfully
       - **Project creation validation**: Enhanced `_create.ps1` script with proactive path length validation
+    - **Logging System Coordinate Fix**:
+      - **Bug**: `nc_set_position_log(0, 0)` displayed text off-screen instead of top-left corner (Bug #166: https://github.com/David-Vandensteen/neocore/issues/166)
+      - **Root Cause**: Coordinate system inconsistency - logging system expected 1-based coordinates but API suggested 0-based
+      - **Fix**: Corrected coordinate handling to properly support 0-based coordinates for consistent API behavior
+      - **Impact**: `nc_set_position_log(0, 0)` now correctly displays text at top-left corner as expected
 
 ## 3.0.0-r1
 

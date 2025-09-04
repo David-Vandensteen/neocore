@@ -1242,8 +1242,8 @@ WORD nc_get_position_x_log() { return log_x; }
 WORD nc_get_position_y_log() { return log_y; }
 
 void nc_set_position_log(WORD _x, WORD _y) {
-  log_x = _x;
-  log_y = _y;
+  log_x = _x + 1;
+  log_y = _y + 2;
   log_x_default = log_x;
   log_y_default = log_y;
 }
