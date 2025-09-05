@@ -195,7 +195,6 @@ Create custom config files in your project and reference them:
 .\mak.bat run:raine:full     # Fullscreen
 ```
 
-```
 
 ---
 
@@ -279,8 +278,8 @@ The upgrade script performs comprehensive validation and updates:
 - ✅ Build scripts (mak.bat and mak.ps1)
 - ✅ Project structure validation
 - ✅ Deprecated file cleanup (automatic removal)
+- ✅ XML project definition
 - ❌ Your source code (manual migration needed - see logs for guidance)
-- ❌ XML project definition (manual review recommended)
 - ❌ Project assets
 
 > 💡 **Tip**: The script generates detailed logs showing breaking changes found in your code. Review these logs to understand what manual changes may be needed.
@@ -307,10 +306,9 @@ From your project's `src` folder:
 
 ### 📚 C API Documentation<a name="documentation-of-neocore-c-lib"></a>
 
-- **[Complete Doxygen Documentation](http://azertyvortex.free.fr/neocore-doxy/r11/neocore_8h.html)**
+- **[Doxygen Documentation](http://azertyvortex.free.fr/neocore-doxy/r11/neocore_8h.html)**
 - **[Migration Guide](docs/MIGRATION_GUIDE_v2Tov3.md)** - Breaking changes and migration from previous versions
-- **[Consolidated Code Review](docs/neocore_review.md)** - Comprehensive technical analysis and improvement recommendations
-- **[Detailed Changelog](CHANGELOG.md)** - Version history
+- **[Changelog](CHANGELOG.md)** - Version history
 
 ### 🎨 DATlib Assets<a name="datlib-assets"></a>
 
@@ -460,23 +458,6 @@ Necessary if you modify Neocore source code:
 .\mak.bat clean
 .\mak.bat lib
 ```
-
-### 🧪 Migration Testing<a name="migration-testing"></a>
-
-The `test_v2tov3` sample demonstrates migration scenarios and breaking changes:
-
-```cmd
-cd <neocore>\samples\test_v2tov3
-.\mak.bat clean
-.\mak.bat run:raine
-```
-
-This sample includes:
-- **Breaking change patterns** from v2 to v3
-- **Deprecated API usage** examples
-- **Migration validation** test case
-
-Use this sample to test the upgrade script and understand migration requirements.
 
 ### 🌿 Branches & Versions<a name="pull-or-checkout-another-branches"></a>
 

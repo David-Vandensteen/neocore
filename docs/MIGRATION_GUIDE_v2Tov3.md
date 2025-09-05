@@ -19,10 +19,6 @@ This comprehensive guide will help you migrate your NeoCore v2.x projects to Neo
 - **DATlib 0.2 → 0.3**: Complete sprite/scroller system redesign, new type system
 - **Build System**: Updated toolchain and configuration
 
-### Compatibility Status
-- **Binary Compatibility**: ❌ Completely broken - full recompilation required
-- **Source Compatibility**: ❌ Heavily broken - extensive code changes required
-
 ## Migration Tools and Scripts
 
 ### Official Migration Script (Recommended)
@@ -30,9 +26,9 @@ This comprehensive guide will help you migrate your NeoCore v2.x projects to Neo
 NeoCore v3 includes an official migration script that automates many migration tasks:
 
 ```bash
-# Location: bootstrap/scripts/project/upgrade.bat
 # Usage:
-.\bootstrap\scripts\project\upgrade.bat -projectSrcPath "path\to\your\src" -projectNeocorePath "path\to\neocore"
+cd bootstrap\scripts\project
+.\upgrade.bat -projectSrcPath "path\to\your\src" -projectNeocorePath "path\to\neocore"
 ```
 
 **What the script does automatically:**
@@ -67,7 +63,6 @@ NeoCore v3 includes an official migration script that automates many migration t
     - `paletteMgr` → Removed (handled internally)
     - `spriteManager` → Removed (handled internally)
     - `fixMgrMemoryPool` → Removed (handled internally)
-  - **C99 code patterns**: Detects variable declarations mixed with code (not supported in NeoCore C89/C90)
 - ✅ **Deprecated file cleanup**: Automatically removes obsolete files:
   - `common_crt0_cd.s` (no longer needed)
   - `crt0_cd.s` (no longer needed)
@@ -77,10 +72,7 @@ NeoCore v3 includes an official migration script that automates many migration t
     - `**/out/char.bin` (generated build artifacts)
     - `/build/` or `build/` (build directory)
     - `/dist/` or `dist/` (distribution directory)
-  - **Obsolete entries**: Identifies patterns that should be removed:
-    - `externs.h` (no longer needed in v3)
   - **Path optimization**: Suggests absolute paths (`/build/` instead of `build/`) for better Git behavior
-- ✅ **Backup creation**: Creates automatic backup in temp directory
 - ✅ **Detailed logging**: Comprehensive migration log for debugging
 
 **Migration process:**
@@ -235,28 +227,28 @@ If the automatic script fails or encounters issues, you can perform the migratio
 
 **Remove deprecated files:**
 
-```bash
-# Remove deprecated startup files
-rm src/common_crt0_cd.s 2>/dev/null || true
-rm src/crt0_cd.s 2>/dev/null || true
+```cmd
+REM Remove deprecated startup files
+del src\common_crt0_cd.s 2>nul
+del src\crt0_cd.s 2>nul
 
-# Clean build artifacts
-rm -rf build/* 2>/dev/null || true
-rm -rf dist/* 2>/dev/null || true
-rm src/*.o 2>/dev/null || true
-rm src/*.iso 2>/dev/null || true
+REM Clean build artifacts
+rmdir /s /q build 2>nul
+rmdir /s /q dist 2>nul
+del src\*.o 2>nul
+del src\*.iso 2>nul
 ```
 
 #### Step 4: Manual Makefile Update
 
 **Replace your project's Makefile:**
 
-```bash
-# Backup current Makefile
-cp src/Makefile src/Makefile_v2_backup
+```cmd
+REM Backup current Makefile
+copy src\Makefile src\Makefile_v2_backup
 
-# Copy new v3 Makefile from NeoCore standalone template
-cp path/to/neocore_v3/bootstrap/standalone/Makefile src/Makefile
+REM Copy new v3 Makefile from NeoCore standalone template
+copy path\to\neocore_v3\bootstrap\standalone\Makefile src\Makefile
 ```
 
 #### Step 5: Manual C Code Migration
@@ -328,29 +320,14 @@ cp path/to/neocore_v3/bootstrap/standalone/Makefile src/Makefile
 **Check for common issues:**
 
 1. **Verify project.xml syntax:**
-   ```bash
-   # Test XML parsing (if you have xmllint)
-   xmllint --noout src/project.xml
+   ```cmd
+   REM Test XML parsing (optional - requires XML tools)
+   REM On Windows, you can use PowerShell:
+   powershell -Command "[xml](Get-Content src\project.xml)"
    ```
 
-2. **Check for missed patterns:**
-   ```bash
-   # Search for old patterns that might have been missed
-   grep -r "Vec2short\|nc_log(" src/ --include="*.c" --include="*.h"
-   grep -r "= nc_get_position_" src/ --include="*.c"
-
-   # Check for obsolete structure members
-   grep -r "\.palCount\|\.paletteMgr\|\.spriteManager\|\.fixMgrMemoryPool" src/ --include="*.c"
-
-   # Check for labeled logging functions
-   grep -r "nc_log_\w\+\s*(" src/ --include="*.c" | grep '\".*\"'
-
-   # DATlib legacy patterns
-   grep -r "->palCount\|->currentStepNum" src/ --include="*.c"
-   ```
-
-3. **Compilation test:**
-   ```bash
+2. **Compilation test:**
+   ```cmd
    cd src
    make clean
    make
@@ -361,16 +338,23 @@ cp path/to/neocore_v3/bootstrap/standalone/Makefile src/Makefile
 **Review and fix .gitignore patterns:**
 
 1. **Check for incorrect patterns:**
-   ```bash
-   # Look for patterns that should be absolute
-   grep "^build/\|^dist/" ../.gitignore
+   ```cmd
+   REM Look for patterns that should be absolute
+   findstr /B "build/ dist/" ..\.gitignore
+
+   REM Check for missing build artifact patterns
+   findstr /C:"**/out/fix.bin" ..\.gitignore
+   findstr /C:"**/out/char.bin" ..\.gitignore
    ```
 
 2. **Fix patterns manually:**
-   ```bash
-   # Edit .gitignore to use absolute paths
-   build/ → /build/
-   dist/ → /dist/
+   ```cmd
+   REM Edit .gitignore to use absolute paths
+   REM Change build/ to /build/
+   REM Change dist/ to /dist/
+   REM Add missing patterns if not found:
+   REM **/out/fix.bin
+   REM **/out/char.bin
    ```
 
 #### Troubleshooting Manual Migration
@@ -396,76 +380,6 @@ cp path/to/neocore_v3/bootstrap/standalone/Makefile src/Makefile
    - Color values changed (check JOB_* constants)
    - Animation system behavior changes
    - Scroller system compatibility (may need rewrite)
-
-**Manual verification checklist:**
-
-- [ ] `project.xml` has `<platform>cd</platform>`
-- [ ] `<neocorePath>` moved to top level
-- [ ] Path templates use `{{neocore}}`
-- [ ] Sound section wrapped in `<cd>`
-- [ ] Compiler paths updated for v3
-- [ ] Deprecated files removed
-- [ ] All `Vec2short` replaced with `Position`
-- [ ] Position getters use output parameters
-- [ ] Logging calls updated
-- [ ] Project compiles without errors
-- [ ] .gitignore patterns use absolute paths
-
-### Automated Search & Replace Script
-```bash
-#!/bin/bash
-# migration-helper.sh
-
-echo "NeoCore v2 to v3 Migration Helper"
-
-# NeoCore Framework migrations
-find . -name "*.c" -o -name "*.h" | xargs sed -i 's/Vec2short/Position/g'
-# NOTE: nc_log_vec2short has been removed. Replace with:
-# nc_log_vec2short("label", pos) → nc_set_position_log(pos.x, pos.y); nc_log_info("label");
-
-# DATlib migrations
-find . -name "*.c" -o -name "*.h" | xargs sed -i 's/->palCount/->count/g'
-find . -name "*.c" -o -name "*.h" | xargs sed -i 's/->colNumber/\/\* MIGRATION NEEDED: colNumber removed \*\//g'
-find . -name "*.c" -o -name "*.h" | xargs sed -i 's/->topBk/\/\* MIGRATION NEEDED: topBk removed \*\//g'
-find . -name "*.c" -o -name "*.h" | xargs sed -i 's/->botBk/\/\* MIGRATION NEEDED: botBk removed \*\//g'
-find . -name "*.c" -o -name "*.h" | xargs sed -i 's/->currentStepNum/->stepNum/g'
-
-echo "Automated replacements completed. Manual review required for:"
-echo "- Position getter function calls"
-echo "- Logging function calls"
-echo "- Scroller system (complete rewrite needed)"
-echo "- Animation system (manual updates needed)"
-```
-
-### Validation Script
-```bash
-#!/bin/bash
-# validate-migration.sh
-
-echo "Checking for common migration issues..."
-
-# Check for old function patterns
-echo "=== Checking for old position getter patterns ==="
-grep -r "= nc_get_position_" . --include="*.c" && echo "⚠️  Found old position getter patterns"
-
-# Check for old logging patterns
-echo "=== Checking for old logging patterns ==="
-grep -r "nc_log(" . --include="*.c" && echo "⚠️  Found old nc_log() calls"
-
-# Check for removed functions
-echo "=== Checking for removed functions ==="
-grep -r "nc_clear_vram(" . --include="*.c" && echo "⚠️  Found nc_clear_vram() calls - replace with nc_clear_display() or nc_reset()"
-
-# Check for removed structures
-echo "=== Checking for removed structures ==="
-grep -r "animation \*" . --include="*.c" --include="*.h" && echo "⚠️  Found animation* usage"
-
-# Check for removed members
-echo "=== Checking for removed members ==="
-grep -r "->colNumber\|->topBk\|->botBk\|->maxStep\|->currentAnimation" . --include="*.c" && echo "⚠️  Found removed member access"
-
-echo "Validation complete. Review warnings above."
-```
 
 ## Animator Export
 
@@ -1099,25 +1013,5 @@ nc_log_next_line();
 - Better const-correctness
 - More logical structure layouts
 - Improved API design
-
-## Conclusion
-
-The migration from NeoCore v2 to v3 is a significant undertaking that will require substantial code changes. However, the improvements in performance, capabilities, and code quality make this migration worthwhile for ongoing projects.
-
-**Expected Timeline:**
-- **Small Projects**: 1-2 days
-- **Medium Projects**: 1-2 weeks
-- **Large Projects**: 2-4 weeks
-
-**Critical Success Factors:**
-1. **Complete backup** before starting
-2. **Methodical approach** following this guide
-3. **Thorough testing** of migrated functionality
-4. **Visual validation** of color and animation changes
-
-**Support Resources:**
-- NeoCore v3 documentation
-- Community forums
-- Migration validation scripts (provided above)
 
 Good luck with your migration!
