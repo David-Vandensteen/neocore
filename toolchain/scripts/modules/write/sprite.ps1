@@ -242,7 +242,6 @@ function Write-Sprite {
 
   # Debug: Check what files were created after BuildChar.exe execution
   Write-Host "Checking for files created by BuildChar.exe..." -ForegroundColor Yellow
-  Write-Host "Contents of 'out' directory after BuildChar.exe:" -ForegroundColor Yellow
   if (Test-Path "out") {
     $outFiles = Get-ChildItem "out" -ErrorAction SilentlyContinue
     if ($outFiles) {
@@ -302,14 +301,11 @@ function Write-Sprite {
   # Debug: Check where files were created
   Write-Host "Checking for output files after CharSplit.exe..." -ForegroundColor Yellow
   Write-Host "Looking for: $OutputFile.$Format" -ForegroundColor Cyan
-  Write-Host "Current directory contents after CharSplit:" -ForegroundColor Yellow
-  Get-ChildItem . | ForEach-Object { Write-Host "  $($_.Name)" -ForegroundColor Gray }
 
   # Also check the target directory
   $targetDir = Split-Path $OutputFile -Parent
   if ($targetDir -and (Test-Path $targetDir)) {
-    Write-Host "Target directory ($targetDir) contents:" -ForegroundColor Yellow
-    Get-ChildItem $targetDir | ForEach-Object { Write-Host "  $($_.Name)" -ForegroundColor Gray }
+    Write-Host "Target directory ($targetDir)" -ForegroundColor Yellow
   }
 
   # Look for any .cd files in current directory
