@@ -1,29 +1,32 @@
 # NeoCore v2 to v3 Migration Guide
 
-This comprehensive guide will help you migrate your NeoCore v2.x projects to NeoCore v3.0.0. The migration involves both **NeoCore framework changes** and **DATlib library changes**.
+This guide helps you migrate your NeoCore v2.x projects to NeoCore v3.0.0.
 
 ## Table of Contents
-1. [Migration Overview](#migration-overview)
-2. [Migration Tools and Scripts](#migration-tools-and-scripts)
-3. [Animator Export](#animator-export)
-4. [NeoCore Framework Migration](#neocore-framework-migration)
-5. [DATlib Migration](#datlib-migration)
-6. [Step-by-Step Migration Process](#step-by-step-migration-process)
-7. [Testing Your Migration](#testing-your-migration)
-8. [Common Issues and Solutions](#common-issues-and-solutions)
+1. [Overview](#overview)
+2. [Prerequisites and Backup](#prerequisites-and-backup)
+3. [Migration Script](#migration-script)
+4. [Animator Export](#animator-export)
+5. [NeoCore Framework Migration](#neocore-framework-migration)
+6. [DATlib Migration](#datlib-migration)
+7. [Conclusion](#conclusion)
 
-## Migration Overview
+## Overview
 
-### What's Changed
-- **NeoCore Framework**: Position types, function signatures, logging API
+**Main changes:**
+- **NeoCore**: Position types, function signatures, logging API
 - **DATlib 0.2 → 0.3**: Complete sprite/scroller system redesign, new type system
-- **Build System**: Updated toolchain and configuration
+- **Build**: Updated toolchain and configuration
 
-## Migration Tools and Scripts
+## Prerequisites and Backup
 
-### Official Migration Script (Recommended)
+**⚠️ IMPORTANT: Before starting any migration (automatic or manual), always backup your complete project.**
 
-NeoCore v3 includes an official migration script that automates many migration tasks:
+## Migration Script
+
+**Official script (recommended):**
+
+NeoCore v3 includes a migration script that automates many migration tasks:
 
 ```bash
 # Usage:
@@ -38,7 +41,6 @@ cd bootstrap\scripts\project
   - **Always overwrites**: `<includePath>` with `{{neocore}}\src-lib\include` (required for v3 compatibility)
   - Updates compiler configuration with v3 paths
   - **Migrates `<sound>` section**: Automatically wraps existing sound content in `<cd>` structure, preserving all sound elements
-- ✅ **Build directory validation**: Checks for existing build directory and requires cleanup before proceeding
 - ✅ **Code analysis**: Scans C files for v2/v3 compatibility issues and legacy patterns:
   - **Position function signatures**: Detects functions that return Vec2short instead of using output parameters:
     - `nc_get_position_gfx_animated_sprite()` return values and `.x/.y` access
@@ -79,7 +81,76 @@ cd bootstrap\scripts\project
 1. Run the script with your project paths
 2. Review compatibility warnings for C code
 3. Manually update C code based on analysis results
-4. Test your migrated project
+4. Export animations if your project uses animated sprites (see Animator Export section)
+
+## Animator Export
+
+⚠️ **CRITICAL STEP - MANDATORY FOR PROJECTS WITH ANIMATED SPRITES** ⚠️
+
+**This step is REQUIRED if your NeoCore v2 project contains animated sprites.** Skipping this export will result in **runtime crashes** when running your migrated project on NeoCore v3.
+
+After migrating your NeoCore v2 project, you **must** re-export your animations from the Animator tool to ensure compatibility with NeoCore v3. The animation data format has changed between v2 and v3, making this export step essential for projects using animated sprites.
+
+### When is this step required?
+
+✅ **Export Required:** Your project uses animated sprites\
+❌ **Export Not Needed:** Your project only uses static sprites without animations
+
+### Export Process Overview
+
+The Animator export process involves three main steps:
+1. **Access the Animator menu**
+2. **Browse to your project directory**
+3. **Execute the export operation**
+
+### Step-by-Step Visual Guide
+
+#### Prerequisites: Launching the Animator
+
+Before you can export your animations, you need to launch the Animator tool from your project directory:
+
+1. **Navigate to your project source directory** (where your project files are located)
+2. **Open a terminal/command prompt** in this directory
+3. **Execute the command:**
+   ```bash
+   mak animator
+   ```
+
+#### Step 1: Access the Animator Menu
+
+<img src="images/migration/animator-menu.png" alt="Animator Menu" width="600">
+
+*Figure 1: Open the Animator menu to access export options*
+
+Navigate to the Animator application and access the main menu where the export functionality is located.
+
+#### Step 2: Browse to Project Directory
+
+<img src="images/migration/animator-browse.png" alt="Animator Browse" width="600">
+
+*Figure 2: Browse and select your project directory for export*
+
+Use the directory browser to navigate to your NeoCore v2 project directory. Ensure you select the correct project folder that contains your animation assets.
+
+#### Step 3: Execute Export Operation
+
+<img src="images/migration/animator-export.png" alt="Animator Export" width="600">
+
+*Figure 3: Execute the export process to generate compatible animation files*
+
+Initiate the export process. The Animator will generate the necessary files in a format compatible with NeoCore v3.
+
+**Critical Notes:**
+- 🚨 **MANDATORY**: This export is **required** for projects with animated sprites - skipping will cause **runtime crashes**
+- 💾 **Always backup** your project before running the export
+
+### Consequences of Skipping This Step
+
+If you skip the Animator export for a project with animated sprites:
+- ❌ **Runtime crashes** when loading animation data
+- ❌ **Incompatible animation format** between v2 and v3
+- ❌ **Missing or corrupted sprite animations**
+- ❌ **Game will fail to start** or crash during sprite initialization
 
 ### Manual Migration Procedure (Fallback)
 
@@ -87,33 +158,22 @@ If the automatic script fails or encounters issues, you can perform the migratio
 
 #### Prerequisites for Manual Migration
 
-1. **Backup your project:**
-   ```bash
-   # Create a full backup
-   cp -r your_project your_project_backup
-
-   # Or use git
-   git tag pre-neocore-v3-migration
-   git commit -am "Pre-migration backup"
-   ```
-
-2. **Ensure you have NeoCore v3 source:**
-   - Download or clone NeoCore v3.0.0
-   - Verify the version in `manifest.xml`
+**Ensure you have NeoCore v3 source:**
+- Download or clone NeoCore v3.0.0
 
 #### Step 1: Manual NeoCore Library Update
 
 **Replace the NeoCore library files:**
 
-1. **Backup your complete project** (create a full copy or git commit)
-2. **Replace with the new v3 library** from your NeoCore v3 installation
-3. **Update the toolchain** if you have custom modifications
-4. **Copy new externs.h file:**
-   ```bash
-   # Copy the new v3 externs.h file to your project
-   copy neocore_v3_installation\bootstrap\standalone\externs.h your_project\src\externs.h
-   ```
-5. **Replace any other NeoCore-specific folders** as needed
+1. **Backup your complete project** (create a full copy)
+2. **Replace NeoCore library components:**
+   - Delete your existing `neocore\src-lib` folder (the old NeoCore v2 library)
+   - Copy the `src-lib` folder from your NeoCore v3 installation to `neocore\src-lib`
+   - Delete your existing `neocore\toolchain` folder
+   - Copy the `toolchain` folder from your NeoCore v3 installation to `neocore\toolchain`
+3. **Copy new externs.h file:**
+   - Copy `externs.h` from `neocore_v3_installation\bootstrap\standalone\`
+   - Place it in your project's `src\` directory, replacing the old one
 
 #### Step 2: Manual Project.xml Migration
 
@@ -227,29 +287,21 @@ If the automatic script fails or encounters issues, you can perform the migratio
 
 **Remove deprecated files:**
 
-```cmd
-REM Remove deprecated startup files
-del src\common_crt0_cd.s 2>nul
-del src\crt0_cd.s 2>nul
+1. **Delete deprecated startup files:**
+   - Remove `src\common_crt0_cd.s` if it exists
+   - Remove `src\crt0_cd.s` if it exists
 
-REM Clean build artifacts
-rmdir /s /q build 2>nul
-rmdir /s /q dist 2>nul
-del src\*.o 2>nul
-del src\*.iso 2>nul
-```
+2. **Clean build artifacts:**
+   - Delete the `build` directory
+   - Delete the `dist` directory
 
 #### Step 4: Manual Makefile Update
 
 **Replace your project's Makefile:**
 
-```cmd
-REM Backup current Makefile
-copy src\Makefile src\Makefile_v2_backup
-
-REM Copy new v3 Makefile from NeoCore standalone template
-copy path\to\neocore_v3\bootstrap\standalone\Makefile src\Makefile
-```
+1. **Copy new v3 Makefile:**
+   - Copy the Makefile from `neocore_v3_installation\bootstrap\standalone\Makefile`
+   - Place it in your project's `src\Makefile` location
 
 #### Step 5: Manual C Code Migration
 
@@ -315,157 +367,44 @@ copy path\to\neocore_v3\bootstrap\standalone\Makefile src\Makefile
    sprite->currentStepNum → sprite->stepNum
    ```
 
-#### Step 6: Manual Validation
+#### Step 6: Animator Export (If Required)
+
+**⚠️ CRITICAL: Export animations if your project uses animated sprites**
+
+If your project contains animated sprites, you **must** perform the Animator export step before validation.
+
+**→ See the complete [Animator Export section](#animator-export) above for detailed instructions.**
+
+**Skip this step only if your project uses static sprites exclusively.**
+
+#### Step 7: Manual Validation
 
 **Check for common issues:**
 
-1. **Verify project.xml syntax:**
-   ```cmd
-   REM Test XML parsing (optional - requires XML tools)
-   REM On Windows, you can use PowerShell:
-   powershell -Command "[xml](Get-Content src\project.xml)"
-   ```
-
-2. **Compilation test:**
+1. **Compilation test:**
    ```cmd
    cd src
-   make clean
-   make
+   mak clean
+   mak sprite
+   mak
    ```
 
-#### Step 7: Manual .gitignore Check
+#### Step 8: Manual .gitignore Check
 
 **Review and fix .gitignore patterns:**
 
 1. **Check for incorrect patterns:**
-   ```cmd
-   REM Look for patterns that should be absolute
-   findstr /B "build/ dist/" ..\.gitignore
-
-   REM Check for missing build artifact patterns
-   findstr /C:"**/out/fix.bin" ..\.gitignore
-   findstr /C:"**/out/char.bin" ..\.gitignore
-   ```
+   - Open your `.gitignore` file in a text editor
+   - Look for patterns that use relative paths like `build/` or `dist/`
+   - Check if build artifact patterns are missing: `**/out/fix.bin` and `**/out/char.bin`
 
 2. **Fix patterns manually:**
-   ```cmd
-   REM Edit .gitignore to use absolute paths
-   REM Change build/ to /build/
-   REM Change dist/ to /dist/
-   REM Add missing patterns if not found:
-   REM **/out/fix.bin
-   REM **/out/char.bin
-   ```
-
-#### Troubleshooting Manual Migration
-
-**Common manual migration issues:**
-
-1. **XML parsing errors:**
-   - Check for unclosed tags
-   - Verify proper nesting
-   - Ensure `<cd>` wrapper around sound elements
-
-2. **Compilation errors:**
-   - Missing `Position` declarations
-   - Old function call patterns
-   - Incorrect parameter counts
-
-3. **Linking errors:**
-   - Wrong library paths in project.xml
-   - Missing CRT path configuration
-   - Incorrect system file paths
-
-4. **Runtime issues:**
-   - Color values changed (check JOB_* constants)
-   - Animation system behavior changes
-   - Scroller system compatibility (may need rewrite)
-
-## Animator Export
-
-⚠️ **CRITICAL STEP - MANDATORY FOR PROJECTS WITH ANIMATED SPRITES** ⚠️
-
-**This step is REQUIRED if your NeoCore v2 project contains animated sprites.** Skipping this export will result in **runtime crashes** when running your migrated project on NeoCore v3.
-
-After migrating your NeoCore v2 project, you **must** re-export your animations from the Animator tool to ensure compatibility with NeoCore v3. The animation data format has changed between v2 and v3, making this export step essential for projects using animated sprites.
-
-### When is this step required?
-
-✅ **Export Required:** Your project uses animated sprites (`.spr` files with animation data)
-❌ **Export Not Needed:** Your project only uses static sprites without animations
-
-### Export Process Overview
-
-The Animator export process involves three main steps:
-1. **Access the Animator menu**
-2. **Browse to your project directory**
-3. **Execute the export operation**
-
-### Step-by-Step Visual Guide
-
-#### Prerequisites: Launching the Animator
-
-Before you can export your animations, you need to launch the Animator tool from your project directory:
-
-1. **Navigate to your project source directory** (where your project files are located)
-2. **Open a terminal/command prompt** in this directory
-3. **Execute the command:**
-   ```bash
-   mak animator
-   ```
-
-#### Step 1: Access the Animator Menu
-
-<img src="images/migration/animator-menu.png" alt="Animator Menu" width="600">
-
-*Figure 1: Open the Animator menu to access export options*
-
-Navigate to the Animator application and access the main menu where the export functionality is located.
-
-#### Step 2: Browse to Project Directory
-
-<img src="images/migration/animator-browse.png" alt="Animator Browse" width="600">
-
-*Figure 2: Browse and select your project directory for export*
-
-Use the directory browser to navigate to your NeoCore v2 project directory. Ensure you select the correct project folder that contains your animation assets.
-
-#### Step 3: Execute Export Operation
-
-<img src="images/migration/animator-export.png" alt="Animator Export" width="600">
-
-*Figure 3: Execute the export process to generate compatible animation files*
-
-Initiate the export process. The Animator will generate the necessary files in a format compatible with NeoCore v3.
-
-### Export Completion
-
-Once the export process is complete:
-- ✅ Animation files are converted to v3 format
-- ✅ Asset references are updated for compatibility
-- ✅ Your project is ready for the migration script
-
-**Critical Notes:**
-- 🚨 **MANDATORY**: This export is **required** for projects with animated sprites - skipping will cause **runtime crashes**
-- 💾 **Always backup** your project before running the export
-- ✅ **Verify** that all animations export successfully
-- 📋 **Check the export logs** for any warnings or errors
-- 🔍 **Test animations** after export to ensure they work correctly
-
-### Consequences of Skipping This Step
-
-If you skip the Animator export for a project with animated sprites:
-- ❌ **Runtime crashes** when loading animation data
-- ❌ **Incompatible animation format** between v2 and v3
-- ❌ **Missing or corrupted sprite animations**
-- ❌ **Game will fail to start** or crash during sprite initialization
-
-### Next Steps
-
-After successfully exporting your animations:
-1. Proceed with the [Migration Tools and Scripts](#migration-tools-and-scripts)
-2. Run the official migration script
-3. Validate your migrated project
+   - Edit your `.gitignore` file to use absolute paths
+   - Change `build/` to `/build/`
+   - Change `dist/` to `/dist/`
+   - Add missing patterns if not found:
+     - `**/out/fix.bin`
+     - `**/out/char.bin`
 
 ## NeoCore Framework Migration
 
@@ -856,7 +795,10 @@ void clearFixLayer3();
 #define VRAM_SPR_ADDR(s)   ((s)<<6)
 #define VRAM_FIX_ADDR(x,y) (0x7000+(((x)<<5)+(y)))
 #define VRAM_SHRINK_ADDR(s) (0x8000|(s))
-// ... many more VRAM macros
+# ... many more VRAM macros
+```
+
+## Conclusion
 ```
 
 ## Step-by-Step Migration Process
@@ -911,107 +853,8 @@ void clearFixLayer3();
    - Verify frame rate performance
    - Test under different load conditions
 
-## Common Issues and Solutions
+## Conclusion
 
-### Issue 1: Build Directory Exists Error
-**Problem:** Migration script stops with "BUILD DIRECTORY EXISTS" error
+NeoCore v3 migration requires updating code but brings better performance and new features.
 
-**Root Cause:** An existing build directory from previous builds conflicts with migration process
-
-**Solution:** Remove the build directory before running migration:
-```bash
-# Windows
-rmdir /s /q "path\to\your\project\build"
-
-# Linux/macOS
-rm -rf path/to/your/project/build
-```
-
-### Issue 2: Compilation Errors with Position Getters
-**Problem:**
-```c
-Vec2short pos = nc_get_position_gfx_animated_sprite(player); // Error
-```
-
-**Solution:**
-```c
-Position pos;
-nc_get_position_gfx_animated_sprite(&player, &pos);
-```
-
-### Issue 3: Job Meter Colors Look Wrong
-**Problem:** Colors appear different after migration
-
-**Root Cause:** Job meter color constants have completely different values
-
-**Solution:** Review and update all hardcoded color usage:
-```c
-// Check if you're using any JOB_* constants
-// Verify visually that colors match your expectations
-jobMeterColor(JOB_RED); // This is now a different red!
-```
-
-### Issue 4: Scroller System Crashes
-**Problem:** Scroller code causes crashes or displays incorrectly
-
-**Root Cause:** Scroller structures completely redesigned
-
-**Solution:** Complete rewrite required - the old API is incompatible
-
-### Issue 5: Animation System Not Working
-**Problem:** Sprite animations don't play correctly
-
-**Root Cause:** `animation` structure removed, `aSprite` structure changed
-
-**Solution:**
-1. Remove all `animation*` references
-2. Update `aSprite` member access patterns
-3. Use new animation control functions
-
-### Issue 6: Logging Output Missing or Incorrect
-**Problem:** Log messages don't appear or format incorrectly
-
-**Solution:**
-```c
-// OLD
-nc_log_word("HP", player_hp);
-
-// NEW
-nc_log_info("HP: ");
-nc_log_word(player_hp);
-nc_log_next_line();
-```
-
-## Performance Considerations
-
-### Memory Usage Changes
-- **aSprite**: 50 → 42 bytes (16% reduction)
-- **scroller**: 58 → 76 bytes (31% increase)
-- **Position getters**: No structure copying overhead
-
-### Performance Improvements
-- Position functions avoid structure copying
-- Better memory layout with consistent types
-- Enhanced color streaming capabilities
-- More efficient animation system
-
-## Benefits After Migration
-
-### 1. Performance Improvements
-- Reduced memory copying overhead
-- Better cache performance with consistent types
-- More efficient sprite animation system
-
-### 2. Enhanced Capabilities
-- **Color Streams**: Advanced color effects system
-- **Enhanced Fix Layer**: Multi-layer support with job system
-- **VRAM Manipulation**: Direct VRAM access macros
-- **Better Logging**: More flexible logging system
-
-### 3. Code Quality
-- Consistent type system (`ushort` vs mixed `WORD`/`BYTE`)
-- Better const-correctness
-- More logical structure layouts
-- Improved API design
-
-Good luck with your migration!
+Follow the migration script or manual steps above. Good luck!
