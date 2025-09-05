@@ -75,7 +75,7 @@
         - **Now**: Manual execution required: `mak sprite` → `mak` → `mak run:raine`
         - **Reason**: Better control over build process, clearer separation of build phases, faster development cycle by leveraging cache (skip sprite generation when unchanged), and reduced build time
         - **Usage examples**:
-          ```bash
+          ```cmd
           # Initial development (do everything)
           mak sprite && mak && mak run:raine
 
@@ -97,21 +97,8 @@
       - **Sound structure changes**: Reorganized sound.cd.cdda hierarchy
       - **Path resolution**: Improved neocorePath and buildPath handling mechanisms
     - **C API Changes**:
-      - **Function removals**:
-        - nc_log() function removed - use nc_log_info() for logging functionality
-        - nc_clear_vram() function removed - use nc_clear_display() to clear display or nc_reset() for full reset
-      - **Type removals**:
-        - typedef char Hex_Color[3]; removed - no longer supported
-        - typedef char Hex_Packed_Color[5]; removed - no longer supported
-      - **GFX getter functions**: Breaking signature changes - now require Position* parameter:
-        - nc_get_position_gfx_animated_sprite() now takes Position* instead of returning values
-        - nc_get_position_gfx_animated_sprite_physic() now takes Position* instead of returning values
-        - nc_get_position_gfx_picture() now takes Position* instead of returning values
-        - nc_get_position_gfx_picture_physic() now takes Position* instead of returning values
-        - nc_get_position_gfx_scroller() now takes Position* instead of returning values
-      - **Function signatures**: All coordinate-related functions standardized to short type
-      - **Logging behavior changes**: nc_log_info(), nc_log_short(), nc_log_word(), and other nc_log_* functions no longer automatically add line breaks - use nc_log_info_line() for automatic line breaks or nc_log_next_line() to manually control line breaks
-      - **Logging parameter changes**: Some logging functions no longer accept the `label` parameter - use simplified function signatures without label parameter
+      - **Breaking changes**: Multiple function signature changes, type removals, and API restructuring
+      - **Complete migration guide**: See [NeoCore v2 to v3 Migration Guide](docs/MIGRATION_GUIDE_v2Tov3.md#manual-c-code-migration) for comprehensive list of all breaking changes, deprecated patterns, and migration examples.
   - **NEW C API FUNCTIONS**:
     - **Logging Functions**:
       - nc_log_info_line() - Log with automatic line break

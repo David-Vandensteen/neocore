@@ -7,7 +7,63 @@ This guide helps you migrate your NeoCore v2.x projects to NeoCore v3.0.0.
 2. [Prerequisites and Backup](#prerequisites-and-backup)
 3. [Migration Script](#migration-script)
 4. [Animator Export](#animator-export)
-5. [NeoCore Framework Migration](#neocore-framework-migration)
+5. [NeoCore Framewor3. **Initialization signature changes:**
+   ```bash
+   # Core initialization:
+   nc_init_neocore(enum_neo_geo_rom_type) → nc_init_neocore("rom_type")
+
+   # Rom type parameter changed from enum to string constant:
+   CARTRIDGE_STANDARD → "CARTRIDGE_STANDARD"
+   CARTRIDGE_COMPRESSED_68K → "CARTRIDGE_COMPRESSED_68K"
+   MVS → "MVS"
+   ```
+
+4. **Struct member type changes:**
+   ```bash
+   # In structs containing byte pointers:
+   BYTE* data; → char* data;
+
+   # In sprite-related structs (width/height size changes):
+   BYTE width; → WORD width;
+   BYTE height; → WORD height;
+
+   # Example in Picture and Animated_Sprite:
+   typedef struct Picture {
+       char* data;      // was BYTE*
+       WORD width;      // was BYTE
+       WORD height;     // was BYTE
+       // ... other members
+   } Picture;
+   ```
+
+5. **API name changes (sprite functions):**
+   ```bash
+   # Sprite functions renamed (get/set pattern standardized):
+   nc_sprite_get_z_order() → nc_sprite_z_order_get()
+   nc_sprite_set_z_order() → nc_sprite_z_order_set()
+   nc_sprite_get_flip() → nc_sprite_flip_get()
+   nc_sprite_set_flip() → nc_sprite_flip_set()
+   nc_sprite_get_shrink() → nc_sprite_shrink_get()
+   nc_sprite_set_shrink() → nc_sprite_shrink_set()
+   nc_sprite_get_position() → nc_sprite_position_get()
+   nc_sprite_set_position() → nc_sprite_position_set()
+
+   # Picture functions renamed:
+   nc_picture_get_visible() → nc_picture_visible_get()
+   nc_picture_set_visible() → nc_picture_visible_set()
+   ```
+
+6. **Z-order type change:**
+   ```bash
+   # Z-order parameter/return type changed from BYTE to WORD:
+   BYTE z_order → WORD z_order
+
+   # Example:
+   WORD z = nc_sprite_z_order_get(sprite_index);    // was BYTE
+   nc_sprite_z_order_set(sprite_index, z_order);   // z_order is now WORD
+   ```
+
+7. **Position getter functions:** Migration](#neocore-framework-migration)
 6. [DATlib Migration](#datlib-migration)
 7. [Conclusion](#conclusion)
 
@@ -167,10 +223,10 @@ If the automatic script fails or encounters issues, you can perform the migratio
 
 1. **Backup your complete project** (create a full copy)
 2. **Replace NeoCore library components:**
-   - Delete your existing `neocore\src-lib` folder (the old NeoCore v2 library)
-   - Copy the `src-lib` folder from your NeoCore v3 installation to `neocore\src-lib`
-   - Delete your existing `neocore\toolchain` folder
-   - Copy the `toolchain` folder from your NeoCore v3 installation to `neocore\toolchain`
+   - Delete your existing `neocore\src-lib` folder in your project
+   - Copy the `src-lib` folder from your NeoCore v3 installation to your project's `neocore\src-lib`
+   - Delete your existing `neocore\toolchain` folder in your project
+   - Copy the `toolchain` folder from your NeoCore v3 installation to your project's `neocore\toolchain`
 3. **Copy new externs.h file:**
    - Copy `externs.h` from `neocore_v3_installation\bootstrap\standalone\`
    - Place it in your project's `src\` directory, replacing the old one
@@ -323,7 +379,31 @@ If the automatic script fails or encounters issues, you can perform the migratio
    nc_get_position_gfx_animated_sprite(&sprite, &pos);
    ```
 
-3. **Relative position function:**
+3. **Position getter functions with direct access:**
+   ```bash
+   # Find patterns like:
+   nc_get_position_gfx_animated_sprite(sprite).x
+   nc_get_position_gfx_picture(picture).y
+   nc_get_position_gfx_scroller(scroller).x
+   nc_get_position_gfx_animated_sprite_physic(sprite).y
+   nc_get_position_gfx_picture_physic(picture).x
+
+8. **Position getter functions with direct access:**
+   ```bash
+   # Find patterns like:
+   nc_get_position_gfx_animated_sprite(sprite).x
+   nc_get_position_gfx_picture(picture).y
+   nc_get_position_gfx_scroller(scroller).x
+   nc_get_position_gfx_animated_sprite_physic(sprite).y
+   nc_get_position_gfx_picture_physic(picture).x
+
+   # Replace with:
+   Position pos;
+   nc_get_position_gfx_animated_sprite(&sprite, &pos);
+   // Then use pos.x or pos.y
+   ```
+
+9. **Relative position function:**
    ```bash
    # Find patterns like:
    Vec2short relative = nc_get_relative_position(box, world_coord);
@@ -333,7 +413,7 @@ If the automatic script fails or encounters issues, you can perform the migratio
    nc_get_relative_position(&relative, box, world_coord);
    ```
 
-4. **Logging system migration:**
+10. **Logging system migration:**
    ```bash
    # Replace basic logging:
    nc_log("message") → nc_log_info_line("message")
@@ -349,22 +429,115 @@ If the automatic script fails or encounters issues, you can perform the migratio
 
    # Replace type-specific logging:
    nc_log_vec2short("Pos", pos) → nc_set_position_log(pos.x, pos.y); nc_log_info("Pos");
+
+   # Note: Logging functions no longer add automatic line breaks
+   # Use nc_log_info_line() for automatic line breaks or nc_log_next_line() manually
    ```
 
-5. **Structure member changes:**
+11. **Removed functions and types:**
+   ```bash
+   # Replace removed function:
+   nc_clear_vram() → nc_clear_display() or nc_reset()
+
+   # Remove removed types (no replacement needed):
+   typedef char Hex_Color[3]; → Remove (no longer supported)
+   typedef char Hex_Packed_Color[5]; → Remove (no longer supported)
+   ```
+
+12. **Display function return values:**
+   ```bash
+   # Display functions now return sprite index (WORD) instead of void:
+   nc_display_gfx_picture() → now returns sprite index
+   nc_display_gfx_animated_sprite() → now returns sprite index
+   nc_display_gfx_scroller() → now returns sprite index
+   nc_init_display_gfx_picture() → now returns sprite index
+   nc_init_display_gfx_animated_sprite() → now returns sprite index
+   nc_init_display_gfx_scroller() → now returns sprite index
+
+   # You can capture the sprite index if needed:
+   WORD sprite_index = nc_display_gfx_picture(&picture);
+   ```
+
+13. **DATlib structure changes:**
+   ```bash
+   # DATlib palCount member deprecated, replaced with count:
+   palette_data.palCount → palette_data.count
+   paletteInfo->palCount → paletteInfo->count
+
+   # NeoCore object palInfo->palCount changes:
+   object.palInfo->palCount → object.palInfo->count
+   object_ptr->palInfo->palCount → object_ptr->palInfo->count
+
+   # DATlib animated sprite member renamed:
+   sprite.currentStepNum → sprite.stepNum
+   sprite_ptr->currentStepNum → sprite_ptr->stepNum
+   ```
+
+14. **DATlib type changes:**
+   ```bash
+   # DATlib type replacements:
+   WORD type_var → ushort type_var
+   DWORD type_var → uint type_var
+   ```
+
+15. **Removed structure members (NeoCore v3):**
+   ```bash
+   # These structure members were removed - remove all usage:
+   .palCount         → Remove (handled internally)
+   .paletteMgr       → Remove (handled internally)
+   .spriteManager    → Remove (handled internally)
+   .fixMgrMemoryPool → Remove (handled internally)
+   .sprites          → Check v3 documentation for replacement
+   .frames           → Check v3 documentation for replacement
+   ```
+
+16. **C89/C90 compatibility (variable declarations):**
+   ```bash
+   # NeoCore v3 requires C89/C90 - move ALL variable declarations to function start:
+
+   // ❌ WRONG (C99 style):
+   void function() {
+       int a = 5;
+       some_code();
+       int b = 10;  // Declaration after code
+   }
+
+   // ✅ CORRECT (C89/C90 style):
+   void function() {
+       int a = 5;
+       int b;       // All declarations at top
+       some_code();
+       b = 10;
+   }
+   ```
+
+7. **Structure member changes:**
    ```bash
    # Remove obsolete structure members (handled internally in v3):
    .palCount → Remove usage (palette count managed internally)
    .paletteMgr → Remove usage (palette manager handled internally)
    .spriteManager → Remove usage (sprite manager handled internally)
    .fixMgrMemoryPool → Remove usage (memory management handled internally)
+   .sprites → Remove usage (handled internally)
+   .frames → Remove usage (handled internally)
    ```
 
-6. **DATlib type changes:**
+8. **DATlib structure changes:**
    ```bash
    # Global replacements:
    paletteInfo->palCount → paletteInfo->count
    sprite->currentStepNum → sprite->stepNum
+
+   # For nested palette access:
+   object.palInfo->palCount → object.palInfo->count
+   object->palInfo->palCount → object->palInfo->count
+   ```
+
+9. **C89/C90 compliance (variable declarations):**
+   ```bash
+   # Ensure all variable declarations are at the beginning of blocks
+   # Move any variables declared after code statements to the top of the function
+   # This is required for C89/C90 compliance used by NeoCore
    ```
 
 #### Step 6: Animator Export (If Required)
