@@ -98,7 +98,7 @@
       - **Path resolution**: Improved neocorePath and buildPath handling mechanisms
     - **C API Changes**:
       - **Breaking changes**: Multiple function signature changes, type removals, and API restructuring
-      - **Complete migration guide**: See [NeoCore v2 to v3 Migration Guide](docs/MIGRATION_GUIDE_v2Tov3.md#manual-c-code-migration) for comprehensive list of all breaking changes, deprecated patterns, and migration examples.
+      - **Complete migration guide**: See [NeoCore v2 to v3 Migration Guide](docs/migration_guides/v2tov3/v2tov3.md#manual-c-code-migration) for comprehensive list of all breaking changes, deprecated patterns, and migration examples.
   - **NEW C API FUNCTIONS**:
     - **Logging Functions**:
       - nc_log_info_line() - Log with automatic line break
