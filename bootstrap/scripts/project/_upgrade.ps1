@@ -95,9 +95,19 @@ function Main {
     switch ($comparisonResult) {
         "conflict" { return $false }
         "error" { return $false }
-        "minor" { Update-MinorVersion }
+        "minor" {
+            if (-not (Update-MinorVersion)) {
+                Write-Host "Migration failed during minor version update" -ForegroundColor Red
+                Write-Log -File $logFile -Level "ERROR" -Message "Migration failed during minor version update"
+                return $false
+            }
+        }
         "major" {
-            Update-MajorVersion
+            if (-not (Update-MajorVersion)) {
+                Write-Host "Migration failed during major version update" -ForegroundColor Red
+                Write-Log -File $logFile -Level "ERROR" -Message "Migration failed during major version update"
+                return $false
+            }
 
             # Remove obsolete files
             if (-not (Remove-ObsoleteFiles -ProjectSrcPath $ProjectSrcPath -LogFile $logFile)) {
@@ -154,15 +164,17 @@ function Copy-Toolchain {
         Write-Log -File $logFile -Level "ERROR" -Message "Migration failed during NeoCore files copy"
         return $false
     }
+    return $true
 }
 
-function Copy-Makefile {
+function Update-Makefile {
     # Overwrite Makefile with NeoCore v3 version
     if (-not (Copy-Makefile -ProjectSrcPath $ProjectSrcPath -SourceNeocorePath $sourceNeocorePath -LogFile $logFile)) {
         Write-Host "Migration failed during Makefile update" -ForegroundColor Red
         Write-Log -File $logFile -Level "ERROR" -Message "Migration failed during Makefile update"
         return $false
     }
+    return $true
 }
 
 function Copy-ExternsHeader {
@@ -199,18 +211,20 @@ function Update-MajorVersion {
     if (-not (Copy-Toolchain)) {
         return $false
     }
-    if (-not (Copy-Makefile)) {
+    if (-not (Update-Makefile)) {
         return $false
     }
     if (-not (Copy-ExternsHeader)) {
         return $false
     }
+    return $true
 }
 
 function Update-MinorVersion {
     if (-not (Copy-Toolchain)) {
         return $false
     }
+    return $true
 }
 
 # Execute main function and handle result
