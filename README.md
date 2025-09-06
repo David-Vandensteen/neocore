@@ -3,7 +3,7 @@
 
 ![](https://media.giphy.com/media/TLfbmyW3523z24WONz/giphy.gif) ![](https://media.giphy.com/media/iFUh5AEPD4XfvpsvJh/giphy.gif) ![](https://media.giphy.com/media/iJObJsdx6ud4zI7cS1/giphy.gif)
 
-## 🎯 Overview
+## 🎯 Overview<a name="overview"></a>
 
 Neocore is a library and toolchain for developing on Neo Geo CD.
 
@@ -11,7 +11,7 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
 
 ### ✨ Key Features
 - 🚀 **High abstraction level** for Neo Geo CD development
-- 🔧 **Complete toolchain** with PowerShell scripts
+- 🔧 **Toolchain** with PowerShell scripts
 - 🎮 **Compatible** with Windows 11
 - 📖 **Documentation** generated with Doxygen
 - 🔄 **Hot reload** for rapid development
@@ -43,12 +43,12 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
 - [🛠️ Advanced Development](#advanced-development)
   - [♻️ Hot Reload](#hot-reload)
   - [🔧 Compile Library](#compiling-the-lib)
-  - [🧪 Migration Testing](#migration-testing)
   - [🌿 Branches & Versions](#pull-or-checkout-another-branches)
+- [🎵 Audio Configuration](#audio-configuration)
 - [🤝 Contribution](#contribute)
   - [📅 Roadmap](#roadmap)
+  - [🎮 Game Examples & Showcases](#examples)
   - [📚 Dependencies](#dependencies)
-- [🎮 Examples & Showcases](#examples)
 
 ---
 
@@ -81,7 +81,7 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Quick Start<a name="quick-start"></a>
 
 ### ⚡ Installation<a name="installation"></a>
 
@@ -101,7 +101,7 @@ cd samples\hello
 
 **3. Create your first project**
 ```cmd
-cd ..\..\bootstrap\scripts\project
+cd <neocore>\bootstrap\scripts\project
 .\create.bat -name MyGame -projectPath C:\temp\MyGame
 cd C:\temp\MyGame\src
 .\mak.bat sprite
@@ -115,7 +115,7 @@ cd C:\temp\MyGame\src
 
 ---
 
-## ⚙️ Command Reference
+## ⚙️ Command Reference<a name="command-reference"></a>
 
 ### 🔨 Mak Rules<a name="mak-rules"></a>
 
@@ -204,7 +204,7 @@ Create custom config files in your project and reference them:
 
 Starting with version 3.0.0, build steps are now explicit and must be executed manually for better control and performance optimization:
 
-#### Optimized Development Workflows
+#### Development Workflows
 
 ```bash
 # Initial development (build everything)
@@ -237,7 +237,7 @@ This workflow change provides better performance for iterative development.
 
 ---
 
-## 📦 Project Management
+## 📦 Project Management<a name="project-management"></a>
 
 ### 🆕 Create a New Project<a name="create-a-project"></a>
 
@@ -302,7 +302,7 @@ From your project's `src` folder:
 ```
 
 ---
-## 📖 Documentation & Resources
+## 📖 Documentation & Resources<a name="documentation--resources"></a>
 
 ### 📚 C API Documentation<a name="documentation-of-neocore-c-lib"></a>
 
@@ -430,7 +430,7 @@ Any help is welcome! 🙏
 
 ---
 
-## 🛠️ Advanced Development
+## 🛠️ Advanced Development<a name="advanced-development"></a>
 
 ### ♻️ Hot Reload<a name="hot-reload"></a>
 

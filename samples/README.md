@@ -53,8 +53,13 @@ Explore advanced features:
 ### Technical Tests
 - **[test_gas](test_gas/)**, **[test_gasp](test_gasp/)**, **[test_gp](test_gp/)**, **[test_gpp](test_gpp/)**, **[test_gs](test_gs/)** - Graphics system component testing
 - **[test_raine_config_switch](test_raine_config_switch/)** - RAINE emulator configuration testing
-- **[issue_80](issue_80/)** - Specific bug fix demonstration
 - **[recurse](recurse/)** - Recursive function testing
+
+### Bug Fixes & Issues
+- **[issue_80](issue_80/)** - Specific bug fix demonstration
+- **[issue_166](issue_166/)** - Issue #166 test case and validation
+- **[issue_167](issue_167/)** - Issue #167 test case and validation
+- **[issue_167_datlib](issue_167_datlib/)** - DATlib-specific aspects of issue #167
 
 ### Data Management
 - **[DATdemo](DATdemo/)** - External data file management
@@ -75,10 +80,6 @@ cd samples/[sample_name]
 make
 ```
 
-Or use the global build scripts:
-- `build-all-samples.bat` - Build all samples
-- `run-all-samples.bat` - Run all samples for testing
-
 ## 📋 Sample Categories
 
 | Category | Samples |
@@ -88,15 +89,9 @@ Or use the global build scripts:
 | **Physics** | collide, collide_complex, collide_multiple |
 | **Audio** | soundFX, soundFX_poly, CDDA |
 | **Advanced** | bullet, sprite_id, DATdemo |
-| **Testing** | test_* samples, issue_80, recurse |
+| **Testing** | test_* samples, recurse |
+| **Bug Fixes** | issue_* samples |
 
-## 🆕 NeoCore v3.0.0 Features
-
-The **[sprite_id](sprite_id/)** sample demonstrates new features in NeoCore v3.0.0:
-- Conditional sprite allocation
-- Function return values for sprite indices
-- Enhanced sprite management functions
-- Dynamic sprite reallocation
 
 ## 📖 Documentation
 

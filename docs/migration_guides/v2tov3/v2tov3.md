@@ -7,65 +7,10 @@ This guide helps you migrate your NeoCore v2.x projects to NeoCore v3.0.0.
 2. [Prerequisites and Backup](#prerequisites-and-backup)
 3. [Migration Script](#migration-script)
 4. [Animator Export](#animator-export)
-5. [NeoCore Framewor3. **Initialization signature changes:**
-   ```bash
-   # Core initialization:
-   nc_init_neocore(enum_neo_geo_rom_type) → nc_init_neocore("rom_type")
-
-   # Rom type parameter changed from enum to string constant:
-   CARTRIDGE_STANDARD → "CARTRIDGE_STANDARD"
-   CARTRIDGE_COMPRESSED_68K → "CARTRIDGE_COMPRESSED_68K"
-   MVS → "MVS"
-   ```
-
-4. **Struct member type changes:**
-   ```bash
-   # In structs containing byte pointers:
-   BYTE* data; → char* data;
-
-   # In sprite-related structs (width/height size changes):
-   BYTE width; → WORD width;
-   BYTE height; → WORD height;
-
-   # Example in Picture and Animated_Sprite:
-   typedef struct Picture {
-       char* data;      // was BYTE*
-       WORD width;      // was BYTE
-       WORD height;     // was BYTE
-       // ... other members
-   } Picture;
-   ```
-
-5. **API name changes (sprite functions):**
-   ```bash
-   # Sprite functions renamed (get/set pattern standardized):
-   nc_sprite_get_z_order() → nc_sprite_z_order_get()
-   nc_sprite_set_z_order() → nc_sprite_z_order_set()
-   nc_sprite_get_flip() → nc_sprite_flip_get()
-   nc_sprite_set_flip() → nc_sprite_flip_set()
-   nc_sprite_get_shrink() → nc_sprite_shrink_get()
-   nc_sprite_set_shrink() → nc_sprite_shrink_set()
-   nc_sprite_get_position() → nc_sprite_position_get()
-   nc_sprite_set_position() → nc_sprite_position_set()
-
-   # Picture functions renamed:
-   nc_picture_get_visible() → nc_picture_visible_get()
-   nc_picture_set_visible() → nc_picture_visible_set()
-   ```
-
-6. **Z-order type change:**
-   ```bash
-   # Z-order parameter/return type changed from BYTE to WORD:
-   BYTE z_order → WORD z_order
-
-   # Example:
-   WORD z = nc_sprite_z_order_get(sprite_index);    // was BYTE
-   nc_sprite_z_order_set(sprite_index, z_order);   // z_order is now WORD
-   ```
-
-7. **Position getter functions:** Migration](#neocore-framework-migration)
+5. [Manual Migration Procedure (Fallback)](#manual-migration-procedure-fallback)
 6. [DATlib Migration](#datlib-migration)
-7. [Conclusion](#conclusion)
+7. [Step-by-Step Migration Process](#step-by-step-migration-process)
+8. [Conclusion](#conclusion)
 
 ## Overview
 
@@ -174,7 +119,7 @@ Before you can export your animations, you need to launch the Animator tool from
 
 #### Step 1: Access the Animator Menu
 
-<img src="images/migration/animator-menu.png" alt="Animator Menu" width="600">
+<img src="images/animator-menu.png" alt="Animator Menu" width="600">
 
 *Figure 1: Open the Animator menu to access export options*
 
@@ -182,7 +127,7 @@ Navigate to the Animator application and access the main menu where the export f
 
 #### Step 2: Browse to Project Directory
 
-<img src="images/migration/animator-browse.png" alt="Animator Browse" width="600">
+<img src="images/animator-browse.png" alt="Animator Browse" width="600">
 
 *Figure 2: Browse and select your project directory for export*
 
@@ -190,7 +135,7 @@ Use the directory browser to navigate to your NeoCore v2 project directory. Ensu
 
 #### Step 3: Execute Export Operation
 
-<img src="images/migration/animator-export.png" alt="Animator Export" width="600">
+<img src="images/animator-export.png" alt="Animator Export" width="600">
 
 *Figure 3: Execute the export process to generate compatible animation files*
 
@@ -208,7 +153,7 @@ If you skip the Animator export for a project with animated sprites:
 - ❌ **Missing or corrupted sprite animations**
 - ❌ **Game will fail to start** or crash during sprite initialization
 
-### Manual Migration Procedure (Fallback)
+## Manual Migration Procedure (Fallback)
 
 If the automatic script fails or encounters issues, you can perform the migration manually. This section provides a complete step-by-step manual procedure.
 
@@ -579,146 +524,6 @@ If your project contains animated sprites, you **must** perform the Animator exp
      - `**/out/fix.bin`
      - `**/out/char.bin`
 
-## NeoCore Framework Migration
-
-### 1. Type System Changes
-
-#### 1.1 Position Type Replacement
-
-**OLD (v2.x):**
-```c
-typedef struct Vec2short { short x; short y; } Vec2short;
-
-// Usage
-Vec2short player_pos = nc_get_position_gfx_animated_sprite(player);
-Vec2short enemies[10];
-```
-
-**NEW (v3.0):**
-```c
-typedef struct Position { short x; short y; } Position;
-
-// Usage
-Position player_pos;
-nc_get_position_gfx_animated_sprite(&player, &player_pos);
-Position enemies[10];
-```
-
-**Migration Steps:**
-1. **Global Search & Replace**: `Vec2short` → `Position`
-2. **Update Box Structure Access**: No change needed (same member names)
-3. **Update Array Declarations**: Change array types accordingly
-
-#### 1.2 Function Signature Changes
-
-**CRITICAL**: Position getter functions now use output parameters
-
-**OLD (v2.x):**
-```c
-Vec2short pos = nc_get_position_gfx_animated_sprite(player);
-Vec2short pic_pos = nc_get_position_gfx_picture(picture);
-Vec2short scroll_pos = nc_get_position_gfx_scroller(scroller);
-
-// Get relative position (returns by value)
-Vec2short relative_pos = nc_get_relative_position(box, world_coord);
-
-if (pos.x > 100 && pos.y < 50) {
-    // Do something
-}
-```
-
-**NEW (v3.0):**
-```c
-Position pos;
-nc_get_position_gfx_animated_sprite(&player, &pos);
-Position pic_pos;
-nc_get_position_gfx_picture(&picture, &pic_pos);
-Position scroll_pos;
-nc_get_position_gfx_scroller(&scroller, &scroll_pos);
-
-// Get relative position (now uses output parameter)
-Position relative_pos;
-nc_get_relative_position(&relative_pos, box, world_coord);
-
-if (pos.x > 100 && pos.y < 50) {
-    // Do something - usage remains the same
-}
-```
-
-### 2. Logging System Overhaul
-
-#### 2.1 Basic Logging Changes
-
-**OLD (v2.x):**
-```c
-nc_log("Game started");
-nc_log_word("Player HP", player_hp);
-nc_log_int("Score", current_score);
-nc_log_vec2short("Position", player_pos);
-```
-
-**NEW (v3.0):**
-```c
-nc_log_info_line("Game started");
-nc_log_info("Player HP: "); nc_log_word(player_hp); nc_log_next_line();
-nc_log_info("Score: "); nc_log_int(current_score); nc_log_next_line();
-nc_set_position_log(player_pos.x, player_pos.y); nc_log_info("Position");
-```
-
-#### 2.2 Label Removal Pattern
-
-All logging functions with label parameters have been removed:
-
-**Removed Functions:**
-- `nc_log_word(char *label, WORD value)` → `nc_log_word(WORD value)`
-- `nc_log_int(char *label, int value)` → `nc_log_int(int value)`
-- `nc_log_short(char *label, short value)` → `nc_log_short(short value)`
-- `nc_log_vec2short(char *label, Vec2short vec)` → `nc_set_position_log(short x, short y)` + `nc_log_info(char *text)`
-- `nc_clear_vram()` → Use `nc_clear_display()` or `nc_reset()` instead
-
-#### 2.3 Type Removals
-
-**BREAKING:** Hex color typedefs have been removed
-
-**OLD (v2.x):**
-```c
-typedef char Hex_Color[3];
-typedef char Hex_Packed_Color[5];
-
-// Usage
-Hex_Color hex_red = "FF0000";
-Hex_Packed_Color hex_packed = "7FFF";
-```
-
-**NEW (v3.0):**
-```c
-// Types no longer available - use direct string literals or char arrays
-char hex_red[3] = "FF0000";      // Manual array declaration
-char hex_packed[5] = "7FFF";     // Manual array declaration
-```
-
-**Migration Required:**
-- Replace `Hex_Color` declarations with `char[3]` arrays
-- Replace `Hex_Packed_Color` declarations with `char[5]` arrays
-- Update function parameters that used these types
-
-### 3. Utility Functions
-
-**OLD (v2.x):**
-```c
-void nc_update_mask(short x, short y, Vec2short vec[], Vec2short offset[], BYTE vector_max);
-BOOL nc_vectors_collide(Box *box, Vec2short vec[], BYTE vector_max);
-Vec2short relative = nc_get_relative_position(box, world_coord); // Returns by value
-```
-
-**NEW (v3.0):**
-```c
-void nc_update_mask(short x, short y, Position vec[], Position offset[], BYTE vector_max);
-BOOL nc_vectors_collide(Box *box, Position vec[], BYTE vector_max);
-Position relative;
-nc_get_relative_position(&relative, box, world_coord); // Uses output parameter
-```
-
 ## DATlib Migration
 
 ### 1. Type System Overhaul
@@ -971,9 +776,6 @@ void clearFixLayer3();
 # ... many more VRAM macros
 ```
 
-## Conclusion
-```
-
 ## Step-by-Step Migration Process
 
 ### Phase 1: Prerequisites and Backup
@@ -1005,6 +807,12 @@ void clearFixLayer3();
    - Remove deprecated files
    - Update build configuration
 
+4. **Export Animations (If Required)**
+   - ⚠️ **CRITICAL**: Export animations if your project uses animated sprites
+   - Use the Animator tool to re-export all animations for v3 compatibility
+   - **Skip this step only** if your project uses static sprites exclusively
+   - **→ See [Animator Export section](#animator-export) for complete instructions**
+
 ### Phase 3: Testing and Validation
 
 1. **Compilation Test**
@@ -1021,13 +829,8 @@ void clearFixLayer3();
    - Test collision detection
    - Verify color output (job meter colors changed!)
 
-3. **Performance Validation**
-   - Check memory usage (structure sizes changed)
-   - Verify frame rate performance
-   - Test under different load conditions
-
 ## Conclusion
 
-NeoCore v3 migration requires updating code but brings better performance and new features.
+NeoCore v3 migration requires updating code.
 
 Follow the migration script or manual steps above. Good luck!

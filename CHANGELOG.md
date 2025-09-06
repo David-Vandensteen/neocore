@@ -1,116 +1,33 @@
 ## 3.0.0-rc2
-  - **IMPROVEMENTS**:
-    - **Graphics destroy functions optimization**: Improved sprite destruction with proper shrinking reset
-      - **Enhancement**: `nc_destroy_gfx_animated_sprite` and `nc_destroy_gfx_picture` now properly reset sprite shrinking to default value (0xFFF)
-      - **Benefit**: Ensures clean sprite state after destruction, preventing visual artifacts from lingering shrink effects
 
+  - **IMPROVEMENTS**:
+    - **Sample Documentation**: Added comprehensive README.md files for all samples with learning objectives and enhanced categorization
+    - **Migration Guide**: Consolidated and enhanced v2→v3 migration documentation with comprehensive C code migration patterns and examples
+    - **Graphics destroy functions**: `nc_destroy_gfx_animated_sprite` and `nc_destroy_gfx_picture` now properly reset sprite shrinking
   - **BUG FIXES**:
-    - **Sprite Index Manager Critical Fixes**:
-      - **Bug**: `use_sprite_manager_index()` returned incorrect error code (0x00) on allocation failure
-      - **Fix**: Function now returns proper error code (0xFFFF) when no sprites are available
-      - **Impact**: Error handling in display functions now works correctly, preventing undefined behavior
-      - **Bug**: Display functions (`nc_display_gfx_picture`, `nc_display_gfx_animated_sprite`) did not handle sprite allocation failures
-      - **Fix**: Added proper error checking and early return when sprite allocation fails
-      - **Impact**: Prevents attempting to display graphics with invalid sprite indices, improving stability
-    - **Bootstrap System Fixes**:
-      - **Problem**: Path length limitations in GCC 2.95.2 causing segmentation faults during compilation (Bug #165: https://github.com/David-Vandensteen/neocore/issues/165)
-      - **Solution**: Added proactive path length validation to prevent projects with incompatible path lengths
-      - **Impact**: Bootstrap system now creates only compatible projects that compile successfully
-      - **Project creation validation**: Enhanced `_create.ps1` script with proactive path length validation
-    - **Logging System Coordinate Fix**:
-      - **Bug**: `nc_set_position_log(0, 0)` displayed text off-screen instead of top-left corner (Bug #166: https://github.com/David-Vandensteen/neocore/issues/166)
-      - **Root Cause**: Coordinate system inconsistency - logging system expected 1-based coordinates but API suggested 0-based
-      - **Fix**: Corrected coordinate handling to properly support 0-based coordinates for consistent API behavior
-      - **Impact**: `nc_set_position_log(0, 0)` now correctly displays text at top-left corner as expected
+    - **Sprite Index Manager**: Fixed error handling in sprite allocation and display functions
+    - **Bootstrap System**: Added path length validation to prevent GCC compilation issues (Bug #165)
+    - **Logging Coordinates**: Fixed `nc_set_position_log(0, 0)` to display at top-left corner (Bug #166)
 
 ## 3.0.0-r1
 
   - **MAJOR RELEASE** - DATLib 0.3, toolchain refactoring and quality improvement
   - **TOOLCHAIN IMPROVEMENTS**:
-    - **PowerShell Refactoring**: Complete refactoring of PowerShell toolchain modules with improved error handling and return values
-    - **Build System Enhancements**:
-      - **Real-time Monitoring**: BuildChar output monitoring with immediate process termination on color overload errors
-      - **Error Handling**: Comprehensive error parsing and propagation across all build scripts with detailed logging
-      - **Process Execution**: Enhanced make process execution with separate output/error log files
-      - **CRT Configuration System**: Added configurable `crtPath` in project.xml
-      - **Embedded CRT Runtime**: Runtime files (crt0_cd.s, common_crt0_cd.s, etc.) are now automatically embedded in each build from centralized `src-lib/crt/` source
-      - **CRT Cleanup**: Removed duplicate CRT files from samples/ directory - now sourced from single authoritative location
-      - **Makefile Improvements**: Added `-I$(PROJECT_PATH)` to ASFLAGS for correct assembler include path handling
-    - **Module Robustness**: Improved robustness of Set-EnvPath, Stop-Emulators, and Watch-Folder modules with fixed infinite loops and blocking risks
-    - **Embedded Dependencies**: Neodev and DATlib headers are now embedded in NeoCore instead of being installed as external dependencies
-    - **Configuration Validation**:
-      - Enhanced Assert-Project function
-      - Improved XML path resolution and template variable handling
-      - Better error messages for missing or invalid project configurations
-  - **DOCUMENTATION IMPROVEMENTS**:
-    - **Doxygen Integration**: Added comprehensive documentation tags throughout neocore.h
-    - **API Documentation**: Documentation for major structures (Position, Box, RGB16, GFX_*)
-    - **Function Documentation**: Detailed parameter descriptions, return values, and usage notes
+    - **PowerShell Refactoring**: Complete refactoring with improved error handling
+    - **Build System**: Enhanced monitoring, error handling, embedded CRT runtime, and makefile improvements
+    - **Dependencies**: Embedded Neodev and DATlib headers, improved configuration validation
+  - **DOCUMENTATION**: Added comprehensive Doxygen tags and API documentation throughout neocore.h
   - **NEW FEATURES**:
-    - **NeoCore API Enhancements**:
-      - **New function**: `nc_get_free_sprite_index()` - Returns the first available sprite index for allocation
-        - **Purpose**: Provides direct access to next free sprite slot for manual sprite management
-        - **Return value**: First free sprite index (0-383) or 0xFFFF if no sprites available
-        - **Complement**: Works alongside existing `nc_get_max_free_sprite_index()` which counts total free sprites
-      - **Enhanced sprite management**: `nc_display_gfx_with_sprite_id()` integration
-        - **Purpose**: Allows forcing a specific sprite ID for graphics display functions
-        - **Behavior**: When `nc_display_gfx_with_sprite_id(sprite_id)` is called with a value different from 0xFFFF, all subsequent display functions (`nc_display_gfx_picture`, `nc_display_gfx_animated_sprite`, `nc_display_gfx_scroller`) will use the specified sprite ID instead of the automatic sprite manager
-        - **Usage**: Call `nc_display_gfx_with_sprite_id(desired_sprite_id)` before displaying graphics to override automatic sprite allocation
-        - **Auto-reset**: The forced sprite ID is automatically reset to 0xFFFF after use, ensuring it only affects the next graphics allocation
-        - **Table management**: Forced sprite IDs are properly registered in the sprite manager table to prevent conflicts
-      - **Display functions return sprite index**: Updated graphics display functions to return sprite index
-        - **Functions affected**: `nc_display_gfx_picture()`, `nc_display_gfx_picture_physic()`, `nc_display_gfx_animated_sprite()`, `nc_display_gfx_animated_sprite_physic()`, `nc_display_gfx_scroller()`
-        - **Functions affected**: `nc_init_display_gfx_picture()`, `nc_init_display_gfx_picture_physic()`, `nc_init_display_gfx_animated_sprite()`, `nc_init_display_gfx_animated_sprite_physic()`, `nc_init_display_gfx_scroller()`
-        - **Change**: Return type changed from `void` to `WORD`
-        - **Return value**: Sprite index used for display (either forced via `nc_display_gfx_with_sprite_id()` or automatically allocated)
-        - **Benefit**: Enables sprite index tracking and debugging, facilitates manual sprite management
+    - **New function**: `nc_get_free_sprite_index()` - Returns first available sprite index
+    - **Enhanced sprite management**: `nc_display_gfx_with_sprite_id()` for forced sprite ID allocation
+    - **Display functions**: Now return sprite index instead of void
   - **BREAKING CHANGES**:
-    - **PowerShell Toolchain**:
-      - **Command deprecations**: mak mame and mak raine deprecated (use mak run:mame and mak run:raine instead)
-      - **Rule removals**: `iso` and `only:iso` rules have been removed from the build system
-        - **Alternative**: Use `mak dist:iso` for ISO distribution packaging
-        - **Reason**: Simplified build system by consolidating ISO-related commands
-      - **Build workflow changes**: Build steps are now explicit and must be run manually instead of automatic execution
-        - **Before**: `mak run:raine` or `mak run:mame` automatically executed all build steps
-        - **Now**: Manual execution required: `mak sprite` → `mak` → `mak run:raine`
-        - **Reason**: Better control over build process, clearer separation of build phases, faster development cycle by leveraging cache (skip sprite generation when unchanged), and reduced build time
-        - **Usage examples**:
-          ```cmd
-          # Initial development (do everything)
-          mak sprite && mak && mak run:raine
-
-          # Code-only modifications (sprites unchanged)
-          mak && mak run:raine  # ⚡ Faster!
-
-          # Quick test without recompilation
-          mak run:raine  # 🚀 Instant!
-          ```
-    - **Dependencies**:
-      - **DATlib upgraded to version 0.3** - Breaking compatibility with previous DATlib version
-      - **Package updates in manifest.xml**:
-        - Updated DATlib package
-        - Refreshed toolchain component packages (mame, raine, gcc, etc.)
-        - Updated build tools and runtime dependencies
-    - **Project Configuration**:
-      - **project.xml schema changes**: Enhanced structure - prepares cartridge compatibility for future version
-      - **Templated path system**: Build paths now use template variables ({{neocore}}, {{build}})
-      - **Sound structure changes**: Reorganized sound.cd.cdda hierarchy
-      - **Path resolution**: Improved neocorePath and buildPath handling mechanisms
-    - **C API Changes**:
-      - **Breaking changes**: Multiple function signature changes, type removals, and API restructuring
-      - **Complete migration guide**: See [NeoCore v2 to v3 Migration Guide](docs/migration_guides/v2tov3/v2tov3.md#manual-c-code-migration) for comprehensive list of all breaking changes, deprecated patterns, and migration examples.
-  - **NEW C API FUNCTIONS**:
-    - **Logging Functions**:
-      - nc_log_info_line() - Log with automatic line break
-      - nc_log_next_line() - Move to next log line
-      - nc_init_log() - Initialize logging system
-      - nc_set_position_log() - Set log cursor position
-  - **MIGRATION TOOLS ENHANCEMENTS**:
-    - **C Code Analysis**: Automatic scanning of C files for v2/v3 compatibility issues with detailed reporting of deprecated patterns and breaking changes
-    - **Automated Cleanup**: Automatically removes obsolete files (common_crt0_cd.s, crt0_cd.s) during migration
-    - **Sound Section Migration**: Automatically migrates `<sound>` sections to v3 format (`<sound><cd>` structure) while preserving content and formatting
-    - **Comprehensive Logging**: Detailed migration logging
-    - **Full XML Rewrite**: Complete project.xml rewrite using v3 template structure while preserving some user data
+    - **Toolchain**: Command deprecations, rule removals, manual build workflow (`mak sprite` → `mak` → `mak run:raine`)
+    - **Dependencies**: DATlib 0.3 upgrade breaks compatibility with previous versions
+    - **Configuration**: project.xml schema changes, templated path system, sound structure reorganization
+    - **C API**: Multiple function signature changes - see [Migration Guide](docs/migration_guides/v2tov3/v2tov3.md#manual-c-code-migration)
+  - **NEW C API FUNCTIONS**: nc_log_info_line(), nc_log_next_line(), nc_init_log(), nc_set_position_log()
+  - **MIGRATION TOOLS**: Enhanced with C code analysis, automated cleanup, sound section migration, and comprehensive logging
 
 ## 2.9.0
 
