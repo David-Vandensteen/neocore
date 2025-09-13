@@ -41,6 +41,8 @@ function Write-MameHash {
 
   $SHA1 = Get-CHDSHA1 -File $CHDFile
   Write-MameHashFile -ProjectName $ProjectName -XMLFile $XMLFile -SHA1 $SHA1
+
+  return $true
 }
 
 function Write-Mame {
@@ -52,17 +54,22 @@ function Write-Mame {
   )
   if ((Test-Path -Path $PathMame) -eq $false) {
     if ($Manifest.manifest.dependencies.mame.url) {
-      Install-Component `
+      if (-not (Install-Component `
         -URL $Manifest.manifest.dependencies.mame.url `
         -PathDownload "$($Config.project.buildPath)\spool" `
-        -PathInstall $Manifest.manifest.dependencies.mame.path
+        -PathInstall $Manifest.manifest.dependencies.mame.path)) {
+        Write-Host "Failed to install MAME component" -ForegroundColor Red
+        return $false
+      }
     } else {
-      Install-Component -URL "$BaseURL/neocore-mame.zip" -PathDownload "$($Config.project.buildPath)\spool" -PathInstall $Config.project.buildPath
+      Write-Host "Error: MAME not found in manifest dependencies" -ForegroundColor Red
+      Write-Host "Please add mame to manifest.xml dependencies section" -ForegroundColor Yellow
+      return $false
     }
   }
-  if ((Test-Path -Path $PathMame) -eq $false) { Write-Host "error - $PathMame not found" -ForegroundColor Red; exit 1 }
-  if ((Test-Path -Path $CUEFile) -eq $false) { Write-Host "error - $CUEFile not found" -ForegroundColor Red; exit 1 }
-  if ((Test-Path -Path "$PathMame\mame64.exe") -eq $false) { Write-Host "error - mame64.exe is not found in $PathMame" -ForegroundColor Red; exit 1 }
+  if ((Test-Path -Path $PathMame) -eq $false) { Write-Host "error - $PathMame not found" -ForegroundColor Red; return $false }
+  if ((Test-Path -Path $CUEFile) -eq $false) { Write-Host "error - $CUEFile not found" -ForegroundColor Red; return $false }
+  if ((Test-Path -Path "$PathMame\mame64.exe") -eq $false) { Write-Host "error - mame64.exe is not found in $PathMame" -ForegroundColor Red; return $false }
 
   Write-Host "Compiling CHD" -ForegroundColor Yellow
 
@@ -74,15 +81,16 @@ function Write-Mame {
 
   if ((Test-Path -Path $OutputFile) -eq $false) {
     Write-Host "$OutputFile was not generated" -ForegroundColor Red
-    exit 1
+    return $false
   } else {
     Write-Host "Builded CHD $OutputFile" -ForegroundColor Green
     Write-Host ""
   }
-  Write-MameHash -ProjectName $ProjectName -CHDFile $OutputFile -XMLFile "$(Resolve-Path -Path $PathMame)\hash\neocd.xml"
+  Write-MameHash -ProjectName $ProjectName -CHDFile $OutputFile -XMLFile "$(Resolve-TemplatePath -Path $PathMame)\hash\neocd.xml"
+
+  return $true
 }
 
-# TODO : remove at v3
 function Mame {
   param (
     [Parameter(Mandatory=$true)][String] $ExeName,
@@ -99,12 +107,14 @@ function Mame {
 
   if ((Test-Path -Path $pathMame) -eq $false) {
     Write-Host "$pathMame not found" -ForegroundColor Red
-    exit 1
+    return $false
   }
-  if ((Test-Path -Path "$pathMame\$ExeName") -eq $false) { Write-Host ("error - {0}\ not found" -f $PathMame) -ForegroundColor Red; exit 1 }
+  if ((Test-Path -Path "$pathMame\$ExeName") -eq $false) { Write-Host ("error - {0}\ not found" -f $PathMame) -ForegroundColor Red; return $false }
   Write-Host "Launching mame $GameName" -ForegroundColor Yellow
   Write-Host "$pathMame\$ExeName $mameArgs $defaultMameArgs"
   Start-Process -NoNewWindow -FilePath "$pathMame\$ExeName" -ArgumentList "$mameArgs $defaultMameArgs"
+
+  return $true
 }
 
 function Mame-WithProfile {
@@ -118,7 +128,7 @@ function Mame-WithProfile {
   if ($Rule -eq "run:mame") { $profileName = "default" }
   if (-Not($Config.project.emulator.mame.profile.$profileName)) {
     Write-Host "error : mame profile $profileName not found" -ForegroundColor Red
-    exit 1
+    return $false
   }
 
   Write-Host "start mame with profile : $profileName" -ForegroundColor Yellow
@@ -130,4 +140,6 @@ function Mame-WithProfile {
 
   Write-Host "$pathMame\$ExeName $mameArgs $defaultMameArgs"
   Start-Process -NoNewWindow -FilePath "$pathMame\$ExeName" -ArgumentList "$mameArgs $defaultMameArgs"
+
+  return $true
 }

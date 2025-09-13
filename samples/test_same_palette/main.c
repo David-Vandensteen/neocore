@@ -35,13 +35,13 @@ int main(void) {
   while(1) {
     nc_update();
     nc_init_log();
-    nc_log_byte("PALI PLAYER ", player.aSpriteDAT.basePalette);
-    nc_log_byte("PALI PLANET ", planet.pictureDAT.basePalette);
-    nc_log_byte("PALI BACK   ", backgroung.scrollerDAT.basePalette);
-    nc_log_info(" ");
-    nc_log_word("PAL PLAYER ", (int)player.paletteInfoDAT);
-    nc_log_word("PAL PLANET ", (int)planet.paletteInfoDAT);
-    nc_log_word("PAL BACK   ", (int)backgroung.paletteInfoDAT);
+    nc_log_info_line("PALI PLAYER : %d", player.aSpriteDAT.basePalette);
+    nc_log_info_line("PALI PLANET : %d", planet.pictureDAT.basePalette);
+    nc_log_info_line("PALI BACK   : %d", backgroung.scrollerDAT.basePalette);
+    nc_log_info_line(" ");
+    nc_log_info_line("PAL PLAYER : %d", (int)player.paletteInfoDAT);
+    nc_log_info_line("PAL PLANET : %d", (int)planet.paletteInfoDAT);
+    nc_log_info("PAL BACK   : %d", (int)backgroung.paletteInfoDAT);
     nc_update_animation_gfx_animated_sprite(&player);
   };
 

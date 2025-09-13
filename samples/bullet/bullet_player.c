@@ -50,9 +50,9 @@ static void debug() {
   BYTE i = 0;
   nc_init_log();
   for (i = 0; i < get_bullet_max(); i++) {
-    nc_log_bool("STATE ", sprites_state[i]);
+    nc_log_info("STATE : %d", sprites_state[i]);
   }
-  nc_log_byte("PAL I :", sprites[0].gfx_animated_sprite.aSpriteDAT.basePalette);
+  nc_log_info("PAL I : %d", sprites[0].gfx_animated_sprite.aSpriteDAT.basePalette);
   if (nc_joypad_is_a(0)) {
     nc_log_info("JOYPAD A 1");
   } else {
@@ -64,7 +64,7 @@ static void update_states(short x, short y) {
   GFX_Animated_Sprite_Physic *free_aSprite;
   free_aSprite = get_free_sprite();
   if (free_aSprite) {
-    Vec2short position = {x + get_bullet_xoffset(), y};
+    Position position = {x + get_bullet_xoffset(), y};
     nc_set_position_gfx_animated_sprite_physic(free_aSprite, position.x, position.y);
     nc_show_gfx_animated_sprite_physic(free_aSprite);
   }
@@ -72,10 +72,10 @@ static void update_states(short x, short y) {
 
 static void update_move() {
   BYTE i = 0;
-  Vec2short position;
+  Position position;
   for (i = 0; i < get_bullet_max(); i++) {
     if (sprites_state[i]) {
-      position = nc_get_position_gfx_animated_sprite_physic(sprites[i]);
+      nc_get_position_gfx_animated_sprite_physic(&sprites[i], &position);
       nc_move_gfx_animated_sprite_physic(&sprites[i], get_bullet_max(), 0);
       nc_update_animation_gfx_animated_sprite_physic(&sprites[i]);
       if (position.x > 320) {

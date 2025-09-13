@@ -1,3 +1,32 @@
+## 3.0.0
+
+  - **MAJOR RELEASE** - DATLib 0.3, toolchain refactoring and quality improvement
+  - **TOOLCHAIN IMPROVEMENTS**:
+    - **PowerShell Refactoring**: Complete refactoring with improved error handling
+    - **Build System**: Enhanced monitoring, error handling, embedded CRT runtime, and makefile improvements
+    - **Dependencies**: Embedded Neodev and DATlib headers, improved configuration validation
+  - **DOCUMENTATION**:
+    - Added comprehensive Doxygen tags and API documentation throughout neocore.h
+    - **Sample Documentation**: Added comprehensive README.md files for all samples with learning objectives and enhanced categorization
+    - **Migration Guide**: Consolidated and enhanced v2→v3 migration documentation with comprehensive C code migration patterns and examples
+  - **NEW FEATURES**:
+    - **New function**: `nc_get_free_sprite_index()` - Returns first available sprite index
+    - **Enhanced sprite management**: `nc_display_gfx_with_sprite_id()` for forced sprite ID allocation
+    - **Display functions**: Now return sprite index instead of void
+  - **IMPROVEMENTS**:
+    - **Graphics destroy functions**: `nc_destroy_gfx_animated_sprite` and `nc_destroy_gfx_picture` now properly reset sprite shrinking
+  - **BUG FIXES**:
+    - **Sprite Index Manager**: Fixed error handling in sprite allocation and display functions
+    - **Bootstrap System**: Added path length validation to prevent GCC compilation issues (Bug #165)
+    - **Logging Coordinates**: Fixed `nc_set_position_log(0, 0)` to display at top-left corner (Bug #166)
+  - **BREAKING CHANGES**:
+    - **Toolchain**: Command deprecations, rule removals, manual build workflow (`mak sprite` → `mak` → `mak run:raine`)
+    - **Dependencies**: DATlib 0.3 upgrade breaks compatibility with previous versions
+    - **Configuration**: project.xml schema changes, templated path system, sound structure reorganization
+    - **C API**: Multiple function signature changes - see [Migration Guide](docs/migration_guides/v2tov3/v2tov3.md#manual-c-code-migration)
+  - **NEW C API FUNCTIONS**: nc_log_info_line(), nc_log_next_line(), nc_init_log(), nc_set_position_log()
+  - **MIGRATION TOOLS**: Enhanced with C code analysis, automated cleanup, sound section migration, and comprehensive logging
+
 ## 2.9.0
 
   - add formatting arguments support in nc log info (check out samples\hello)

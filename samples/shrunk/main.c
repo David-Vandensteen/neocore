@@ -2,15 +2,15 @@
 #include "externs.h"
 
 int main(void) {
-  GFX_Picture logo1, logo2, logo3;
-  BYTE logo1_shrunk_x = 0;
-  BYTE logo2_shrunk_y = 0;
+  static GFX_Picture logo1, logo2, logo3;
+  static BYTE logo1_shrunk_x = 0;
+  static BYTE logo2_shrunk_y = 0;
 
   nc_init_gfx_picture(&logo1, &logo_sprite, &logo_sprite_Palettes);
   nc_init_gfx_picture(&logo2, &logo_sprite, &logo_sprite_Palettes);
   nc_init_gfx_picture(&logo3, &logo_sprite, &logo_sprite_Palettes);
   nc_init_log();
-  nc_log_info("HORIZONTAL SHRUNK");
+  nc_log_info_line("HORIZONTAL SHRUNK");
   nc_init_gfx_picture(&logo1, &logo_sprite, &logo_sprite_Palettes);
   nc_init_gfx_picture(&logo2, &logo_sprite, &logo_sprite_Palettes);
   nc_init_gfx_picture(&logo3, &logo_sprite, &logo_sprite_Palettes);
@@ -31,7 +31,7 @@ int main(void) {
     nc_shrunk(logo2.pictureDAT.baseSprite, logo2.pictureDAT.info->tileWidth, nc_shrunk_forge(0xF, logo2_shrunk_y));
     nc_shrunk(logo3.pictureDAT.baseSprite, logo3.pictureDAT.info->tileWidth, nc_get_shrunk_proportional_table(nc_get_frame_counter() & SHRUNK_TABLE_PROP_SIZE)); // todo (minor) - rename SHRUNK_PROPORTIONAL_TABLE_SIZE
 
-    /* neocore provide a precalculated table for keep "aspect ratio" */
+    /* neocore provide a precalculated table to keep "aspect ratio" */
   };
 
   return 0;

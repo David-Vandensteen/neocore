@@ -57,6 +57,7 @@ if %errorlevel% neq 0 (
   set error=%errorlevel%
 )
 @echo off
+del /q %includePath%\neocore.h
 path=%backupPath%
 exit /b %error%
 
