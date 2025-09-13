@@ -19,7 +19,7 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
 ### 🔗 Quick Links
 - [💬 Discord](https://discord.com/channels/1330066799445676093/1330089958798790686)
 - [📋 Migration from previous versions](docs/migration_guides/v2tov3/v2tov3.md)
-- [📚 API Documentation](http://azertyvortex.free.fr/neocore-doxy/r11/neocore_8h.html)
+- [📚 API Documentation](http://azertyvortex.free.fr/neocore-doxy/r12/neocore_8h.html)
 - [📝 Changelog](CHANGELOG.md)
 
 > ⚠️ **Current Version**: This version includes **breaking changes**. Please check the [migration guide](docs/migration_guides/v2tov3/v2tov3.md) before updating your existing projects.
