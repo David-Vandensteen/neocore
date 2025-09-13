@@ -1,26 +1,24 @@
-## 3.0.0-rc2
-
-  - **IMPROVEMENTS**:
-    - **Sample Documentation**: Added comprehensive README.md files for all samples with learning objectives and enhanced categorization
-    - **Migration Guide**: Consolidated and enhanced v2→v3 migration documentation with comprehensive C code migration patterns and examples
-    - **Graphics destroy functions**: `nc_destroy_gfx_animated_sprite` and `nc_destroy_gfx_picture` now properly reset sprite shrinking
-  - **BUG FIXES**:
-    - **Sprite Index Manager**: Fixed error handling in sprite allocation and display functions
-    - **Bootstrap System**: Added path length validation to prevent GCC compilation issues (Bug #165)
-    - **Logging Coordinates**: Fixed `nc_set_position_log(0, 0)` to display at top-left corner (Bug #166)
-
-## 3.0.0-r1
+## 3.0.0
 
   - **MAJOR RELEASE** - DATLib 0.3, toolchain refactoring and quality improvement
   - **TOOLCHAIN IMPROVEMENTS**:
     - **PowerShell Refactoring**: Complete refactoring with improved error handling
     - **Build System**: Enhanced monitoring, error handling, embedded CRT runtime, and makefile improvements
     - **Dependencies**: Embedded Neodev and DATlib headers, improved configuration validation
-  - **DOCUMENTATION**: Added comprehensive Doxygen tags and API documentation throughout neocore.h
+  - **DOCUMENTATION**:
+    - Added comprehensive Doxygen tags and API documentation throughout neocore.h
+    - **Sample Documentation**: Added comprehensive README.md files for all samples with learning objectives and enhanced categorization
+    - **Migration Guide**: Consolidated and enhanced v2→v3 migration documentation with comprehensive C code migration patterns and examples
   - **NEW FEATURES**:
     - **New function**: `nc_get_free_sprite_index()` - Returns first available sprite index
     - **Enhanced sprite management**: `nc_display_gfx_with_sprite_id()` for forced sprite ID allocation
     - **Display functions**: Now return sprite index instead of void
+  - **IMPROVEMENTS**:
+    - **Graphics destroy functions**: `nc_destroy_gfx_animated_sprite` and `nc_destroy_gfx_picture` now properly reset sprite shrinking
+  - **BUG FIXES**:
+    - **Sprite Index Manager**: Fixed error handling in sprite allocation and display functions
+    - **Bootstrap System**: Added path length validation to prevent GCC compilation issues (Bug #165)
+    - **Logging Coordinates**: Fixed `nc_set_position_log(0, 0)` to display at top-left corner (Bug #166)
   - **BREAKING CHANGES**:
     - **Toolchain**: Command deprecations, rule removals, manual build workflow (`mak sprite` → `mak` → `mak run:raine`)
     - **Dependencies**: DATlib 0.3 upgrade breaks compatibility with previous versions
