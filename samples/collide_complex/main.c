@@ -7,7 +7,7 @@
 
 // todo (minor) - improve neocore collision detection (bug on top of peak)
 
-static Vec2short peak_mask[PEAK_MASK_VECTOR_MAX];
+static Position peak_mask[PEAK_MASK_VECTOR_MAX];
 static GFX_Animated_Sprite_Physic player;
 
 static GFX_Picture peak;
@@ -70,8 +70,8 @@ static void init_mask() {
 }
 
 static void update_player() {
-  Vec2short position;
-  position = nc_get_position_gfx_animated_sprite_physic(player);
+  Position position;
+  nc_get_position_gfx_animated_sprite_physic(&player, &position);
   if (nc_joypad_is_left(0) && position.x > 0) { nc_move_gfx_animated_sprite_physic(&player, -1, 0); }
   if (nc_joypad_is_right(0) && position.x < 280) { nc_move_gfx_animated_sprite_physic(&player, 1, 0); }
   if (nc_joypad_is_up(0) && position.y > 0) {

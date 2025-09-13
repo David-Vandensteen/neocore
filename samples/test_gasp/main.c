@@ -2,9 +2,13 @@
 #include <math.h>
 #include "externs.h"
 
-GFX_Animated_Sprite_Physic player;
+static GFX_Animated_Sprite_Physic player;
 
 int main(void) {
+  const DWORD accumulator = 200;
+  DWORD frame_seq;
+  Position current_pos;
+
   nc_init_display_gfx_animated_sprite_physic(
     &player,
     &player_sprite,
@@ -19,15 +23,14 @@ int main(void) {
   );
 
   while(1) {
-    const DWORD accumulator = 200;
-    DWORD frame_seq = accumulator;
+    frame_seq = accumulator;
 
     nc_update();
     nc_init_log();
     nc_update_animation_gfx_animated_sprite_physic(&player);
 
     if (nc_get_frame_counter() < frame_seq) {
-      nc_log_info("INIT GASP");
+      nc_log_info_line("INIT GASP");
       nc_log_info("DISPLAY GASP AT 100 100");
     }
 
@@ -41,7 +44,8 @@ int main(void) {
     frame_seq += accumulator;
 
     if (nc_get_frame_counter() >= (frame_seq - accumulator) && nc_get_frame_counter() < frame_seq) {
-      if (nc_get_position_gfx_animated_sprite_physic(player).x < 0) {
+      nc_get_position_gfx_animated_sprite_physic(&player, &current_pos);
+      if (current_pos.x < 0) {
         nc_set_position_gfx_animated_sprite_physic(&player, 150, 150);
       } else {
         nc_set_animation_gfx_animated_sprite_physic(&player, PLAYER_SPRITE_ANIM_UP);
@@ -53,11 +57,12 @@ int main(void) {
     frame_seq += accumulator;
 
     if (nc_get_frame_counter() >= (frame_seq - accumulator) && nc_get_frame_counter() < frame_seq) {
-      nc_log_info("GET X AND Y");
+      nc_log_info_line("GET X AND Y");
       nc_set_position_gfx_animated_sprite_physic(&player, 181, 57);
       nc_set_animation_gfx_animated_sprite_physic(&player, PLAYER_SPRITE_ANIM_IDLE);
-      nc_log_short("X", nc_get_position_gfx_animated_sprite_physic(player).x);
-      nc_log_short("Y", nc_get_position_gfx_animated_sprite_physic(player).y);
+      nc_get_position_gfx_animated_sprite_physic(&player, &current_pos);
+      nc_log_info_line("X: %d", current_pos.x);
+      nc_log_info("Y: %d", current_pos.y);
     }
 
     frame_seq += accumulator;

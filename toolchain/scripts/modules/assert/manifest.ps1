@@ -1,33 +1,40 @@
 function Assert-Manifest {
-  param (
-    [Parameter(Mandatory = $true)]
-    [ValidateScript({Test-Path $_})]
-    [string]$ManifestSource,
+  Write-Host "Assert manifest" -ForegroundColor Yellow
 
-    [Parameter(Mandatory = $true)]
-    [ValidateScript({Test-Path $_})]
-    [string]$ManifestCache
-)
   if ($Rule -ne "clean:build") {
-    Write-Host "assert manifest" -ForegroundColor Yellow
-    if ((Test-Path -Path "$($Config.project.buildPath)\manifest.xml") -eq $false) {
-      if (Test-Path -Path $Config.project.buildPath) {
-        Write-Host "manifest not found : remove build cache" -ForegroundColor Blue
-        Write-Host "Please, remove $(Resolve-Path -Path $Config.project.buildPath) to rebuild neocore"
+    $projectBuildPath = Get-TemplatePath -Path $Config.project.buildPath
+    if ((Test-Path -Path "$projectBuildPath\manifest.xml") -eq $false) {
+      if (Test-Path -Path $projectBuildPath) {
+        Write-Host "manifest not found : remove build cache" -ForegroundColor Cyan
+        Write-Host "Please, remove $projectBuildPath to rebuild neocore"
         Write-Host "You can use mak clean:build"
-        exit 1
+        return $false
       }
     }
-    Write-Host "source : $ManifestSource"
-    Write-Host "cache : $ManifestCache"
-    if ((Compare-FileHash -SrcFile $ManifestSource -DestFile $ManifestCache) -eq $false) {
-      Write-Host "manifest has changed : remove build cache" -ForegroundColor Blue
-      Write-Host "Please, remove $(Resolve-Path -Path $Config.project.buildPath) to rebuild neocore"
-      Write-Host "You can use mak clean:build"
-      exit 1
+
+    if (Test-Path -Path "$projectBuildPath\manifest.xml") {
+      $neocorePath = Get-TemplatePath -Path $Config.project.neocorePath
+      $manifestSource = "$neocorePath\manifest.xml"
+      $manifestCache = "$projectBuildPath\manifest.xml"
+      Write-Host "source : $manifestSource"
+      Write-Host "cache : $manifestCache"
+      if ((Compare-FileHash -SrcFile $manifestSource -DestFile $manifestCache) -eq $false) {
+        Write-Host "manifest has changed : remove build cache" -ForegroundColor Cyan
+        Write-Host "Please, remove $projectBuildPath to rebuild neocore"
+        Write-Host "You can use mak clean:build"
+        return $false
+      }
     }
 
-    Assert-ManifestDependencies
+    if (-Not(Assert-ManifestDependencies)) {
+      Write-Host "Manifest dependency validation failed" -ForegroundColor Red
+      return $false
+    }
     Write-Host "manifest is compliant" -ForegroundColor Green
+    return $true
+  }
+  else {
+    # For clean:build rule, no validation needed
+    return $true
   }
 }

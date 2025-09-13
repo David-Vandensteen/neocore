@@ -31,10 +31,9 @@ static void display_menu() {
   nc_set_position_log(MENU_X, MENU_Y_GREEN);
   nc_log_info("GREEN :");
   nc_set_position_log(MENU_X, MENU_Y_BLUE);
-  nc_log_info("BLUE :");
-  nc_next_line_log();
+  nc_log_info_line("BLUE :");
   nc_log_packed_color16(packed_color);
-  nc_next_line_log();
+  nc_log_next_line();
 }
 
 static void display_cursor() {

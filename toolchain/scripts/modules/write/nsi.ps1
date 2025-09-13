@@ -4,10 +4,10 @@ function Write-NSI {
 
   $packageName = $Config.project.name
   $version = $Config.project.version
-  $buildPath = $Config.project.buildPath
-  $distPath = $Config.project.distPath
-  $neocorePath = $Config.project.neocorePath
-  $mameExeFile = $Config.project.emulator.mame.exeFile
+  $buildPath = Get-TemplatePath -Path $Config.project.buildPath
+  $distPath = Get-TemplatePath -Path $Config.project.distPath
+  $neocorePath = Get-TemplatePath -Path $Config.project.neocorePath
+  $mameExeFile = Get-TemplatePath -Path $Config.project.emulator.mame.exeFile
 
   if ((Test-Path -Path $distPath) -eq $false) {
     Write-Host "create $distPath folder" -ForegroundColor Yellow
@@ -24,44 +24,49 @@ function Write-NSI {
     New-Item -Path "$distPath\$packageName\$packageName-$version" -ItemType Directory -Force
   }
 
-  if ((Test-Path -Path "$distPath\$packageName\$packageName-$version\exe") -eq $false) {
-    Write-Host "create $distPath\$packageName\$packageName-$version\exe folder" -ForegroundColor Yellow
-    New-Item -Path "$distPath\$packageName\$packageName-$version\exe" -ItemType Directory -Force
+  if ((Test-Path -Path "$distPath\$packageName\$packageName-$version\cd") -eq $false) {
+    Write-Host "create $distPath\$packageName\$packageName-$version\cd folder" -ForegroundColor Yellow
+    New-Item -Path "$distPath\$packageName\$packageName-$version\cd" -ItemType Directory -Force
   }
 
-  if ((Test-Path -Path "$distPath\$packageName\$packageName-$version\exe\$packageName-$version.exe") -eq $true) {
+  if ((Test-Path -Path "$distPath\$packageName\$packageName-$version\cd\exe") -eq $false) {
+    Write-Host "create $distPath\$packageName\$packageName-$version\cd\exe folder" -ForegroundColor Yellow
+    New-Item -Path "$distPath\$packageName\$packageName-$version\cd\exe" -ItemType Directory -Force
+  }
+
+  if ((Test-Path -Path "$distPath\$packageName\$packageName-$version\cd\exe\$packageName-$version.exe") -eq $true) {
     Write-Host "$packageName : $version was already released" -ForegroundColor Red
-    Write-Host "$distPath\$packageName\$packageName-$version\exe\$packageName-$version.exe already exist" -ForegroundColor Red
-    exit 1
+    Write-Host "$distPath\$packageName\$packageName-$version\cd\exe\$packageName-$version.exe already exist" -ForegroundColor Red
+    return $false
   }
 
   $NSITemplateFile = "$neocorePath\toolchain\nsi\template.nsi"
-  $outPath = Resolve-Path -Path "$buildPath\$packageName"
+  $outPath = "$buildPath\$packageName"
   $NSIFile = "$outPath\$packageName.nsi"
-  $outFile = "$(Resolve-Path -Path $distPath)\$packageName\$packageName-$version\exe\$packageName-$version.exe"
-  $icon = Resolve-Path -Path "$neocorePath\toolchain\nsi\neogeo.ico"
+  $outFile = "$distPath\$packageName\$packageName-$version\cd\exe\$packageName-$version.exe"
+  $icon = "$neocorePath\toolchain\nsi\neogeo.ico"
   $brandingText = "Created with Neocore"
-  $mamePath = "$(Resolve-Path -Path $(Split-Path -Parent $mameExeFile))\"
+  $mamePath = "$(Split-Path -Parent $mameExeFile)\"
   $exec = "$(Split-Path $mameExeFile -Leaf) -window -skip_gameinfo neocdz $packageName"
 
   if ((Test-Path -Path $NSITemplateFile) -eq $false) {
     Write-Host "$NSITemplateFile not found" -ForegroundColor Red
-    exit 1
+    return $false
   }
 
   if ((Test-Path -Path $outPath) -eq $false) {
     Write-Host "$outPath not found" -ForegroundColor Red
-    exit 1
+    return $false
   }
 
   if ((Test-Path -Path $icon) -eq $false) {
     Write-Host "$icon not found" -ForegroundColor Red
-    exit 1
+    return $false
   }
 
   if ((Test-Path -Path $mamePath) -eq $false) {
     Write-Host "$mamePath not found" -ForegroundColor Red
-    exit 1
+    return $false
   }
 
   $NSIcontent = [System.IO.File]::ReadAllText($NSITemplateFile)
@@ -76,12 +81,16 @@ function Write-NSI {
 
   if ((Test-Path -Path $NSIFile) -eq $false) {
     Write-Host "$NSIFile was not generated" -ForegroundColor Red
-    exit 1
+    return $false
   }
 
   if ((Test-Path -Path $NSIFile) -eq $true) {
     Write-Host ""
     Write-Host "NSI script $NSIFile" -ForegroundColor Green
     Write-Host ""
+    return $true
   }
+
+  # Cette ligne ne devrait jamais être atteinte, mais par sécurité
+  return $false
 }

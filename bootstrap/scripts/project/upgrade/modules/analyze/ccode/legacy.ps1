@@ -1,0 +1,432 @@
+function Analyze-CCodeLegacy {
+    param (
+        [Parameter(Mandatory=$true)]
+        [string]$ProjectSrcPath,
+
+        [Parameter(Mandatory=$true)]
+        [string]$LogFile
+    )
+
+    # Helper function to get relative path (Windows PowerShell compatible)
+    function Get-RelativePath {
+        param(
+            [string]$FullPath,
+            [string]$BasePath
+        )
+
+        try {
+            # Normalize paths
+            $FullPath = $FullPath.TrimEnd('\', '/')
+            $BasePath = $BasePath.TrimEnd('\', '/')
+
+            # Convert to absolute paths
+            $fullPathResolved = (Resolve-Path -Path $FullPath).Path
+            $basePathResolved = (Resolve-Path -Path $BasePath).Path
+
+            # Simple relative path calculation
+            if ($fullPathResolved.StartsWith($basePathResolved)) {
+                $relativePath = $fullPathResolved.Substring($basePathResolved.Length)
+                $relativePath = $relativePath.TrimStart('\', '/')
+                # Convert backslashes to forward slashes for consistency
+                return $relativePath -replace '\\', '/'
+            } else {
+                # If not under base path, just return filename
+                return Split-Path $FullPath -Leaf
+            }
+        } catch {
+            # Fallback: just return filename if relative path calculation fails
+            return Split-Path $FullPath -Leaf
+        }
+    }
+
+    Write-Host "Analyzing C code for legacy patterns..." -ForegroundColor Cyan
+    Write-Log -File $LogFile -Level "INFO" -Message "Starting C code legacy analysis"
+    Write-Log -File $LogFile -Level "INFO" -Message "ProjectSrcPath: '$ProjectSrcPath'"
+
+    # Define legacy patterns to detect
+    $LegacyPatterns = @{
+        # Position return type changes (v2 returns Vec2short, v3 uses Position* output parameter)
+        "nc_get_position_gfx_animated_sprite() return value" = @{
+            Pattern = "Vec2short\s+\w+\s*=\s*nc_get_position_gfx_animated_sprite\s*\("
+            Issue = "nc_get_position_gfx_animated_sprite() signature changed in v3 (now uses output parameter)"
+            Suggestion = "Change to: Position pos; nc_get_position_gfx_animated_sprite(&sprite, &pos);"
+        }
+
+        "nc_get_position_gfx_picture() return value" = @{
+            Pattern = "Vec2short\s+\w+\s*=\s*nc_get_position_gfx_picture\s*\("
+            Issue = "nc_get_position_gfx_picture() signature changed in v3 (now uses output parameter)"
+            Suggestion = "Change to: Position pos; nc_get_position_gfx_picture(&picture, &pos);"
+        }
+
+        "nc_get_position_gfx_scroller() return value" = @{
+            Pattern = "Vec2short\s+\w+\s*=\s*nc_get_position_gfx_scroller\s*\("
+            Issue = "nc_get_position_gfx_scroller() signature changed in v3 (now uses output parameter)"
+            Suggestion = "Change to: Position pos; nc_get_position_gfx_scroller(&scroller, &pos);"
+        }
+
+        "nc_get_position_gfx_animated_sprite_physic() return value" = @{
+            Pattern = "Vec2short\s+\w+\s*=\s*nc_get_position_gfx_animated_sprite_physic\s*\("
+            Issue = "nc_get_position_gfx_animated_sprite_physic() signature changed in v3 (now uses output parameter)"
+            Suggestion = "Change to: Position pos; nc_get_position_gfx_animated_sprite_physic(&sprite, &pos);"
+        }
+
+        # Breaking change: nc_get_relative_position signature
+        "nc_get_relative_position() old signature" = @{
+            Pattern = "Vec2short\s+\w+\s*=\s*nc_get_relative_position\s*\(\s*[^,]*,\s*[^)]*\s*\)"
+            Issue = "nc_get_relative_position() signature changed in v3 (now takes Position* as first parameter)"
+            Suggestion = "Change to: Position pos; nc_get_relative_position(&pos, box, world_coord);"
+        }
+
+        # Vec2short type usage (replaced with Position in v3)
+        "Vec2short type usage" = @{
+            Pattern = "Vec2short\s+\w+"
+            Issue = "Vec2short type deprecated in v3, replaced with Position"
+            Suggestion = "Replace Vec2short with Position type"
+        }
+
+        # Direct member access on position functions (v3 signature change)
+        "nc_get_position_gfx_picture_physic().x access" = @{
+            Pattern = "nc_get_position_gfx_picture_physic\s*\([^)]*\)\s*\.\s*x"
+            Issue = "nc_get_position_gfx_picture_physic() signature changed in v3 (now uses output parameter)"
+            Suggestion = "Change to: Position pos; nc_get_position_gfx_picture_physic(&picture, &pos); then use pos.x"
+        }
+
+        "nc_get_position_gfx_picture_physic().y access" = @{
+            Pattern = "nc_get_position_gfx_picture_physic\s*\([^)]*\)\s*\.\s*y"
+            Issue = "nc_get_position_gfx_picture_physic() signature changed in v3 (now uses output parameter)"
+            Suggestion = "Change to: Position pos; nc_get_position_gfx_picture_physic(&picture, &pos); then use pos.y"
+        }
+
+        "nc_get_position_gfx_animated_sprite_physic().x access" = @{
+            Pattern = "nc_get_position_gfx_animated_sprite_physic\s*\([^)]*\)\s*\.\s*x"
+            Issue = "nc_get_position_gfx_animated_sprite_physic() signature changed in v3 (now uses output parameter)"
+            Suggestion = "Change to: Position pos; nc_get_position_gfx_animated_sprite_physic(&sprite, &pos); then use pos.x"
+        }
+
+        "nc_get_position_gfx_animated_sprite_physic().y access" = @{
+            Pattern = "nc_get_position_gfx_animated_sprite_physic\s*\([^)]*\)\s*\.\s*y"
+            Issue = "nc_get_position_gfx_animated_sprite_physic() signature changed in v3 (now uses output parameter)"
+            Suggestion = "Change to: Position pos; nc_get_position_gfx_animated_sprite_physic(&sprite, &pos); then use pos.y"
+        }
+
+        "nc_get_position_gfx_animated_sprite().x access" = @{
+            Pattern = "nc_get_position_gfx_animated_sprite\s*\([^)]*\)\s*\.\s*x"
+            Issue = "nc_get_position_gfx_animated_sprite() signature changed in v3 (now uses output parameter)"
+            Suggestion = "Change to: Position pos; nc_get_position_gfx_animated_sprite(&sprite, &pos); then use pos.x"
+        }
+
+        "nc_get_position_gfx_animated_sprite().y access" = @{
+            Pattern = "nc_get_position_gfx_animated_sprite\s*\([^)]*\)\s*\.\s*y"
+            Issue = "nc_get_position_gfx_animated_sprite() signature changed in v3 (now uses output parameter)"
+            Suggestion = "Change to: Position pos; nc_get_position_gfx_animated_sprite(&sprite, &pos); then use pos.y"
+        }
+
+        "nc_get_position_gfx_picture().x access" = @{
+            Pattern = "nc_get_position_gfx_picture\s*\([^)]*\)\s*\.\s*x"
+            Issue = "nc_get_position_gfx_picture() signature changed in v3 (now uses output parameter)"
+            Suggestion = "Change to: Position pos; nc_get_position_gfx_picture(&picture, &pos); then use pos.x"
+        }
+
+        "nc_get_position_gfx_picture().y access" = @{
+            Pattern = "nc_get_position_gfx_picture\s*\([^)]*\)\s*\.\s*y"
+            Issue = "nc_get_position_gfx_picture() signature changed in v3 (now uses output parameter)"
+            Suggestion = "Change to: Position pos; nc_get_position_gfx_picture(&picture, &pos); then use pos.y"
+        }
+
+        "nc_get_position_gfx_scroller().x access" = @{
+            Pattern = "nc_get_position_gfx_scroller\s*\([^)]*\)\s*\.\s*x"
+            Issue = "nc_get_position_gfx_scroller() signature changed in v3 (now uses output parameter)"
+            Suggestion = "Change to: Position pos; nc_get_position_gfx_scroller(&scroller, &pos); then use pos.x"
+        }
+
+        "nc_get_position_gfx_scroller().y access" = @{
+            Pattern = "nc_get_position_gfx_scroller\s*\([^)]*\)\s*\.\s*y"
+            Issue = "nc_get_position_gfx_scroller() signature changed in v3 (now uses output parameter)"
+            Suggestion = "Change to: Position pos; nc_get_position_gfx_scroller(&scroller, &pos); then use pos.y"
+        }
+
+        # Deprecated logging functions from v2
+        "nc_log() function" = @{
+            Pattern = "nc_log\s*\(\s*`"[^`"]*`"\s*\)\s*;"
+            Issue = "nc_log() function removed in v3"
+            Suggestion = "Replace with nc_log_info_line()"
+        }
+
+        "nc_log_vec2short()" = @{
+            Pattern = "nc_log_vec2short\s*\("
+            Issue = "nc_log_vec2short() function removed in v3"
+            Suggestion = "Replace with nc_set_position_log(x, y)"
+        }
+
+        "nc_log_word() with label" = @{
+            Pattern = "nc_log_word\s*\(\s*`"[^`"]*`"\s*,"
+            Issue = "nc_log_word() signature changed in v3 (label parameter removed)"
+            Suggestion = "Remove label parameter: nc_log_word(value) or use nc_log_info() first"
+        }
+
+        "nc_log_int() with label" = @{
+            Pattern = "nc_log_int\s*\(\s*`"[^`"]*`"\s*,"
+            Issue = "nc_log_int() signature changed in v3 (label parameter removed)"
+            Suggestion = "Remove label parameter: nc_log_int(value) or use nc_log_info() first"
+        }
+
+        "nc_log_short() with label" = @{
+            Pattern = "nc_log_short\s*\(\s*`"[^`"]*`"\s*,"
+            Issue = "nc_log_short() signature changed in v3 (label parameter removed)"
+            Suggestion = "Remove label parameter: nc_log_short(value) or use nc_log_info() first"
+        }
+
+        # DATlib structure changes (palCount deprecated, replaced with count)
+        "DATlib palCount member access" = @{
+            Pattern = "\w+\s*\.\s*palCount\b"
+            Issue = "DATlib palCount member deprecated in v3, replaced with count"
+            Suggestion = "Replace .palCount with .count (e.g., palette_data.palCount becomes palette_data.count)"
+        }
+
+        "DATlib ->palCount member access" = @{
+            Pattern = "\w+\s*->\s*palCount\b"
+            Issue = "DATlib palCount member deprecated in v3, replaced with count"
+            Suggestion = "Replace ->palCount with ->count (e.g., paletteInfo->palCount becomes paletteInfo->count)"
+        }
+
+        # NeoCore object palette count access (different migration path)
+        "NeoCore object palCount access" = @{
+            Pattern = "\w+\s*\.\s*palInfo\s*->\s*palCount\b"
+            Issue = "NeoCore object palInfo->palCount deprecated in v3, replaced with palInfo->count"
+            Suggestion = "Replace .palInfo->palCount with .palInfo->count"
+        }
+
+        "NeoCore object ->palInfo->palCount access" = @{
+            Pattern = "\w+\s*->\s*palInfo\s*->\s*palCount\b"
+            Issue = "NeoCore object palInfo->palCount deprecated in v3, replaced with palInfo->count"
+            Suggestion = "Replace ->palInfo->palCount with ->palInfo->count"
+        }
+
+        # DATlib animated sprite changes
+        "currentStepNum member access" = @{
+            Pattern = "\w+\s*\.\s*currentStepNum\b"
+            Issue = "DATlib currentStepNum member renamed to stepNum in v3"
+            Suggestion = "Replace .currentStepNum with .stepNum"
+        }
+
+        "->currentStepNum member access" = @{
+            Pattern = "\w+\s*->\s*currentStepNum\b"
+            Issue = "DATlib currentStepNum member renamed to stepNum in v3"
+            Suggestion = "Replace ->currentStepNum with ->stepNum"
+        }
+
+        # DATlib type changes
+        "WORD type usage" = @{
+            Pattern = "\bWORD\s+\w+"
+            Issue = "DATlib WORD type replaced with ushort in v3"
+            Suggestion = "Replace WORD with ushort"
+        }
+
+        "DWORD type usage" = @{
+            Pattern = "\bDWORD\s+\w+"
+            Issue = "DATlib DWORD type replaced with uint in v3"
+            Suggestion = "Replace DWORD with uint"
+        }
+
+        "nc_log_bool() with label" = @{
+            Pattern = "nc_log_bool\s*\(\s*`"[^`"]*`"\s*,"
+            Issue = "nc_log_bool() signature changed in v3 (label parameter removed)"
+            Suggestion = "Remove label parameter: nc_log_bool(value) or use nc_log_info() first"
+        }
+
+        "nc_log_byte() with label" = @{
+            Pattern = "nc_log_byte\s*\(\s*`"[^`"]*`"\s*,"
+            Issue = "nc_log_byte() signature changed in v3 (label parameter removed)"
+            Suggestion = "Remove label parameter: nc_log_byte(value) or use nc_log_info() first"
+        }
+
+        "nc_log_box() with label" = @{
+            Pattern = "nc_log_box\s*\(\s*`"[^`"]*`"\s*,"
+            Issue = "nc_log_box() signature changed in v3 (label parameter removed)"
+            Suggestion = "Remove label parameter: nc_log_box(value) or use nc_log_info() first"
+        }
+
+        "nc_log_dword() with label" = @{
+            Pattern = "nc_log_dword\s*\(\s*`"[^`"]*`"\s*,"
+            Issue = "nc_log_dword() signature changed in v3 (label parameter removed)"
+            Suggestion = "Remove label parameter: nc_log_dword(value) or use nc_log_info() first"
+        }
+
+        # Removed function - nc_clear_vram
+        "nc_clear_vram() function" = @{
+            Pattern = "nc_clear_vram\s*\("
+            Issue = "nc_clear_vram() function removed in v3"
+            Suggestion = "Replace with nc_clear_display() to clear display or nc_reset() for full reset"
+        }
+
+        # Obsolete structure members from v2
+        "palCount structure member" = @{
+            Pattern = "\.\s*palCount\b"
+            Issue = "palCount member removed from NeoCore v3 structures"
+            Suggestion = "Remove palCount usage - palette counts are now handled internally"
+        }
+
+        "paletteMgr structure member" = @{
+            Pattern = "\.\s*paletteMgr\b"
+            Issue = "paletteMgr member removed from NeoCore v3 structures"
+            Suggestion = "Remove paletteMgr usage - palette management is now handled internally"
+        }
+
+        "spriteManager structure member" = @{
+            Pattern = "\.\s*spriteManager\b"
+            Issue = "spriteManager member removed from NeoCore v3 structures"
+            Suggestion = "Remove spriteManager usage - sprite management is now handled internally"
+        }
+
+        "fixMgrMemoryPool structure member" = @{
+            Pattern = "\.\s*fixMgrMemoryPool\b"
+            Issue = "fixMgrMemoryPool member removed from NeoCore v3 structures"
+            Suggestion = "Remove fixMgrMemoryPool usage - memory management is now handled internally"
+        }
+
+        "sprites structure member" = @{
+            Pattern = "\.\s*sprites\b"
+            Issue = "sprites member may have been removed or renamed in NeoCore v3 structures"
+            Suggestion = "Check NeoCore v3 documentation for updated structure members"
+        }
+
+        "frames structure member" = @{
+            Pattern = "\.\s*frames\b"
+            Issue = "frames member may have been removed or renamed in NeoCore v3 structures"
+            Suggestion = "Check NeoCore v3 documentation for updated structure members"
+        }
+
+        # C99 variable declarations (not supported in NeoCore C89/C90)
+        "C99 variable declaration" = @{
+            Pattern = "^[^/\*]*\w+\s+\w+\s*=[^;]*;.*\w+\s+\w+\s*[=;]"
+            Issue = "C99-style variable declaration (variables declared after code statements)"
+            Suggestion = "Move all variable declarations to the beginning of the function block (C89/C90 requirement)"
+        }
+
+        "Mixed declarations and code" = @{
+            Pattern = "(?<!\s*//.*)\w+\s+\w+\s*=.*;\s*\n.*\n.*\w+\s+\w+\s*[=;]"
+            Issue = "Mixed variable declarations and code statements (C99 feature not supported)"
+            Suggestion = "Move all variable declarations to the beginning of the function block"
+        }
+    }
+
+    # Get all C files in the project
+    $cFiles = @()
+    $searchPatterns = @("*.c", "*.h")
+
+    foreach ($pattern in $searchPatterns) {
+        try {
+            $files = Get-ChildItem -Path $ProjectSrcPath -Filter $pattern -Recurse -File -ErrorAction SilentlyContinue
+            # Additional check to ensure we only get files, not directories
+            $validFiles = $files | Where-Object { $_.PSIsContainer -eq $false -and (Test-Path $_.FullName -PathType Leaf) }
+            $cFiles += $validFiles
+        } catch {
+            Write-Log -File $LogFile -Level "WARNING" -Message "Error scanning for $pattern files: $($_.Exception.Message)"
+        }
+    }
+
+    # Exclude build and common non-source directories
+    $excludePatterns = @("*\build\*", "*\out\*", "*\bin\*", "*\obj\*", "*\.git\*")
+    $filteredFiles = $cFiles | Where-Object {
+        $filePath = $_.FullName
+        $shouldInclude = $true
+
+        foreach ($excludePattern in $excludePatterns) {
+            if ($filePath -like $excludePattern) {
+                $shouldInclude = $false
+                break
+            }
+        }
+        return $shouldInclude
+    }
+
+    Write-Log -File $LogFile -Level "INFO" -Message "Found $($filteredFiles.Count) C files to analyze"
+
+    $allIssues = @()
+    $filesWithIssues = 0
+
+    # Analyze each file
+    foreach ($file in $filteredFiles) {
+        try {
+            $fileContent = Get-Content -Path $file.FullName -Raw -ErrorAction Stop
+            $fileIssues = @()
+
+            # Scan for each legacy pattern
+            foreach ($patternName in $LegacyPatterns.Keys) {
+                $patternInfo = $LegacyPatterns[$patternName]
+                $pattern = $patternInfo.Pattern
+
+                if ($fileContent -match $pattern) {
+                    # Find all matches with line numbers
+                    $lines = $fileContent -split "`r?`n"
+
+                    for ($i = 0; $i -lt $lines.Count; $i++) {
+                        if ($lines[$i] -match $pattern) {
+                            # Calculate relative path for this file
+                            $relativePath = Get-RelativePath -FullPath $file.FullName -BasePath $ProjectSrcPath
+
+                            $issue = [PSCustomObject]@{
+                                File = $relativePath  # Use relative path instead of just filename
+                                FullPath = $file.FullName
+                                Line = $i + 1
+                                Pattern = $patternName
+                                Issue = $patternInfo.Issue
+                                Suggestion = $patternInfo.Suggestion
+                                Code = $lines[$i].Trim()
+                            }
+                            $fileIssues += $issue
+                            $allIssues += $issue
+
+                            # Log detailed information for each pattern found (using relative path)
+                            Write-Log -File $LogFile -Level "WARNING" -Message "LEGACY PATTERN DETECTED in $relativePath at line $($i + 1): $($patternInfo.Issue)"
+                            Write-Log -File $LogFile -Level "INFO" -Message "  Code: $($lines[$i].Trim())"
+                            Write-Log -File $LogFile -Level "INFO" -Message "  Suggestion: $($patternInfo.Suggestion)"
+                        }
+                    }
+                }
+            }
+
+            if ($fileIssues.Count -gt 0) {
+                $filesWithIssues++
+                Write-Log -File $LogFile -Level "INFO" -Message "Found $($fileIssues.Count) legacy patterns in $($file.Name)"
+            }
+
+        } catch {
+            Write-Log -File $LogFile -Level "ERROR" -Message "Error analyzing file $($file.FullName): $($_.Exception.Message)"
+        }
+    }
+
+    # Report results
+    if ($allIssues.Count -gt 0) {
+        Write-Host "Legacy code analysis completed:" -ForegroundColor Yellow
+        Write-Host "  - Files analyzed: $($filteredFiles.Count)" -ForegroundColor White
+        Write-Host "  - Files with issues: $filesWithIssues" -ForegroundColor White
+        Write-Host "  - Total legacy patterns found: $($allIssues.Count)" -ForegroundColor White
+        Write-Host ""
+        Write-Host "Files requiring manual review:" -ForegroundColor Yellow
+
+        # Show only file summary on console (detailed info is in log) - using relative paths
+        $issuesByFile = $allIssues | Group-Object -Property File
+        foreach ($fileGroup in $issuesByFile) {
+            $displayName = if ([string]::IsNullOrWhiteSpace($fileGroup.Name)) {
+                "<unknown file>"
+            } else {
+                $fileGroup.Name  # Already contains relative path
+            }
+            $patternCount = $fileGroup.Count
+            Write-Host "  - ${displayName}: ${patternCount} pattern(s)" -ForegroundColor Red
+        }
+        Write-Host ""
+        Write-Host "See upgrade.log for detailed analysis and suggestions." -ForegroundColor Cyan
+
+        Write-Log -File $LogFile -Level "WARNING" -Message "Legacy code analysis completed: $($allIssues.Count) patterns found in $filesWithIssues files requiring manual review"
+
+        return $false  # Manual intervention required
+    } else {
+        Write-Host "Legacy code analysis completed successfully:" -ForegroundColor Green
+        Write-Host "  - Files analyzed: $($filteredFiles.Count)" -ForegroundColor White
+        Write-Host "  - No legacy patterns detected" -ForegroundColor Green
+        Write-Log -File $LogFile -Level "SUCCESS" -Message "Legacy code analysis completed: no legacy patterns detected in $($filteredFiles.Count) files"
+        return $true
+    }
+}

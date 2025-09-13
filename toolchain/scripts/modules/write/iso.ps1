@@ -14,9 +14,10 @@ function Write-ISO {
   if ((Test-Path -Path $OutputFile) -eq $true) {
     Write-Host "Builded ISO $OutputFile" -ForegroundColor Green
     Write-Host ""
+    return $true
   } else {
     Write-Host "$OutputFile was not generated" -ForegroundColor Red
-    exit 1
+    return $false
   }
 }
 
@@ -28,14 +29,21 @@ function Write-Cache {
     [Parameter(Mandatory=$true)][String] $PathISOBuildFolder
   )
 
+  $projectBuildPath = Get-TemplatePath -Path $Config.project.buildPath
+
   if ((Test-Path -Path $PathCDTemplate) -eq $false) {
     if ($Manifest.manifest.dependencies.cdTemplate.url) {
-      Install-Component `
+      if (-not (Install-Component `
         -URL $Manifest.manifest.dependencies.cdTemplate.url `
-        -PathDownload "$($Config.project.buildPath)\spool" `
-        -PathInstall $Manifest.manifest.dependencies.cdTemplate.path
+        -PathDownload "$projectBuildPath\spool" `
+        -PathInstall $Manifest.manifest.dependencies.cdTemplate.path)) {
+        Write-Host "Failed to install CD Template component" -ForegroundColor Red
+        return $false
+      }
     } else {
-      Install-Component -URL "$BaseURL/neobuild-cd_template.zip" -PathDownload "$($Config.project.buildPath)\spool" -PathInstall $Config.project.buildPath
+      Write-Host "Error: CD Template not found in manifest dependencies" -ForegroundColor Red
+      Write-Host "Please add cdTemplate to manifest.xml dependencies section" -ForegroundColor Yellow
+      return $false
     }
   }
 
@@ -43,20 +51,27 @@ function Write-Cache {
   if (-Not(Test-Path -Path $PathISOBuildFolder)) { mkdir -Path $PathISOBuildFolder | Out-Null }
   if (-Not(Test-Path -Path $PathCDTemplate)) {
     Write-Host "$PathCDTemplate not found" -ForegroundColor Red
-    exit 1
+    return $false
   }
   if (-Not(Test-Path -Path $PRGFile)) {
     Write-Host "$PRGFile not found" -ForegroundColor Red
-    exit 1
+    return $false
   }
   if (-Not(Test-Path -Path $SpriteFile)) {
     Write-Host "$SpriteFile not found" -ForegroundColor Red
-    exit 1
+    return $false
   }
 
   Copy-Item -Path "$PathCDTemplate\*" -Destination $PathISOBuildFolder -Recurse -Force -ErrorAction Stop
   Copy-Item -Path $PRGFile -Destination "$PathISOBuildFolder\DEMO.PRG" -Force -ErrorAction Stop
   Copy-Item -Path $SpriteFile -Destination "$PathISOBuildFolder\DEMO.SPR" -Force -ErrorAction Stop
+
+  if ($Config.project.gfx.DAT.fixdata.chardata.setup.PSObject.Properties.Name -contains "charfile" -and $Config.project.gfx.DAT.fixdata.chardata.setup.charfile) {
+    $fixfile = $Config.project.gfx.DAT.fixdata.chardata.setup.charfile
+    Copy-Item -Path $fixfile -Destination "$PathISOBuildFolder\DEMO.FIX" -Force -ErrorAction Stop
+  }
+
+  return $true
 }
 
 function Write-SFX {
@@ -68,13 +83,15 @@ function Write-SFX {
 
   Write-Host "SoundFX" -ForegroundColor Yellow
 
-  if ($PCMFile) { Write-Host $PCMFile -ForegroundColor Blue }
-  if ($Z80File) { Write-Host $Z80File -ForegroundColor Blue }
+  if ($PCMFile) { Write-Host $PCMFile -ForegroundColor Cyan }
+  if ($Z80File) { Write-Host $Z80File -ForegroundColor Cyan }
 
-  Write-Host "Destination folder $PathISOBuildFolder" -ForegroundColor Blue
+  Write-Host "Destination folder $PathISOBuildFolder" -ForegroundColor Cyan
 
   if ($PCMFile) { Copy-Item -Path $PCMFile -Destination "$PathISOBuildFolder\DEMO.PCM" -Force -ErrorAction Stop }
   if ($Z80File) { Copy-Item -Path $Z80File -Destination "$PathISOBuildFolder\DEMO.Z80" -Force -ErrorAction Stop }
+
+  return $true
 }
 
 function Write-CUE {
@@ -97,36 +114,55 @@ function Write-CUE {
     $ext = [System.IO.Path]::GetExtension($File)
     $path = [System.IO.Path]::GetDirectoryName($File)
 
-    $destination = "$($Config.project.buildPath)\$($Config.project.name)\$path"
+    $projectBuildPath = Get-TemplatePath -Path $Config.project.buildPath
+    $buildPathProject = "$projectBuildPath\$($Config.project.name)"
+    $destination = "$buildPathProject\$path"
 
-    Copy-Item -Path $File -Destination $destination
+    # Source file should be from the build folder, not project root
+    $sourceFile = "$buildPathProject\$File"
+
+    # Ensure destination directory exists
+    if (-Not(Test-Path -Path $destination)) {
+      New-Item -ItemType Directory -Path $destination -Force | Out-Null
+    }
+
+    # Only copy if source file exists and destination is different
+    $destinationFile = "$destination\$baseName$ext"
+    if (Test-Path -Path $sourceFile) {
+      if ($sourceFile -ne $destinationFile) {
+        Copy-Item -Path $sourceFile -Destination $destination -Force
+      }
+    } else {
+      Write-Warning "Source file not found: $sourceFile"
+    }
 
     if ($ext -eq ".mp3" -or ($ext -eq ".wav" -and $ConfigCDDA.dist.iso.format -eq ".mp3")) {
-      if ((Test-Path -Path "$($Config.project.buildPath)\bin\mpg123-1.31.3-static-x86-64") -eq $false) {
+      if ((Test-Path -Path "$projectBuildPath\bin\mpg123-1.31.3-static-x86-64") -eq $false) {
         if ($Manifest.manifest.dependencies.mpg123.url) {
-          Install-Component `
+          if (-not (Install-Component `
           -URL $Manifest.manifest.dependencies.mpg123.url `
-          -PathDownload "$($Config.project.buildPath)\spool" `
-          -PathInstall $Manifest.manifest.dependencies.mpg123.path
+          -PathDownload "$projectBuildPath\spool" `
+          -PathInstall $Manifest.manifest.dependencies.mpg123.path)) {
+            Write-Host "Failed to install mpg123 component" -ForegroundColor Red
+            return $false
+          }
         } else {
-          Install-Component `
-          -URL "$BaseURL/mpg123-1.31.3-static-x86-64.zip" `
-          -PathDownload "$($Config.project.buildPath)\spool" `
-          -PathInstall "$($Config.project.buildPath)\bin"
+          Write-Host "Error: mpg123 not found in manifest dependencies" -ForegroundColor Red
+          Write-Host "Please add mpg123 to manifest.xml dependencies section" -ForegroundColor Yellow
+          return $false
         }
       }
     }
 
     if (-Not($Rule -like "*dist*")) {
-      $buildPathProject = "$($Config.project.buildPath)\$($Config.project.name)"
       if ($ext -eq ".wav") {
-        Write-Host "copy $File" -ForegroundColor Blue
+        Write-Host "copy $File" -ForegroundColor Cyan
         Copy-Item -Path "$buildPathProject\$path\$baseName$ext" -Destination $path\$baseName$ext
       }
 
       if ($ext -eq ".mp3") {
         Write-WAV `
-          -mpg123 "$($Config.project.buildPath)\bin\mpg123-1.31.3-static-x86-64\mpg123.exe" `
+          -mpg123 "$projectBuildPath\bin\mpg123-1.31.3-static-x86-64\mpg123.exe" `
           -WAVFile "$buildPathProject\$path\$baseName.wav" `
           -MP3File "$path\$baseName.mp3"
         $File = "$path\$baseName.wav"
@@ -135,7 +171,7 @@ function Write-CUE {
 
     if ($Rule -eq "dist:exe" -and $ext -eq ".mp3") {
       Write-WAV `
-        -mpg123 "$($Config.project.buildPath)\bin\mpg123-1.31.3-static-x86-64\mpg123.exe" `
+        -mpg123 "$projectBuildPath\bin\mpg123-1.31.3-static-x86-64\mpg123.exe" `
         -WAVFile "$buildPathProject\$path\$baseName.wav" `
         -MP3File "$path\$baseName.mp3"
       $File = "$path\$baseName.wav"
@@ -143,56 +179,81 @@ function Write-CUE {
 
     if ($Rule -eq "dist:mame" -and $ext -eq ".mp3") {
       Write-WAV `
-        -mpg123 "$($Config.project.buildPath)\bin\mpg123-1.31.3-static-x86-64\mpg123.exe" `
+        -mpg123 "$projectBuildPath\bin\mpg123-1.31.3-static-x86-64\mpg123.exe" `
         -WAVFile "$buildPathProject\$path\$baseName.wav" `
         -MP3File "$path\$baseName.mp3"
       $File = "$path\$baseName.wav"
     }
 
     if ($Rule -eq "dist:exe" -and $ext -eq ".wav") {
-      Write-Host "copy $File" -ForegroundColor Blue
+      Write-Host "copy $File" -ForegroundColor Cyan
       Copy-Item -Path "$buildPathProject\$path\$baseName$ext" -Destination $path\$baseName$ext
     }
 
     if ($Rule -eq "dist:mame" -and $ext -eq ".wav") {
-      Write-Host "copy $File" -ForegroundColor Blue
+      Write-Host "copy $File" -ForegroundColor Cyan
       Copy-Item -Path "$buildPathProject\$path\$baseName$ext" -Destination $path\$baseName$ext
     }
 
     if ($Rule -like "dist:iso") {
       if ($ext -eq ".mp3" -and $ConfigCDDA.dist.iso.format -eq "wav") {
         Write-WAV `
-          -mpg123 "$($Config.project.buildPath)\bin\mpg123-1.31.3-static-x86-64\mpg123.exe" `
+          -mpg123 "$projectBuildPath\bin\mpg123-1.31.3-static-x86-64\mpg123.exe" `
           -WAVFile "$buildPathProject\$path\$baseName.wav" `
           -MP3File "$path\$baseName.mp3"
         $File = "$path\$baseName.wav"
       }
 
       if ($ext -eq ".wav" -and $ConfigCDDA.dist.iso.format -eq "wav") {
-        Write-Host "copy $File" -ForegroundColor Blue
+        Write-Host "copy $File" -ForegroundColor Cyan
         Copy-Item -Path "$buildPathProject\$path\$baseName$ext" -Destination $path\$baseName$ext
       }
 
       if ($ext -eq ".wav" -and $ConfigCDDA.dist.iso.format -eq "mp3") {
-        if ((Test-Path -Path "$($Config.project.buildPath)\bin\ffmpeg.exe") -eq $false) {
+        # Search for ffmpeg executable in bin folder or its subdirectories
+        $ffmpegPath = Get-ChildItem -Path "$projectBuildPath\bin" -Name "ffmpeg.exe" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+        if ($ffmpegPath) {
+          $ffmpegExe = Join-Path "$projectBuildPath\bin" $ffmpegPath
+        } else {
+          $ffmpegExe = "$projectBuildPath\bin\ffmpeg.exe"
+        }
+
+        # Download ffmpeg if not found
+        if (-Not(Test-Path -Path $ffmpegExe)) {
           if ($Manifest.manifest.dependencies.ffmpeg.url) {
-              Install-Component `
-                -URL $Manifest.manifest.dependencies.ffmpeg.url `
-                -PathDownload "$($Config.project.buildPath)\spool" `
-                -PathInstall $Manifest.manifest.dependencies.ffmpeg.url
-            } else {
-              Install-Component `
-                -URL "$BaseURL/ffmpeg-23-12-18.zip" `
-                -PathDownload "$($Config.project.buildPath)\spool" `
-                -PathInstall "$($Config.project.buildPath)\bin"
+            if (-not (Install-Component `
+              -URL $Manifest.manifest.dependencies.ffmpeg.url `
+              -PathDownload "$projectBuildPath\spool" `
+              -PathInstall (Get-TemplatePath -Path $Manifest.manifest.dependencies.ffmpeg.path))) {
+              Write-Host "Failed to install ffmpeg component" -ForegroundColor Red
+              return $false
             }
+          } else {
+            Write-Host "Error: ffmpeg not found in manifest dependencies" -ForegroundColor Red
+            Write-Host "Please add ffmpeg to manifest.xml dependencies section" -ForegroundColor Yellow
+            return $false
+          }
+
+          # Re-search for ffmpeg after installation
+          $ffmpegPath = Get-ChildItem -Path "$projectBuildPath\bin" -Name "ffmpeg.exe" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
+          if ($ffmpegPath) {
+            $ffmpegExe = Join-Path "$projectBuildPath\bin" $ffmpegPath
+          } else {
+            $ffmpegExe = "$projectBuildPath\bin\ffmpeg.exe"
+          }
+        }
+
+        # Create destination directory if necessary
+        $destinationDir = Split-Path -Path "$buildPathProject\$path\$baseName.mp3" -Parent
+        if (-Not(Test-Path -Path $destinationDir)) {
+          New-Item -ItemType Directory -Path $destinationDir -Force | Out-Null
         }
 
         Write-MP3 `
-          -ffmpeg "$($Config.project.buildPath)\bin\ffmpeg.exe" `
-          -WAVFile "$path\$baseName.wav" `
+          -ffmpeg $ffmpegExe `
+          -WAVFile "$buildPathProject\$path\$baseName.wav" `
           -MP3File "$buildPathProject\$path\$baseName.mp3"
-        $File = "$path\$baseName.wav"
+        $File = "$buildPathProject\$path\$baseName.mp3"
       }
     }
 
@@ -225,8 +286,9 @@ function Write-CUE {
   if ((Test-Path -Path $OutputFile) -eq $true) {
     Write-Host "Builded CUE $OutputFile" -ForegroundColor Green
     Write-Host ""
+    return $true
   } else {
     Write-Host "$OutputFile was not generated" -ForegroundColor Red
-    exit 1
+    return $false
   }
 }

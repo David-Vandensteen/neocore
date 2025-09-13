@@ -10,7 +10,7 @@ function Update-RaineConfigSwitch {
   if ($Rule -like "run:raine:*") {
     if (-Not($Config.project.emulator.raine.config.$raineConfigName)) {
       Write-Host "Error - $raineConfigName not found in project.emulator.raine.config" -ForegroundColor Red
-      exit 1
+      return $false
     }
     $raineConfig = Resolve-TemplatePath -Path $Config.project.emulator.raine.config.$raineConfigName
   } else {
@@ -19,7 +19,7 @@ function Update-RaineConfigSwitch {
 
   if (-Not(Test-Path -Path $raineConfig)) {
     Write-Host "Error - $raineConfig not found" -ForegroundColor Red
-    exit 1
+    return $false
   }
 
   Write-Host "Copying $raineConfig to $rainePath\config\raine32_sdl.cfg"
@@ -35,7 +35,7 @@ function Invoke-Raine {
   )
   if ((Test-Path -Path "$PathISO\$FileName") -eq $false) {
     Write-Host "$FileName not found" -ForegroundColor Red
-    exit 1
+    return $false
   }
   if ((Test-Path -Path $PathRaine) -eq $false) {
     if ($Manifest.manifest.dependencies.raine.url) {
@@ -44,27 +44,59 @@ function Invoke-Raine {
         -PathDownload "$($Config.project.buildPath)\spool" `
         -PathInstall $Manifest.manifest.dependencies.raine.path
     } else {
-      Install-Component -URL "$BaseURL/neobuild-raine.zip" -PathDownload "$($Config.project.buildPath)\spool" -PathInstall $Config.project.buildPath
+      Write-Host "Error: Raine not found in manifest dependencies" -ForegroundColor Red
+      Write-Host "Please add raine to manifest.xml dependencies section" -ForegroundColor Yellow
+      return $false
     }
     Install-RaineConfig -Path $PathRaine
   }
-  Assert-RaineConfig
+  if (-Not(Assert-RaineConfig)) {
+    Write-Host "Raine config assertion failed" -ForegroundColor Red
+    return $false
+  }
   Update-RaineConfigSwitch
+
   Write-Host "Launching raine $FileName" -ForegroundColor Yellow
-  $pathRaineAbs = (Resolve-Path -Path $PathRaine).Path
-  Push-Location -Path $PathISO
-  & "$pathRaineAbs\$ExeName" $FileName
-  Pop-Location
+  $pathRaineAbs = Resolve-TemplatePath -Path $PathRaine
+  $fullExePath = "$pathRaineAbs\$ExeName"
+  $pathISOAbs = Resolve-TemplatePath -Path $PathISO
+  $fullCuePath = "$pathISOAbs\$FileName"
+
+  Write-Host "Raine path: $pathRaineAbs" -ForegroundColor Cyan
+  Write-Host "Exe name: $ExeName" -ForegroundColor Cyan
+  Write-Host "ISO path: $PathISO" -ForegroundColor Cyan
+  Write-Host "CUE file: $fullCuePath" -ForegroundColor Cyan
+  Write-Host "Full exe path: $fullExePath" -ForegroundColor Cyan
+
+  if (-Not(Test-Path -Path $fullExePath)) {
+    Write-Host "Error: Raine executable not found at $fullExePath" -ForegroundColor Red
+    return $false
+  }
+
+  if (-Not(Test-Path -Path $fullCuePath)) {
+    Write-Host "Error: CUE file not found at $fullCuePath" -ForegroundColor Red
+    return $false
+  }
+
+  Write-Host "Starting Raine with command: `"$fullExePath`" `"$fullCuePath`"" -ForegroundColor Green
+  $raineProcess = Start-Process -FilePath $fullExePath -ArgumentList $fullCuePath -Wait -PassThru
+
+  # Raine might return non-zero exit codes even on normal exit, so we consider it successful
+  # as long as the process started and ran
+  Write-Host "Raine exited with code $($raineProcess.ExitCode)" -ForegroundColor Cyan
+  return $true
 }
 
 function Start-Raine {
+  Write-Host "Start Raine" -ForegroundColor Cyan
   $exeName = [System.IO.Path]::GetFileName($Config.project.emulator.raine.exeFile)
   $rainePath = Split-Path $Config.project.emulator.raine.exeFile
   $rainePath = Get-TemplatePath -Path $rainePath
+  $pathISO = Get-TemplatePath -Path "$($Config.project.buildPath)\$($Config.project.name)"
 
-  Invoke-Raine `
+  return Invoke-Raine `
     -FileName "$($Config.project.name).cue" `
     -PathRaine $rainePath `
-    -PathISO "$($Config.project.buildPath)\$($Config.project.name)" `
+    -PathISO $pathISO `
     -ExeName $exeName
 }
