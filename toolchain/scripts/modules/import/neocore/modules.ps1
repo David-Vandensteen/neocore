@@ -25,6 +25,7 @@ Import-Module "$neocorePathAbs\toolchain\scripts\modules\compare\filehash.ps1"
 # Project assertions
 Import-Module "$neocorePathAbs\toolchain\scripts\modules\assert\project.ps1"
 Import-Module "$neocorePathAbs\toolchain\scripts\modules\assert\project\gfx\dat.ps1"
+# NOTE: Fix files assertion is now integrated directly in fixdata.ps1
 Import-Module "$neocorePathAbs\toolchain\scripts\modules\assert\project\name.ps1"
 Import-Module "$neocorePathAbs\toolchain\scripts\modules\assert\project\compiler\systemFile.ps1"
 Import-Module "$neocorePathAbs\toolchain\scripts\modules\assert\path.ps1"
