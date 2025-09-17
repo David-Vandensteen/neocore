@@ -6,7 +6,6 @@
 *.mp3
 .vscode
 SPR.cd
-char.bin
 maps.s
 output.map
 palettes.s
@@ -15,12 +14,13 @@ test.prg
 as.exe.stackdump
 *.o
 *.prg
-neocore_migration_sample_1_0_0
-neocore_migration_sample_1_0_2
-neocore_migration_sample_2_0_0
-neocore_migration_sample_2_9_0
-neocore_migration_sample_3_0_0-rc1
+samples/neocore_migration_sample_1_0_0
+samples/neocore_migration_sample_1_0_2
+samples/neocore_migration_sample_2_0_0
+samples/neocore_migration_sample_2_9_0
+samples/neocore_migration_sample_3_0_0-rc1
 samples/ngcd-flamble-003
 samples/**/out/fix.bin
 samples/**/out/char.bin
 synchro.sh
+synchro.bat
