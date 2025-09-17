@@ -40,9 +40,9 @@ function Assert-ProjectGfxDatFixdataChardataFiles {
 
       if (-not (Test-Path -Path $resolvedPath)) {
         $missingFiles += $resolvedPath
-        Write-Host "    ✗ Missing: $resolvedPath" -ForegroundColor Red
+        Write-Host "    X Missing: $resolvedPath" -ForegroundColor Red
       } else {
-        Write-Host "    ✓ Found: $resolvedPath" -ForegroundColor Green
+        Write-Host "    OK Found: $resolvedPath" -ForegroundColor Green
       }
       $checkedFiles++
     }
@@ -51,7 +51,7 @@ function Assert-ProjectGfxDatFixdataChardataFiles {
   # Report results
   if ($missingFiles.Count -gt 0) {
     Write-Host "" -ForegroundColor Red
-    Write-Host "✗ Fix files assertion FAILED" -ForegroundColor Red
+    Write-Host "X Fix files assertion FAILED" -ForegroundColor Red
     Write-Host "Missing files:" -ForegroundColor Red
     foreach ($missingFile in $missingFiles) {
       Write-Host "  - $missingFile" -ForegroundColor Red
@@ -59,6 +59,6 @@ function Assert-ProjectGfxDatFixdataChardataFiles {
     return $false
   }
 
-  Write-Host "✓ All $checkedFiles fix files found successfully" -ForegroundColor Green
+  Write-Host "OK All $checkedFiles fix files found successfully" -ForegroundColor Green
   return $true
 }
