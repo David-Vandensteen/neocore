@@ -1,5 +1,12 @@
 ## 3.0.1
 
+  - **TOOLCHAIN IMPROVEMENTS**:
+    - **New Assert Module**: Added fix files validation
+    - **Enhanced Validation**: Fix graphics files existence checking integrated in project assertions
+  - **MAINTENANCE**:
+    - **Bootstrap**: Updated project creation script instructions
+    - **Configuration**: Improved .gitignore handling and validation
+
 ## 3.0.0
 
   - **MAJOR RELEASE** - DATLib 0.3, toolchain refactoring and quality improvement
