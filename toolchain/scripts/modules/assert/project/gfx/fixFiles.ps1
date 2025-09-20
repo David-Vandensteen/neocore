@@ -46,8 +46,15 @@ function Assert-ProjectGfxFixFiles {
   if ($fixdata.import) {
     foreach ($importElement in $fixdata.import) {
       if ($importElement.file) {
-        $checkedFiles++
         $filePath = $importElement.file
+
+        # Skip validation for system font file
+        if ($filePath -eq "{{build}}\fix\systemFont.bin") {
+          Write-Host "import file skipped (system): $filePath (bank: $($importElement.bank))" -ForegroundColor Cyan
+          continue
+        }
+
+        $checkedFiles++
 
         # Resolve path with templates
         try {
