@@ -1,3 +1,5 @@
+## 3.0.1
+
 ## 3.0.0
 
   - **MAJOR RELEASE** - DATLib 0.3, toolchain refactoring and quality improvement
