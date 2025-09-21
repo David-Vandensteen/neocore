@@ -130,10 +130,9 @@ try {
   Write-Host ""
   Write-Host "Next steps:" -ForegroundColor Yellow
   Write-Host "  1. cd `"$Path\src`"" -ForegroundColor Gray
-  Write-Host "  2. .\mak.ps1 sprite    # Generate sprites" -ForegroundColor Gray
-  Write-Host "  3. .\mak.ps1          # Build program" -ForegroundColor Gray
-  Write-Host "  4. .\mak.ps1 run:raine # Run in emulator" -ForegroundColor Gray
-
+  Write-Host "  2. .\mak.bat sprite    # Generate sprites" -ForegroundColor Gray
+  Write-Host "  3. .\mak.bat          # Build program" -ForegroundColor Gray
+  Write-Host "  4. .\mak.bat run:raine # Run in emulator" -ForegroundColor Gray
 } catch {
   Write-Host ""
   Write-Host "Project creation failed: $($_.Exception.Message)" -ForegroundColor Red
