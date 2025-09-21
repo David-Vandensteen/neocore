@@ -38,6 +38,10 @@ function Compare-ProjectVersions {
         $targetVer = [System.Version]::Parse($normalizedTargetVersion)
 
         if ($currentVer -lt $targetVer) {
+            # Check if this is a minor version bump (patch or RC)
+            $majorDiff = $targetVer.Major - $currentVer.Major
+            $minorDiff = $targetVer.Minor - $currentVer.Minor
+
             Write-Host ""
             Write-Host "*** MIGRATION REQUIRED ***" -ForegroundColor Green -BackgroundColor Black
             Write-Host ""
@@ -47,7 +51,13 @@ function Compare-ProjectVersions {
             Write-Host ""
             Write-Host "Migration will update your project to use NeoCore v$TargetVersion" -ForegroundColor White
             Write-Log -File $LogFile -Level "INFO" -Message "Migration required: $CurrentVersion -> $TargetVersion"
-            return "major"
+
+            # Return "minor" for patch/RC updates, "major" for major/minor version changes
+            if ($majorDiff -eq 0 -and $minorDiff -eq 0) {
+                return "minor"  # Patch or RC update (e.g., 3.0.0 -> 3.0.1-rc)
+            } else {
+                return "major"  # Major or minor version change
+            }
         } elseif ($currentVer -eq $targetVer) {
             Write-Host ""
             Write-Host "*** PROJECT XML UP TO DATE ***" -ForegroundColor Green -BackgroundColor Black
