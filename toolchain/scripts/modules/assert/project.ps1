@@ -58,6 +58,10 @@ function Assert-Project {
       Write-Host "Project GFX DAT assertion failed" -ForegroundColor Red
       return $false
     }
+    if (-Not(Assert-ProjectGfxFixFiles)) {
+      Write-Host "Project GFX fix files assertion failed" -ForegroundColor Red
+      return $false
+    }
   }
   if (-Not($Config.project.emulator)) {
     Write-Host "error : project.emulator not found" -ForegroundColor Red
