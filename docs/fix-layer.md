@@ -116,6 +116,29 @@ fixPrintf(2, 6, 2, 3, "TIME: %02d:%02d", min, sec);  /* Zero-padded numbers */
 - **Bank 3**: Custom font0 (requires palette loading)
 - **Bank 5**: Custom logos and graphics (requires palette loading)
 
+### Logging Functions vs Fix Display Functions
+
+**Important**: Neocore also provides logging functions (`nc_log_info`, `nc_set_log_bank`, `nc_set_log_palette_id`) with full control:
+
+```c
+// Logging functions - FULL palette and bank control
+nc_init_log();                          /* Initialize logging system */
+nc_set_position_log(x, y);             /* Set position */
+nc_set_log_bank(bank);                 /* Set font bank */
+nc_set_log_palette_id(palette);        /* Set palette ID (works with palJobPut palettes!) */
+nc_log_info("TEXT: %d", value);        /* Display with chosen palette and bank */
+```
+
+**Advantages of logging functions:**
+- Automatic cursor management and line wrapping
+- Consistent API for debug output
+- Full control over position, palette, and font bank
+- Works with custom palettes loaded via `palJobPut()`
+
+**Recommendation**: Both approaches are now equally powerful:
+- Use `fixPrint`/`fixPrintf` for direct, single-call text display
+- Use logging functions for complex debug output with automatic formatting
+
 ### Palette Management
 
 Custom fonts require their palettes to be loaded using `palJobPut()`:
