@@ -1030,6 +1030,30 @@ void nc_log_set_palette_id(WORD palette);
 WORD nc_palette_set_info(const paletteInfo *paletteInfo, WORD palette_index);
 
 /**
+ * @brief Allocate and set palette for fix layer
+ * @details Automatically allocates a palette index from the fix layer reserved range (2-16)
+ *          and loads the palette data. Uses the palette manager to ensure proper allocation.
+ *          Palettes 0-1 are reserved for system use and cannot be allocated.
+ *
+ * @param palette_info Pointer to palette data structure containing colors and count
+ * @return WORD Allocated palette index (2-16), or 0 if allocation failed
+ *
+ * @code
+ * // Allocate palette for fix layer font
+ * WORD fix_palette = nc_fix_set_palette_info(&my_font_palette);
+ * nc_log_set_palette_id(fix_palette);
+ * @endcode
+ *
+ * @note This function is specifically for fix layer palettes (indices 2-16)
+ * @note Palettes 0-1 are system reserved and never allocated
+ * @note Returns 0 if no palette slots available in fix range
+ * @since 3.1.0
+ *
+ * @see nc_palette_set_info(), nc_log_set_palette_id(), use_palette_manager_index()
+ */
+WORD nc_fix_set_palette_info(const paletteInfo *palette_info);
+
+/**
  * @brief Log formatted text without automatic line break
  * @details Prints formatted text at current log cursor position using printf-style formatting.
  *          Does not automatically advance to next line - use nc_log_next_line() manually.

@@ -41,6 +41,13 @@
 #define SPRITE_INDEX_MANAGER_MAX  384
 #define PALETTE_INDEX_MANAGER_MAX 256
 
+#define USE_PALETTE_MANAGER_INDEX_SPRITE_TYPE 0
+#define USE_PALETTE_MANAGER_INDEX_FIX_TYPE 1
+
+#define USE_PALETTE_MANAGER_INDEX_RESERVED_FOR_FIX ((const paletteInfo*) 1)
+#define USE_PALETTE_MANAGER_INDEX_FREE ((const paletteInfo*) NULL)
+#define USE_PALETTE_MANAGER_INDEX_SYSTEM_RESERVED ((const paletteInfo*) 2)
+
   //--------------------------------------------------------------------------//
  //                             STATIC                                       //
 //--------------------------------------------------------------------------//
@@ -188,7 +195,15 @@ static WORD use_sprite_manager_index(WORD max) {
 
 static void init_palette_manager_index() {
   WORD i = 0;
-  for (i = 0; i <= 16; i++) palette_index_manager_status[i] = (const paletteInfo*) 1;
+
+  // Reserve palettes 0 and 1 for system (never allocatable)
+  palette_index_manager_status[0] = USE_PALETTE_MANAGER_INDEX_SYSTEM_RESERVED;
+  palette_index_manager_status[1] = USE_PALETTE_MANAGER_INDEX_SYSTEM_RESERVED;
+
+  // Reserve palettes 2-16 for fix layer (allocatable for fix)
+  for (i = 2; i <= 16; i++) {
+    palette_index_manager_status[i] = USE_PALETTE_MANAGER_INDEX_RESERVED_FOR_FIX;
+  }
 }
 
 static void set_palette_manager_index(const paletteInfo *pi, WORD index) {
@@ -200,34 +215,72 @@ static void set_free_palette_index_manager(const paletteInfo *pi) {
   WORD i = 0;
   for (i = 0; i <PALETTE_INDEX_MANAGER_MAX; i++) {
     if (palette_index_manager_status[i] == pi) {
-      palette_index_manager_status[i] = (const paletteInfo*) NULL;
+      palette_index_manager_status[i] = USE_PALETTE_MANAGER_INDEX_FREE;
     }
   }
 }
 
-static WORD use_palette_manager_index(const paletteInfo *pi) {
-  WORD i, j = 0;
-  WORD found = 0;
-  for (i = 0; i < PALETTE_INDEX_MANAGER_MAX; i++) {
-    if (palette_index_manager_status[i] == pi) {
-      return i;
-    } else {
-      if (!palette_index_manager_status[i]) {
-        for (j = i; j < i + pi->count; j++) {
-          if (!palette_index_manager_status[j]) {
-            found++;
-            if (found >= pi->count) {
-              set_palette_manager_index(pi, i);
-              return i;
+static WORD use_palette_manager_index(const paletteInfo *pi, WORD type) {
+  if (type == USE_PALETTE_MANAGER_INDEX_SPRITE_TYPE) {
+    WORD i, j = 0;
+    WORD found = 0;
+    for (i = 0; i < PALETTE_INDEX_MANAGER_MAX; i++) {
+      if (palette_index_manager_status[i] == pi) {
+        return i;
+      } else {
+        if (palette_index_manager_status[i] == USE_PALETTE_MANAGER_INDEX_FREE) {
+          for (j = i; j < i + pi->count; j++) {
+            if (palette_index_manager_status[j] == USE_PALETTE_MANAGER_INDEX_FREE) {
+              found++;
+              if (found >= pi->count) {
+                set_palette_manager_index(pi, i);
+                return i;
+              }
             }
           }
+        } else {
+          found = 0;
         }
-      } else {
-        found = 0;
       }
     }
+    return 0; // TODO : no zero return
+  } else if (type == USE_PALETTE_MANAGER_INDEX_FIX_TYPE) {
+    // For FIX_TYPE, use only the reserved palette indices (2-16, excluding system palettes 0-1)
+    WORD i, j = 0;
+    WORD found = 0;
+
+    // Check if palette is already allocated
+    for (i = 2; i <= 16; i++) {
+      if (palette_index_manager_status[i] == pi) {
+        return i;
+      }
+    }
+
+    // Find available space in reserved indices (2-16)
+    for (i = 2; i <= 16 - pi->count + 1; i++) {
+      found = 0;
+      for (j = i; j < i + pi->count; j++) {
+        if (palette_index_manager_status[j] == USE_PALETTE_MANAGER_INDEX_RESERVED_FOR_FIX) {
+          // Reserved but not allocated to a specific palette
+          found++;
+        } else if (palette_index_manager_status[j] == USE_PALETTE_MANAGER_INDEX_FREE) {
+          // Completely free (shouldn't happen in reserved range normally)
+          found++;
+        } else {
+          // Already allocated to another palette
+          break;
+        }
+      }
+
+      if (found >= pi->count) {
+        set_palette_manager_index(pi, i);
+        return i;
+      }
+    }
+
+    return 0; // No space available in reserved range
   }
-  return 0; // TODO : no zero return
+  return 0; // Default fallback
 }
 
 NEOCORE_INIT
@@ -362,7 +415,7 @@ WORD nc_display_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic, short
 }
 
 WORD nc_display_gfx_picture(GFX_Picture *gfx_picture, short x, short y) {
-  WORD palette_index = use_palette_manager_index(gfx_picture->paletteInfoDAT);
+  WORD palette_index = use_palette_manager_index(gfx_picture->paletteInfoDAT, USE_PALETTE_MANAGER_INDEX_SPRITE_TYPE);
   WORD sprite_index;
 
   if (display_gfx_with_sprite_id != DISPLAY_GFX_WITH_SPRITE_ID_AUTO) {
@@ -399,7 +452,7 @@ WORD nc_display_gfx_animated_sprite(
   short y,
   WORD anim
   ) {
-  WORD palette_index = use_palette_manager_index(animated_sprite->paletteInfoDAT);
+  WORD palette_index = use_palette_manager_index(animated_sprite->paletteInfoDAT, USE_PALETTE_MANAGER_INDEX_SPRITE_TYPE);
   WORD sprite_index;
 
   if (display_gfx_with_sprite_id != DISPLAY_GFX_WITH_SPRITE_ID_AUTO) {
@@ -451,7 +504,7 @@ WORD nc_display_gfx_animated_sprite_physic(
 }
 
 WORD nc_display_gfx_scroller(GFX_Scroller *gfx_scroller, short x, short y) {
-  WORD palette_index = use_palette_manager_index(gfx_scroller->paletteInfoDAT);
+  WORD palette_index = use_palette_manager_index(gfx_scroller->paletteInfoDAT, USE_PALETTE_MANAGER_INDEX_SPRITE_TYPE);
   WORD sprite_index;
 
   if (display_gfx_with_sprite_id != DISPLAY_GFX_WITH_SPRITE_ID_AUTO) {
@@ -874,7 +927,7 @@ void nc_destroy_palette(const paletteInfo* paletteInfo) { set_free_palette_index
 WORD nc_get_max_free_palette_index() {
   WORD i, max = 0;
   for (i = 0; i < PALETTE_INDEX_MANAGER_MAX; i++) {
-    if (palette_index_manager_status[i] == (const paletteInfo*) NULL) max++;
+    if (palette_index_manager_status[i] == USE_PALETTE_MANAGER_INDEX_FREE) max++;
   }
   return max;
 }
@@ -882,7 +935,7 @@ WORD nc_get_max_free_palette_index() {
 WORD nc_get_max_palette_index_used() {
   WORD i, max = 0;
   for (i = 0; i < PALETTE_INDEX_MANAGER_MAX; i++) {
-    if (palette_index_manager_status[i] != (const paletteInfo*) NULL) max++;
+    if (palette_index_manager_status[i] != USE_PALETTE_MANAGER_INDEX_FREE) max++;
   }
   return max;
 }
@@ -1409,6 +1462,14 @@ void nc_log_set_palette_id(WORD palette) {
 WORD nc_palette_set_info(const paletteInfo *paletteInfo, WORD palette_index) {
   set_palette_manager_index(paletteInfo, palette_index);
   palJobPut(palette_index, paletteInfo->count, paletteInfo->data);
+  return palette_index;
+}
+
+WORD nc_fix_set_palette_info(const paletteInfo *palette_info) {
+  WORD palette_index = use_palette_manager_index(palette_info, USE_PALETTE_MANAGER_INDEX_FIX_TYPE);
+  if (palette_index != 0) {
+    palJobPut(palette_index, palette_info->count, palette_info->data);
+  }
   return palette_index;
 }
 

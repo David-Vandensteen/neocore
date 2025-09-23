@@ -5,19 +5,18 @@ int main(void) {
   WORD palette_index = 2;
 
   nc_init_log();
-  // palette_index = nc_fix_set_palette_info(&font0_Palettes); // TODO
-  nc_palette_set_info(&font0_Palettes, palette_index);  /* Load custom palette for font0 */
+  palette_index = nc_fix_set_palette_info(&font0_Palettes);
 
   /* System font with default palette */
   nc_set_position_log(2, 4);
   nc_log_info_line("HELLO WORLD");
-  nc_log_info_line("PALETTE INDEX: %d", palette_index);
   nc_log_next_line();
 
   /* Custom font0 with custom palette */
   nc_log_set_bank(3);                               /* Custom font0 bank */
   nc_log_set_palette_id(palette_index);             /* Custom palette */
   nc_log_info_line("CUSTOM FONT");
+  nc_log_info_line("PALETTE INDEX: %d", palette_index);
   nc_log_next_line();
 
   /* Formatted text with system font */
