@@ -2,18 +2,20 @@
 #include "externs.h"
 
 int main(void) {
-  nc_update();
-  palJobPut(2, font0_Palettes.count, font0_Palettes.data);
+  WORD palette_index = 2;
+
   nc_init_log();
+  nc_set_palette_info(&font0_Palettes, palette_index);  /* Load custom palette for font0 */
 
   /* System font with default palette */
   nc_set_position_log(2, 4);
   nc_log_info_line("HELLO WORLD");
+  nc_log_info_line("PALETTE INDEX: %d", palette_index);
   nc_log_next_line();
 
   /* Custom font0 with custom palette */
   nc_set_log_bank(3);                               /* Custom font0 bank */
-  nc_set_log_palette_id(2);                         /* Custom palette */
+  nc_set_log_palette_id(palette_index);             /* Custom palette */
   nc_log_info_line("CUSTOM FONT");
   nc_log_next_line();
 
@@ -25,7 +27,7 @@ int main(void) {
 
   /* Formatted text with custom font0 */
   nc_set_log_bank(3);
-  nc_set_log_palette_id(2);
+  nc_set_log_palette_id(palette_index);
   nc_log_info_line("LIVES: %d", 3);
   nc_log_next_line();
 
@@ -37,7 +39,7 @@ int main(void) {
 
   /* Level with custom font0 */
   nc_set_log_bank(3);
-  nc_set_log_palette_id(2);
+  nc_set_log_palette_id(palette_index);
   nc_log_info_line("LEVEL %d", 7);
   nc_log_next_line();
 

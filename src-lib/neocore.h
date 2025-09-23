@@ -1009,6 +1009,27 @@ void nc_set_log_bank(WORD bank);
 void nc_set_log_palette_id(WORD palette);
 
 /**
+ * @brief Load palette data and return the palette index
+ * @details Loads palette data to the specified palette index using palJobPut() and returns
+ *          the same palette index. This is a convenience function that combines palette
+ *          loading and returns the index for immediate use with other palette functions.
+ *
+ * @param[in] paletteInfo Pointer to palette information structure containing color data (must not be NULL)
+ * @param[in] palette_index Target palette index where the palette will be loaded (0-15)
+ *
+ * @return The same palette index that was passed as parameter
+ * @retval palette_index Echo of the input palette_index parameter
+ *
+ * @note Typical usage: `nc_set_log_palette_id(nc_set_palette_info(&my_palette, 5));`
+ * @note The returned index can be used with nc_set_log_palette_id() or other palette functions
+ * @warning No validation of palette_index bounds - ensure valid range (0-15)
+ * @since 3.1.0
+ *
+ * @see nc_set_log_palette_id(), nc_set_log_bank(), palJobPut(), nc_log_info()
+ */
+WORD nc_set_palette_info(const paletteInfo *paletteInfo, WORD palette_index);
+
+/**
  * @brief Log formatted text without automatic line break
  * @details Prints formatted text at current log cursor position using printf-style formatting.
  *          Does not automatically advance to next line - use nc_log_next_line() manually.
