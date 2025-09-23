@@ -32,6 +32,7 @@
           <import bank="0">
             <file>{{build}}\fix\systemFont.bin</file>
           </import>
+          <!-- The next free bank is bank 3 -->
         </chardata>
       </fixdata>
     </DAT>
