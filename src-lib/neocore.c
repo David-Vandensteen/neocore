@@ -1398,11 +1398,11 @@ void nc_log_rgb16(RGB16 *color) {
   nc_log_info(buffer);
 }
 
-void nc_set_log_bank(WORD bank) {
+void nc_log_set_bank(WORD bank) {
   log_bank = bank;
 }
 
-void nc_set_log_palette_id(WORD palette) {
+void nc_log_set_palette_id(WORD palette) {
   log_palette_id = palette;
 }
 

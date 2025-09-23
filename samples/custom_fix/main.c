@@ -5,6 +5,7 @@ int main(void) {
   WORD palette_index = 2;
 
   nc_init_log();
+  // palette_index = nc_set_fix_palette_info(&font0_Palettes); // TODO
   nc_set_palette_info(&font0_Palettes, palette_index);  /* Load custom palette for font0 */
 
   /* System font with default palette */
@@ -14,32 +15,32 @@ int main(void) {
   nc_log_next_line();
 
   /* Custom font0 with custom palette */
-  nc_set_log_bank(3);                               /* Custom font0 bank */
-  nc_set_log_palette_id(palette_index);             /* Custom palette */
+  nc_log_set_bank(3);                               /* Custom font0 bank */
+  nc_log_set_palette_id(palette_index);             /* Custom palette */
   nc_log_info_line("CUSTOM FONT");
   nc_log_next_line();
 
   /* Formatted text with system font */
-  nc_set_log_bank(0);
-  nc_set_log_palette_id(0);
+  nc_log_set_bank(0);
+  nc_log_set_palette_id(0);
   nc_log_info_line("SCORE: %d", 12500);
   nc_log_next_line();
 
   /* Formatted text with custom font0 */
-  nc_set_log_bank(3);
-  nc_set_log_palette_id(palette_index);
+  nc_log_set_bank(3);
+  nc_log_set_palette_id(palette_index);
   nc_log_info_line("LIVES: %d", 3);
   nc_log_next_line();
 
   /* Time formatting with system font */
-  nc_set_log_bank(0);
-  nc_set_log_palette_id(0);
+  nc_log_set_bank(0);
+  nc_log_set_palette_id(0);
   nc_log_info_line("TIME: %02d:%02d", 5, 30);
   nc_log_next_line();
 
   /* Level with custom font0 */
-  nc_set_log_bank(3);
-  nc_set_log_palette_id(palette_index);
+  nc_log_set_bank(3);
+  nc_log_set_palette_id(palette_index);
   nc_log_info_line("LEVEL %d", 7);
   nc_log_next_line();
 

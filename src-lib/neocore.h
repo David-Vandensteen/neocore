@@ -988,9 +988,9 @@ void nc_log_next_line();
  * @note Bank 0 = system font (always available)
  * @since 3.1.0
  *
- * @see nc_set_log_palette_id(), nc_log_info(), nc_init_log()
+ * @see nc_log_set_palette_id(), nc_log_info(), nc_init_log()
  */
-void nc_set_log_bank(WORD bank);
+void nc_log_set_bank(WORD bank);
 
 /**
  * @brief Set palette ID for log text display
@@ -1001,12 +1001,12 @@ void nc_set_log_bank(WORD bank);
  *
  * @note Must be called before nc_log_info() to affect text color
  * @note Palette 0 = default system palette (usually white text)
- * @note Works in combination with nc_set_log_bank() for full text control
+ * @note Works in combination with nc_log_set_bank() for full text control
  * @since 3.1.0
  *
- * @see nc_set_log_bank(), nc_log_info(), palJobPut(), nc_init_log()
+ * @see nc_log_set_bank(), nc_log_info(), palJobPut(), nc_init_log()
  */
-void nc_set_log_palette_id(WORD palette);
+void nc_log_set_palette_id(WORD palette);
 
 /**
  * @brief Load palette data and return the palette index
@@ -1020,12 +1020,12 @@ void nc_set_log_palette_id(WORD palette);
  * @return The same palette index that was passed as parameter
  * @retval palette_index Echo of the input palette_index parameter
  *
- * @note Typical usage: `nc_set_log_palette_id(nc_set_palette_info(&my_palette, 5));`
- * @note The returned index can be used with nc_set_log_palette_id() or other palette functions
+ * @note Typical usage: `nc_log_set_palette_id(nc_set_palette_info(&my_palette, 5));`
+ * @note The returned index can be used with nc_log_set_palette_id() or other palette functions
  * @warning No validation of palette_index bounds - ensure valid range (0-15)
  * @since 3.1.0
  *
- * @see nc_set_log_palette_id(), nc_set_log_bank(), palJobPut(), nc_log_info()
+ * @see nc_log_set_palette_id(), nc_log_set_bank(), palJobPut(), nc_log_info()
  */
 WORD nc_set_palette_info(const paletteInfo *paletteInfo, WORD palette_index);
 
