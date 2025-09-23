@@ -5,8 +5,8 @@ int main(void) {
   WORD palette_index = 2;
 
   nc_init_log();
-  // palette_index = nc_set_fix_palette_info(&font0_Palettes); // TODO
-  nc_set_palette_info(&font0_Palettes, palette_index);  /* Load custom palette for font0 */
+  // palette_index = nc_fix_set_palette_info(&font0_Palettes); // TODO
+  nc_palette_set_info(&font0_Palettes, palette_index);  /* Load custom palette for font0 */
 
   /* System font with default palette */
   nc_set_position_log(2, 4);

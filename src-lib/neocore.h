@@ -1020,14 +1020,14 @@ void nc_log_set_palette_id(WORD palette);
  * @return The same palette index that was passed as parameter
  * @retval palette_index Echo of the input palette_index parameter
  *
- * @note Typical usage: `nc_log_set_palette_id(nc_set_palette_info(&my_palette, 5));`
+ * @note Typical usage: `nc_log_set_palette_id(nc_palette_set_info(&my_palette, 5));`
  * @note The returned index can be used with nc_log_set_palette_id() or other palette functions
  * @warning No validation of palette_index bounds - ensure valid range (0-15)
  * @since 3.1.0
  *
  * @see nc_log_set_palette_id(), nc_log_set_bank(), palJobPut(), nc_log_info()
  */
-WORD nc_set_palette_info(const paletteInfo *paletteInfo, WORD palette_index);
+WORD nc_palette_set_info(const paletteInfo *paletteInfo, WORD palette_index);
 
 /**
  * @brief Log formatted text without automatic line break

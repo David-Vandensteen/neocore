@@ -1406,7 +1406,7 @@ void nc_log_set_palette_id(WORD palette) {
   log_palette_id = palette;
 }
 
-WORD nc_set_palette_info(const paletteInfo *paletteInfo, WORD palette_index) {
+WORD nc_palette_set_info(const paletteInfo *paletteInfo, WORD palette_index) {
   set_palette_manager_index(paletteInfo, palette_index);
   palJobPut(palette_index, paletteInfo->count, paletteInfo->data);
   return palette_index;
