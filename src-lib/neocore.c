@@ -49,6 +49,8 @@ static Adpcm_player adpcm_player;
 static BOOL is_init = false;
 static BOOL joypad_edge_mode = false;
 static WORD display_gfx_with_sprite_id = DISPLAY_GFX_WITH_SPRITE_ID_AUTO;
+static WORD log_bank = 0;
+static WORD log_palette_id = 0;
 
 static void init_adpcm_player() {
   adpcm_player.state = IDLE;
@@ -1203,7 +1205,7 @@ BOOL nc_each_frame(DWORD frame) {
   return (nc_get_frame_counter() % frame == 0) ? true : false;
 }
 
-void nc_print(int x, int y, char *label) { fixPrint(x, y, 0, 0, label); }
+void nc_print(int x, int y, char *label) { fixPrint(x, y, 0, log_bank, label); }
 
 WORD nc_free_ram_info() {
   // $000000  $0FFFFF    Vector Table, 68k program (.PRG files), 68k RAM
@@ -1266,7 +1268,7 @@ WORD nc_log_info(char *text, ...) {
       line_buffer[line_len] = '\0';
 
       // Print the line
-      fixPrintf(log_x, log_y, 0, 0, "%s", line_buffer);
+      fixPrintf(log_x, log_y, log_palette_id, log_bank, "%s", line_buffer);
 
       // Move to next line
       log_y++;
@@ -1278,12 +1280,12 @@ WORD nc_log_info(char *text, ...) {
 
     // Handle remaining text after last \n (if any)
     if (*line_start != '\0') {
-      fixPrintf(log_x, log_y, 0, 0, "%s", line_start);
+      fixPrintf(log_x, log_y, log_palette_id, log_bank, "%s", line_start);
       log_x += strlen(line_start);
     }
   } else {
     // No \n, just print and advance log_x
-    fixPrintf(log_x, log_y, 0, 0, "%s", buffer);
+    fixPrintf(log_x, log_y, log_palette_id, log_bank, "%s", buffer);
     log_x += strlen(buffer);
   }
 
@@ -1296,7 +1298,7 @@ WORD nc_log_info_line(char *text, ...) {
   va_start(args, text);
   vsprintf(buffer, text, args);
   va_end(args);
-  fixPrintf(log_x, log_y, 0, 0, "%s", buffer);
+  fixPrintf(log_x, log_y, log_palette_id, log_bank, "%s", buffer);
 
   // Always advance to next line
   nc_log_next_line();
@@ -1305,32 +1307,32 @@ WORD nc_log_info_line(char *text, ...) {
 }
 
 void nc_log_word(WORD value) {
-  fixPrintf(log_x, log_y, 0, 0, "%04d", value);
+  fixPrintf(log_x, log_y, log_palette_id, log_bank, "%04d", value);
   log_x += 4;
 }
 
 void nc_log_int(int value) {
-  fixPrintf(log_x, log_y, 0, 0, "%08d", value);
+  fixPrintf(log_x, log_y, log_palette_id, log_bank, "%08d", value);
   log_x += 8;
 }
 
 void nc_log_dword(DWORD value) {
-  fixPrintf(log_x, log_y, 0, 0, "%08d", value);
+  fixPrintf(log_x, log_y, log_palette_id, log_bank, "%08d", value);
   log_x += 8;
 }
 
 void nc_log_short(short value) {
-  fixPrintf(log_x, log_y, 0, 0, "%02d", value);
+  fixPrintf(log_x, log_y, log_palette_id, log_bank, "%02d", value);
   log_x += 2;
 }
 
 void nc_log_byte(BYTE value) {
-  fixPrintf(log_x, log_y, 0, 0, "%02d", value);
+  fixPrintf(log_x, log_y, log_palette_id, log_bank, "%02d", value);
   log_x += 2;
 }
 
 void nc_log_bool(BOOL value) {
-  fixPrintf(log_x, log_y, 0, 0, "%01d", value);
+  fixPrintf(log_x, log_y, log_palette_id, log_bank, "%01d", value);
   log_x += 1;
 }
 
@@ -1394,6 +1396,14 @@ void nc_log_rgb16(RGB16 *color) {
   nc_byte_to_hex(color->b, b);
   sprintf(buffer, "RGB DARK: %1X, R: %1X, G: %1X, B: %1X", color->dark, color->r, color->g, color->b);
   nc_log_info(buffer);
+}
+
+void nc_set_log_bank(WORD bank) {
+  log_bank = bank;
+}
+
+void nc_set_log_palette_id(WORD palette) {
+  log_palette_id = palette;
 }
 
   /*---------------*/

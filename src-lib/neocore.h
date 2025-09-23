@@ -978,6 +978,37 @@ void nc_set_position_log(WORD _x, WORD _y);
 void nc_log_next_line();
 
 /**
+ * @brief Set font bank for log text display
+ * @details Sets the font bank number used by logging functions for text rendering.
+ *          Controls which font is used for subsequent log output.
+ *
+ * @param[in] bank Font bank number (0-15)
+ *
+ * @note Must be called before nc_log_info() to affect font selection
+ * @note Bank 0 = system font (always available)
+ * @since 3.1.0
+ *
+ * @see nc_set_log_palette_id(), nc_log_info(), nc_init_log()
+ */
+void nc_set_log_bank(WORD bank);
+
+/**
+ * @brief Set palette ID for log text display
+ * @details Sets the palette number used by logging functions for text color.
+ *          Works with custom palettes loaded via palJobPut() and system palettes.
+ *
+ * @param[in] palette Palette ID number (0-15)
+ *
+ * @note Must be called before nc_log_info() to affect text color
+ * @note Palette 0 = default system palette (usually white text)
+ * @note Works in combination with nc_set_log_bank() for full text control
+ * @since 3.1.0
+ *
+ * @see nc_set_log_bank(), nc_log_info(), palJobPut(), nc_init_log()
+ */
+void nc_set_log_palette_id(WORD palette);
+
+/**
  * @brief Log formatted text without automatic line break
  * @details Prints formatted text at current log cursor position using printf-style formatting.
  *          Does not automatically advance to next line - use nc_log_next_line() manually.
