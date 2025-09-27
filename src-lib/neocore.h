@@ -978,6 +978,115 @@ void nc_set_position_log(WORD _x, WORD _y);
 void nc_log_next_line();
 
 /**
+ * @brief Set font bank for log text display
+ * @details Sets the font bank number used by logging functions for text rendering.
+ *          Controls which font is used for subsequent log output.
+ *
+ * @param[in] bank Font bank number (0-15)
+ *
+ * @note Must be called before nc_log_info() to affect font selection
+ * @note Bank 0 = system font (always available)
+ * @since 3.1.0
+ *
+ * @see nc_fix_set_palette_id(), nc_fix_load_palette_info(), nc_log_info(), nc_init_log()
+ */
+void nc_fix_set_bank(WORD bank);
+
+/**
+ * @brief Set palette ID for log text display
+ * @details Sets the palette number used by logging functions for text color.
+ *          Works with custom palettes loaded via palJobPut() and system palettes.
+ *
+ * @param[in] palette Palette ID number (0-15)
+ *
+ * @note Must be called before nc_log_info() to affect text color
+ * @note Palette 0 = default system palette (usually white text)
+ * @note Works in combination with nc_fix_set_bank() for full text control
+ * @since 3.1.0
+ *
+ * @see nc_fix_set_bank(), nc_fix_load_palette_info(), nc_log_info(), palJobPut(), nc_init_log()
+ */
+void nc_fix_set_palette_id(WORD palette);
+
+/**
+ * @brief Load palette data and return the palette index
+ * @details Loads palette data to the specified palette index using palJobPut() and returns
+ *          the same palette index. This is a convenience function that combines palette
+ *          loading and returns the index for immediate use with other palette functions.
+ *
+ * @param[in] paletteInfo Pointer to palette information structure containing color data (must not be NULL)
+ * @param[in] palette_index Target palette index where the palette will be loaded (0-15)
+ *
+ * @return The same palette index that was passed as parameter
+ * @retval palette_index Echo of the input palette_index parameter
+ *
+ * @note Typical usage: `nc_fix_set_palette_id(nc_palette_set_info(&my_palette, 5));`
+ * @note The returned index can be used with nc_fix_set_palette_id() or other palette functions
+ * @warning No validation of palette_index bounds - ensure valid range (0-15)
+ * @since 3.1.0
+ *
+ * @see nc_fix_set_palette_id(), nc_fix_set_bank(), nc_fix_load_palette_info(), palJobPut(), nc_log_info()
+ */
+WORD nc_palette_set_info(const paletteInfo *paletteInfo, WORD palette_index);
+
+/**
+ * @brief Allocate and set palette for fix layer
+ * @details Automatically allocates a palette index from the fix layer reserved range (2-16)
+ *          and loads the palette data. Uses the palette manager to ensure proper allocation.
+ *          Palettes 0-1 are reserved for system use and cannot be allocated.
+ *
+ * @param palette_info Pointer to palette data structure containing colors and count
+ * @return WORD Allocated palette index (2-16), or 0 if allocation failed
+ *
+ * @code
+ * // Allocate palette for fix layer font
+ * WORD fix_palette = nc_fix_load_palette_info(&my_font_palette);
+ * nc_fix_set_palette_id(fix_palette);
+ * @endcode
+ *
+ * @note This function is specifically for fix layer palettes (indices 2-16)
+ * @note Palettes 0-1 are system reserved and never allocated
+ * @note Returns 0 if no palette slots available in fix range
+ * @since 3.1.0
+ *
+ * @see nc_palette_set_info(), nc_fix_set_palette_id(), nc_fix_unload_palette_info(), nc_fix_unload_palette_id(), use_palette_manager_index()
+ */
+WORD nc_fix_load_palette_info(const paletteInfo *palette_info);
+
+/**
+ * @brief Unload palette data by palette info for fix layer
+ * @details Frees a previously allocated palette in the fix layer range (2-16) by matching
+ *          the palette info pointer. This is the counterpart to nc_fix_load_palette_info().
+ *
+ * @param palette_info Pointer to palette info structure that was used to load the palette
+ * @return true if palette was found and freed, false if not found
+ *
+ * @note Only works with palettes allocated via nc_fix_load_palette_info()
+ * @note System reserved palettes (0-1) cannot be unloaded
+ * @since 3.1.0
+ *
+ * @see nc_fix_load_palette_info(), nc_fix_unload_palette_id()
+ */
+BOOL nc_fix_unload_palette_info(const paletteInfo *palette_info);
+
+/**
+ * @brief Unload palette data by palette ID for fix layer
+ * @details Frees a palette at the specified index in the fix layer range (2-16).
+ *          This is useful when you know the palette ID but don't have the original palette info.
+ *
+ * @param palette_id Palette index to free (2-16)
+ * @return true if palette was freed, false if invalid ID or system reserved palette
+ *
+ * @note Only works with fix layer palette range (2-16)
+ * @note System reserved palettes (0-1) cannot be unloaded
+ * @note Will fail if palette_id is outside valid fix range
+ * @since 3.1.0
+ *
+ * @see nc_fix_load_palette_info(), nc_fix_unload_palette_info()
+ */
+BOOL nc_fix_unload_palette_id(WORD palette_id);
+
+/**
  * @brief Log formatted text without automatic line break
  * @details Prints formatted text at current log cursor position using printf-style formatting.
  *          Does not automatically advance to next line - use nc_log_next_line() manually.
