@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
-  <name></name>
+  <name>custom_fix</name>
   <version>1.0.0</version>
   <platform>cd</platform>
-  <makefile>Makefile</makefile>
-  <neocorePath>..\neocore</neocorePath>
-  <buildPath>..\build</buildPath>
-  <distPath>..\dist</distPath>
+  <makefile>..\Makefile</makefile>
+  <neocorePath>..\..</neocorePath>
+  <buildPath>{{neocore}}\build</buildPath>
+  <distPath>{{neocore}}\dist</distPath>
   <gfx>
     <DAT>
       <chardata>
@@ -33,34 +33,13 @@
             <file>{{build}}\fix\systemFont.bin</file>
           </import>
           <!-- The next free bank is bank 3 -->
+          <fix bank="3" id="font0">
+            <file>assets\gfx\fix\font0.png</file>
+          </fix>
         </chardata>
       </fixdata>
     </DAT>
   </gfx>
-  <!-- To use CDDA audio tracks, uncomment and set up your files.
-  Warning: Track ID 1 is reserved for the binary program.
-  <sound>
-    <cd>
-      <sfx>
-        <pcm>assets\sounds\sfx\click.V1</pcm>
-        <z80>assets\sounds\sfx\click.M1</z80>
-      </sfx>
-      <cdda>
-        <dist>
-          <iso>
-            <format>mp3</format>
-          </iso>
-        </dist>
-        <tracks>
-          <track>
-            <id>2</id>
-            <file>assets\sounds\cdda\track_1.mp3</file>
-            <pregap>00:02:00</pregap>
-          </track>
-        </tracks>
-      </cdda>
-    </cd>
-  </sound> -->
   <emulator>
     <raine>
       <exeFile>{{build}}\raine\raine32.exe</exeFile>
