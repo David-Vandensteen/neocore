@@ -1451,11 +1451,11 @@ void nc_log_rgb16(RGB16 *color) {
   nc_log_info(buffer);
 }
 
-void nc_log_set_bank(WORD bank) {
+void nc_fix_set_bank(WORD bank) {
   log_bank = bank;
 }
 
-void nc_log_set_palette_id(WORD palette) {
+void nc_fix_set_palette_id(WORD palette) {
   log_palette_id = palette;
 }
 
@@ -1465,7 +1465,7 @@ WORD nc_palette_set_info(const paletteInfo *paletteInfo, WORD palette_index) {
   return palette_index;
 }
 
-WORD nc_fix_set_palette_info(const paletteInfo *palette_info) {
+WORD nc_fix_load_palette_info(const paletteInfo *palette_info) {
   WORD palette_index = use_palette_manager_index(palette_info, USE_PALETTE_MANAGER_INDEX_FIX_TYPE);
   if (palette_index != 0) {
     palJobPut(palette_index, palette_info->count, palette_info->data);
