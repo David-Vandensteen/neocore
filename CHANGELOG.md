@@ -1,5 +1,11 @@
 ## 3.1.0
 
+  - **NEW FEATURES**:
+    - **Fix layer palette management**: Added `nc_fix_load_palette_info()`, `nc_fix_unload_palette_info()`, `nc_fix_unload_palette_id()`
+    - **Enhanced fix layer API**: Added `nc_fix_set_bank()`, `nc_fix_set_palette_id()`, `nc_palette_set_info()`
+  - **IMPROVEMENTS**:
+    - **Palette manager**: Type-based allocation (fix layer: indices 2-16, sprites: 17-255, system reserved: 0-1)
+
 ## 3.0.1
 
   - **TOOLCHAIN IMPROVEMENTS**:
