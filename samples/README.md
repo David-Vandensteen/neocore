@@ -24,10 +24,11 @@ Build upon the basics with these samples:
 Explore advanced features:
 
 9. **[sprite_id](sprite_id/)** - Advanced sprite management (NeoCore v3.0.0)
-10. **[palette_swap](palette_swap/)** - Dynamic palette animation
-11. **[collide_complex](collide_complex/)** - Advanced collision scenarios
-12. **[collide_multiple](collide_multiple/)** - Multi-object collision detection
-13. **[CDDA](CDDA/)** - CD audio playback (Neo Geo CD)
+10. **[custom_fix](custom_fix/)** - Fix layer palette management and font banking (NeoCore v3.1.0)
+11. **[palette_swap](palette_swap/)** - Dynamic palette animation
+12. **[collide_complex](collide_complex/)** - Advanced collision scenarios
+13. **[collide_multiple](collide_multiple/)** - Multi-object collision detection
+14. **[CDDA](CDDA/)** - CD audio playbook (Neo Geo CD)
 
 ## 🔧 Specialized Samples
 
@@ -88,7 +89,7 @@ make
 | **Graphics** | palette_swap, pal_rgb, pal_backdrop, pal_rgb_mixer, shrunk, shrunk_centroid |
 | **Physics** | collide, collide_complex, collide_multiple |
 | **Audio** | soundFX, soundFX_poly, CDDA |
-| **Advanced** | bullet, sprite_id, DATdemo |
+| **Advanced** | bullet, sprite_id, custom_fix, DATdemo |
 | **Testing** | test_* samples, recurse |
 | **Bug Fixes** | issue_* samples |
 

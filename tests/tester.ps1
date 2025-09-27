@@ -35,6 +35,7 @@ function Main {
   BuildProject -Path "..\samples\collide" -Rule $Rule -KillTime $KillTime
   BuildProject -Path "..\samples\collide_complex" -Rule $Rule -KillTime $KillTime
   BuildProject -Path "..\samples\collide_multiple" -Rule $Rule -KillTime $KillTime
+  BuildProject -Path "..\samples\custom_fix" -Rule $Rule -KillTime $KillTime
   BuildProject -Path "..\samples\DATdemo" -Rule $Rule -KillTime $KillTime
   BuildProject -Path "..\samples\hello" -Rule $Rule -KillTime $KillTime
   BuildProject -Path "..\samples\joypad" -Rule $Rule -KillTime $KillTime
