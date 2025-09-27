@@ -849,7 +849,6 @@ void nc_init_gpu() {
 void nc_clear_display() {
   WORD i = 0;
   const WORD sprite_max = 380;
-  const WORD palette_max = 256;
 
   clearFixLayer();
   clearSprites(1, sprite_max);
@@ -1473,7 +1472,54 @@ WORD nc_fix_load_palette_info(const paletteInfo *palette_info) {
   return palette_index;
 }
 
-  /*---------------*/
+BOOL nc_fix_unload_palette_info(const paletteInfo *palette_info) {
+  WORD i, j;
+
+  // Check if the palette is allocated in the fix layer range (2-16)
+  for (i = 2; i <= 16; i++) {
+    if (palette_index_manager_status[i] == palette_info) {
+      // Found the palette, now free all its indices
+      for (j = i; j < i + palette_info->count && j <= 16; j++) {
+        if (palette_index_manager_status[j] == palette_info) {
+          palette_index_manager_status[j] = USE_PALETTE_MANAGER_INDEX_RESERVED_FOR_FIX;
+        }
+      }
+      return 1; // TRUE
+    }
+  }
+  return 0; // FALSE - palette not found
+}
+
+BOOL nc_fix_unload_palette_id(WORD palette_id) {
+  const paletteInfo *pi;
+  WORD i;
+
+  // Check if palette_id is in valid fix layer range (2-16)
+  if (palette_id < 2 || palette_id > 16) {
+    return 0; // FALSE - invalid range
+  }
+
+  // Check if the palette slot is actually allocated (not system reserved or already free)
+  if (palette_index_manager_status[palette_id] == USE_PALETTE_MANAGER_INDEX_SYSTEM_RESERVED ||
+      palette_index_manager_status[palette_id] == USE_PALETTE_MANAGER_INDEX_RESERVED_FOR_FIX) {
+    return 0; // FALSE - not allocated or system reserved
+  }
+
+  // Get the palette info pointer to know how many consecutive indices to free
+  pi = palette_index_manager_status[palette_id];
+  if (pi == USE_PALETTE_MANAGER_INDEX_FREE) {
+    return 0; // FALSE - already free
+  }
+
+  // Free all consecutive indices belonging to this palette
+  for (i = palette_id; i < palette_id + pi->count && i <= 16; i++) {
+    if (palette_index_manager_status[i] == pi) {
+      palette_index_manager_status[i] = USE_PALETTE_MANAGER_INDEX_RESERVED_FOR_FIX;
+    }
+  }
+
+  return 1; // TRUE
+}  /*---------------*/
  /* SOUND         */
 /*---------------*/
 

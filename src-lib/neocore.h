@@ -1049,9 +1049,42 @@ WORD nc_palette_set_info(const paletteInfo *paletteInfo, WORD palette_index);
  * @note Returns 0 if no palette slots available in fix range
  * @since 3.1.0
  *
- * @see nc_palette_set_info(), nc_fix_set_palette_id(), use_palette_manager_index()
+ * @see nc_palette_set_info(), nc_fix_set_palette_id(), nc_fix_unload_palette_info(), nc_fix_unload_palette_id(), use_palette_manager_index()
  */
 WORD nc_fix_load_palette_info(const paletteInfo *palette_info);
+
+/**
+ * @brief Unload palette data by palette info for fix layer
+ * @details Frees a previously allocated palette in the fix layer range (2-16) by matching
+ *          the palette info pointer. This is the counterpart to nc_fix_load_palette_info().
+ *
+ * @param palette_info Pointer to palette info structure that was used to load the palette
+ * @return true if palette was found and freed, false if not found
+ *
+ * @note Only works with palettes allocated via nc_fix_load_palette_info()
+ * @note System reserved palettes (0-1) cannot be unloaded
+ * @since 3.1.0
+ *
+ * @see nc_fix_load_palette_info(), nc_fix_unload_palette_id()
+ */
+BOOL nc_fix_unload_palette_info(const paletteInfo *palette_info);
+
+/**
+ * @brief Unload palette data by palette ID for fix layer
+ * @details Frees a palette at the specified index in the fix layer range (2-16).
+ *          This is useful when you know the palette ID but don't have the original palette info.
+ *
+ * @param palette_id Palette index to free (2-16)
+ * @return true if palette was freed, false if invalid ID or system reserved palette
+ *
+ * @note Only works with fix layer palette range (2-16)
+ * @note System reserved palettes (0-1) cannot be unloaded
+ * @note Will fail if palette_id is outside valid fix range
+ * @since 3.1.0
+ *
+ * @see nc_fix_load_palette_info(), nc_fix_unload_palette_info()
+ */
+BOOL nc_fix_unload_palette_id(WORD palette_id);
 
 /**
  * @brief Log formatted text without automatic line break
