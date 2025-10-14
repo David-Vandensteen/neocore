@@ -44,7 +44,7 @@ int main(void) {
   nc_log_info_line("Background sprite ID: %d", background_sprite_id);
   nc_log_info_line("Planet sprite ID: %d", planet_sprite_id);
   nc_log_info_line("Player sprite ID: %d (forced to 50)", player_sprite_id);
-  nc_log_info_line("Free sprites available: %d", nc_get_max_free_sprite_index());
+  nc_log_info_line("Free sprites available: %d", nc_sprite_manager_get_max_free_index());
   nc_log_info_line("Next free sprite index: %d", nc_get_free_sprite_index());
   nc_log_info_line("Used sprites: %d", nc_get_max_sprite_index_used());
   nc_log_info_line("=============================");
@@ -60,7 +60,7 @@ int main(void) {
     if (frame_counter % 60 == 0) {
       nc_set_position_log(1, 10);
       nc_log_info_line("Frame: %d", frame_counter / 60);
-      nc_log_info_line("Free sprites: %d", nc_get_max_free_sprite_index());
+      nc_log_info_line("Free sprites: %d", nc_sprite_manager_get_max_free_index());
       nc_log_info_line("Used sprites: %d", nc_get_max_sprite_index_used());
       nc_log_info_line("Next free: %d", nc_get_free_sprite_index());
     }

@@ -1,5 +1,9 @@
 ## 3.1.1
 
+  - **IMPROVEMENTS**:
+    - **Function Naming**: Renamed several functions for better API consistency and clarity
+    - **Legacy Detection**: Implemented automated legacy function detection script in toolchain for migration assistance
+
 ## 3.1.0
 
   - **NEW FEATURES**:

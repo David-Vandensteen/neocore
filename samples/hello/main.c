@@ -8,7 +8,7 @@ int main(void) {
 
   while(1) {
     nc_update();
-    nc_init_log();
+    nc_log_init();
 
     /* nc_log_info_line - adds automatic newline */
     nc_log_info_line("HELLO NEO GEO !!!");
