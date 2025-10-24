@@ -50,6 +50,7 @@ function Main {
   BuildProject -Path "..\samples\soundFX" -Rule $Rule -KillTime $KillTime
   BuildProject -Path "..\samples\soundFX_poly" -Rule $Rule -KillTime $KillTime
   BuildProject -Path "..\samples\sprite" -Rule $Rule -KillTime $KillTime
+  BuildProject -Path "..\samples\sprite_id" -Rule $Rule -KillTime $KillTime
   BuildProject -Path "..\samples\test_copy_palettes" -Rule $Rule -KillTime $KillTime
   BuildProject -Path "..\samples\test_gas" -Rule $Rule -KillTime $KillTime
   BuildProject -Path "..\samples\test_gasp" -Rule $Rule -KillTime $KillTime
