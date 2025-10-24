@@ -417,6 +417,10 @@ void nc_gfx_destroy_animated_sprite(GFX_Animated_Sprite *animated_sprite) {
   clearSprites(animated_sprite->aSpriteDAT.baseSprite, animated_sprite->aSpriteDAT.tileWidth);
 }
 
+void nc_gfx_destroy_animated_physic_sprite(GFX_Animated_Physic_Sprite *gfx_animated_sprite_physic) {
+  nc_gfx_destroy_animated_sprite(&gfx_animated_sprite_physic->gfx_animated_sprite);
+}
+
   /*------------------*/
  /*  GFX DISPLAY     */
 /*------------------*/
@@ -1910,7 +1914,7 @@ void nc_destroy_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic) {
 }
 
 void nc_destroy_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic) {
-  nc_destroy_gfx_animated_sprite(&gfx_animated_sprite_physic->gfx_animated_sprite);
+  nc_gfx_destroy_animated_physic_sprite(gfx_animated_sprite_physic);
 }
 
 void nc_destroy_gfx_picture(GFX_Picture *gfx_picture) {
