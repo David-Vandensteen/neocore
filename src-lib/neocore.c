@@ -407,6 +407,16 @@ void nc_gfx_destroy_picture(GFX_Picture *gfx_picture) {
   clearSprites(gfx_picture->pictureDAT.baseSprite, gfx_picture->pictureInfoDAT->tileWidth);
 }
 
+void nc_gfx_destroy_animated_sprite(GFX_Animated_Sprite *animated_sprite) {
+  aSpriteHide(&animated_sprite->aSpriteDAT);
+  set_free_sprite_manager_index(
+    animated_sprite->aSpriteDAT.baseSprite,
+    animated_sprite->spriteInfoDAT->maxWidth
+  );
+  nc_gpu_shrunk(animated_sprite->aSpriteDAT.baseSprite, animated_sprite->aSpriteDAT.tileWidth, 0xFFF);
+  clearSprites(animated_sprite->aSpriteDAT.baseSprite, animated_sprite->aSpriteDAT.tileWidth);
+}
+
   /*------------------*/
  /*  GFX DISPLAY     */
 /*------------------*/
@@ -1908,13 +1918,7 @@ void nc_destroy_gfx_picture(GFX_Picture *gfx_picture) {
 }
 
 void nc_destroy_gfx_animated_sprite(GFX_Animated_Sprite *animated_sprite) {
-  aSpriteHide(&animated_sprite->aSpriteDAT);
-  set_free_sprite_manager_index(
-    animated_sprite->aSpriteDAT.baseSprite,
-    animated_sprite->spriteInfoDAT->maxWidth
-  );
-  nc_gpu_shrunk(animated_sprite->aSpriteDAT.baseSprite, animated_sprite->aSpriteDAT.tileWidth, 0xFFF);
-  clearSprites(animated_sprite->aSpriteDAT.baseSprite, animated_sprite->aSpriteDAT.tileWidth);
+  nc_gfx_destroy_animated_sprite(animated_sprite);
 }
 
 // Legacy GFX Position Getter functions
