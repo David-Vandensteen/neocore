@@ -7,18 +7,18 @@ static void init();
 static void update();
 
 static void init() {
-  nc_set_palette_backdrop_by_rgb16(backdrop_color);
+  nc_palette_set_backdrop_rgb16(backdrop_color);
 }
 
 static void update() {
   backdrop_color.b--;
-  nc_set_palette_backdrop_by_rgb16(backdrop_color);
+  nc_palette_set_backdrop_rgb16(backdrop_color);
 }
 
 int main(void) {
   init();
   while(1) {
-    nc_update();
+    nc_gpu_update();
     update();
   };
   return 0;

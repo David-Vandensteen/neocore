@@ -4,11 +4,11 @@
 int main(void) {
   WORD font0_palette_id;
 
-  nc_init_log();
+  nc_log_init();
   font0_palette_id = nc_fix_load_palette_info(&font0_Palettes);
 
   /* System font with default palette */
-  nc_set_position_log(2, 4);
+  nc_log_set_position(2, 4);
   nc_log_info_line("HELLO WORLD");
   nc_log_next_line();
 
@@ -47,7 +47,7 @@ int main(void) {
   nc_log_info("AOZ");
 
   while(1) {
-    nc_update();
+    nc_gpu_update();
   };
 
   /* Unload the custom font palette */

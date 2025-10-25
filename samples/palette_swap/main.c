@@ -7,17 +7,17 @@ int main(void) {
   static paletteInfo logo_swap_palette;
   BYTE i = 0;
 
-  nc_init_display_gfx_picture(&logo, &logo_sprite, &logo_sprite_Palettes, 50, 100);
+  nc_gfx_init_and_display_picture(&logo, &logo_sprite, &logo_sprite_Palettes, 50, 100);
   logo_swap_palette.count = logo.paletteInfoDAT->count;
 
-  for (i = 0; i < nc_bitwise_multiplication_16(logo.paletteInfoDAT->count); i++) { logo_swap_palette.data[i] = nc_random(0xFFFF); }
+  for (i = 0; i < nc_math_bitwise_multiplication_16(logo.paletteInfoDAT->count); i++) { logo_swap_palette.data[i] = nc_math_random(0xFFFF); }
   logo_swap_palette.data[1] = 0x0000;
 
   while(1) {
-    nc_update();
-    nc_init_log();
-    if (nc_get_frame_counter() % 8 == 0) {
-      for (i = 0; i < nc_bitwise_multiplication_16(logo.paletteInfoDAT->count); i++) { logo_swap_palette.data[i] = nc_random(0xFFFF); }
+    nc_gpu_update();
+    nc_log_init();
+    if (nc_gpu_get_frame_number() % 8 == 0) {
+      for (i = 0; i < nc_math_bitwise_multiplication_16(logo.paletteInfoDAT->count); i++) { logo_swap_palette.data[i] = nc_math_random(0xFFFF); }
       logo_swap_palette.data[1] = 0x0000;
       palJobPut(logo.pictureDAT.basePalette, logo_swap_palette.count, logo_swap_palette.data);
     }

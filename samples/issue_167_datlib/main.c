@@ -101,7 +101,7 @@ static void game() {
   /* APPLIQUER SHRUNK - TEST DE L'ISSUE #167 */
   /* Coefficient de shrink 50% sur X et Y (0x88) */
   {
-    WORD shrunk_value = nc_get_shrunk_proportional_table(150); /* 50% sur les deux axes */
+    WORD shrunk_value = nc_gpu_get_shrunk_proportional_table(150); /* 50% sur les deux axes */
     WORD sprite_width = 4;    /* Largeur typique d'un sprite animé */
     WORD i;
 

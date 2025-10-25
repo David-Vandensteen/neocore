@@ -9,77 +9,77 @@ static void display();
 static void update();
 
 static void init() {
-  nc_init_gfx_picture(&asteroid, &asteroid_asset, &asteroid_asset_Palettes);
+  nc_gfx_init_picture(&asteroid, &asteroid_asset, &asteroid_asset_Palettes);
 }
 
 static void display() {
-  nc_display_gfx_picture(&asteroid, 100, 100);
+  nc_gfx_display_picture(&asteroid, 100, 100);
 }
 
 static void update() {
   const DWORD accumulator = 200;
   DWORD frame_seq = accumulator;
 
-  nc_init_log();
+  nc_log_init();
 
-  if (nc_get_frame_counter() < frame_seq) {
+  if (nc_gpu_get_frame_number() < frame_seq) {
     nc_log_info_line("INIT GP");
     nc_log_info("DISPLAY GP AT 100 100");
   }
 
   frame_seq += accumulator;
 
-  if (nc_get_frame_counter() >= (frame_seq - accumulator) && nc_get_frame_counter() < frame_seq) {
+  if (nc_gpu_get_frame_number() >= (frame_seq - accumulator) && nc_gpu_get_frame_number() < frame_seq) {
     nc_log_info("SET POS GP 150 150");
-    nc_set_position_gfx_picture(&asteroid, 150, 150);
+    nc_gfx_set_picture_position(&asteroid, 150, 150);
   }
 
   frame_seq += accumulator;
 
-  if (nc_get_frame_counter() >= (frame_seq - accumulator) && nc_get_frame_counter() < frame_seq) {
-    nc_get_position_gfx_picture(&asteroid, &position);
+  if (nc_gpu_get_frame_number() >= (frame_seq - accumulator) && nc_gpu_get_frame_number() < frame_seq) {
+    nc_gfx_get_picture_position(&asteroid, &position);
     if (position.x < 0) {
-      nc_set_position_gfx_picture(&asteroid, 150, 150);
+      nc_gfx_set_picture_position(&asteroid, 150, 150);
     } else {
       nc_log_info("MOVE GP -1 -1");
-      nc_move_gfx_picture(&asteroid, -1, -1);
+      nc_gfx_move_picture(&asteroid, -1, -1);
     }
   }
 
   frame_seq += accumulator;
 
-  if (nc_get_frame_counter() >= (frame_seq - accumulator) && nc_get_frame_counter() < frame_seq) {
+  if (nc_gpu_get_frame_number() >= (frame_seq - accumulator) && nc_gpu_get_frame_number() < frame_seq) {
     nc_log_info_line("GET X AND Y GP");
-    nc_set_position_gfx_picture(&asteroid, 181, 57);
-    nc_get_position_gfx_picture(&asteroid, &position);
+    nc_gfx_set_picture_position(&asteroid, 181, 57);
+    nc_gfx_get_picture_position(&asteroid, &position);
     nc_log_info_line("X: %d", position.x);
     nc_log_info("Y: %d", position.y);
   }
 
   frame_seq += accumulator;
 
-  if (nc_get_frame_counter() >= (frame_seq - accumulator) && nc_get_frame_counter() < frame_seq) {
+  if (nc_gpu_get_frame_number() >= (frame_seq - accumulator) && nc_gpu_get_frame_number() < frame_seq) {
     nc_log_info("HIDE GP");
-    nc_hide_gfx_picture(&asteroid);
+    nc_gfx_hide_picture(&asteroid);
   }
 
   frame_seq += accumulator;
 
-  if (nc_get_frame_counter() >= (frame_seq - accumulator) && nc_get_frame_counter() < frame_seq) {
+  if (nc_gpu_get_frame_number() >= (frame_seq - accumulator) && nc_gpu_get_frame_number() < frame_seq) {
     nc_log_info("SHOW GP");
-    nc_show_gfx_picture(&asteroid);
+    nc_gfx_show_picture(&asteroid);
   }
 
   frame_seq += accumulator;
 
-  if (nc_get_frame_counter() >= (frame_seq - accumulator) && nc_get_frame_counter() < frame_seq) {
+  if (nc_gpu_get_frame_number() >= (frame_seq - accumulator) && nc_gpu_get_frame_number() < frame_seq) {
     nc_log_info("DESTROY GP");
-    nc_destroy_gfx_picture(&asteroid);
+    nc_gfx_destroy_picture(&asteroid);
   }
 
   frame_seq += accumulator;
 
-  if (nc_get_frame_counter() >= (frame_seq - accumulator)) {
+  if (nc_gpu_get_frame_number() >= (frame_seq - accumulator)) {
     nc_log_info("TEST GP END");
   }
 }
@@ -89,7 +89,7 @@ int main(void) {
   display();
 
   while(1) {
-    nc_update();
+    nc_gpu_update();
     update();
   };
 
