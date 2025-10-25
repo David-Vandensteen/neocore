@@ -421,6 +421,10 @@ void nc_gfx_destroy_animated_physic_sprite(GFX_Animated_Physic_Sprite *gfx_anima
   nc_gfx_destroy_animated_sprite(&gfx_animated_sprite_physic->gfx_animated_sprite);
 }
 
+void nc_gfx_destroy_physic_picture(GFX_Physic_Picture *gfx_picture_physic) {
+  nc_gfx_destroy_picture(&gfx_picture_physic->gfx_picture);
+}
+
   /*------------------*/
  /*  GFX DISPLAY     */
 /*------------------*/
@@ -1910,7 +1914,7 @@ void nc_destroy_gfx_scroller(GFX_Scroller *gfx_scroller) {
 }
 
 void nc_destroy_gfx_picture_physic(GFX_Picture_Physic *gfx_picture_physic) {
-  nc_destroy_gfx_picture(&gfx_picture_physic->gfx_picture);
+  nc_gfx_destroy_physic_picture(gfx_picture_physic);
 }
 
 void nc_destroy_gfx_animated_sprite_physic(GFX_Animated_Sprite_Physic *gfx_animated_sprite_physic) {
