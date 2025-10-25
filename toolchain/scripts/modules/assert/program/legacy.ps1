@@ -102,7 +102,7 @@ function Assert-ProgramLegacy {
     'nc_hide_gfx_animated_sprite' = 'nc_gfx_hide_animated_sprite'
     'nc_hide_gfx_picture' = 'nc_gfx_hide_picture'
     'nc_hide_gfx_picture_physic' = 'nc_gfx_hide_physic_picture'
-    'nc_hide_gfx_animated_sprite_physic' = 'nc_gfx_hide_physic_sprite'
+    'nc_hide_gfx_animated_sprite_physic' = 'nc_gfx_hide_animated_physic_sprite'
     'nc_show_gfx_animated_sprite' = 'nc_gfx_show_animated_sprite'
     'nc_show_gfx_animated_sprite_physic' = 'nc_gfx_show_animated_physic_sprite'
     'nc_show_gfx_picture' = 'nc_gfx_show_picture'
