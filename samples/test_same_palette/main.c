@@ -35,6 +35,7 @@ int main(void) {
   while(1) {
     nc_update();
     nc_init_log();
+    nc_log_info_line("FRAME : %d", nc_gpu_get_frame_number());
     nc_log_info_line("PALI PLAYER : %d", player.aSpriteDAT.basePalette);
     nc_log_info_line("PALI PLANET : %d", planet.pictureDAT.basePalette);
     nc_log_info_line("PALI BACK   : %d", backgroung.scrollerDAT.basePalette);
