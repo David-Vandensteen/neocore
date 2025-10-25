@@ -1822,9 +1822,6 @@ void nc_debug_joypad(BYTE id);
  /* LEGACY SYSTEM                */
 /*------------------------------*/
 
-/** @deprecated Use nc_system_init() instead */
-void nc_init_system();
-
 /** @deprecated Use nc_system_reset() instead */
 void nc_reset();
 
