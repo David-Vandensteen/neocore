@@ -69,6 +69,7 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
 ### 🟡 Soon
 - [ ] Integrate city41/mameNeoGeoDevPlugin
   - [ ] Fork it and tweak for Windows compatibility
+- [ ] Add mame conf for video recording
 
 ### 🕓 Later
 - [ ] Neocore 4
