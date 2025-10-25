@@ -67,11 +67,13 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
 ## 📅 Roadmap<a name="roadmap"></a>
 
 ### 🟡 Soon
-- [x] Custom HUD / Fix layer
-  - [x] Upgrade to Neocore v3 with DATlib 0.3
-- [ ] AES / MVS support (**5% completed**)
+- [ ] Integrate city41/mameNeoGeoDevPlugin
+  - [ ] Fork it and tweak for Windows compatibility
 
 ### 🕓 Later
+- [ ] Neocore 4
+  - [ ] Remove deprecated functions, macros and structures since Neocore 3.1.1
+  - [ ] AES / MVS support (**5% completed**)
 - [ ] RGB palette handlers (**60% completed**)
   - Samples: `pal_backdrop`, `pal_rgb`, `pal_rgb_mixer`
 - [ ] Joypad 2 support
