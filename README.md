@@ -317,7 +317,7 @@ From your project's `src` folder:
 
 ### 📚 C API Documentation<a name="documentation-of-neocore-c-lib"></a>
 
-- **[Doxygen Documentation](http://azertyvortex.free.fr/neocore-doxy/r13/neocore_8h.html)**
+- **[Doxygen Documentation](http://azertyvortex.free.fr/neocore-doxy/r14/neocore_8h.html)**
 - **[Migration Guide](docs/migration_guides/v2tov3/v2tov3.md)** - Breaking changes and migration from previous versions
 - **[Changelog](CHANGELOG.md)** - Version history
 
