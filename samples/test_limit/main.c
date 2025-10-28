@@ -16,7 +16,7 @@ static GFX_Picture planets[PLANETS_MAX];
 
 static void init() {
   WORD i = 0;
-  for (i = 0; i < PLANETS_MAX; i++) nc_init_gfx_picture(&planets[i], &planet04_sprite, &planet04_sprite_Palettes);
+  for (i = 0; i < PLANETS_MAX; i++) nc_gfx_init_picture(&planets[i], &planet04_sprite, &planet04_sprite_Palettes);
 }
 
 static void display() {
@@ -27,8 +27,8 @@ static void display() {
     //y = 10 + (i * 3);
     x = 100 + ( i * 10);
     y = 100;
-    nc_display_gfx_picture(&planets[i], 0, 0 + i);
-    nc_shrunk_centroid_gfx_picture(&planets[i], x, y, nc_get_shrunk_proportional_table(50));
+    nc_gfx_display_picture(&planets[i], 0, 0 + i);
+    nc_gpu_shrunk_centroid_gfx_picture(&planets[i], x, y, nc_gpu_get_shrunk_proportional_table(50));
   }
 }
 
@@ -36,8 +36,8 @@ static void update() {
   DWORD x;
   DWORD result;
   WORD i = 0;
-  nc_init_log();
-  nc_log_info_line("F : %08ld", nc_get_frame_counter());
+  nc_log_init();
+  nc_log_info_line("F : %08ld", nc_gpu_get_frame_number());
   nc_log_info("FD : %04d", DAT_droppedFrames);
   // BURN
   /*
@@ -55,7 +55,7 @@ int main(void) {
   display();
 
   while(1) {
-    nc_update();
+    nc_gpu_update();
     update();
   };
 

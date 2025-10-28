@@ -118,6 +118,13 @@ function Write-Program {
         Write-Host "Builded program $prgFile" -ForegroundColor Green
       }
       Write-Host ""
+
+      # Assert legacy functions after successful build
+      # Use the original project directory, not the build directory
+      $originalProjectPath = (Get-Location).Path
+      $legacyCheckResult = Assert-ProgramLegacy -ProjectPath $originalProjectPath
+      Write-Host ""
+
       if ($StatusFile) { "SUCCESS" | Out-File -FilePath $StatusFile -Force }
       return $true
     } else {

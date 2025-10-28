@@ -47,6 +47,9 @@ Import-Module "$neocorePathAbs\toolchain\scripts\modules\assert\build\sprite.ps1
 Import-Module "$neocorePathAbs\toolchain\scripts\modules\assert\rule.ps1"
 Import-Module "$neocorePathAbs\toolchain\scripts\modules\assert\raine\config.ps1"
 
+# Program legacy function assertions
+Import-Module "$neocorePathAbs\toolchain\scripts\modules\assert\program\legacy.ps1"
+
 # ============================================================================
 # BUILD MODULES
 # ============================================================================
@@ -111,8 +114,9 @@ Import-Module "$neocorePathAbs\toolchain\scripts\modules\start\mame.ps1"
 Import-Module "$neocorePathAbs\toolchain\scripts\modules\start\raine.ps1"
 
 # ============================================================================
-# SYSTEM MODULES
+# ASSERTION MODULES
 # ============================================================================
+# Project assertions
 Import-Module "$neocorePathAbs\toolchain\scripts\modules\set\env-path.ps1"
 Import-Module "$neocorePathAbs\toolchain\scripts\modules\show\version.ps1"
 Import-Module "$neocorePathAbs\toolchain\scripts\modules\stop\emulators.ps1"

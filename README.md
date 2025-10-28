@@ -1,4 +1,9 @@
 # Neocore
+
+<p align="center">
+  <img src="docs/images/logo/neocore-logo-crop.png" alt="Neocore Logo" width="400"/>
+</p>
+
 ![Platform](https://img.shields.io/badge/platform-%20%7C%20windows-lightgrey) ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg) ![GitHub last commit](https://img.shields.io/github/last-commit/David-Vandensteen/neocore) ![GitHub repo size](https://img.shields.io/github/repo-size/David-Vandensteen/neocore) ![NeoGeo-CD](https://img.shields.io/badge/target-NeoGeo%20CD-red) ![Uses Doxygen](https://img.shields.io/badge/docs-Doxygen-blue)
 
 ![](https://media.giphy.com/media/TLfbmyW3523z24WONz/giphy.gif) ![](https://media.giphy.com/media/iFUh5AEPD4XfvpsvJh/giphy.gif) ![](https://media.giphy.com/media/iJObJsdx6ud4zI7cS1/giphy.gif)
@@ -62,11 +67,14 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
 ## 📅 Roadmap<a name="roadmap"></a>
 
 ### 🟡 Soon
-- [x] Custom HUD / Fix layer
-  - [x] Upgrade to Neocore v3 with DATlib 0.3
-- [ ] AES / MVS support (**5% completed**)
+- [ ] Integrate city41/mameNeoGeoDevPlugin
+  - [ ] Fork it and tweak for Windows compatibility
+- [ ] Add mame conf for video recording
 
 ### 🕓 Later
+- [ ] Neocore 4
+  - [ ] Remove deprecated functions, macros and structures since Neocore 3.1.1
+  - [ ] AES / MVS support (**5% completed**)
 - [ ] RGB palette handlers (**60% completed**)
   - Samples: `pal_backdrop`, `pal_rgb`, `pal_rgb_mixer`
 - [ ] Joypad 2 support
@@ -309,7 +317,7 @@ From your project's `src` folder:
 
 ### 📚 C API Documentation<a name="documentation-of-neocore-c-lib"></a>
 
-- **[Doxygen Documentation](http://azertyvortex.free.fr/neocore-doxy/r13/neocore_8h.html)**
+- **[Doxygen Documentation](http://azertyvortex.free.fr/neocore-doxy/r14/neocore_8h.html)**
 - **[Migration Guide](docs/migration_guides/v2tov3/v2tov3.md)** - Breaking changes and migration from previous versions
 - **[Changelog](CHANGELOG.md)** - Version history
 

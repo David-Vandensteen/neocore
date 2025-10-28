@@ -296,6 +296,19 @@ function Analyze-CCodeLegacy {
             Suggestion = "Check NeoCore v3 documentation for updated structure members"
         }
 
+        # Deprecated structure names (v3.1.1 naming convention changes)
+        "GFX_Animated_Sprite_Physic type usage" = @{
+            Pattern = "GFX_Animated_Sprite_Physic\b"
+            Issue = "GFX_Animated_Sprite_Physic structure renamed in v3.1.1 for naming consistency"
+            Suggestion = "Replace with GFX_Animated_Physic_Sprite (legacy typedef available for compatibility)"
+        }
+
+        "GFX_Picture_Physic type usage" = @{
+            Pattern = "GFX_Picture_Physic\b"
+            Issue = "GFX_Picture_Physic structure renamed in v3.1.1 for naming consistency"
+            Suggestion = "Replace with GFX_Physic_Picture (legacy typedef available for compatibility)"
+        }
+
         # C99 variable declarations (not supported in NeoCore C89/C90)
         "C99 variable declaration" = @{
             Pattern = "^[^/\*]*\w+\s+\w+\s*=[^;]*;.*\w+\s+\w+\s*[=;]"
