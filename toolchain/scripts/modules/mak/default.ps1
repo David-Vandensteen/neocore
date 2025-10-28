@@ -8,9 +8,10 @@ function MakDefault {
     Write-Host "Run 'mak sprite' to generate it" -ForegroundColor Yellow
     return $false
   }
+
   Write-Host "Calling Build-Program..." -ForegroundColor Cyan
   $buildOutput = Build-Program
-  $buildResult = $buildOutput[-1]  # La dernière ligne est la valeur de retour
+  $buildResult = $buildOutput[-1]  # The last line is the return value
   Write-Host "Build-Program returned: $buildResult" -ForegroundColor Cyan
   if (-Not($buildResult)) {
     Write-Host "Build-Program failed" -ForegroundColor Red

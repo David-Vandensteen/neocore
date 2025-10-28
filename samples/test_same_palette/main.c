@@ -7,7 +7,7 @@ static GFX_Animated_Sprite player;
 static GFX_Scroller backgroung;
 
 int main(void) {
-  nc_init_display_gfx_scroller(
+  nc_gfx_init_and_display_scroller(
     &backgroung,
     &background_sprite,
     &background_sprite_Palettes,
@@ -15,7 +15,7 @@ int main(void) {
     0
   );
 
-  nc_init_display_gfx_picture(
+  nc_gfx_init_and_display_picture(
     &planet,
     &planet04_sprite,
     &background_sprite_Palettes,
@@ -23,7 +23,7 @@ int main(void) {
     150
   );
 
-  nc_init_display_gfx_animated_sprite(
+  nc_gfx_init_and_display_animated_sprite(
     &player,
     &player_sprite,
     &background_sprite_Palettes,
@@ -33,8 +33,9 @@ int main(void) {
   );
 
   while(1) {
-    nc_update();
-    nc_init_log();
+    nc_gpu_update();
+    nc_log_init();
+    nc_log_info_line("FRAME : %d", nc_gpu_get_frame_number());
     nc_log_info_line("PALI PLAYER : %d", player.aSpriteDAT.basePalette);
     nc_log_info_line("PALI PLANET : %d", planet.pictureDAT.basePalette);
     nc_log_info_line("PALI BACK   : %d", backgroung.scrollerDAT.basePalette);
@@ -42,7 +43,7 @@ int main(void) {
     nc_log_info_line("PAL PLAYER : %d", (int)player.paletteInfoDAT);
     nc_log_info_line("PAL PLANET : %d", (int)planet.paletteInfoDAT);
     nc_log_info("PAL BACK   : %d", (int)backgroung.paletteInfoDAT);
-    nc_update_animation_gfx_animated_sprite(&player);
+    nc_gfx_update_animated_sprite_animation(&player);
   };
 
   return 0;

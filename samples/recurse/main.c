@@ -18,7 +18,7 @@ int main(void) {
   init();
 
   while(1) {
-    nc_update();
+    nc_gpu_update();
     update();
   };
 

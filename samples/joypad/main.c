@@ -1,13 +1,13 @@
 #include <neocore.h>
 
 int main(void) {
-  nc_set_joypad_edge_mode(true);
+  nc_joypad_set_edge_mode(true);
 
   while(1) {
-    nc_update();
-    nc_init_log();
+    nc_gpu_update();
+    nc_log_init();
     nc_log_info_line("INTERACT WITH JOYPAD ...");
-    nc_debug_joypad(0);
+    nc_joypad_debug(0);
 
     if (nc_joypad_is_up(0)) nc_log_info_line("ITS UP !");
     if (nc_joypad_is_down(0)) nc_log_info_line("ITS DOWN !");

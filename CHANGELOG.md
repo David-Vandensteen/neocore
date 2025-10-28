@@ -1,3 +1,17 @@
+## 3.1.1
+
+  - **IMPROVEMENTS**:
+    - **Function Naming**: Renamed several functions for better API consistency and clarity
+    - **Naming Convention**: New consistent pattern `nc_[module]_[action]_[object]()` for all functions
+      - Examples: `nc_gfx_display_animated_sprite()`, `nc_palette_set_color()`, `nc_sound_play_adpcm()`
+      - Module prefixes: `nc_gfx_`, `nc_gpu_`, `nc_palette_`, `nc_sound_`, `nc_physic_`, `nc_math_`, etc.
+      - Structures follow similar pattern: `GFX_Animated_Sprite`, `Sound_Adpcm_Player`, etc.
+    - **Legacy Detection**: Implemented automated legacy function detection script in toolchain for migration assistance
+  - **DEPRECATION NOTICE**:
+    - **API Modernization**: Many macros, functions, and structures have been renamed to follow consistent naming conventions
+    - **Legacy Compatibility**: Old names remain available as deprecated aliases for backward compatibility
+    - **Future Removal**: All legacy aliases will be removed in version 4.0.0. Projects should migrate to new names before upgrading to v4
+
 ## 3.1.0
 
   - **NEW FEATURES**:

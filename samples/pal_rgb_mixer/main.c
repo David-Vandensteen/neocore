@@ -20,58 +20,58 @@ static void display_rgb_values();
 
 static void display_menu() {
   WORD packed_color;
-  packed_color = nc_rgb16_to_packed_color16(backdrop_color);
+  packed_color = nc_palette_rgb16_to_packed_color16(backdrop_color);
 
-  nc_set_position_log(5, 5);
+  nc_log_set_position(5, 5);
   nc_log_info("RGB COLOR MIXER");
-  nc_set_position_log(MENU_X, MENU_Y_DARK);
+  nc_log_set_position(MENU_X, MENU_Y_DARK);
   nc_log_info("DARK :");
-  nc_set_position_log(MENU_X, MENU_Y_RED);
+  nc_log_set_position(MENU_X, MENU_Y_RED);
   nc_log_info("RED :");
-  nc_set_position_log(MENU_X, MENU_Y_GREEN);
+  nc_log_set_position(MENU_X, MENU_Y_GREEN);
   nc_log_info("GREEN :");
-  nc_set_position_log(MENU_X, MENU_Y_BLUE);
+  nc_log_set_position(MENU_X, MENU_Y_BLUE);
   nc_log_info_line("BLUE :");
   nc_log_packed_color16(packed_color);
   nc_log_next_line();
 }
 
 static void display_cursor() {
-  nc_set_position_log(cursorX, cursorY);
+  nc_log_set_position(cursorX, cursorY);
   nc_log_info(">");
 }
 
 static void display_rgb_values() {
-  nc_set_position_log(MENU_X + 10, MENU_Y_DARK);
+  nc_log_set_position(MENU_X + 10, MENU_Y_DARK);
   nc_log_info("%1X", backdrop_color.dark);
 
-  nc_set_position_log(MENU_X + 10, MENU_Y_RED);
+  nc_log_set_position(MENU_X + 10, MENU_Y_RED);
   nc_log_info("%1X", backdrop_color.r);
 
-  nc_set_position_log(MENU_X + 10, MENU_Y_GREEN);
+  nc_log_set_position(MENU_X + 10, MENU_Y_GREEN);
   nc_log_info("%1X", backdrop_color.g);
 
-  nc_set_position_log(MENU_X + 10, MENU_Y_BLUE);
+  nc_log_set_position(MENU_X + 10, MENU_Y_BLUE);
   nc_log_info("%1X", backdrop_color.b);
 }
 
 static void init() {
-  nc_set_joypad_edge_mode(TRUE);
+  nc_joypad_set_edge_mode(TRUE);
 }
 
 static void display() {
-  nc_init_log();
+  nc_log_init();
   display_menu();
   display_cursor();
   display_rgb_values();
-  nc_set_palette_backdrop_by_rgb16(backdrop_color);
+  nc_palette_set_backdrop_rgb16(backdrop_color);
 }
 
 int main(void) {
   init();
   display();
   while(1) {
-    nc_update();
+    nc_gpu_update();
     if (nc_joypad_is_down(0) && cursorY < MENU_Y_BLUE) {
       cursorY += 2;
       display();
