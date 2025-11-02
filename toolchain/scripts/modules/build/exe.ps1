@@ -33,7 +33,7 @@ function Build-EXE {
     }
   }
 
-  Write-Host "building the exe file, be patient ..." -ForegroundColor Yellow
+  Write-Host "Building the exe file, be patient ..." -ForegroundColor Yellow
   Write-Host ""
 
   if ((Test-Path -Path $NSIFile) -eq $false) {
@@ -46,10 +46,19 @@ function Build-EXE {
     return $false
   }
 
+  $exeFile = "$distPath\$packageName\$packageName-$version\$($Config.project.platform)\exe\$packageName-$version.exe"
+  Write-Host "Building exe file at $exeFile" -ForegroundColor Yellow
+
   Start-Process -FilePath $makeNSISexe -Wait -NoNewWindow -ArgumentList $NSIFile
 
-  if ((Test-Path -Path "$distPath\$packageName\$packageName-$version\exe\$packageName-$version.exe") -eq $true) {
+  if ((Test-Path -Path $exeFile) -eq $true) {
     Write-Host ""
-    Write-Host "builded exe $distPath\$packageName\$packageName-$version\exe\$packageName-$version.exe" -ForegroundColor Green
+    Write-Host "Builded exe $exeFile" -ForegroundColor Green
+  } else {
+    Write-Host ""
+    Write-Host "Builded $exeFile not found" -ForegroundColor Red
+    return $false
   }
+
+  return $true
 }
