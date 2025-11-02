@@ -46,10 +46,8 @@ function Build-EXE {
     return $false
   }
 
-  $exeFile = "$distPath\$packageName\$packageName-$version\$($Config.project.platform)\exe\$packageName-$version.exe"
-  Write-Host "Building exe file at $exeFile" -ForegroundColor Yellow
-
   Start-Process -FilePath $makeNSISexe -Wait -NoNewWindow -ArgumentList $NSIFile
+  $exeFile = "$(Resolve-TemplatePath -Path $Config.project.distPath)\$packageName\$packageName-$version\$($Config.project.platform)\exe\$packageName-$version.exe"
 
   if ((Test-Path -Path $exeFile) -eq $true) {
     Write-Host ""
