@@ -1,5 +1,14 @@
 ## 3.1.2
 
+  - **BUG FIXES**:
+    - **mak run:dist**: Fixed standalone executable build with proper path resolution (Issue #176)
+      - Fixed NSIS output path mismatch causing "Can't open output file" error
+      - Replaced hardcoded "cd" directory with dynamic platform-specific paths
+      - Added absolute path resolution using `Resolve-TemplatePath` for consistency
+      - Improved build status messages and error reporting
+      - Added proper return value handling for build success/failure detection
+      - See: https://github.com/David-Vandensteen/neocore/issues/176
+
 ## 3.1.1
 
   - **IMPROVEMENTS**:
