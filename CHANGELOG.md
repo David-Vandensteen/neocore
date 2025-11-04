@@ -1,3 +1,7 @@
+## 3.1.3
+
+  - Add gitignore recommendations after program build
+
 ## 3.1.2
 
   - **BUG FIXES**:

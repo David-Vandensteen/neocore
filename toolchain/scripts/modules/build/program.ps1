@@ -169,5 +169,11 @@ Resolved path: $gccPath
     Remove-Item $statusFile -Force
   }
 
+  # Check .gitignore configuration after successful build
+  if ($result) {
+    $projectSrc = (Get-Location).Path
+    Assert-Gitignore -ProjectSrc $projectSrc | Out-Null
+  }
+
   return $result
 }
