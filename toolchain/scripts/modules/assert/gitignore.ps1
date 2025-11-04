@@ -1,10 +1,10 @@
 function Assert-Gitignore {
   param (
     [Parameter(Mandatory=$true)]
-    [string]$ProjectRoot
+    [string]$ProjectSrc
   )
   
-  $gitignorePath = Join-Path (Join-Path $ProjectRoot "..") ".gitignore"
+  $gitignorePath = Join-Path (Join-Path $ProjectSrc "..") ".gitignore"
 
   if (-not (Test-Path $gitignorePath)) {
     return $true

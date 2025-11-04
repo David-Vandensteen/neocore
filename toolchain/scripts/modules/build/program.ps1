@@ -171,8 +171,8 @@ Resolved path: $gccPath
 
   # Check .gitignore configuration after successful build
   if ($result) {
-    $projectRoot = (Get-Location).Path
-    Assert-Gitignore -ProjectRoot $projectRoot | Out-Null
+    $projectSrc = (Get-Location).Path
+    Assert-Gitignore -ProjectSrc $projectSrc | Out-Null
   }
 
   return $result
