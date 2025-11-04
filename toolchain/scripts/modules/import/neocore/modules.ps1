@@ -46,6 +46,7 @@ Import-Module "$neocorePathAbs\toolchain\scripts\modules\assert\build\sprite.ps1
 # Other assertions
 Import-Module "$neocorePathAbs\toolchain\scripts\modules\assert\rule.ps1"
 Import-Module "$neocorePathAbs\toolchain\scripts\modules\assert\raine\config.ps1"
+Import-Module "$neocorePathAbs\toolchain\scripts\modules\assert\gitignore.ps1"
 
 # Program legacy function assertions
 Import-Module "$neocorePathAbs\toolchain\scripts\modules\assert\program\legacy.ps1"
