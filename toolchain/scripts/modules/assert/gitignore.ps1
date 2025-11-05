@@ -24,7 +24,8 @@ function Assert-Gitignore {
       "**/out/fix.bin",
       "**/out/char.bin",
       "/build/",
-      "/dist/"
+      "/dist/",
+      "upgrade.log"
     )
 
     # Check for missing required patterns

@@ -1,3 +1,7 @@
+## 3.1.4
+
+  - Add gitignore recommendation for upgrade.log
+
 ## 3.1.3
 
   - Add gitignore recommendations after program build
