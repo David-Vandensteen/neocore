@@ -67,6 +67,8 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
 ## 📅 Roadmap<a name="roadmap"></a>
 
 ### 🟡 Soon
+- [ ] neocore version switcher script for standalone project
+- [ ] Mak lint
 - [ ] Integrate city41/mameNeoGeoDevPlugin
   - [ ] Fork it and tweak for Windows compatibility
 - [ ] Add mame conf for video recording
