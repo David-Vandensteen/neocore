@@ -13,3 +13,4 @@ as.exe.stackdump
 *.prg
 **/out/fix.bin
 **/out/char.bin
+upgrade.log
