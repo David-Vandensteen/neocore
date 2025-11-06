@@ -94,6 +94,16 @@ if %errorlevel% neq 0 (
     goto :end
 )
 
+REM Pull latest changes if it's a branch
+if "!VERSION_FOUND!"=="branch" (
+    echo Pulling latest changes from branch %ARG1%...
+    git -C "%GIT_REPO_PATH%" pull
+    if %errorlevel% neq 0 (
+        echo Error: Failed to pull latest changes.
+        goto :end
+    )
+)
+
 echo Successfully switched to version: %ARG1%
 
 echo Running upgrade script...
