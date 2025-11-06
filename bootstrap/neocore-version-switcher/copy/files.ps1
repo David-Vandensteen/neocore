@@ -17,13 +17,13 @@ function Copy-NeocoreFiles {
     $directoriesToCopy = @(
         @{ Name = "src-lib"; SourcePath = "$SourceNeocorePath\src-lib" },
         @{ Name = "toolchain"; SourcePath = "$SourceNeocorePath\toolchain" },
-        @{ Name = "neocore-version-switcher"; SourcePath = "$SourceNeocorePath\bootstrap\scripts\project\neocore-version-switcher" }
+        @{ Name = "neocore-version-switcher"; SourcePath = "$SourceNeocorePath\bootstrap\neocore-version-switcher" }
     )
 
     # Files to copy at root level (with custom source paths if needed)
     $filesToCopy = @(
         @{ Name = "manifest.xml"; SourcePath = "$SourceNeocorePath\manifest.xml" },
-        @{ Name = "neocore-version-switcher.bat"; SourcePath = "$SourceNeocorePath\bootstrap\scripts\project\neocore-version-switcher.bat" }
+        @{ Name = "neocore-version-switcher.bat"; SourcePath = "$SourceNeocorePath\bootstrap\neocore-version-switcher.bat" }
     )
 
     $copiedDirs = @()
