@@ -1,3 +1,5 @@
+## 3.2.0
+
 ## 3.1.4
 
   - Add gitignore recommendation for upgrade.log
