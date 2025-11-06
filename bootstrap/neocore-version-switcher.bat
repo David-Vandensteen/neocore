@@ -116,5 +116,18 @@ if %UPGRADE_ERROR% neq 0 (
 
 echo Upgrade completed successfully.
 
+REM Create a temporary script to update this script after it exits
+echo Updating version switcher script...
+set "TEMP_UPDATER=%temp%\update_neocore_switcher_%random%.bat"
+(
+    echo @echo off
+    echo timeout /t 2 /nobreak ^>nul
+    echo copy /Y "%GIT_REPO_PATH%\bootstrap\neocore-version-switcher.bat" "%~f0" ^>nul
+    echo if exist "%~dp0neocore-version-switcher" rd /s /q "%~dp0neocore-version-switcher"
+    echo xcopy /E /I /Y /Q "%GIT_REPO_PATH%\bootstrap\neocore-version-switcher" "%~dp0neocore-version-switcher" ^>nul
+    echo del "%%~f0"
+) > "%TEMP_UPDATER%"
+start "" "%TEMP_UPDATER%"
+
 :end
 endlocal
