@@ -1,5 +1,14 @@
 ## 3.2.0
 
+  - **NEW FEATURES**:
+    - **Version Switcher**: Added `neocore-version-switcher.bat` to allow switching between NeoCore versions in standalone project
+      - Switch to any tagged version or branch from the repository
+      - Use `--list` option to see all available versions
+  - **IMPROVEMENTS**:
+    - **Project Creation**: Version switcher automatically copied to new projects
+    - **Project Upgrade**: Version switcher updated/added during project upgrades
+    - **Version Management**: Simplified workflow for testing and switching between NeoCore versions
+
 ## 3.1.4
 
   - Add gitignore recommendation for upgrade.log
