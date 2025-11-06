@@ -39,7 +39,8 @@ if "%ARG1%"=="--list" (
 REM Check if argument is provided
 if "%ARG1%"=="" (
   echo Error: No version specified.
-  echo Usage: %~nx0 ^<version||branch^> or %~nx0 --list
+  echo Usage: %~nx0 ^<version or branch^> 
+  echo or %~nx0 --list
   goto :end
 )
 
