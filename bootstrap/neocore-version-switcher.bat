@@ -104,6 +104,12 @@ if "!VERSION_FOUND!"=="branch" (
 
 echo Successfully switched to version: %ARG1%
 
+REM Clean up existing neocore folder
+if exist "%~dp0neocore" (
+  echo Removing existing neocore folder...
+  rd /s /q "%~dp0neocore"
+)
+
 echo Running upgrade script...
 powershell -ExecutionPolicy Bypass -Command "& { . '%~dp0neocore-version-switcher\write\log.ps1'; . '%~dp0neocore-version-switcher\copy\files.ps1'; Copy-NeocoreFiles -SourceNeocorePath '%GIT_REPO_PATH%' -ProjectNeocorePath '%~dp0neocore' -LogFile '%~dp0upgrade.log' }"
 set UPGRADE_ERROR=%errorlevel%
