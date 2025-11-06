@@ -68,22 +68,18 @@ if not defined VERSION_FOUND (
 
 echo Switching to version: %ARG1% ^(!VERSION_FOUND!^)
 
-REM Check if git repository exists
-if not exist "%GIT_REPO_PATH%\.git" (
-  echo Cloning neocore repository...
-  if not exist "%temp%\neocore" mkdir "%temp%\neocore"
-  git clone %ORIGIN% "%GIT_REPO_PATH%"
-  if %errorlevel% neq 0 (
-    echo Error: Failed to clone repository.
-    goto :end
-  )
+REM Clean up existing repository if it exists
+if exist "%GIT_REPO_PATH%" (
+  echo Cleaning up existing repository...
+  rd /s /q "%GIT_REPO_PATH%"
 )
 
-REM Fetch latest changes
-echo Fetching latest changes...
-git -C "%GIT_REPO_PATH%" fetch --all --tags
+REM Clone the repository
+echo Cloning neocore repository...
+if not exist "%temp%\neocore" mkdir "%temp%\neocore"
+git clone %ORIGIN% "%GIT_REPO_PATH%"
 if %errorlevel% neq 0 (
-  echo Error: Failed to fetch changes.
+  echo Error: Failed to clone repository.
   goto :end
 )
 
