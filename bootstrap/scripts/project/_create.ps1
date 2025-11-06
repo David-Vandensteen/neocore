@@ -98,6 +98,29 @@ try {
   }
   Write-Host "  Toolchain copied successfully" -ForegroundColor Green
 
+  # Copy neocore-version-switcher.bat
+  Write-Host "Copying NeoCore version switcher..." -ForegroundColor Cyan
+  $versionSwitcherBatSource = "..\..\..\bootstrap\neocore-version-switcher.bat"
+  $versionSwitcherBatDest = "$Path\neocore-version-switcher.bat"
+  Copy-Item $versionSwitcherBatSource $versionSwitcherBatDest -Force
+  if (-not (Test-Path $versionSwitcherBatDest)) {
+    throw "Failed to copy neocore-version-switcher.bat"
+  }
+  Write-Host "  Version switcher script copied successfully" -ForegroundColor Green
+
+  # Copy neocore-version-switcher directory
+  Write-Host "Copying NeoCore version switcher directory..." -ForegroundColor Cyan
+  $versionSwitcherSource = "..\..\..\bootstrap\neocore-version-switcher"
+  $versionSwitcherDest = "$Path\neocore-version-switcher"
+  Write-Host "  Source: $versionSwitcherSource" -ForegroundColor Gray
+  Write-Host "  Destination: $versionSwitcherDest" -ForegroundColor Gray
+
+  $xcopyOutput = cmd /c "xcopy /E /I /Y /Q `"$versionSwitcherSource`" `"$versionSwitcherDest`" 2>&1"
+  if ($LASTEXITCODE -ne 0) {
+    throw "Failed to copy neocore-version-switcher directory. Exit code: $LASTEXITCODE. Output: $xcopyOutput"
+  }
+  Write-Host "  Version switcher directory copied successfully" -ForegroundColor Green
+
   # Copy standalone template to src
   Write-Host "Copying project template..." -ForegroundColor Cyan
   $templateSource = "..\..\..\bootstrap\standalone"

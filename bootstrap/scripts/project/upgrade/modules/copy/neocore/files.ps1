@@ -13,15 +13,25 @@ function Copy-NeocoreFiles {
     Write-Host "Copying NeoCore files..." -ForegroundColor Cyan
     Write-Log -File $LogFile -Level "INFO" -Message "Starting NeoCore files copy"
 
-    # Directories to copy
+    # Directories to copy from neocore root
     $directoriesToCopy = @(
         "src-lib",
         "toolchain"
     )
 
-    # Files to copy at root level
+    # Directories to copy from neocore/bootstrap to project root
+    $bootstrapDirectoriesToCopy = @(
+        "neocore-version-switcher"
+    )
+
+    # Files to copy at neocore root level
     $filesToCopy = @(
         "manifest.xml"
+    )
+
+    # Files to copy from neocore/bootstrap to project root
+    $bootstrapFilesToCopy = @(
+        "neocore-version-switcher.bat"
     )
 
     $copiedDirs = @()
@@ -94,6 +104,77 @@ function Copy-NeocoreFiles {
             }
         } else {
             $errorMsg = "Source file not found: $sourceFile"
+            Write-Host "  WARNING: $errorMsg" -ForegroundColor Yellow
+            Write-Log -File $LogFile -Level "WARNING" -Message $errorMsg
+        }
+    }
+
+    # Copy bootstrap directories to project root
+    foreach ($dir in $bootstrapDirectoriesToCopy) {
+        $sourceDir = "$SourceNeocorePath\bootstrap\$dir"
+        $targetDir = (Split-Path -Parent $ProjectNeocorePath) + "\$dir"  # Project root, not neocore subfolder
+
+        if (Test-Path $sourceDir) {
+            Write-Host "  Copying bootstrap directory: $dir..." -ForegroundColor White
+
+            # Remove target directory if it exists
+            if (Test-Path $targetDir) {
+                Remove-Item -Path $targetDir -Recurse -Force -ErrorAction Stop
+                Write-Log -File $LogFile -Level "INFO" -Message "Removed existing directory: $targetDir"
+            }
+
+            # Use robocopy for reliable directory copying
+            $robocopyArgs = @(
+                $sourceDir,
+                $targetDir,
+                "/E",        # Copy subdirectories including empty ones
+                "/R:0",      # Number of retries on failed copies (0 = no retry)
+                "/W:0"       # Wait time between retries (0 seconds)
+            )
+
+            Write-Log -File $LogFile -Level "INFO" -Message "Running robocopy: $sourceDir -> $targetDir"
+            $robocopyResult = & robocopy @robocopyArgs
+            $robocopyExitCode = $LASTEXITCODE
+
+            # Robocopy exit codes: 0-3 are success, 4+ are errors
+            if ($robocopyExitCode -ge 4) {
+                $errorMsg = "Failed to copy bootstrap directory $dir (robocopy exit code: $robocopyExitCode)"
+                Write-Host "  ERROR: $errorMsg" -ForegroundColor Red
+                Write-Log -File $LogFile -Level "ERROR" -Message $errorMsg
+                Write-Log -File $LogFile -Level "ERROR" -Message "NeoCore files copy failed - stopping migration"
+                return $false
+            } else {
+                Write-Log -File $LogFile -Level "INFO" -Message "Successfully copied bootstrap directory: $sourceDir -> $targetDir (exit code: $robocopyExitCode)"
+                $copiedDirs += "bootstrap\$dir"
+            }
+        } else {
+            $errorMsg = "Source bootstrap directory not found: $sourceDir"
+            Write-Host "  WARNING: $errorMsg" -ForegroundColor Yellow
+            Write-Log -File $LogFile -Level "WARNING" -Message $errorMsg
+        }
+    }
+
+    # Copy bootstrap files to project root
+    foreach ($file in $bootstrapFilesToCopy) {
+        $sourceFile = "$SourceNeocorePath\bootstrap\$file"
+        $targetFile = (Split-Path -Parent $ProjectNeocorePath) + "\$file"  # Project root, not neocore subfolder
+
+        if (Test-Path $sourceFile) {
+            try {
+                Write-Host "  Copying bootstrap file: $file..." -ForegroundColor White
+                Copy-Item -Path $sourceFile -Destination $targetFile -Force -ErrorAction Stop
+                Write-Log -File $LogFile -Level "INFO" -Message "Copied bootstrap file: $sourceFile -> $targetFile"
+                $copiedFiles += "bootstrap\$file"
+
+            } catch {
+                $errorMsg = "Failed to copy bootstrap file $file : $($_.Exception.Message)"
+                Write-Host "  ERROR: $errorMsg" -ForegroundColor Red
+                Write-Log -File $LogFile -Level "ERROR" -Message $errorMsg
+                Write-Log -File $LogFile -Level "ERROR" -Message "NeoCore files copy failed - stopping migration"
+                return $false
+            }
+        } else {
+            $errorMsg = "Source bootstrap file not found: $sourceFile"
             Write-Host "  WARNING: $errorMsg" -ForegroundColor Yellow
             Write-Log -File $LogFile -Level "WARNING" -Message $errorMsg
         }
