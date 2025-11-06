@@ -128,7 +128,7 @@ if exist "%GIT_REPO_PATH%\bootstrap\neocore-version-switcher.bat" (
         echo     if exist "%~dp0neocore-version-switcher" rd /s /q "%~dp0neocore-version-switcher"
         echo     xcopy /E /I /Y /Q "%GIT_REPO_PATH%\bootstrap\neocore-version-switcher" "%~dp0neocore-version-switcher" ^>nul
         echo ^)
-        echo del "%%~f0"
+        echo del "%%~f0" ^& exit
     ) > "!TEMP_UPDATER!"
     start "" "!TEMP_UPDATER!"
 ) else (
