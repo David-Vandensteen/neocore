@@ -67,7 +67,8 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
 ## 📅 Roadmap<a name="roadmap"></a>
 
 ### 🟡 Soon
-- [ ] neocore version switcher script for standalone project
+- [x] neocore version switcher script for standalone project
+- [ ] On-the-fly project creation to streamline the process and remove the need for multiple manual steps
 - [ ] Mak lint
 - [ ] Integrate city41/mameNeoGeoDevPlugin
   - [ ] Fork it and tweak for Windows compatibility
@@ -267,6 +268,28 @@ cd <neocore>\bootstrap\scripts\project
 ### 🆙 Upgrade an Existing Project<a name="upgrade-an-existing-project"></a>
 
 > ⚠️ **Important**: Backup your project before upgrading. Check the [migration guide](docs/migration_guides/v2tov3/v2tov3.md) for breaking changes.
+
+#### Method 1: Using Version Switcher (NeoCore 3.2.0+)
+
+The version switcher provides a simple way to upgrade or switch between NeoCore versions:
+
+```cmd
+# From your project root directory
+cd C:\temp\MyGame
+
+# Upgrade to latest stable version
+.\neocore-version-switcher.bat master
+
+# Or switch to a specific version
+.\neocore-version-switcher.bat 3.2.0
+
+# List all available versions
+.\neocore-version-switcher.bat --list
+```
+
+> 💡 **Tip**: The version switcher automatically handles the upgrade process and updates itself when switching versions.
+
+#### Method 2: Manual Upgrade Script (NeoCore < 3.2.0)
 
 ```cmd
 # 1. Remove build folder
