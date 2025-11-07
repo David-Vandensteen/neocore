@@ -68,6 +68,7 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
 
 ### 🟡 Soon
 - [x] neocore version switcher script for standalone project
+- [ ] On-the-fly project creation to streamline the process and remove the need for multiple manual steps
 - [ ] Mak lint
 - [ ] Integrate city41/mameNeoGeoDevPlugin
   - [ ] Fork it and tweak for Windows compatibility
