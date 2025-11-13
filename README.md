@@ -68,8 +68,8 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
 
 ### 🟡 Soon
 - [x] neocore version switcher script for standalone project
-- [ ] On-the-fly project creation to streamline the process and remove the need for multiple manual steps
-- [ ] Mak lint
+- [x] One liner command for project creation to streamline the process and remove the need for multiple manual steps
+- [x] Mak lint
 - [ ] Integrate city41/mameNeoGeoDevPlugin
   - [ ] Fork it and tweak for Windows compatibility
 - [ ] Add mame conf for video recording
@@ -113,17 +113,30 @@ cd samples\hello
 .\mak.bat run:mame
 ```
 
-**3. Create your first project**
+**3. Create your first project (One-liner)**
+
+> ⚠️ **Important**: Avoid using spaces in project paths (e.g., use `C:\MyGame` instead of `C:\My Game`). Spaces can cause issues with the build tools.
+
+Create and enter your project directory:
 ```cmd
-cd <neocore>\bootstrap\scripts\project
-.\create.bat -name MyGame -projectPath C:\temp\MyGame
-cd C:\temp\MyGame\src
+md C:\MyGame
+cd C:\MyGame
+```
+
+Run the creation command:
+```cmd
+curl -L https://raw.githubusercontent.com/David-Vandensteen/neocore/main/bootstrap/scripts/project/create_from_oneliner.bat -o c.bat && c.bat && del c.bat
+```
+
+Then build and run:
+```cmd
+cd src
 .\mak.bat sprite
 .\mak.bat
 .\mak.bat run:mame
 ```
 
-🎉 **Congratulations!** You've created and launched your first Neo Geo CD project.
+🎉 **Congratulations!** You've created and launched your first Neo Geo CD project with a single command!
 
 > 💡 **Next Steps**: See [Project Management](#project-management) section for detailed project creation options and workflows.
 
@@ -141,6 +154,7 @@ cd C:\temp\MyGame\src
 | `.\mak.bat clean` | Remove built resources |
 | `.\mak.bat clean:build` | Remove the entire build folder |
 | `.\mak.bat sprite` | Build sprites |
+| `.\mak.bat lint` | Validate project (project.xml, .gitignore, legacy code) |
 | `.\mak.bat run:raine` | Run with Raine emulator |
 | `.\mak.bat run:mame` | Run with MAME emulator |
 | `.\mak.bat serve:mame` | Run in hot reload mode |
@@ -254,6 +268,39 @@ This workflow change provides better performance for iterative development.
 ## 📦 Project Management<a name="project-management"></a>
 
 ### 🆕 Create a New Project<a name="create-a-project"></a>
+
+#### Method 1: One-liner (Recommended)
+
+The fastest way to create a new project from anywhere.
+
+> ⚠️ **Important**: Avoid using spaces in project paths (e.g., use `C:\MyGame` instead of `C:\My Game`). Spaces can cause issues with the build tools.
+
+Create and enter your project directory:
+```cmd
+md C:\MyGame
+cd C:\MyGame
+```
+
+Run the creation command:
+```cmd
+curl -L https://raw.githubusercontent.com/David-Vandensteen/neocore/main/bootstrap/scripts/project/create_from_oneliner.bat -o c.bat && c.bat && del c.bat
+```
+
+This will:
+1. Create and enter your project directory
+2. Download the creation script from GitHub
+3. Prompt you for a project name
+4. Set up the complete Neocore project structure
+5. Clean up temporary files
+
+**Advantages:**
+- ✅ No need to clone the Neocore repository
+- ✅ Always uses the latest stable version
+- ✅ Single command to copy and paste
+
+#### Method 2: Manual creation (Alternative)
+
+If you have already cloned the Neocore repository:
 
 ```cmd
 cd <neocore>\bootstrap\scripts\project

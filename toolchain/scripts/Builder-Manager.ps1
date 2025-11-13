@@ -137,6 +137,13 @@ function Main {
     }
     return $true
   }
+  if ($Rule -eq "lint") {
+    if (-not (MakLint)) {
+      Write-Host "Lint operation failed" -ForegroundColor Red
+      return $false
+    }
+    return $true
+  }
   if (($Rule -eq "make") -or ($Rule -eq "") -or (!$Rule) -or ($Rule -eq "default") ) {
     if (-Not(MakDefault)) {
       Write-Host "Default build failed" -ForegroundColor Red
