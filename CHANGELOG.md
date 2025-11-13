@@ -1,5 +1,8 @@
 ## 3.3.0
 
+  - **NEW FEATURES**:
+    - **One-liner Project Creation**: Create NeoCore projects without cloning yourself the repository
+
 ## 3.2.0
 
   - **NEW FEATURES**:
