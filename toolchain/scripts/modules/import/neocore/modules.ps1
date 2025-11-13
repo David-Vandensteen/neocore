@@ -91,6 +91,7 @@ Import-Module "$neocorePathAbs\toolchain\scripts\modules\mak\clean.ps1"
 Import-Module "$neocorePathAbs\toolchain\scripts\modules\mak\clean\build.ps1"
 Import-Module "$neocorePathAbs\toolchain\scripts\modules\mak\default.ps1"
 Import-Module "$neocorePathAbs\toolchain\scripts\modules\mak\iso.ps1"
+Import-Module "$neocorePathAbs\toolchain\scripts\modules\mak\lint.ps1"
 
 # Mak distribution
 Import-Module "$neocorePathAbs\toolchain\scripts\modules\mak\dist\exe.ps1"

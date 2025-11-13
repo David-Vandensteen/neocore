@@ -12,6 +12,7 @@ function Assert-Rule {
     if ($Rule -eq "dist:exe") { return $true }
     if ($Rule -eq "framer") { return $true }
     if ($Rule -eq "lib") { return $true }
+    if ($Rule -eq "lint") { return $true }
     if ($Rule -eq "make") { return $true }
     if ($Rule -eq "only:sprite") { return $true }
     if ($Rule -eq "only:program") { return $true }
@@ -43,6 +44,7 @@ function Assert-Rule {
     Write-Host "animator"
     Write-Host "framer"
     Write-Host "lib"
+    Write-Host "lint"
     Write-Host "make"
     Write-Host "sprite"
     Write-Host "serve:raine"
