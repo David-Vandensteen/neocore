@@ -12,10 +12,13 @@ if %errorlevel% neq 0 (
 
 echo Git is available.
 echo Continuing...
+echo.
 
 REM Constants
 set "ORIGIN=https://github.com/David-Vandensteen/neocore.git"
-set "GIT_REPO_PATH=%temp%\neocore\git"
+set TIMESTAMP=%DATE:~-4%%DATE:~3,2%%DATE:~0,2%-%TIME::=%
+set TIMESTAMP=%TIMESTAMP:~0,14%
+set "CLONE_PATH=%TEMP%\neocore\git\%RANDOM%-%TIMESTAMP%"
 
 REM Get the first argument
 set "ARG1=%~1"
@@ -69,16 +72,10 @@ if not defined VERSION_FOUND (
 
 echo Switching to version: %ARG1% ^(!VERSION_FOUND!^)
 
-REM Clean up existing repository if it exists
-if exist "%GIT_REPO_PATH%" (
-  echo Cleaning up existing repository...
-  rd /s /q "%GIT_REPO_PATH%"
-)
-
 REM Clone the repository
 echo Cloning neocore repository...
-if not exist "%temp%\neocore" mkdir "%temp%\neocore"
-git clone %ORIGIN% "%GIT_REPO_PATH%"
+
+git clone --depth 1 %ORIGIN% "%CLONE_PATH%"
 if %errorlevel% neq 0 (
   echo Error: Failed to clone repository.
   goto :end
@@ -86,7 +83,7 @@ if %errorlevel% neq 0 (
 
 REM Checkout the specified version
 echo Checking out %ARG1%...
-git -C "%GIT_REPO_PATH%" checkout %ARG1%
+git -C "%CLONE_PATH%" checkout %ARG1%
 if %errorlevel% neq 0 (
   echo Error: Failed to checkout %ARG1%.
   goto :end
@@ -95,7 +92,7 @@ if %errorlevel% neq 0 (
 REM Pull latest changes if it's a branch
 if "!VERSION_FOUND!"=="branch" (
   echo Pulling latest changes from branch %ARG1%...
-  git -C "%GIT_REPO_PATH%" pull
+  git -C "%CLONE_PATH%" pull
   if %errorlevel% neq 0 (
     echo Error: Failed to pull latest changes.
     goto :end
@@ -111,7 +108,7 @@ if exist "%~dp0neocore" (
 )
 
 echo Running upgrade script...
-powershell -ExecutionPolicy Bypass -Command "& { . '%~dp0neocore-version-switcher\write\log.ps1'; . '%~dp0neocore-version-switcher\copy\files.ps1'; Copy-NeocoreFiles -SourceNeocorePath '%GIT_REPO_PATH%' -ProjectNeocorePath '%~dp0neocore' -LogFile '%~dp0upgrade.log' }"
+powershell -ExecutionPolicy Bypass -Command "& { . '%~dp0neocore-version-switcher\write\log.ps1'; . '%~dp0neocore-version-switcher\copy\files.ps1'; Copy-NeocoreFiles -SourceNeocorePath '%CLONE_PATH%' -ProjectNeocorePath '%~dp0neocore' -LogFile '%~dp0upgrade.log' }"
 set UPGRADE_ERROR=%errorlevel%
 if %UPGRADE_ERROR% neq 0 (
   echo Error: Upgrade script failed.
@@ -121,16 +118,16 @@ if %UPGRADE_ERROR% neq 0 (
 echo Upgrade completed successfully.
 
 REM Create a temporary script to update this script after it exits (only if files exist in the version)
-if exist "%GIT_REPO_PATH%\bootstrap\neocore-version-switcher.bat" (
+if exist "%CLONE_PATH%\bootstrap\neocore-version-switcher.bat" (
   echo Updating version switcher script...
   set "TEMP_UPDATER=%temp%\update_neocore_switcher_%random%.bat"
   (
     echo @echo off
     echo timeout /t 2 /nobreak ^>nul
-    echo if exist "%GIT_REPO_PATH%\bootstrap\neocore-version-switcher.bat" copy /Y "%GIT_REPO_PATH%\bootstrap\neocore-version-switcher.bat" "%~f0" ^>nul
-    echo if exist "%GIT_REPO_PATH%\bootstrap\neocore-version-switcher" ^(
+    echo if exist "%CLONE_PATH%\bootstrap\neocore-version-switcher.bat" copy /Y "%CLONE_PATH%\bootstrap\neocore-version-switcher.bat" "%~f0" ^>nul
+    echo if exist "%CLONE_PATH%\bootstrap\neocore-version-switcher" ^(
     echo   if exist "%~dp0neocore-version-switcher" rd /s /q "%~dp0neocore-version-switcher"
-    echo   xcopy /E /I /Y /Q "%GIT_REPO_PATH%\bootstrap\neocore-version-switcher" "%~dp0neocore-version-switcher" ^>nul
+    echo   xcopy /E /I /Y /Q "%CLONE_PATH%\bootstrap\neocore-version-switcher" "%~dp0neocore-version-switcher" ^>nul
     echo ^)
     echo del "%%~f0" ^& exit
   ) > "!TEMP_UPDATER!"
