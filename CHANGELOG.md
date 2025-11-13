@@ -2,6 +2,8 @@
 
   - **NEW FEATURES**:
     - **One-liner Project Creation**: Create NeoCore projects without cloning yourself the repository
+  - **IMPROVEMENTS**:
+    - **Version Switcher**: Improved temporary directory naming with timestamp-based unique identifiers
 
 ## 3.2.0
 
