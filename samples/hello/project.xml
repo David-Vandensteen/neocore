@@ -58,6 +58,7 @@
         <full>-nowindow -skip_gameinfo neocdz</full>
         <nosound>-sound none -window -skip_gameinfo neocdz</nosound>
         <debug>-debug -window -skip_gameinfo neocdz</debug>
+        <record>-window -skip_gameinfo -snappath . -mngwrite output.mng neocdz</record>        
       </profile>
     </mame>
   </emulator>
