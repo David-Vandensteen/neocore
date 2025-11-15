@@ -1,3 +1,7 @@
+## 3.3.1
+
+  - Fix URL in readme for project creation script
+
 ## 3.3.0
 
   - **NEW FEATURES**:

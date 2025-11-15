@@ -126,7 +126,7 @@ cd C:\MyGame
 
 Run the creation command:
 ```cmd
-curl -L https://raw.githubusercontent.com/David-Vandensteen/neocore/main/bootstrap/scripts/project/create_from_oneliner.bat -o c.bat && c.bat && del c.bat
+curl -L https://raw.githubusercontent.com/David-Vandensteen/neocore/master/bootstrap/scripts/project/create_from_oneliner.bat -o c.bat && c.bat && del c.bat
 ```
 
 Then build and run:
@@ -284,7 +284,7 @@ cd C:\MyGame
 
 Run the creation command:
 ```cmd
-curl -L https://raw.githubusercontent.com/David-Vandensteen/neocore/main/bootstrap/scripts/project/create_from_oneliner.bat -o c.bat && c.bat && del c.bat
+curl -L https://raw.githubusercontent.com/David-Vandensteen/neocore/master/bootstrap/scripts/project/create_from_oneliner.bat -o c.bat && c.bat && del c.bat
 ```
 
 This will:
