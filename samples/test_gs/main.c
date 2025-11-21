@@ -22,6 +22,9 @@ int main(void) {
     if (position.x > 512) {
       nc_gfx_set_scroller_position(&background, 0, 0);
     }
+    if (nc_joypad_is_start(0) & nc_joypad_is_a(0)) {
+      nc_gfx_destroy_scroller(&background);
+    }
   };
 
   return 0;
