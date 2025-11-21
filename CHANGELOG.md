@@ -1,6 +1,10 @@
+## 3.3.3
+
+  - Fix issue 198: undefined reference to nc_gfx_destroy_scroller
+
 ## 3.3.2
 
-  - Fix and refactor neocore version switcher
+  - Fix issue 197: NeoCore 3.3.0 & 3.3.1 - neocore-version-switcher - failed to checkout and refactor neocore version switcher
   
 ## 3.3.1
 
