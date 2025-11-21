@@ -19,20 +19,9 @@ function Copy-NeocoreFiles {
     @{ Name = "toolchain"; SourcePath = "$SourceNeocorePath\toolchain"; TargetPath = "$ProjectNeocorePath\toolchain" }
   )
 
-  # Directories to copy to project root (parent of neocore folder)
-  $projectRootPath = Split-Path -Parent $ProjectNeocorePath
-  $rootDirectoriesToCopy = @(
-    @{ Name = "neocore-version-switcher"; SourcePath = "$SourceNeocorePath\bootstrap\neocore-version-switcher"; TargetPath = "$projectRootPath\neocore-version-switcher" }
-  )
-
   # Files to copy to neocore folder
   $filesToCopy = @(
     @{ Name = "manifest.xml"; SourcePath = "$SourceNeocorePath\manifest.xml"; TargetPath = "$ProjectNeocorePath\manifest.xml" }
-  )
-
-  # Files to copy to project root (parent of neocore folder)
-  $rootFilesToCopy = @(
-    @{ Name = "neocore-version-switcher.bat"; SourcePath = "$SourceNeocorePath\bootstrap\neocore-version-switcher.bat"; TargetPath = "$projectRootPath\neocore-version-switcher.bat" }
   )
 
   $copiedDirs = @()

@@ -25,7 +25,9 @@ function Assert-Gitignore {
       "**/out/char.bin",
       "/build/",
       "/dist/",
-      "upgrade.log"
+      "upgrade.log",
+      "neocore-version-switcher-latest-spool.bat",
+      "neocore-version-switcher-spool/"      
     )
 
     # Check for missing required patterns
