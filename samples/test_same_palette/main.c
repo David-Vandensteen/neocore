@@ -44,7 +44,12 @@ int main(void) {
     nc_log_info_line("PAL PLANET : %d", (int)planet.paletteInfoDAT);
     nc_log_info("PAL BACK   : %d", (int)backgroung.paletteInfoDAT);
     nc_gfx_update_animated_sprite_animation(&player);
+    if (nc_joypad_is_start(0) & nc_joypad_is_a(0)) {
+      nc_gfx_destroy_animated_sprite(&player);
+      nc_gfx_destroy_picture(&planet);
+      nc_gfx_destroy_scroller(&backgroung);
+    }
   };
-
+  
   return 0;
 }

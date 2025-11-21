@@ -22,7 +22,7 @@ static bool menu() {
     nc_log_next_line();
     nc_log_info("Menu Sprite ID: ");
     nc_log_word(menu_sprite_id);
-    if (nc_joypad_is_start(0)) {
+    if (nc_joypad_is_start(0) & nc_joypad_is_a(0)) {
       nc_gfx_destroy_picture(&menu_anime_girl_darker8);
       nc_gpu_update();
       return true;
