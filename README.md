@@ -69,10 +69,10 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
 ### 🟡 Soon
 - [x] neocore version switcher script for standalone project
 - [x] One liner command for project creation to streamline the process and remove the need for multiple manual steps
-- [ ] Mak lint
+- [x] Mak lint
 - [ ] Integrate city41/mameNeoGeoDevPlugin
   - [ ] Fork it and tweak for Windows compatibility
-- [ ] Add mame conf for video recording
+- [ ] Video recording support - *After analysis, this feature will be deferred to Maybe section*
 
 ### 🕓 Later
 - [ ] Neocore 4
@@ -86,6 +86,7 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
 - [ ] DRAM asset management (unload/load from CD-ROM)
 
 ### 🧐 Maybe
+- [ ] Video recording support (MAME MNG format with manual ffmpeg conversion to MP4)
 - [ ] XML WYSIWYG editor
 - [ ] Memory card support
 - [ ] CLI-based asset packager
@@ -125,7 +126,7 @@ cd C:\MyGame
 
 Run the creation command:
 ```cmd
-curl -L https://raw.githubusercontent.com/David-Vandensteen/neocore/main/bootstrap/scripts/project/create_from_oneliner.bat -o c.bat && c.bat && del c.bat
+curl -L https://raw.githubusercontent.com/David-Vandensteen/neocore/master/bootstrap/scripts/project/create_from_oneliner.bat -o c.bat && c.bat && del c.bat
 ```
 
 Then build and run:
@@ -154,6 +155,7 @@ cd src
 | `.\mak.bat clean` | Remove built resources |
 | `.\mak.bat clean:build` | Remove the entire build folder |
 | `.\mak.bat sprite` | Build sprites |
+| `.\mak.bat lint` | Validate project (project.xml, .gitignore, legacy code) |
 | `.\mak.bat run:raine` | Run with Raine emulator |
 | `.\mak.bat run:mame` | Run with MAME emulator |
 | `.\mak.bat serve:mame` | Run in hot reload mode |
@@ -282,7 +284,7 @@ cd C:\MyGame
 
 Run the creation command:
 ```cmd
-curl -L https://raw.githubusercontent.com/David-Vandensteen/neocore/main/bootstrap/scripts/project/create_from_oneliner.bat -o c.bat && c.bat && del c.bat
+curl -L https://raw.githubusercontent.com/David-Vandensteen/neocore/master/bootstrap/scripts/project/create_from_oneliner.bat -o c.bat && c.bat && del c.bat
 ```
 
 This will:

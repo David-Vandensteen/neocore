@@ -1,7 +1,14 @@
+## 3.3.2
+  
+## 3.3.1
+
+  - Fix URL in readme for project creation script
+
 ## 3.3.0
 
   - **NEW FEATURES**:
     - **One-liner Project Creation**: Create NeoCore projects without cloning yourself the repository
+    - **Mak Lint**: Added `mak lint` command for project validation (project.xml, .gitignore, legacy code detection)
   - **IMPROVEMENTS**:
     - **Version Switcher**: Improved temporary directory naming with timestamp-based unique identifiers
 
