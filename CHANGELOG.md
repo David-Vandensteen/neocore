@@ -1,4 +1,6 @@
 ## 3.3.2
+
+  - Fix and refactor neocore version switcher
   
 ## 3.3.1
 
