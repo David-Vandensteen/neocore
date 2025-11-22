@@ -54,6 +54,7 @@
         <!-- To use a named profile, use mak run:mame:<profileName>.
         Example: mak run:mame:full to run MAME in fullscreen.
         You can add more custom profiles. -->
+        <dev>-console -window -skip_gameinfo -pluginspath C:\Users\davidv\Documents\github\neocore\neocore\build\mame\plugins -plugin ngdev neocdz</dev>
         <default>-window -skip_gameinfo neocdz</default>
         <full>-nowindow -skip_gameinfo neocdz</full>
         <nosound>-sound none -window -skip_gameinfo neocdz</nosound>
