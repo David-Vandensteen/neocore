@@ -1,3 +1,5 @@
+## 3.3.4
+
 ## 3.3.3
 
   - Fix issue 198: undefined reference to nc_gfx_destroy_scroller
