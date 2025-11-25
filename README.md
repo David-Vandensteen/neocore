@@ -86,6 +86,7 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
   - Samples: `pal_backdrop`, `pal_rgb`, `pal_rgb_mixer`
 - [ ] Joypad 2 support
 - [ ] Improve sound FX management
+  - [ ] Evaluate Mezz-Estate-NeoGeo-Audio-Driver(https://github.com/neogeo-mzs/Mezz-Estate-NeoGeo-Audio-Driver)
 - [ ] Palette bank switcher
 - [ ] DRAM asset management (unload/load from CD-ROM)
 
