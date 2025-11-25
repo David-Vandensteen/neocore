@@ -71,10 +71,14 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
 - [x] One liner command for project creation to streamline the process and remove the need for multiple manual steps
 - [x] Mak lint
 - [ ] Integrate city41/mameNeoGeoDevPlugin
-  - [ ] Fork it and tweak for Windows compatibility
+  - [ ] Fork it and tweak it for NeoCore integration
+    - [ ]  Add Windows compatibility
+    - [ ]  Add Neo-Geo CD Mame compatibility
+    - [ ]  Upgrade Mame for Mame API plug-in compatibility
 - [ ] Video recording support - *After analysis, this feature will be deferred to Maybe section*
 
 ### 🕓 Later
+- [ ] Handle DATlib JobMeter in NeoCore
 - [ ] Neocore 4
   - [ ] Remove deprecated functions, macros and structures since Neocore 3.1.1
   - [ ] AES / MVS support (**5% completed**)
