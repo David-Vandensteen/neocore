@@ -67,21 +67,22 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
 ## 📅 Roadmap<a name="roadmap"></a>
 
 ### 🟡 Soon
-- [x] neocore version switcher script for standalone project
-- [x] One liner command for project creation to streamline the process and remove the need for multiple manual steps
-- [x] Mak lint
-- [ ] Integrate city41/mameNeoGeoDevPlugin
-  - [ ] Fork it and tweak it for NeoCore integration
-    - [ ]  Add Windows compatibility
-    - [ ]  Add Neo-Geo CD Mame compatibility
-    - [ ]  Upgrade Mame for Mame API plug-in compatibility
-- [ ] Video recording support - *After analysis, this feature will be deferred to Maybe section*
+- [x] **~~neocore version switcher script for standalone project~~**
+- [x] **~~One liner command for project creation to streamline the process and remove the need for multiple manual steps~~**
+- [x] **~~Mak lint~~**
+- [ ] *Integrate city41/mameNeoGeoDevPlugin (In Progress)*
+  - [ ] Fork it and tweak it for NeoCore integration - https://github.com/David-Vandensteen/neocore-mameNeoGeoDevPlugin
+    - [X]  Add Windows compatibility
+    - [X]  Add Neo-Geo CD Mame compatibility
+    - [ ]  *Upgrade Mame in NeoCore for Mame API compatibility with this plug-in (In Progress)*
+- [ ] ~~Video recording support - *After analysis, this feature will be deferred to Maybe section*~~
 
 ### 🕓 Later
 - [ ] Handle DATlib JobMeter in NeoCore
 - [ ] Neocore 4
   - [ ] Remove deprecated functions, macros and structures since Neocore 3.1.1
-  - [ ] AES / MVS support (**5% completed**)
+- [ ] AES / MVS support (**5% completed**)
+- [ ] Add a basic modular C lib system for reusable functions (and assets)
 - [ ] RGB palette handlers (**60% completed**)
   - Samples: `pal_backdrop`, `pal_rgb`, `pal_rgb_mixer`
 - [ ] Joypad 2 support
