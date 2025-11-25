@@ -96,6 +96,7 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
 - [ ] Memory card support
 - [ ] CLI-based asset packager
 - [ ] GCC upgrade to version > 2.95.2
+  - [ ] Evaluate DATlib -> libNG (https://github.com/TheHpman/libNG)
 - [ ] Raine version selection
 - [ ] MAME version selection
 
