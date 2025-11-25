@@ -1,5 +1,7 @@
 ## 3.3.4
 
+  - upgrade mame from 0.227 to 0.251
+
 ## 3.3.3
 
   - Fix issue 198: undefined reference to nc_gfx_destroy_scroller
