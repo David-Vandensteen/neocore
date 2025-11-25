@@ -1,6 +1,7 @@
 ## 3.3.4
 
-  - upgrade mame from 0.227 to 0.251
+  - Upgrade mame from 0.227 to 0.251
+  - Update roadmap in README
 
 ## 3.3.3
 
