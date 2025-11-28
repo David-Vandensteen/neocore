@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest>
   <name>Neocore</name>
-  <version>3.3.3</version>
+  <version>3.3.4-rc</version>
   <author>David Vandensteen</author>
   <projectLink>https://github.com/David-Vandensteen/neocore</projectLink>
   <dependencies>
@@ -50,7 +50,7 @@
       <path>{{build}}\bin</path>
     </ffmpeg>
     <mame>
-      <url>http://azertyvortex.free.fr/download/neocore/current/mame.zip</url>
+      <url>http://azertyvortex.free.fr/download/neocore/mame-0251-r0.zip</url>
       <path>{{build}}</path>
     </mame>
     <msys2Runtime>

@@ -4,7 +4,7 @@
 static GFX_Picture neogeoLogo;
 
 int main(void) {
-  nc_init_display_gfx_picture(&neogeoLogo, &logo, &logo_Palettes, 100, 160);
+  nc_gfx_init_display_picture(&neogeoLogo, &logo, &logo_Palettes, 100, 160);
 
   while(1) {
     nc_update();
