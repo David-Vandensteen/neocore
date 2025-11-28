@@ -58,9 +58,9 @@ int main(void) {
     }
     nc_gfx_update_animated_sprite_animation(&player);
     if (nc_joypad_is_start(0) & nc_joypad_is_a(0)) {
-      nc_destroy_gfx_animated_sprite(&player);
-      nc_destroy_gfx_picture(&planet);
-      nc_destroy_gfx_scroller(&background);
+      nc_gfx_destroy_animated_sprite(&player);
+      nc_gfx_destroy_picture(&planet);
+      nc_gfx_destroy_scroller(&background);
     }
   };
   return 0;

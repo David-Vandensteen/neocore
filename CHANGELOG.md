@@ -2,6 +2,7 @@
 
   - Upgrade mame from 0.227 to 0.251
   - Update roadmap in README
+  - Rmove legacy code in sprite sample
 
 ## 3.3.3
 
