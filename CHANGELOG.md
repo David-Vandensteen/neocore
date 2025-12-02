@@ -1,3 +1,10 @@
+## 3.3.4
+
+  - Upgrade mame from 0.227 to 0.251
+  - Update roadmap in README
+  - Rmove legacy code in sprite sample
+  - Remove legacy code in bootstrap project
+
 ## 3.3.3
 
   - Fix issue 198: undefined reference to nc_gfx_destroy_scroller
