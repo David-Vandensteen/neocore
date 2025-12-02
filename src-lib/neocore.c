@@ -1427,7 +1427,7 @@ void nc_log_palette_info(paletteInfo *paletteInfo) {
   BYTE i = 0;
   for (i = 0; i < 16; i++) {
     sprintf(buffer, "0x%01X : 0x%04X", i, (unsigned int)paletteInfo[i].data);
-    nc_log_info(buffer);
+    nc_log_info_line(buffer);
   }
 }
 
