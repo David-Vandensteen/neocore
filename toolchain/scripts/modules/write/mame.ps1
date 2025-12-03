@@ -136,6 +136,7 @@ function Mame-WithProfile {
   Write-Host ""
 
   $mameArgs = $Config.project.emulator.mame.profile.$profileName
+  $mameArgs = Get-TemplatePath -Path $mameArgs
   $defaultMameArgs = "-rompath `"$pathMame\roms`" -hashpath `"$pathMame\hash`" -cfg_directory $env:TEMP -nvram_directory $env:TEMP $GameName"
 
   Write-Host "$pathMame\$ExeName $mameArgs $defaultMameArgs"
