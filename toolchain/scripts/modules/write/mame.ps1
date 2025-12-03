@@ -140,7 +140,12 @@ function Mame-WithProfile {
   $defaultMameArgs = "-rompath `"$pathMame\roms`" -hashpath `"$pathMame\hash`" -cfg_directory $env:TEMP -nvram_directory $env:TEMP $GameName"
 
   Write-Host "$pathMame\$ExeName $mameArgs $defaultMameArgs"
-  Start-Process -NoNewWindow -FilePath "$pathMame\$ExeName" -ArgumentList "$mameArgs $defaultMameArgs"
+  Start-Process -NoNewWindow -Wait -FilePath "$pathMame\$ExeName" -ArgumentList "$mameArgs $defaultMameArgs"
+
+  # Clean up console_history file if it exists
+  if (Test-Path -Path "console_history") {
+    Remove-Item -Path "console_history" -Force
+  }
 
   return $true
 }
