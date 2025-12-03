@@ -110,6 +110,13 @@ function Assert-Project {
   }
   }
 
+  if ($Config.project.emulator.mame.profile.debug) {
+    if (-Not(Assert-ProjectEmulatorMameProfileDebug)) {
+      Write-Host "Project emulator MAME profile debug assertion failed" -ForegroundColor Red
+      return $false
+    }
+  }
+
   Write-Host "project config is compliant" -ForegroundColor Green
   return $true
 }
