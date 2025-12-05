@@ -14,10 +14,8 @@ This sample demonstrates the Neo Geo's sprite scaling capabilities, showing thre
 
 ## Key Functions Used
 
-- `nc_init_gfx_picture()` - Initializes sprite graphics
-- `nc_display_gfx_picture()` - Displays sprites at specified positions
-- `nc_shrunk()` - Applies scaling effects to sprites
-- `nc_shrunk_forge()` - Creates scaling parameters for horizontal/vertical scaling
+- `nc_init_display_gfx_picture()` - Initializes sprite graphics
+- `nc_gpu_shrunk_centroid_gfx_picture()` - Applies scaling effects to sprites
 - `nc_get_frame_counter()` - Gets current frame count for animation timing
 - `nc_log_info()` - Displays descriptive text
 
@@ -40,7 +38,7 @@ This sample demonstrates the Neo Geo's sprite scaling capabilities, showing thre
 
 ## Technical Details
 
-- Uses `nc_shrunk_forge()` to create scaling parameters with different X and Y values
+- Uses `nc_gpu_shrunk_centroid_gfx_picture()` to apply scaling with different X and Y values
 - Implements different animation speeds for varied visual effects
 - Demonstrates the relationship between frame counters and animation timing
 - Shows how to manage multiple scaled sprites simultaneously

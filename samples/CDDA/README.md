@@ -13,10 +13,10 @@ Demonstrates CD Digital Audio playback functionality with interactive controls a
 
 ## Key Functions Used
 
-- `nc_play_cdda()` - Play CD audio track
-- `nc_init_gfx_scroller()` - Create scrolling background
-- `nc_init_gfx_picture()` - Display static graphics
-- `nc_set_joypad_edge_mode()` - Enable edge detection for controls
+- `nc_cdda_play()` - Play CD audio track
+- `nc_init_display_gfx_scroller()` - Create scrolling background
+- `nc_init_display_gfx_picture()` - Display static graphics
+- `nc_joypad_set_edge_mode()` - Enable edge detection for controls
 
 ## Controls
 
