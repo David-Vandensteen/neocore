@@ -1,5 +1,6 @@
 ## 3.4.0
 
+  - Add gfx debug mame plugin (mak run:mame:debug)
   - Remove legacy code in samples documentations
 
 ## 3.3.4

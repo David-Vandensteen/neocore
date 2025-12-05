@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <project>
   <name>cdda</name>
   <version>1.0.0</version>
@@ -25,7 +25,7 @@
           <file>assets\gfx\02-spectrum.png</file>
         </scrl>
       </chardata>
-       <fixdata>
+      <fixdata>
         <chardata>
           <setup fileType="fix">
             <charfile>out\fix.bin</charfile>
@@ -48,7 +48,8 @@
           </iso>
         </dist>
         <tracks>
-          <track><!-- track id 1 is reserved for the binary program -->
+          <track>
+            <!-- track id 1 is reserved for the binary program -->
             <id>2</id>
             <file>assets\sounds\cdda\The Moon - High Orbit.wav</file>
             <pregap>00:02:00</pregap>
@@ -93,7 +94,7 @@
         <default>-window -skip_gameinfo neocdz</default>
         <full>-nowindow -skip_gameinfo neocdz</full>
         <nosound>-sound none -window -skip_gameinfo neocdz</nosound>
-        <debug>-debug -window -skip_gameinfo neocdz</debug>
+        <debug>-console -debug -window -skip_gameinfo -pluginspath {{build}}\mame\plugins -plugin ngdev neocdz</debug>
       </profile>
     </mame>
   </emulator>

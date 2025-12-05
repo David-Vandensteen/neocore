@@ -28,6 +28,7 @@ Import-Module "$neocorePathAbs\toolchain\scripts\modules\assert\project\gfx\dat.
 Import-Module "$neocorePathAbs\toolchain\scripts\modules\assert\project\gfx\fixFiles.ps1"
 Import-Module "$neocorePathAbs\toolchain\scripts\modules\assert\project\name.ps1"
 Import-Module "$neocorePathAbs\toolchain\scripts\modules\assert\project\compiler\systemFile.ps1"
+Import-Module "$neocorePathAbs\toolchain\scripts\modules\assert\project\emulator\mame\profile\debug.ps1"
 Import-Module "$neocorePathAbs\toolchain\scripts\modules\assert\path.ps1"
 Import-Module "$neocorePathAbs\toolchain\scripts\modules\assert\program.ps1"
 
@@ -81,6 +82,7 @@ Import-Module "$neocorePathAbs\toolchain\scripts\modules\write\wav.ps1"
 Import-Module "$neocorePathAbs\toolchain\scripts\modules\install\component.ps1"
 Import-Module "$neocorePathAbs\toolchain\scripts\modules\install\nsis.ps1"
 Import-Module "$neocorePathAbs\toolchain\scripts\modules\install\raine\config.ps1"
+Import-Module "$neocorePathAbs\toolchain\scripts\modules\install\mame\plugins\ngdev.ps1"
 Import-Module "$neocorePathAbs\toolchain\scripts\modules\install\sdk.ps1"
 
 # ============================================================================
