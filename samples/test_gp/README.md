@@ -14,8 +14,7 @@ This sample tests the Graphics Picture (GP) system functionality, validating sta
 
 ## Key Functions Used
 
-- `nc_init_gfx_picture()` - Picture initialization functions
-- `nc_display_gfx_picture()` - Picture display functions
+- `nc_init_display_gfx_picture()` - Picture initialization and display function
 - Picture resource management functions
 - Memory allocation and cleanup functions
 
