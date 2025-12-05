@@ -53,6 +53,10 @@
       <url>http://azertyvortex.free.fr/download/neocore/mame-0251-r0.zip</url>
       <path>{{build}}</path>
     </mame>
+    <mameNeodevPlugin>
+      <url>https://github.com/David-Vandensteen/neocore-mameNeoGeoDevPlugin/archive/refs/tags/1.0.0.zip</url>
+      <path>{{build}}\mame\plugins\ngdev</path>
+    </mameNeodevPlugin>
     <msys2Runtime>
       <url>http://azertyvortex.free.fr/download/neocore/current/msys2-runtime.zip</url>
       <path>{{build}}\bin</path>

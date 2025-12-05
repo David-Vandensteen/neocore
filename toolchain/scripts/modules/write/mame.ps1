@@ -61,6 +61,12 @@ function Write-Mame {
         Write-Host "Failed to install MAME component" -ForegroundColor Red
         return $false
       }
+      
+      # Install ngdev plugin after MAME installation
+      if (-not (Install-MamePluginsNgdev -PathMame $PathMame)) {
+        Write-Host "Failed to install MAME ngdev plugin" -ForegroundColor Red
+        return $false
+      }
     } else {
       Write-Host "Error: MAME not found in manifest dependencies" -ForegroundColor Red
       Write-Host "Please add mame to manifest.xml dependencies section" -ForegroundColor Yellow
