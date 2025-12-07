@@ -42,6 +42,7 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
   - [📦 Distribution](#distribution)
   - [ℹ️ Information](#information)
   - [🎮 Custom Emulator Profiles](#emulator-profiles)
+  - [🐞 Debug Mode with ngdev Plugin](#debug-mode-with-ngdev-plugin)
 - [🔧 Development Workflow](#development-workflow)
   - [C89/ANSI C Strict Compliance](#c89ansi-c-strict-compliance)
   - [Build Steps (v3.0.0+)](#build-steps-v300)
@@ -52,12 +53,11 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
 - [📖 Documentation & Resources](#documentation--resources)
   - [📚 C API Documentation](#documentation-of-neocore-c-lib)
   - [🎨 DATlib Assets](#datlib-assets)
-  - [🔄 Migration from Previous Versions](docs/migration_guides/v2tov3/v2tov3.md)
+- [🎵 Audio Configuration](#audio-configuration)
 - [🛠️ Advanced Development](#advanced-development)
   - [♻️ Hot Reload](#hot-reload)
   - [🔧 Compile Library](#compiling-the-lib)
   - [🌿 Branches & Versions](#pull-or-checkout-another-branches)
-- [🎵 Audio Configuration](#audio-configuration)
 - [🤝 Contribution](#contribute)
   - [🎮 Game Examples & Showcases](#examples)
 - [📚 Dependencies](#dependencies)
@@ -77,7 +77,7 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
 - ✅ neocore version switcher script for standalone projects
 - ✅ One-liner command for project creation
 - ✅ Mak lint command for project validation
-- ✅ Integrate city41/mameNeoGeoDevPlugin
+- ✅ Integrate city41/mameNeoGeoDevPlugin (use `.\mak.bat run:mame:debug` to enable it)
   - ✅ Fork and tweak for NeoCore - [neocore-mameNeoGeoDevPlugin](https://github.com/David-Vandensteen/neocore-mameNeoGeoDevPlugin)
   - ✅ Add Windows compatibility
   - ✅ Add Neo-Geo CD MAME compatibility
@@ -133,8 +133,14 @@ cd neocore\samples\hello
 
 ```cmd
 md C:\MyGame && cd C:\MyGame
+````
+```cmd
 curl -L https://raw.githubusercontent.com/David-Vandensteen/neocore/master/bootstrap/scripts/project/create_from_oneliner.bat -o c.bat && c.bat && del c.bat
+```
+```cmd
 cd src
+```
+```cmd
 .\mak.bat sprite && .\mak.bat && .\mak.bat run:mame
 ```
 
@@ -166,6 +172,7 @@ cd src
 |---------|-------------|
 | `.\mak.bat run:raine` | Run with Raine emulator |
 | `.\mak.bat run:mame` | Run with MAME emulator |
+| `.\mak.bat run:mame:debug` | Run with MAME in debug mode (ngdev plugin) |
 | `.\mak.bat serve:mame` | Run in hot reload mode |
 
 ### 🧪 Validation & Tools
@@ -255,20 +262,13 @@ The `debug` profile provides enhanced Neo Geo CD debugging capabilities:
 .\mak.bat run:mame:debug
 ```
 
-**Features:**
-- 🎨 **Sprite Viewer** - Real-time sprite inspection with coordinates, dimensions, and palette info
-- 🎨 **Fix Layer Viewer** - Examine fix layer tiles and patterns
-- 🎨 **Palette Inspector** - View and analyze color palettes in real-time
-- 📊 **Memory Viewer** - Inspect VRAM, sprite RAM, and palette RAM
-- 🎯 **Debug Console** - Interactive MAME debugger with Neo Geo CD extensions
+![MAME Debug with ngdev Plugin](docs/images/mame-debug-collide-multiple.png)
 
 **Plugin Information:**
-- Automatically installed on first MAME run
+- Automatically installed
 - Based on [city41/mameNeoGeoDevPlugin](https://github.com/city41/mameNeoGeoDevPlugin)
 - Forked and enhanced for NeoCore: [neocore-mameNeoGeoDevPlugin](https://github.com/David-Vandensteen/neocore-mameNeoGeoDevPlugin)
 - Profile is automatically maintained by NeoCore
-
-> 💡 **Tip**: Press `~` in MAME to open the debug console and access ngdev commands.
 
 
 ---
@@ -441,8 +441,6 @@ cd C:\temp\MyGame
 # List all available versions
 .\neocore-version-switcher.bat --list
 ```
-
-> 💡 **Tip**: The version switcher automatically handles the upgrade process and updates itself when switching versions.
 
 #### Method 2: Manual Upgrade Script (NeoCore < 3.2.0)
 
