@@ -67,18 +67,17 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
 ## 📅 Roadmap<a name="roadmap"></a>
 
 ### 🟡 Soon
+- [ ] Handle DATlib JobMeter in NeoCore
 - [x] **~~neocore version switcher script for standalone project~~**
 - [x] **~~One liner command for project creation to streamline the process and remove the need for multiple manual steps~~**
 - [x] **~~Mak lint~~**
-- [ ] *Integrate city41/mameNeoGeoDevPlugin (In Progress)*
-  - [ ] Fork it and tweak it for NeoCore integration - https://github.com/David-Vandensteen/neocore-mameNeoGeoDevPlugin
+- [x] *Integrate city41/mameNeoGeoDevPlugin*
+  - [x] Fork it and tweak it for NeoCore integration - https://github.com/David-Vandensteen/neocore-mameNeoGeoDevPlugin
     - [X]  Add Windows compatibility
     - [X]  Add Neo-Geo CD Mame compatibility
-    - [ ]  *Upgrade Mame in NeoCore for Mame API compatibility with this plug-in (In Progress)*
-- [ ] ~~Video recording support - *After analysis, this feature will be deferred to Maybe section*~~
+    - [x]  Upgrade Mame in NeoCore for Mame API compatibility with this plug-in
 
 ### 🕓 Later
-- [ ] Handle DATlib JobMeter in NeoCore
 - [ ] Neocore 4
   - [ ] Remove deprecated functions, macros and structures since Neocore 3.1.1
 - [ ] AES / MVS support (**5% completed**)
@@ -357,28 +356,6 @@ cd <neocore>\bootstrap\scripts\project
 .\upgrade.bat -projectSrcPath C:\temp\MyGame\src -projectNeocorePath C:\temp\MyGame\neocore
 ```
 
-The upgrade script performs comprehensive validation and updates:
-
-**Automatic validation:**
-- 📋 Verifies project structure and required files (including Makefile)
-- 🔍 Analyzes C code for breaking changes and deprecated patterns
-- �️ Removes deprecated files (common_crt0_cd.s, crt0_cd.s)
-- �💾 Creates automatic backup before making changes
-- 📝 Generates detailed migration logs
-
-**What gets updated:**
-- ✅ Neocore toolchain and C library
-- ✅ Build scripts (mak.bat and mak.ps1)
-- ✅ Project structure validation
-- ✅ Deprecated file cleanup (automatic removal)
-- ✅ XML project definition
-- ❌ Your source code (manual migration needed - see logs for guidance)
-- ❌ Project assets
-
-> 💡 **Tip**: The script generates detailed logs showing breaking changes found in your code. Review these logs to understand what manual changes may be needed.
-
-> 🔒 **Security Note**: Migration logs may contain absolute paths from your system. Review generated logs before sharing them publicly and consider adding `*.log` to your `.gitignore` if needed.
-
 ### 📤 Release a Project<a name="release-a-project"></a>
 
 From your project's `src` folder:
@@ -578,6 +555,7 @@ Necessary if you modify Neocore source code:
 - mpg123
 - ffmpeg
 - NSIS
+- city41/mameNeoGeoDevPlugin
 
 ---
 
