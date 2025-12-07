@@ -2,6 +2,7 @@
 
   - Add gfx debug mame plugin (mak run:mame:debug)
   - Remove legacy code in samples documentations
+  - Fix nc_log_palette_info: each color value is now displayed on a new line
 
 ## 3.3.4
 
