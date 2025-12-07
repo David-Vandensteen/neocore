@@ -14,9 +14,9 @@ This sample demonstrates and tests the new sprite ID management features introdu
 - Displays the allocated sprite indices on screen
 
 ### 2. **Forced Sprite ID Allocation**
-- Uses `nc_display_gfx_with_sprite_id(50)` to force the player sprite to use index 50
+- Uses `nc_set_next_sprite_id(50)` to force the player sprite to use index 50
 - Demonstrates how to override automatic allocation for specific sprites
-- **Auto-reset feature**: The forced sprite ID automatically resets to `DISPLAY_GFX_WITH_SPRITE_ID_AUTO` after use
+- **Auto-reset feature**: The forced sprite ID automatically resets to `NC_SPRITE_ID_AUTO` after use
 
 ### 3. **Sprite Index Information Functions**
 - `nc_get_free_sprite_index()` - Gets the next available sprite index
@@ -51,9 +51,9 @@ The sample displays:
 4. **Reallocation**: Uses sprite cycling array for predictable testing
 
 ### NeoCore v3.0.0 Improvements
-- **Auto-reset mechanism**: `nc_display_gfx_with_sprite_id()` automatically resets after use
+- **Auto-reset mechanism**: `nc_set_next_sprite_id()` automatically resets after use
 - **Sprite table management**: Forced sprite IDs are properly registered in the sprite manager
-- **No manual cleanup**: No need to manually reset `nc_display_gfx_with_sprite_id(DISPLAY_GFX_WITH_SPRITE_ID_AUTO)`
+- **No manual cleanup**: No need to manually reset `nc_set_next_sprite_id(NC_SPRITE_ID_AUTO)`
 - **Thread-safe allocation**: Prevents sprite ID conflicts and memory corruption
 
 ### Error Handling

@@ -18,9 +18,9 @@ Comprehensive sprite demo showcasing animated sprites, scrolling backgrounds, an
 - `nc_init_display_gfx_animated_sprite()` - Create animated sprite
 - `nc_init_display_gfx_scroller()` - Create scrolling background
 - `nc_init_display_gfx_picture()` - Create static picture
-- `nc_move_gfx_animated_sprite()` - Move animated sprite
-- `nc_set_animation_gfx_animated_sprite()` - Change animation state
-- `nc_update_animation_gfx_animated_sprite()` - Update animation frames
+- `nc_gfx_move_animated_sprite()` - Move animated sprite
+- `nc_gfx_set_animated_sprite_animation()` - Change animation state
+- `nc_gfx_update_animated_sprite_animation()` - Update animation frames
 
 ## Controls
 

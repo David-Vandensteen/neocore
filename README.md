@@ -227,9 +227,11 @@ Create custom config files in your project and reference them:
 
 # Default profiles (included with Neocore)
 .\mak.bat run:mame:full      # Fullscreen
-.\mak.bat run:mame:debug     # Debug mode
+.\mak.bat run:mame:debug     # Debug mode with ngdev plugin for enhanced debugging
 .\mak.bat run:raine:full     # Fullscreen
 ```
+
+> 💡 **Note**: The `debug` profile automatically uses the [ngdev MAME plugin](https://github.com/David-Vandensteen/neocore-mameNeoGeoDevPlugin) for enhanced Neo Geo CD debugging capabilities. This profile is automatically maintained by NeoCore.
 
 
 ---

@@ -15,10 +15,10 @@ This sample demonstrates polyphonic sound effect playback capabilities, allowing
 ## Key Functions Used
 
 - `send_sound_command()` - Sends ADPCM sound commands to the audio system
-- `nc_stop_adpcm()` - Stops all currently playing ADPCM sounds
-- `nc_set_joypad_edge_mode()` - Enables edge-triggered joypad input
+- `nc_sound_stop_adpcm()` - Stops all currently playing ADPCM sounds
+- `nc_joypad_set_edge_mode()` - Enables edge-triggered joypad input
 - `nc_joypad_is_*()` - Detects joypad direction inputs
-- `nc_debug_joypad()` - Shows joypad input status
+- `nc_joypad_debug()` - Shows joypad input status
 
 ## What You'll See
 

@@ -1,8 +1,13 @@
+## 3.4.0
+
+  - Add gfx debug mame plugin (mak run:mame:debug)
+  - Remove legacy code in samples documentations
+
 ## 3.3.4
 
   - Upgrade mame from 0.227 to 0.251
   - Update roadmap in README
-  - Rmove legacy code in sprite sample
+  - Remove legacy code in sprite sample
   - Remove legacy code in bootstrap project
 
 ## 3.3.3

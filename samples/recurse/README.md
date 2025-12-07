@@ -14,7 +14,7 @@ This sample demonstrates recursive function calls and stack management in the Ne
 ## Key Functions Used
 
 - Recursive function implementations
-- `nc_update()` - Main system update loop
+- `nc_gpu_update()` - Main system update loop
 - Stack management functions
 - Memory monitoring utilities (if applicable)
 
