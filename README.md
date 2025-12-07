@@ -238,6 +238,59 @@ Create custom config files in your project and reference them:
 
 ## 🔧 Development Workflow
 
+### C89/ANSI C Strict Compliance
+
+> ⚠️ **CRITICAL**: This project uses `gcc-2.95.2` and requires strict C89 (ANSI C) compliance.
+
+#### Key C89 Rules
+
+**1. All variables must be declared at the beginning of blocks:**
+
+```c
+/* ✅ CORRECT */
+int function(void) {
+    int i;
+    char* buffer;
+
+    i = 0;
+    buffer = NULL;
+    /* code here */
+}
+
+/* ❌ WRONG - will not compile */
+int function(void) {
+    int i = 0;
+    doSomething();
+    char* buffer = NULL;  /* ERROR: declaration after statement */
+}
+```
+
+**2. Loop variables must be declared outside loops:**
+
+```c
+/* ✅ CORRECT */
+int i;
+for (i = 0; i < 10; i++) {
+    /* code */
+}
+
+/* ❌ WRONG */
+for (int i = 0; i < 10; i++) {  /* ERROR: C99+ feature */
+    /* code */
+}
+```
+
+**3. No inline variable initialization in declarations (unless constant):**
+
+```c
+/* ✅ CORRECT */
+int x;
+x = getValue();
+
+/* ❌ WRONG (unless getValue() is a constant) */
+int x = getValue();
+```
+
 ### Build Steps (v3.0.0+)
 
 Starting with version 3.0.0, build steps are now explicit and must be executed manually for better control and performance optimization:
