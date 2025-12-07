@@ -78,6 +78,7 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
     - [x]  Upgrade Mame in NeoCore for Mame API compatibility with this plug-in
 
 ### 🕓 Later
+- [ ] Runtime palette creation: instantiate sprites with palettes built in RAM
 - [ ] Neocore 4
   - [ ] Remove deprecated functions, macros and structures since Neocore 3.1.1
 - [ ] AES / MVS support (**5% completed**)
