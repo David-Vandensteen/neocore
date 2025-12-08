@@ -15,7 +15,7 @@ Demonstrates collision detection between physics-enabled sprites using NeoCore's
 
 - `nc_init_display_gfx_animated_sprite_physic()` - Create physics-enabled animated sprite
 - `nc_init_display_gfx_picture_physic()` - Create physics-enabled static sprite
-- `nc_move_gfx_animated_sprite_physic()` - Move physics sprite
+- `nc_gfx_move_animated_physic_sprite()` - Move physics sprite
 - `nc_check_collision_*()` - Collision detection functions
 
 ## Controls

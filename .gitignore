@@ -24,3 +24,4 @@ samples/**/out/fix.bin
 samples/**/out/char.bin
 synchro.sh
 synchro.bat
+console_history

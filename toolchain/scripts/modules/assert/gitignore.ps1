@@ -27,7 +27,8 @@ function Assert-Gitignore {
       "/dist/",
       "upgrade.log",
       "neocore-version-switcher-latest-spool.bat",
-      "neocore-version-switcher-spool/"      
+      "neocore-version-switcher-spool/",
+      "console_history"      
     )
 
     # Check for missing required patterns
