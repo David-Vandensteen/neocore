@@ -2,6 +2,8 @@
 
   - Add gfx debug mame plugin (mak run:mame:debug) (city41/mameNeoGeoDevPlugin)
   - Remove legacy code in samples documentations
+  - Fix broken bootstrap project (nc_gfx_init_and_display_picture)
+  - Remove legacy code in bootstrap project and update gitignore
   - Fix nc_log_palette_info: each color value is now displayed on a new line
 
 ## 3.3.4
