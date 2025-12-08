@@ -40,7 +40,7 @@ function Assert-ManifestDependencies {
   $fullDependencies = @(
     'datAnimatorFramer', 'datBuildCharCharSplit', 'cdTemplate', 'chdman',
     'datLib', 'systemFont', 'datImage', 'findCommand', 'gcc', 'mpg123',
-    'ffmpeg', 'mame', 'msys2Runtime', 'neodevLib',
+    'ffmpeg', 'mame', 'mameNeodevPlugin', 'msys2Runtime', 'neodevLib',
     'neocoreBin', 'ngfxSoundBuilder', 'nsis', 'raine', 'trCommand'
   )
 

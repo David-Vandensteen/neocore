@@ -12,8 +12,8 @@ This sample demonstrates how to manipulate the backdrop (background) color of th
 
 ## Key Functions Used
 
-- `nc_set_palette_backdrop_by_rgb16()` - Sets the backdrop color using RGB16 format
-- `nc_update()` - Main update loop
+- `nc_palette_set_backdrop_rgb16()` - Sets the backdrop color using RGB16 format
+- `nc_gpu_update()` - Main update loop
 
 ## What You'll See
 

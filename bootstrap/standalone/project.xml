@@ -82,7 +82,8 @@
         <default>-window -skip_gameinfo neocdz</default>
         <full>-nowindow -skip_gameinfo neocdz</full>
         <nosound>-sound none -window -skip_gameinfo neocdz</nosound>
-        <debug>-debug -window -skip_gameinfo neocdz</debug>
+        <!-- DO NOT EDIT: This debug profile is automatically maintained by NeoCore -->
+        <debug>-console -debug -window -skip_gameinfo -pluginspath {{build}}\mame\plugins -plugin ngdev neocdz</debug>
       </profile>
     </mame>
   </emulator>

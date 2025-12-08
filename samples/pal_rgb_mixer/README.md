@@ -14,11 +14,11 @@ This sample provides an interactive RGB color mixer interface where users can ad
 
 ## Key Functions Used
 
-- `nc_set_palette_backdrop_by_rgb16()` - Sets backdrop color using RGB values
+- `nc_palette_set_backdrop_rgb16()` - Sets backdrop color using RGB values
 - `nc_rgb16_to_packed_color16()` - Converts RGB16 to packed color format
-- `nc_set_joypad_edge_mode()` - Enables edge-triggered joypad input
+- `nc_joypad_set_edge_mode()` - Enables edge-triggered joypad input
 - `nc_joypad_is_*()` - Joypad direction detection functions
-- `nc_set_position_log()` - Positions text output
+- `nc_log_set_position()` - Positions text output
 - `nc_log_info()` - Displays information text
 
 ## What You'll See

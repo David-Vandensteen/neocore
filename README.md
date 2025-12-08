@@ -1,7 +1,7 @@
-# Neocore
+# NeoCore
 
 <p align="center">
-  <img src="docs/images/logo/neocore-logo-crop.png" alt="Neocore Logo" width="400"/>
+  <img src="docs/images/logo/neocore-logo-crop.png" alt="NeoCore Logo" width="400"/>
 </p>
 
 ![Platform](https://img.shields.io/badge/platform-%20%7C%20windows-lightgrey) ![License: MIT](https://img.shields.io/badge/License-MIT-green.svg) ![GitHub last commit](https://img.shields.io/github/last-commit/David-Vandensteen/neocore) ![GitHub repo size](https://img.shields.io/github/repo-size/David-Vandensteen/neocore) ![NeoGeo-CD](https://img.shields.io/badge/target-NeoGeo%20CD-red) ![Uses Doxygen](https://img.shields.io/badge/docs-Doxygen-blue)
@@ -10,7 +10,7 @@
 
 ## 🎯 Overview<a name="overview"></a>
 
-Neocore is a library and toolchain for developing on Neo Geo CD.
+NeoCore is a library and toolchain for developing on Neo Geo CD.
 
 It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes tools and code that can help with projects on this platform.
 
@@ -23,37 +23,44 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
 
 ### 🔗 Quick Links
 - [💬 Discord](https://discord.com/channels/1330066799445676093/1330089958798790686)
+- [🐛 Report a Bug](https://github.com/David-Vandensteen/neocore/issues/new?labels=bug&template=bug_report.md)
+- [💡 Request a Feature](https://github.com/David-Vandensteen/neocore/issues/new?labels=enhancement&template=feature_request.md)
 - [📋 Migration from previous versions](docs/migration_guides/v2tov3/v2tov3.md)
 - [📚 API Documentation](http://azertyvortex.free.fr/neocore-doxy/r12/neocore_8h.html)
 - [📝 Changelog](CHANGELOG.md)
 
-> ⚠️ **Current Version**: This version includes **breaking changes**. Please check the [migration guide](docs/migration_guides/v2tov3/v2tov3.md) before updating your existing projects.
+> ⚠️ **Upgrading from v2.x?** This version includes **breaking changes**. Please check the [migration guide](docs/migration_guides/v2tov3/v2tov3.md) before upgrading from NeoCore 2.x to 3.x.
 
 ## 📚 Table of Contents
 - [🎯 Overview](#overview)
+- [📋 Requirements](#requirements)
+- [📅 Roadmap](#roadmap)
 - [🚀 Quick Start](#quick-start)
-  - [📋 Requirements](#requirements)
-  - [⚡ Installation](#installation)
+- [⚙️ Command Reference](#command-reference)
+  - [🔨 Development Cycle](#development-cycle)
+  - [🧪 Validation & Tools](#validation--tools)
+  - [📦 Distribution](#distribution)
+  - [ℹ️ Information](#information)
+  - [🎮 Custom Emulator Profiles](#emulator-profiles)
+  - [🐞 Debug Mode with ngdev Plugin](#debug-mode-with-ngdev-plugin)
+- [🔧 Development Workflow](#development-workflow)
+  - [C89/ANSI C Strict Compliance](#c89ansi-c-strict-compliance)
+  - [Build Steps (v3.0.0+)](#build-steps-v300)
 - [📦 Project Management](#project-management)
   - [🆕 Create a Project](#create-a-project)
   - [🆙 Upgrade a Project](#upgrade-an-existing-project)
   - [📤 Release a Project](#release-a-project)
-- [⚙️ Command Reference](#command-reference)
-  - [🔨 Mak Rules](#mak-rules)
-  - [🎮 Emulator Profiles](#emulator-profiles)
 - [📖 Documentation & Resources](#documentation--resources)
   - [📚 C API Documentation](#documentation-of-neocore-c-lib)
   - [🎨 DATlib Assets](#datlib-assets)
-  - [🔄 Migration from Previous Versions](docs/migration_guides/v2tov3/v2tov3.md)
+- [🎵 Audio Configuration](#audio-configuration)
 - [🛠️ Advanced Development](#advanced-development)
   - [♻️ Hot Reload](#hot-reload)
   - [🔧 Compile Library](#compiling-the-lib)
   - [🌿 Branches & Versions](#pull-or-checkout-another-branches)
-- [🎵 Audio Configuration](#audio-configuration)
 - [🤝 Contribution](#contribute)
-  - [📅 Roadmap](#roadmap)
   - [🎮 Game Examples & Showcases](#examples)
-  - [📚 Dependencies](#dependencies)
+- [📚 Dependencies](#dependencies)
 
 ---
 
@@ -66,118 +73,134 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
 
 ## 📅 Roadmap<a name="roadmap"></a>
 
-### 🟡 Soon
-- [x] **~~neocore version switcher script for standalone project~~**
-- [x] **~~One liner command for project creation to streamline the process and remove the need for multiple manual steps~~**
-- [x] **~~Mak lint~~**
-- [ ] *Integrate city41/mameNeoGeoDevPlugin (In Progress)*
-  - [ ] Fork it and tweak it for NeoCore integration - https://github.com/David-Vandensteen/neocore-mameNeoGeoDevPlugin
-    - [X]  Add Windows compatibility
-    - [X]  Add Neo-Geo CD Mame compatibility
-    - [ ]  *Upgrade Mame in NeoCore for Mame API compatibility with this plug-in (In Progress)*
-- [ ] ~~Video recording support - *After analysis, this feature will be deferred to Maybe section*~~
+### 🟢 Completed (v3.4.0)
+- ✅ neocore version switcher script for standalone projects
+- ✅ One-liner command for project creation
+- ✅ Mak lint command for project validation
+- ✅ Integrate city41/mameNeoGeoDevPlugin (use `.\mak.bat run:mame:debug` to enable it)
+  - ✅ Fork and tweak for NeoCore - [neocore-mameNeoGeoDevPlugin](https://github.com/David-Vandensteen/neocore-mameNeoGeoDevPlugin)
+  - ✅ Add Windows compatibility
+  - ✅ Add Neo-Geo CD MAME compatibility
+  - ✅ Upgrade MAME for plugin API compatibility
 
-### 🕓 Later
-- [ ] Handle DATlib JobMeter in NeoCore
-- [ ] Neocore 4
-  - [ ] Remove deprecated functions, macros and structures since Neocore 3.1.1
-- [ ] AES / MVS support (**5% completed**)
-- [ ] Add a basic modular C lib system for reusable functions (and assets)
-- [ ] RGB palette handlers (**60% completed**)
+### 🟡 In Progress
+- 🔄 Handle DATlib JobMeter in NeoCore
+
+### 🔵 Planned - Soon
+- 🔜 Runtime palette creation: instantiate sprites with palettes built in RAM
+
+### 🔵 Planned - Later
+- 🔜 NeoCore 4
+  - Remove deprecated functions, macros and structures since NeoCore 3.1.1
+- 🔜 AES / MVS support (**5% completed**)
+- 🔜 Add basic modular C lib system for reusable functions and assets
+- 🔜 RGB palette handlers (**60% completed**)
   - Samples: `pal_backdrop`, `pal_rgb`, `pal_rgb_mixer`
-- [ ] Joypad 2 support
-- [ ] Improve sound FX management
-  - [ ] Evaluate Mezz-Estate-NeoGeo-Audio-Driver(https://github.com/neogeo-mzs/Mezz-Estate-NeoGeo-Audio-Driver)
-- [ ] Palette bank switcher
-- [ ] DRAM asset management (unload/load from CD-ROM)
+- 🔜 Joypad 2 support
+- 🔜 Improve sound FX management
+  - Evaluate [Mezz-Estate-NeoGeo-Audio-Driver](https://github.com/neogeo-mzs/Mezz-Estate-NeoGeo-Audio-Driver)
+- 🔜 Palette bank switcher
+- 🔜 DRAM asset management (unload/load from CD-ROM)
 
-### 🧐 Maybe
-- [ ] Video recording support (MAME MNG format with manual ffmpeg conversion to MP4)
-- [ ] XML WYSIWYG editor
-- [ ] Memory card support
-- [ ] CLI-based asset packager
-- [ ] GCC upgrade to version > 2.95.2
-  - [ ] Evaluate DATlib -> libNG (https://github.com/TheHpman/libNG)
-- [ ] Raine version selection
-- [ ] MAME version selection
+### 🧐 Under Consideration
+- 💭 Video recording support (MAME MNG format with manual ffmpeg conversion to MP4)
+- 💭 XML WYSIWYG editor
+- 💭 Memory card support
+- 💭 CLI-based asset packager
+- 💭 GCC upgrade to version > 2.95.2
+  - Evaluate DATlib → libNG ([TheHpman/libNG](https://github.com/TheHpman/libNG))
+- 💭 Raine version selection
+- 💭 MAME version selection
 
 ---
 
 ## 🚀 Quick Start<a name="quick-start"></a>
 
-### ⚡ Installation<a name="installation"></a>
+### Three-Step Setup
 
-**1. Clone the repository**
+**1️⃣ Clone & Test**
 ```cmd
 git clone https://github.com/David-Vandensteen/neocore.git
-cd neocore
+cd neocore\samples\hello
+.\mak.bat sprite && .\mak.bat && .\mak.bat run:mame
 ```
 
-**2. Test the installation**
+**2️⃣ Create Your Project**
+
+> 💡 **No need to clone or download NeoCore** - the script does everything for you!
+> 
+> ⚠️ Avoid spaces in paths (use `C:\MyGame` not `C:\My Game`)
+
 ```cmd
-cd samples\hello
-.\mak.bat sprite
-.\mak.bat
-.\mak.bat run:mame
-```
-
-**3. Create your first project (One-liner)**
-
-> ⚠️ **Important**: Avoid using spaces in project paths (e.g., use `C:\MyGame` instead of `C:\My Game`). Spaces can cause issues with the build tools.
-
-Create and enter your project directory:
-```cmd
-md C:\MyGame
-cd C:\MyGame
-```
-
-Run the creation command:
+md C:\MyGame && cd C:\MyGame
+````
 ```cmd
 curl -L https://raw.githubusercontent.com/David-Vandensteen/neocore/master/bootstrap/scripts/project/create_from_oneliner.bat -o c.bat && c.bat && del c.bat
 ```
-
-Then build and run:
 ```cmd
 cd src
-.\mak.bat sprite
-.\mak.bat
-.\mak.bat run:mame
+```
+```cmd
+.\mak.bat sprite && .\mak.bat && .\mak.bat run:mame
 ```
 
-🎉 **Congratulations!** You've created and launched your first Neo Geo CD project with a single command!
-
-> 💡 **Next Steps**: See [Project Management](#project-management) section for detailed project creation options and workflows.
+**3️⃣ Next Steps**
+- 📖 **Important**: Review [C89 Compliance](#c89ansi-c-strict-compliance) rules before coding
+- 📋 See [Command Reference](#command-reference) for all build commands
+- 🎮 Explore [Custom Emulator Profiles](#emulator-profiles) for testing
+- 🗂️ Read [Project Management](#project-management) for advanced project setup
 
 ---
 
 ## ⚙️ Command Reference<a name="command-reference"></a>
 
-### 🔨 Mak Rules<a name="mak-rules"></a>
-
 > ⚠️ **Warning**: The mak script overrides the PATH environment variable during compilation. If you encounter any problems after using it, simply close and restart a new command terminal.
+
+### 🔨 Development Cycle
+
+**Building:**
+| Command | Description |
+|---------|-------------|
+| `.\mak.bat sprite` | Build sprites from assets |
+| `.\mak.bat` | Compile C code and link |
+| `.\mak.bat lib` | Compile NeoCore library |
+| `.\mak.bat clean` | Remove built resources |
+| `.\mak.bat clean:build` | Remove entire build folder |
+
+**Testing:**
+| Command | Description |
+|---------|-------------|
+| `.\mak.bat run:raine` | Run with Raine emulator |
+| `.\mak.bat run:mame` | Run with MAME emulator |
+| `.\mak.bat run:mame:debug` | Run with MAME in debug mode (ngdev plugin) |
+| `.\mak.bat serve:mame` | Run in hot reload mode |
+
+### 🧪 Validation & Tools
 
 | Command | Description |
 |---------|-------------|
-| `.\mak.bat` | Build the program |
-| `.\mak.bat clean` | Remove built resources |
-| `.\mak.bat clean:build` | Remove the entire build folder |
-| `.\mak.bat sprite` | Build sprites |
 | `.\mak.bat lint` | Validate project (project.xml, .gitignore, legacy code) |
-| `.\mak.bat run:raine` | Run with Raine emulator |
-| `.\mak.bat run:mame` | Run with MAME emulator |
-| `.\mak.bat serve:mame` | Run in hot reload mode |
+| `.\mak.bat framer` | Launch DATlib Framer |
+| `.\mak.bat animator` | Launch DATlib Animator |
+
+### 📦 Distribution
+
+| Command | Description |
+|---------|-------------|
 | `.\mak.bat dist:iso` | Create ISO distribution package |
 | `.\mak.bat dist:mame` | Create MAME distribution package |
 | `.\mak.bat dist:exe` | Create Windows standalone executable |
-| `.\mak.bat framer` | Launch DATlib Framer |
-| `.\mak.bat animator` | Launch DATlib Animator |
-| `.\mak.bat lib` | Compile Neocore library |
+
+### ℹ️ Information
+
+| Command | Description |
+|---------|-------------|
 | `.\mak.bat --version` | Display version information |
 
 ### 🎮 Custom Emulator Profiles<a name="emulator-profiles"></a>
 
 You can create custom emulator profiles for different testing scenarios.
-Neocore comes with default profiles (`default`, `full`, `nosound`, `debug` for MAME), but you can add your own.
+NeoCore comes with default profiles (`default`, `full`, `nosound`, `debug` for MAME), but you can add your own.
 
 **Creating Custom MAME Profiles:**
 
@@ -225,16 +248,93 @@ Create custom config files in your project and reference them:
 .\mak.bat run:raine:myconfig
 .\mak.bat run:raine:test
 
-# Default profiles (included with Neocore)
-.\mak.bat run:mame:full      # Fullscreen
-.\mak.bat run:mame:debug     # Debug mode
+# Default profiles (included with NeoCore)
+.\.mak.bat run:mame:full      # Fullscreen
+.\mak.bat run:mame:debug     # Debug mode with ngdev plugin
 .\mak.bat run:raine:full     # Fullscreen
 ```
+
+### 🐞 Debug Mode with ngdev Plugin
+
+The `debug` profile provides enhanced Neo Geo CD debugging capabilities:
+
+```cmd
+.\mak.bat run:mame:debug
+```
+
+![MAME Debug with ngdev Plugin](docs/images/mame-debug-collide-multiple.png)
+
+**Plugin Information:**
+- Automatically installed
+- Based on [city41/mameNeoGeoDevPlugin](https://github.com/city41/mameNeoGeoDevPlugin)
+- Forked and enhanced for NeoCore: [neocore-mameNeoGeoDevPlugin](https://github.com/David-Vandensteen/neocore-mameNeoGeoDevPlugin)
+- Profile is automatically maintained by NeoCore
 
 
 ---
 
 ## 🔧 Development Workflow
+
+### C89/ANSI C Strict Compliance
+
+> ⚠️ **CRITICAL**: This project uses `gcc-2.95.2` and requires strict C89 (ANSI C) compliance.
+
+**Key Rules:**
+- Declare all variables at the beginning of blocks
+- Declare loop variables outside loops
+- No mixed declarations and code
+
+<details>
+<summary>📖 Click for C89 compliance examples</summary>
+
+**1. All variables must be declared at the beginning of blocks:**
+
+```c
+/* ✅ CORRECT */
+int function(void) {
+    int i;
+    char* buffer;
+
+    i = 0;
+    buffer = NULL;
+    /* code here */
+}
+
+/* ❌ WRONG - will not compile */
+int function(void) {
+    int i = 0;
+    doSomething();
+    char* buffer = NULL;  /* ERROR: declaration after statement */
+}
+```
+
+**2. Loop variables must be declared outside loops:**
+
+```c
+/* ✅ CORRECT */
+int i;
+for (i = 0; i < 10; i++) {
+    /* code */
+}
+
+/* ❌ WRONG */
+for (int i = 0; i < 10; i++) {  /* ERROR: C99+ feature */
+    /* code */
+}
+```
+
+**3. No inline variable initialization in declarations (unless constant):**
+
+```c
+/* ✅ CORRECT */
+int x;
+x = getValue();
+
+/* ❌ WRONG (unless getValue() is a constant) */
+int x = getValue();
+```
+
+</details>
 
 ### Build Steps (v3.0.0+)
 
@@ -285,8 +385,7 @@ The fastest way to create a new project from anywhere.
 
 Create and enter your project directory:
 ```cmd
-md C:\MyGame
-cd C:\MyGame
+md C:\MyGame && cd C:\MyGame
 ```
 
 Run the creation command:
@@ -298,17 +397,17 @@ This will:
 1. Create and enter your project directory
 2. Download the creation script from GitHub
 3. Prompt you for a project name
-4. Set up the complete Neocore project structure
+4. Set up the complete NeoCore project structure
 5. Clean up temporary files
 
 **Advantages:**
-- ✅ No need to clone the Neocore repository
+- ✅ No need to clone the NeoCore repository
 - ✅ Always uses the latest stable version
 - ✅ Single command to copy and paste
 
 #### Method 2: Manual creation (Alternative)
 
-If you have already cloned the Neocore repository:
+If you have already cloned the NeoCore repository:
 
 ```cmd
 cd <neocore>\bootstrap\scripts\project
@@ -342,8 +441,6 @@ cd C:\temp\MyGame
 .\neocore-version-switcher.bat --list
 ```
 
-> 💡 **Tip**: The version switcher automatically handles the upgrade process and updates itself when switching versions.
-
 #### Method 2: Manual Upgrade Script (NeoCore < 3.2.0)
 
 ```cmd
@@ -354,28 +451,6 @@ rd /S /Q C:\temp\MyGame\build
 cd <neocore>\bootstrap\scripts\project
 .\upgrade.bat -projectSrcPath C:\temp\MyGame\src -projectNeocorePath C:\temp\MyGame\neocore
 ```
-
-The upgrade script performs comprehensive validation and updates:
-
-**Automatic validation:**
-- 📋 Verifies project structure and required files (including Makefile)
-- 🔍 Analyzes C code for breaking changes and deprecated patterns
-- �️ Removes deprecated files (common_crt0_cd.s, crt0_cd.s)
-- �💾 Creates automatic backup before making changes
-- 📝 Generates detailed migration logs
-
-**What gets updated:**
-- ✅ Neocore toolchain and C library
-- ✅ Build scripts (mak.bat and mak.ps1)
-- ✅ Project structure validation
-- ✅ Deprecated file cleanup (automatic removal)
-- ✅ XML project definition
-- ❌ Your source code (manual migration needed - see logs for guidance)
-- ❌ Project assets
-
-> 💡 **Tip**: The script generates detailed logs showing breaking changes found in your code. Review these logs to understand what manual changes may be needed.
-
-> 🔒 **Security Note**: Migration logs may contain absolute paths from your system. Review generated logs before sharing them publicly and consider adding `*.log` to your `.gitignore` if needed.
 
 ### 📤 Release a Project<a name="release-a-project"></a>
 
@@ -434,7 +509,13 @@ From your project's `src` folder:
 
 ### CDDA (CD Digital Audio) Configuration
 
-For Neo Geo CD projects, you can configure CDDA tracks in your `project.xml`:
+**Quick Facts:**
+- Track ID 1 is reserved for the binary program
+- Use WAV files for source audio (automatic MP3 conversion for distribution)
+- Mixed source formats supported (WAV, MP3)
+
+<details>
+<summary>📖 Click for complete CDDA configuration example</summary>
 
 **Configuration structure:**
 ```xml
@@ -461,13 +542,6 @@ For Neo Geo CD projects, you can configure CDDA tracks in your `project.xml`:
 </project>
 ```
 
-**Key points:**
-- Track ID 1 is reserved for the binary program
-- Use WAV files for source audio (high quality)
-- Distribution format (MP3) optimizes ISO size
-- Pregap of `00:02:00` is standard for CD audio
-- Mixed source formats supported (WAV, MP3)
-
 **Audio file organization:**
 ```
 assets/
@@ -477,6 +551,12 @@ assets/
         ├── track03.wav
         └── track04.mp3
 ```
+
+**Notes:**
+- Pregap of `00:02:00` is standard for CD audio
+- Distribution format (MP3) optimizes ISO size
+
+</details>
 
 ---
 
@@ -543,7 +623,7 @@ cd <neocore>\samples\hello
 
 ### 🔧 Compile Library<a name="compiling-the-lib"></a>
 
-Necessary if you modify Neocore source code:
+Necessary if you modify NeoCore source code:
 
 ```cmd
 .\mak.bat clean
@@ -562,20 +642,31 @@ Necessary if you modify Neocore source code:
 
 ## 📚 Dependencies<a name="dependencies"></a>
 
-- NeoDev
-- DATlib
-- DATimage
-- NGFX SoundBuilder
-- Raine
-- Mame
-- CHDMAN
-- Doxygen
-- MSYS2
-- Mkisofs
-- GCC
-- mpg123
-- ffmpeg
-- NSIS
+### Core Development Tools
+- **GCC** - C compiler (version 2.95.2 for C89 compliance)
+- **MSYS2** - Unix-like environment for Windows
+- **Git** - Version control (required for installation)
+
+### Neo Geo Development
+- **NeoDev** - Neo Geo CD development toolkit
+- **DATlib** - Data library for Neo Geo assets
+- **DATimage** - Image processing for Neo Geo graphics
+- **NGFX SoundBuilder** - Audio tool for Neo Geo sound effects
+
+### Emulators & Testing
+- **Raine** - Neo Geo CD emulator
+- **MAME** - Multi-platform emulator (version 0.251)
+- **CHDMAN** - MAME compressed hard disk manager
+- **city41/mameNeoGeoDevPlugin** - Enhanced MAME debugging (ngdev fork)
+
+### Build & Distribution Tools
+- **Mkisofs** - ISO image creation
+- **NSIS** - Windows installer creation
+- **mpg123** - MP3 decoder
+- **ffmpeg** - Audio/video conversion
+
+### Documentation
+- **Doxygen** - API documentation generation
 
 ---
 
@@ -587,7 +678,7 @@ Complete version history and changes documentation.
 
 ## 📄 License
 
-Neocore is licensed under the MIT license.
+NeoCore is licensed under the MIT license.
 Copyright 2019 by David Vandensteen.
 Some graphics by **Grass**.
 

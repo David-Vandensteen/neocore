@@ -13,10 +13,10 @@ Demonstrates ADPCM sound playback and audio system management in NeoCore.
 
 ## Key Functions Used
 
-- `nc_get_adpcm_player()` - Get audio player state information
-- `nc_stop_adpcm()` - Stop current audio playback
+- `nc_sound_get_adpcm_player()` - Get audio player state information
+- `nc_sound_stop_adpcm()` - Stop current audio playback
 - `send_sound_command()` - Send sound command to audio system
-- `nc_push_remaining_frame_adpcm_player()` - Set audio duration
+- `nc_sound_set_adpcm_remaining_frame()` - Set audio duration
 - `nc_second_to_frame()` - Convert seconds to frame count
 
 ## Controls

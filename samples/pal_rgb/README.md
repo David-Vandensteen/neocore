@@ -15,7 +15,7 @@ Demonstrates real-time palette color reading and display, showcasing NeoCore's p
 
 - `nc_read_palette_rgb16()` - Read RGB color from palette entry
 - `nc_init_display_gfx_picture()` - Display graphics with palette
-- `nc_set_joypad_edge_mode()` - Enable edge detection for input
+- `nc_joypad_set_edge_mode()` - Enable edge detection for input
 
 ## Technical Details
 

@@ -11,9 +11,14 @@ function Build-Mame {
     return $false
   }
 
-  Write-Mame `
+  if (-not (Write-Mame `
     -ProjectName $name `
     -PathMame $mamePath `
     -CUEFile $cueFile `
-    -OutputFile "$mamePath\roms\neocdz\$name.chd"
+    -OutputFile "$mamePath\roms\neocdz\$name.chd")) {
+    Write-Host "MAME build failed" -ForegroundColor Red
+    return $false
+  }
+  
+  return $true
 }

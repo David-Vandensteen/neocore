@@ -61,6 +61,12 @@ function Write-Mame {
         Write-Host "Failed to install MAME component" -ForegroundColor Red
         return $false
       }
+      
+      # Install ngdev plugin after MAME installation
+      if (-not (Install-MamePluginsNgdev -PathMame $PathMame)) {
+        Write-Host "Failed to install MAME ngdev plugin" -ForegroundColor Red
+        return $false
+      }
     } else {
       Write-Host "Error: MAME not found in manifest dependencies" -ForegroundColor Red
       Write-Host "Please add mame to manifest.xml dependencies section" -ForegroundColor Yellow
@@ -136,10 +142,16 @@ function Mame-WithProfile {
   Write-Host ""
 
   $mameArgs = $Config.project.emulator.mame.profile.$profileName
+  $mameArgs = Get-TemplatePath -Path $mameArgs
   $defaultMameArgs = "-rompath `"$pathMame\roms`" -hashpath `"$pathMame\hash`" -cfg_directory $env:TEMP -nvram_directory $env:TEMP $GameName"
 
   Write-Host "$pathMame\$ExeName $mameArgs $defaultMameArgs"
-  Start-Process -NoNewWindow -FilePath "$pathMame\$ExeName" -ArgumentList "$mameArgs $defaultMameArgs"
+  Start-Process -NoNewWindow -Wait -FilePath "$pathMame\$ExeName" -ArgumentList "$mameArgs $defaultMameArgs"
+
+  # Clean up console_history file if it exists
+  if (Test-Path -Path "console_history") {
+    Remove-Item -Path "console_history" -Force
+  }
 
   return $true
 }

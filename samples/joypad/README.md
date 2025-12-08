@@ -12,8 +12,8 @@ Demonstrates joypad input handling and edge mode detection in NeoCore.
 
 ## Key Functions Used
 
-- `nc_set_joypad_edge_mode(true)` - Enable edge detection mode
-- `nc_debug_joypad(0)` - Display joypad state information
+- `nc_joypad_set_edge_mode(true)` - Enable edge detection mode
+- `nc_joypad_debug(0)` - Display joypad state information
 - `nc_joypad_is_up/down/left/right()` - Directional input detection
 - `nc_joypad_is_a/b/c/d()` - Button input detection
 
@@ -32,7 +32,7 @@ Demonstrates joypad input handling and edge mode detection in NeoCore.
 
 ## Edge Mode Explained
 
-With edge mode enabled (`nc_set_joypad_edge_mode(true)`), inputs are detected only on the frame when the button is first pressed, not continuously while held down. This is useful for menu navigation and discrete actions.
+With edge mode enabled (`nc_joypad_set_edge_mode(true)`), inputs are detected only on the frame when the button is first pressed, not continuously while held down. This is useful for menu navigation and discrete actions.
 
 ## Learning Objectives
 
