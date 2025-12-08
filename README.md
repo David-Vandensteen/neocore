@@ -385,8 +385,7 @@ The fastest way to create a new project from anywhere.
 
 Create and enter your project directory:
 ```cmd
-md C:\MyGame
-cd C:\MyGame
+md C:\MyGame && cd C:\MyGame
 ```
 
 Run the creation command:
