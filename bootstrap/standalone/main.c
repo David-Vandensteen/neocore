@@ -4,15 +4,15 @@
 static GFX_Picture neogeoLogo;
 
 int main(void) {
-  nc_gfx_init_display_picture(&neogeoLogo, &logo, &logo_Palettes, 100, 160);
+  nc_gfx_init_and_display_picture(&neogeoLogo, &logo, &logo_Palettes, 100, 160);
 
   while(1) {
-    nc_update();
-    nc_init_log();
+    nc_gpu_update();
+    nc_log_init();
 
     /* nc_log_info_line - adds automatic newline */
     nc_log_info_line("HELLO NEO GEO !!!");
-    nc_log_info_line("FRAME : %08ld", nc_get_frame_counter());
+    nc_log_info_line("FRAME : %08ld", nc_gpu_get_frame_number());
 
     /* nc_log_info - no automatic newline, continues on same line */
     nc_log_info("PRINT INT: ");
@@ -44,7 +44,7 @@ int main(void) {
     nc_log_info("TEXT WITH ENDING NEWLINE\n");
 
     /* force a position */
-    nc_set_position_log(7, 20);
+    nc_log_set_position(7, 20);
     nc_log_info_line("DAVID VANDENSTEEN");
   };
 

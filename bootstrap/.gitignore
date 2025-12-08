@@ -15,3 +15,5 @@ as.exe.stackdump
 **/out/char.bin
 upgrade.log
 console_history
+neocore-version-switcher-latest-spool.bat
+neocore-version-switcher-spool/
