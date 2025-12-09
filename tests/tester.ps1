@@ -38,6 +38,7 @@ function Main {
   BuildProject -Path "..\samples\custom_fix" -Rule $Rule -KillTime $KillTime
   BuildProject -Path "..\samples\DATdemo" -Rule $Rule -KillTime $KillTime
   BuildProject -Path "..\samples\hello" -Rule $Rule -KillTime $KillTime
+  BuildProject -Path "..\samples\job_meter" -Rule $Rule -KillTime $KillTime
   BuildProject -Path "..\samples\joypad" -Rule $Rule -KillTime $KillTime
   BuildProject -Path "..\samples\math" -Rule $Rule -KillTime $KillTime
   BuildProject -Path "..\samples\pal_backdrop" -Rule $Rule -KillTime $KillTime
