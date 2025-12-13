@@ -38,17 +38,39 @@ function Invoke-Raine {
     return $false
   }
   if ((Test-Path -Path $PathRaine) -eq $false) {
+    Write-Host "Raine not found at $PathRaine, installing..." -ForegroundColor Yellow
     if ($Manifest.manifest.dependencies.raine.url) {
       Install-Component `
         -URL $Manifest.manifest.dependencies.raine.url `
         -PathDownload "$($Config.project.buildPath)\spool" `
         -PathInstall $Manifest.manifest.dependencies.raine.path
+      
+      # Move raine64 folder from spool to build directory and rename to raine
+      $buildPathResolved = Resolve-TemplatePath -Path $Config.project.buildPath
+      $raineSourcePath = "$buildPathResolved\spool\raine64-0.97.5\raine64"
+      $raineDestPath = "$buildPathResolved\raine"
+      Write-Host "Checking source path: $raineSourcePath" -ForegroundColor Cyan
+      Write-Host "Target path: $raineDestPath" -ForegroundColor Cyan
+      if (Test-Path -Path $raineSourcePath) {
+        Write-Host "Source path exists, proceeding with move..." -ForegroundColor Yellow
+        if (Test-Path -Path $raineDestPath) {
+          Write-Host "Removing existing raine folder..." -ForegroundColor Yellow
+          Remove-Item -Path $raineDestPath -Recurse -Force
+        }
+        Move-Item -Path $raineSourcePath -Destination $raineDestPath -Force
+        Write-Host "Moved raine64 from spool to build\raine" -ForegroundColor Green
+      } else {
+        Write-Host "Warning: Source path $raineSourcePath does not exist!" -ForegroundColor Red
+      }
     } else {
       Write-Host "Error: Raine not found in manifest dependencies" -ForegroundColor Red
       Write-Host "Please add raine to manifest.xml dependencies section" -ForegroundColor Yellow
       return $false
     }
+    
     Install-RaineConfig -Path $PathRaine
+  } else {
+    Write-Host "Raine already installed at $PathRaine" -ForegroundColor Green
   }
   if (-Not(Assert-RaineConfig)) {
     Write-Host "Raine config assertion failed" -ForegroundColor Red
