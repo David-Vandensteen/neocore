@@ -78,9 +78,13 @@
       <path>{{build}}\tools</path>
     </nsis>
     <raine>
-      <url>http://azertyvortex.free.fr/download/neocore/current/raine.zip</url>
-      <path>{{build}}</path>
+      <url>http://azertyvortex.free.fr/download/neocore/raine64-0.97.5-r0.zip</url>
+      <path>{{build}}\spool</path>
     </raine>
+    <biosForRaine>
+      <url>http://azertyvortex.free.fr/download/neocore/bios-for-raine-r0.zip</url>
+      <path>{{build}}\raine\roms</path>
+    </biosForRaine>
     <trCommand>
       <url>http://azertyvortex.free.fr/download/neocore/current/tr-command.zip</url>
       <path>{{build}}\bin</path>

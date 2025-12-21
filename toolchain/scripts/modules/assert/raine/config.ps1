@@ -12,9 +12,6 @@ function Assert-RaineConfig {
     Write-Host "$($Config.project.buildPath)\raine\config\fullscreen.cfg not found" -ForegroundColor Red
     return $false
   }
-  if (-Not(Resolve-TemplatePath -Path "$($Config.project.buildPath)\raine\config\yuv.cfg")) {
-    Write-Host "$($Config.project.buildPath)\raine\config\yuv.cfg not found" -ForegroundColor Red
-    return $false
-  }
+
   return $true
 }
