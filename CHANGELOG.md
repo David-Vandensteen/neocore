@@ -1,3 +1,5 @@
+## 3.4.1
+
 ## 3.4.0
 
   - Add gfx debug mame plugin (mak run:mame:debug) (city41/mameNeoGeoDevPlugin)
