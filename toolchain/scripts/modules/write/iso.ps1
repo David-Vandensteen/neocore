@@ -195,7 +195,9 @@ function Write-CUE {
       Copy-Item -Path "$buildPathProject\$path\$baseName$ext" -Destination $path\$baseName$ext
     }
 
-    if ($Rule -like "dist:iso") {
+
+    if ($Rule -like "*dist:iso*") {
+      # Issue #211 fix: for dist:iso and mp3 format, the CUE file must reference the generated mp3 filename (without build-relative path)
       if ($ext -eq ".mp3" -and $ConfigCDDA.dist.iso.format -eq "wav") {
         Write-WAV `
           -mpg123 "$projectBuildPath\bin\mpg123-1.31.3-static-x86-64\mpg123.exe" `
@@ -210,7 +212,7 @@ function Write-CUE {
       }
 
       if ($ext -eq ".wav" -and $ConfigCDDA.dist.iso.format -eq "mp3") {
-        # Search for ffmpeg executable in bin folder or its subdirectories
+        # Convert WAV to MP3
         $ffmpegPath = Get-ChildItem -Path "$projectBuildPath\bin" -Name "ffmpeg.exe" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
         if ($ffmpegPath) {
           $ffmpegExe = Join-Path "$projectBuildPath\bin" $ffmpegPath
@@ -218,7 +220,6 @@ function Write-CUE {
           $ffmpegExe = "$projectBuildPath\bin\ffmpeg.exe"
         }
 
-        # Download ffmpeg if not found
         if (-Not(Test-Path -Path $ffmpegExe)) {
           if ($Manifest.manifest.dependencies.ffmpeg.url) {
             if (-not (Install-Component `
@@ -234,7 +235,6 @@ function Write-CUE {
             return $false
           }
 
-          # Re-search for ffmpeg after installation
           $ffmpegPath = Get-ChildItem -Path "$projectBuildPath\bin" -Name "ffmpeg.exe" -Recurse -ErrorAction SilentlyContinue | Select-Object -First 1
           if ($ffmpegPath) {
             $ffmpegExe = Join-Path "$projectBuildPath\bin" $ffmpegPath
@@ -243,7 +243,6 @@ function Write-CUE {
           }
         }
 
-        # Create destination directory if necessary
         $destinationDir = Split-Path -Path "$buildPathProject\$path\$baseName.mp3" -Parent
         if (-Not(Test-Path -Path $destinationDir)) {
           New-Item -ItemType Directory -Path $destinationDir -Force | Out-Null
@@ -253,7 +252,12 @@ function Write-CUE {
           -ffmpeg $ffmpegExe `
           -WAVFile "$buildPathProject\$path\$baseName.wav" `
           -MP3File "$buildPathProject\$path\$baseName.mp3"
-        $File = "$buildPathProject\$path\$baseName.mp3"
+        # For the CUE, only the generated mp3 filename (no build-relative path) should be used
+        $File = "$baseName.mp3"
+      }
+      # If the source file is already an mp3 and the target format is mp3, only the mp3 filename should be used
+      if ($ext -eq ".mp3" -and $ConfigCDDA.dist.iso.format -eq "mp3") {
+        $File = "$baseName.mp3"
       }
     }
 
