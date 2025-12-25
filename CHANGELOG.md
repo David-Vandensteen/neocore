@@ -3,6 +3,7 @@
   - Upgrade Raine emulator to 0.97.5
   - Remove useless log ("Checking for files created by BuildChar.exe...")
   - Fix issue 211: Incorrect CUE file paths when generating ISO with MP3 CDDA tracks (mak dist:iso)
+  - Remove useless tests/run-all-samples.bat
 
 ## 3.4.0
 
