@@ -103,14 +103,15 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
 - 🔜 DRAM asset management (unload/load from CD-ROM)
 
 ### 🧐 Under Consideration
-- 💭 Video recording support (MAME MNG format with manual ffmpeg conversion to MP4)
-- 💭 XML WYSIWYG editor
-- 💭 Memory card support
-- 💭 CLI-based asset packager
-- 💭 GCC upgrade to version > 2.95.2
-  - Evaluate DATlib → libNG ([TheHpman/libNG](https://github.com/TheHpman/libNG))
-- 💭 Raine version selection
-- 💭 MAME version selection
+ - 💭 Video recording support (MAME MNG format with manual ffmpeg conversion to MP4)
+ - 💭 XML WYSIWYG editor
+ - 💭 Memory card support
+ - 💭 CLI-based asset packager
+ - 💭 Split project.xml to separate user parameters from toolchain parameters
+ - 💭 GCC upgrade to version > 2.95.2
+   - Evaluate DATlib → libNG ([TheHpman/libNG](https://github.com/TheHpman/libNG))
+ - 💭 Raine version selection
+ - 💭 MAME version selection
 
 ---
 
