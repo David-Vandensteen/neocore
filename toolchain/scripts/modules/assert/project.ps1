@@ -117,6 +117,28 @@ function Assert-Project {
     }
   }
 
+  # Remove deprecated yuv config for Raine
+  if ($Config.project.emulator.raine.config.yuv) {
+    Write-Host "Removing deprecated raine.config.yuv from project.xml..." -ForegroundColor Yellow
+    $projectXmlPath = "project.xml"
+    
+    if (Test-Path -Path $projectXmlPath) {
+      [xml]$xmlContent = Get-Content -Path $projectXmlPath
+      
+      if ($xmlContent.project.emulator.raine.config.yuv) {
+        $yuvNode = $xmlContent.project.emulator.raine.config.SelectSingleNode("yuv")
+        if ($yuvNode) {
+          $yuvNode.ParentNode.RemoveChild($yuvNode) | Out-Null
+          $xmlContent.Save((Resolve-Path $projectXmlPath).Path)
+          Write-Host "Removed deprecated yuv config from project.xml" -ForegroundColor Green
+          
+          # Reload the config
+          [xml]$Config = Get-Content -Path $projectXmlPath
+        }
+      }
+    }
+  }
+
   Write-Host "project config is compliant" -ForegroundColor Green
   return $true
 }
