@@ -54,7 +54,6 @@
         You can add more custom configs. -->
         <default>{{build}}\raine\config\default.cfg</default>
         <full>{{build}}\raine\config\fullscreen.cfg</full>
-        <yuv>{{build}}\raine\config\yuv.cfg</yuv>
       </config>
     </raine>
     <mame>

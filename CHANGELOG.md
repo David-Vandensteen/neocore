@@ -1,3 +1,8 @@
+## 3.4.1
+
+  - Upgrade Raine emulator to 0.97.5
+  - Rmemove useless log ("Checking for files created by BuildChar.exe...")
+
 ## 3.4.0
 
   - Add gfx debug mame plugin (mak run:mame:debug) (city41/mameNeoGeoDevPlugin)
