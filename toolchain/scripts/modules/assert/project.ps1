@@ -110,9 +110,17 @@ function Assert-Project {
   }
   }
 
+
   if ($Config.project.emulator.mame.profile.debug) {
     if (-Not(Assert-ProjectEmulatorMameProfileDebug)) {
       Write-Host "Project emulator MAME profile debug assertion failed" -ForegroundColor Red
+      return $false
+    }
+  }
+
+  if ($Config.project.emulator.raine.exeFile) {
+    if (-Not(Assert-ProjectEmulatorRaineExeFile)) {
+      Write-Host "Project emulator RAINE exeFile assertion failed" -ForegroundColor Red
       return $false
     }
   }

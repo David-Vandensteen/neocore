@@ -39,7 +39,7 @@
   </gfx>
   <emulator>
     <raine>
-      <exeFile>{{build}}\raine\raine32.exe</exeFile>
+      <exeFile>{{build}}\raine\raine.exe</exeFile>
       <config>
         <!-- To use a named config, use mak run:raine:<configName>.
         Example: mak run:raine:full to run RAINE in fullscreen.
