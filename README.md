@@ -73,11 +73,15 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
 
 ## 📅 Roadmap<a name="roadmap"></a>
 
+### 🟢 Completed (v3.4.1)
+- ✅ Upgrade Raine emulator to 0.97.5
+- ✅ Fix issue 211: Incorrect CUE file paths when generating ISO with MP3 CDDA tracks (mak dist:iso)
+
 ### 🟢 Completed (v3.4.0)
 - ✅ neocore version switcher script for standalone projects
 - ✅ One-liner command for project creation
 - ✅ Mak lint command for project validation
-- ✅ Integrate city41/mameNeoGeoDevPlugin (use `.\mak.bat run:mame:debug` to enable it)
+- ✅ Integrate city41/mameNeoGeoDevPlugin (use `\.\mak.bat run:mame:debug` to enable it)
   - ✅ Fork and tweak for NeoCore - [neocore-mameNeoGeoDevPlugin](https://github.com/David-Vandensteen/neocore-mameNeoGeoDevPlugin)
   - ✅ Add Windows compatibility
   - ✅ Add Neo-Geo CD MAME compatibility
@@ -103,27 +107,41 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
 - 🔜 DRAM asset management (unload/load from CD-ROM)
 
 ### 🧐 Under Consideration
-- 💭 Video recording support (MAME MNG format with manual ffmpeg conversion to MP4)
-- 💭 XML WYSIWYG editor
-- 💭 Memory card support
-- 💭 CLI-based asset packager
-- 💭 GCC upgrade to version > 2.95.2
-  - Evaluate DATlib → libNG ([TheHpman/libNG](https://github.com/TheHpman/libNG))
-- 💭 Raine version selection
-- 💭 MAME version selection
+ - 💭 Video recording support (MAME MNG format with manual ffmpeg conversion to MP4)
+ - 💭 XML WYSIWYG editor
+ - 💭 Memory card support
+ - 💭 CLI-based asset packager
+ - 💭 Split project.xml to separate user parameters from toolchain parameters
+ - 💭 GCC upgrade to version > 2.95.2
+   - Evaluate DATlib → libNG ([TheHpman/libNG](https://github.com/TheHpman/libNG))
+ - 💭 Raine version selection
+ - 💭 MAME version selection
 
 ---
 
 ## 🚀 Quick Start<a name="quick-start"></a>
 
-### Three-Step Setup
+### Which method should I use?
 
-**1️⃣ Clone & Test**
-```cmd
-git clone https://github.com/David-Vandensteen/neocore.git
-cd neocore\samples\hello
-.\mak.bat sprite && .\mak.bat && .\mak.bat run:mame
-```
+
+#### 🟢 Most users: **No cloning required!**
+
+If you want to **create your own NeoGeo CD game or app**, you do NOT need to clone this repository.
+
+👉 **Just use the one-liner below to initialize your project.**
+This will always fetch the latest stable version and set up everything for you automatically.
+
+#### 🛠️ When should you clone the repo?
+
+You only need to clone this repository if you want to:
+- Explore or run the included samples and demos
+- Contribute to the NeoCore toolchain or C library
+- Develop, debug, or customize the NeoCore internals
+
+For 99% of new projects, the one-liner is all you need!
+
+
+### Three-Step Setup
 
 **2️⃣ Create Your Project**
 

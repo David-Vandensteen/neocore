@@ -1,4 +1,8 @@
 function Update-RaineConfigSwitch {
+  param (
+    [Parameter(Mandatory=$true)][String] $PathRaine
+  )
+  
   Write-Host "Switching Raine config" -ForegroundColor Yellow
   if ($Rule -like "run:raine:*") {
     $raineConfigName = $Rule.Split(":")[2]
@@ -22,8 +26,9 @@ function Update-RaineConfigSwitch {
     return $false
   }
 
-  Write-Host "Copying $raineConfig to $rainePath\config\raine32_sdl.cfg"
-  Copy-Item $raineConfig $rainePath\config\raine32_sdl.cfg -Force
+  Write-Host "Copying $raineConfig to $PathRaine\config\raine32_sdl.cfg"
+  Copy-Item $raineConfig $PathRaine\config\raine32_sdl.cfg -Force
+  return $true
 }
 
 function Invoke-Raine {
@@ -38,23 +43,24 @@ function Invoke-Raine {
     return $false
   }
   if ((Test-Path -Path $PathRaine) -eq $false) {
-    if ($Manifest.manifest.dependencies.raine.url) {
-      Install-Component `
-        -URL $Manifest.manifest.dependencies.raine.url `
-        -PathDownload "$($Config.project.buildPath)\spool" `
-        -PathInstall $Manifest.manifest.dependencies.raine.path
-    } else {
-      Write-Host "Error: Raine not found in manifest dependencies" -ForegroundColor Red
-      Write-Host "Please add raine to manifest.xml dependencies section" -ForegroundColor Yellow
+    if (-Not(Install-Raine -PathRaine $PathRaine)) {
       return $false
     }
-    Install-RaineConfig -Path $PathRaine
+  } else {
+    Write-Host "Raine already installed at $PathRaine" -ForegroundColor Green
+    if (-Not(Install-BiosForRaine)) {
+      Write-Host "Failed to install BIOS for Raine" -ForegroundColor Red
+      return $false
+    }
   }
   if (-Not(Assert-RaineConfig)) {
     Write-Host "Raine config assertion failed" -ForegroundColor Red
     return $false
   }
-  Update-RaineConfigSwitch
+  if (-Not(Update-RaineConfigSwitch -PathRaine $PathRaine)) {
+    Write-Host "Failed to update Raine config" -ForegroundColor Red
+    return $false
+  }
 
   Write-Host "Launching raine $FileName" -ForegroundColor Yellow
   $pathRaineAbs = Resolve-TemplatePath -Path $PathRaine
