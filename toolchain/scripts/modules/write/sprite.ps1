@@ -240,18 +240,7 @@ function Write-Sprite {
 
   Write-Host "BuildChar.exe completed with exit code: $exitCode" -ForegroundColor Cyan
 
-  # Debug: Check what files were created after BuildChar.exe execution
-  Write-Host "Checking for files created by BuildChar.exe..." -ForegroundColor Yellow
-  if (Test-Path "out") {
-    $outFiles = Get-ChildItem "out" -ErrorAction SilentlyContinue
-    if ($outFiles) {
-      $outFiles | ForEach-Object { Write-Host "  $($_.Name)" -ForegroundColor Gray }
-    } else {
-      Write-Host "  (empty)" -ForegroundColor Gray
-    }
-  } else {
-    Write-Host "  'out' directory does not exist" -ForegroundColor Red
-  }  # Check for errors in the log file
+  # Check for errors in the log file
   if (-not (Watch-Error)) {
     return $false
   }
