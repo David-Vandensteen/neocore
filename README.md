@@ -91,11 +91,13 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
 - 🔄 Handle DATlib JobMeter in NeoCore
 
 ### 🔵 Planned - Soon
-- 🔜 Runtime palette creation: instantiate sprites with palettes built in RAM
+- 🔜 Runtime palette creation: instantiate sprites with palettes built in RAM _(may be delayed)_
+
 
 ### 🔵 Planned - Later
 - 🔜 NeoCore 4
   - Remove deprecated functions, macros and structures since NeoCore 3.1.1
+  - 💭 Split project.xml to separate user parameters from toolchain parameters
 - 🔜 AES / MVS support (**5% completed**)
 - 🔜 Add basic modular C lib system for reusable functions and assets
 - 🔜 RGB palette handlers (**60% completed**)
