@@ -77,13 +77,6 @@ function Install-SDK {
     return $false
   }
   if (-not (Install-Component `
-    -URL $Manifest.manifest.dependencies.chdman.url `
-    -PathDownload $downloadPath `
-    -PathInstall $Manifest.manifest.dependencies.chdman.path)) {
-    Write-Host "Failed to install chdman component" -ForegroundColor Red
-    return $false
-  }
-  if (-not (Install-Component `
     -URL $Manifest.manifest.dependencies.neodevLib.url `
     -PathDownload $downloadPath `
     -PathInstall $Manifest.manifest.dependencies.neodevLib.path)) {

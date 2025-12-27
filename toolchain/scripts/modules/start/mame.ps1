@@ -1,7 +1,14 @@
 function Start-Mame {
-  $exeName = [System.IO.Path]::GetFileName($Config.project.emulator.mame.exeFile)
-  $mamePath = Split-Path $Config.project.emulator.mame.exeFile
-  $mamePath = Get-TemplatePath -Path $mamePath
+  # Support both <path>/<exe> and <exeFile> in <mame>
+  if ($Config.project.emulator.mame.path -and $Config.project.emulator.mame.exe) {
+    $mamePath = Get-TemplatePath -Path $Config.project.emulator.mame.path
+    $exeName = $Config.project.emulator.mame.exe
+  } elseif ($Config.project.emulator.mame.exeFile) {
+    $mamePath = Split-Path (Get-TemplatePath -Path $Config.project.emulator.mame.exeFile)
+    $exeName = [System.IO.Path]::GetFileName($Config.project.emulator.mame.exeFile)
+  } else {
+    throw "No valid MAME emulator path/exe or exeFile found in project.xml"
+  }
 
   if ($Rule -eq "serve:mame") {
     Mame `
