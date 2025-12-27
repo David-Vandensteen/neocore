@@ -6,9 +6,16 @@ function Write-MameHash {
   )
   function Get-CHDSHA1 {
     param (
-      [Parameter(Mandatory=$true)][String] $File
+      [Parameter(Mandatory=$true)][String] $File,
+      [Parameter(Mandatory=$true)][String] $PathMame
     )
-    $r = (& chdman.exe info  -i $file) | Select-Object -Index 11
+    $chdmanPath = Join-Path $PathMame "chdman.exe"
+    if ((Test-Path -Path $chdmanPath) -eq $false) {
+      Write-Host "[ERROR] chdman.exe not found: $chdmanPath" -ForegroundColor Red
+      Write-Host "Check that the path is correctly resolved (e.g. build/mame/chdman.exe) and that the file really exists." -ForegroundColor Yellow
+      return $null
+    }
+    $r = (& $chdmanPath info -i $File) | Select-Object -Index 11
     $r = $r.Split(":")[1].trim()
     return $r
   }
@@ -39,7 +46,15 @@ function Write-MameHash {
     Add-Content -Path $XMLFile -Value '</softwarelist>'
   }
 
-  $SHA1 = Get-CHDSHA1 -File $CHDFile
+  # Support both <path> and <exeFile> in <mame>
+  if ($Config.project.emulator.mame.path) {
+    $PathMameResolved = Get-TemplatePath -Path $Config.project.emulator.mame.path
+  } elseif ($Config.project.emulator.mame.exeFile) {
+    $PathMameResolved = Split-Path (Get-TemplatePath -Path $Config.project.emulator.mame.exeFile)
+  } else {
+    throw "No valid MAME emulator path or exeFile found in project.xml"
+  }
+  $SHA1 = Get-CHDSHA1 -File $CHDFile -PathMame $PathMameResolved
   Write-MameHashFile -ProjectName $ProjectName -XMLFile $XMLFile -SHA1 $SHA1
 
   return $true
@@ -73,16 +88,19 @@ function Write-Mame {
       return $false
     }
   }
+
   if ((Test-Path -Path $PathMame) -eq $false) { Write-Host "error - $PathMame not found" -ForegroundColor Red; return $false }
   if ((Test-Path -Path $CUEFile) -eq $false) { Write-Host "error - $CUEFile not found" -ForegroundColor Red; return $false }
-  if ((Test-Path -Path "$PathMame\mame64.exe") -eq $false) { Write-Host "error - mame64.exe is not found in $PathMame" -ForegroundColor Red; return $false }
+  $chdmanPath = Join-Path $PathMame "chdman.exe"
+  if ((Test-Path -Path $chdmanPath) -eq $false) { Write-Host "error - $chdmanPath is not found" -ForegroundColor Red; return $false }
+  if ((Test-Path -Path (Join-Path $PathMame $Config.project.emulator.mame.exe)) -eq $false) { Write-Host "error - $($Config.project.emulator.mame.exe) is not found in $PathMame" -ForegroundColor Red; return $false }
 
   Write-Host "Compiling CHD" -ForegroundColor Yellow
 
   if ($Rule -eq "dist:mame" -or $Rule -eq "dist:exe") {
-    Start-Process -NoNewWindow -FilePath "chdman.exe" -ArgumentList "createcd -i $CUEFile -o $OutputFile --force" -Wait
+    Start-Process -NoNewWindow -FilePath $chdmanPath -ArgumentList "createcd -i $CUEFile -o $OutputFile --force" -Wait
   } else {
-    Start-Process -NoNewWindow -FilePath "chdman.exe" -ArgumentList "createcd -i $CUEFile -o $OutputFile --force --compression none" -Wait
+    Start-Process -NoNewWindow -FilePath $chdmanPath -ArgumentList "createcd -i $CUEFile -o $OutputFile --force --compression none" -Wait
   }
 
   if ((Test-Path -Path $OutputFile) -eq $false) {

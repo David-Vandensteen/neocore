@@ -1,19 +1,31 @@
 function Stop-Emulators {
   try {
-    $raineProcessName = [System.IO.Path]::GetFileNameWithoutExtension($Config.project.emulator.raine.exeFile)
-    $mameProcessName = [System.IO.Path]::GetFileNameWithoutExtension($Config.project.emulator.mame.exeFile)
+
+
+    $raineProcessName = if ($Config.project.emulator.raine.exeFile) {
+        [System.IO.Path]::GetFileNameWithoutExtension($Config.project.emulator.raine.exeFile)
+    } else { $null }
+    $mameProcessName = if ($Config.project.emulator.mame.exeFile) {
+        [System.IO.Path]::GetFileNameWithoutExtension($Config.project.emulator.mame.exeFile)
+    } else { $null }
+
+    # Filter out empty or null process names
+    $processNames = @($mameProcessName, $raineProcessName) | Where-Object { $_ -and $_.Trim() -ne "" }
 
     Write-Host "Stopping emulators if needed..." -ForegroundColor Cyan
-    Write-Host "$MameProcessName, $RaineProcessName"
+    Write-Host ($processNames -join ", ")
 
-    # Check if any emulator processes are running
-    $processes = Get-Process -Name $MameProcessName, $RaineProcessName -ErrorAction SilentlyContinue
-
-    if ($processes) {
-      Stop-Process -Name $MameProcessName, $RaineProcessName -Force -ErrorAction SilentlyContinue
-      Write-Host "Stopped emulator processes" -ForegroundColor Green
+    if ($processNames.Count -gt 0) {
+      # Check if any emulator processes are running
+      $processes = Get-Process -Name $processNames -ErrorAction SilentlyContinue
+      if ($processes) {
+        Stop-Process -Name $processNames -Force -ErrorAction SilentlyContinue
+        Write-Host "Stopped emulator processes" -ForegroundColor Green
+      } else {
+        Write-Host "No emulator processes running" -ForegroundColor Cyan
+      }
     } else {
-      Write-Host "No emulator processes running" -ForegroundColor Cyan
+      Write-Host "No emulator process names to stop" -ForegroundColor Yellow
     }
 
     Write-Host ""

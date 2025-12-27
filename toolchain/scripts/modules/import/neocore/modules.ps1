@@ -1,3 +1,4 @@
+Import-Module "$neocorePathAbs\toolchain\scripts\modules\assert\emulator\mame.ps1"
 # ============================================================================
 # NEOCORE MODULE IMPORTS
 # Organized by functional categories
