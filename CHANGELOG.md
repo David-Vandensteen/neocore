@@ -1,3 +1,5 @@
+## 3.4.2
+
 ## 3.4.1
 
   - Upgrade Raine emulator to 0.97.5
