@@ -674,7 +674,6 @@ Necessary if you modify NeoCore source code:
 ### Emulators & Testing
 - **Raine** - Neo Geo CD emulator
 - **MAME** - Multi-platform emulator (version 0.251)
-- **CHDMAN** - MAME compressed hard disk manager
 - **city41/mameNeoGeoDevPlugin** - Enhanced MAME debugging (ngdev fork)
 
 ### Build & Distribution Tools

@@ -1,5 +1,8 @@
 ## 3.4.2
 
+  - Use the chdman version deliver with mame
+  - Fix: mak serve:raine (the process was blocked)
+
 ## 3.4.1
 
   - Upgrade Raine emulator to 0.97.5
