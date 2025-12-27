@@ -38,7 +38,7 @@ function Assert-ManifestDependencies {
 
   # Dependencies that require both path and url
   $fullDependencies = @(
-    'datAnimatorFramer', 'datBuildCharCharSplit', 'cdTemplate', 'chdman',
+    'datAnimatorFramer', 'datBuildCharCharSplit', 'cdTemplate',
     'datLib', 'systemFont', 'datImage', 'findCommand', 'gcc', 'mpg123',
     'ffmpeg', 'mame', 'mameNeodevPlugin', 'msys2Runtime', 'neodevLib',
     'neocoreBin', 'ngfxSoundBuilder', 'nsis', 'raine', 'trCommand'

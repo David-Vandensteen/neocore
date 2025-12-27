@@ -110,6 +110,13 @@ function Assert-Project {
   }
   }
 
+  # Assert MAME emulator path and exe
+  if ($Config.project.emulator.mame) {
+    if (-Not(Assert-EmulatorMame)) {
+      Write-Host "Project emulator MAME path/exe assertion failed" -ForegroundColor Red
+      return $false
+    }
+  }
 
   if ($Config.project.emulator.mame.profile.debug) {
     if (-Not(Assert-ProjectEmulatorMameProfileDebug)) {

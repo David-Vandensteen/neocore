@@ -85,7 +85,7 @@ function Invoke-Raine {
   }
 
   Write-Host "Starting Raine with command: `"$fullExePath`" `"$fullCuePath`"" -ForegroundColor Green
-  $raineProcess = Start-Process -FilePath $fullExePath -ArgumentList $fullCuePath -Wait -PassThru
+  $raineProcess = Start-Process -FilePath $fullExePath -ArgumentList $fullCuePath -PassThru
 
   # Raine might return non-zero exit codes even on normal exit, so we consider it successful
   # as long as the process started and ran
