@@ -1,3 +1,5 @@
+## 3.4.3
+
 ## 3.4.2
 
   - Use the chdman version deliver with mame
