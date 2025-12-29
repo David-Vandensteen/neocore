@@ -1,5 +1,7 @@
 ## 3.4.3
 
+  - Add docs/neocore.md
+  
 ## 3.4.2
 
   - Use the chdman version deliver with mame
