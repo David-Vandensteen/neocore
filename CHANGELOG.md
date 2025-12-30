@@ -1,3 +1,8 @@
+## 3.4.3
+
+  - Add docs/neocore.md
+  - Add docs/wiki-neogeodev-org.txt
+  
 ## 3.4.2
 
   - Use the chdman version deliver with mame

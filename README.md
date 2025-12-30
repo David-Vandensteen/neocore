@@ -89,6 +89,8 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
 
 ### 🟡 In Progress
 - 🔄 Handle DATlib JobMeter in NeoCore
+- 🔄 Automatic generation of a structure aggregating a pointer to sprite data in ROM  
+  and a pointer to palette information in ROM during sprite compilation
 
 ### 🔵 Planned - Soon
 - 🔜 Runtime palette creation: instantiate sprites with palettes built in RAM _(may be delayed)_
