@@ -156,6 +156,11 @@ typedef struct Box {
   short heightOffset;
 } Box;
 
+typedef struct GFX_DAT_Pict {
+  pictureInfo *pictureInfoDAT;
+  paletteInfo *paletteInfoDAT;  
+} GFX_DAT_Pict;
+
 /**
  * @brief Animated sprite graphics object
  * @details Wrapper for DATlib animated sprite with associated palette information
