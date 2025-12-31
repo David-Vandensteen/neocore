@@ -1,5 +1,6 @@
 ## 3.4.3
 
+  - Add .gitattributes (eol=lf)
   - Add docs/neocore.md
   - Add docs/wiki-neogeodev-org.txt
   
