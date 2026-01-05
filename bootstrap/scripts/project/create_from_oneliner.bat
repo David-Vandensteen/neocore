@@ -14,13 +14,19 @@ echo Git is available.
 echo Continuing...
 echo.
 
+set BRANCH=%1
+
 set /p NAME="Project name: "
 set PROJECT_PATH=%CD%
 set TIMESTAMP=%DATE:~-4%%DATE:~3,2%%DATE:~0,2%-%TIME::=%
 set TIMESTAMP=%TIMESTAMP:~0,14%
 set "CLONE_PATH=%TEMP%\neocore\git\%RANDOM%-%TIMESTAMP%"
 
-git clone --depth 1 https://github.com/David-Vandensteen/neocore.git "%CLONE_PATH%"
+if defined BRANCH (
+  git clone --depth 1 --branch %BRANCH% https://github.com/David-Vandensteen/neocore.git "%CLONE_PATH%"
+) else (
+  git clone --depth 1 https://github.com/David-Vandensteen/neocore.git "%CLONE_PATH%"
+)
 if errorlevel 1 goto error
 
 pushd "%CLONE_PATH%"
