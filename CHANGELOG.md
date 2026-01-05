@@ -1,3 +1,15 @@
+## 3.4.3
+
+  - Fix: Legacy function and type searches case-sensitive detection
+  - Add .gitattributes (eol=lf)
+  - Add docs/neocore.md
+  - Add docs/wiki-neogeodev-org.txt
+  
+## 3.4.2
+
+  - Use the chdman version deliver with mame
+  - Fix: mak serve:raine (the process was blocked)
+
 ## 3.4.1
 
   - Upgrade Raine emulator to 0.97.5

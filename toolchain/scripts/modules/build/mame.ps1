@@ -1,7 +1,11 @@
 function Build-Mame {
   $projectBuildPath = Get-TemplatePath -Path $Config.project.buildPath
-  $mamePath = Split-Path $Config.project.emulator.mame.exeFile
-  $mamePath = Get-TemplatePath -Path $mamePath
+  if ($Config.project.emulator.mame.exeFile) {
+    $mamePath = Split-Path (Get-TemplatePath -Path $Config.project.emulator.mame.exeFile)
+    $exeName = [System.IO.Path]::GetFileName($Config.project.emulator.mame.exeFile)
+  } else {
+    throw "No valid MAME emulator exeFile found in project.xml"
+  }
   $name = $Config.project.name
   $cueFile = "$projectBuildPath\$name\$name.cue"
 
@@ -15,7 +19,7 @@ function Build-Mame {
     -ProjectName $name `
     -PathMame $mamePath `
     -CUEFile $cueFile `
-    -OutputFile "$mamePath\roms\neocdz\$name.chd")) {
+    -OutputFile (Join-Path $mamePath "roms\neocdz\$name.chd"))) {
     Write-Host "MAME build failed" -ForegroundColor Red
     return $false
   }
