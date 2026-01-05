@@ -43,6 +43,9 @@ Explore advanced features:
 - **[soundFX_poly](soundFX_poly/)** - Polyphonic sound effects
 - **[CDDA](CDDA/)** - CD Digital Audio playback
 
+### Profiling
+- **[job_meter](job_meter/)** - CPU profiling and performance analysis with DATlib job meter
+
 ### Testing & Validation
 - **[test_spritemanager](test_spritemanager/)** - Sprite system validation
 - **[test_palettemanager](test_palettemanager/)** - Palette system validation
@@ -89,6 +92,7 @@ make
 | **Graphics** | palette_swap, pal_rgb, pal_backdrop, pal_rgb_mixer, shrunk, shrunk_centroid |
 | **Physics** | collide, collide_complex, collide_multiple |
 | **Audio** | soundFX, soundFX_poly, CDDA |
+| **Debugging** | job_meter |
 | **Advanced** | bullet, sprite_id, custom_fix, DATdemo |
 | **Testing** | test_* samples, recurse |
 | **Bug Fixes** | issue_* samples |

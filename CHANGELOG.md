@@ -1,3 +1,12 @@
+## 3.4.3
+
+  - Fix: Legacy function and type searches case-sensitive detection
+  - Add job_meter sample
+  - Add .gitattributes (eol=lf)
+  - Add docs/neocore.md
+  - Add docs/wiki-neogeodev-org.txt
+  - Remove legacy code in sprite_id sample
+  
 ## 3.4.2
 
   - Use the chdman version deliver with mame
