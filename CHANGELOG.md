@@ -1,6 +1,9 @@
 ## 3.4.3
 
   - Fix: Legacy function and type searches case-sensitive detection
+  - Add job_meter sample
+  - Remove legacy code in sprite_id sample
+  - Add optional branch parameter in create_from_oneliner.bat
   - Add .gitattributes (eol=lf)
   - Add docs/neocore.md
   - Add docs/wiki-neogeodev-org.txt
