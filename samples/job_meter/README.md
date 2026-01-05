@@ -70,4 +70,5 @@ This technique is invaluable for:
 
 ⚠️ **Initialization Order**: `jobMeterSetup()` must not be the first function called. It is recommended to call it after initializing your sprites and graphics elements. In this sample, it's called after all `nc_gfx_init_and_display_*()` functions.
 
-The sample requires DATlib and demonstrates advanced profiling techniques specific to Neo Geo hardware constraints.
+⚠️ **Raine Compatibility**: This sample does not work with the current Raine emulator configuration.
+
