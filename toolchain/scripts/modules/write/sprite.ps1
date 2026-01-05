@@ -259,6 +259,39 @@ function Write-Sprite {
   $charfilePath = $xmlContent.chardata.setup.charfile
   Write-Host "Expected char file path from XML: $charfilePath" -ForegroundColor Cyan
 
+  # Generate GFX_DAT_Pict, GFX_DAT_Scrl, and GFX_DAT_Sprt structures
+  $picts = $xmlContent.SelectNodes("//pict")
+  $scrls = $xmlContent.SelectNodes("//scrl")
+  $sprts = $xmlContent.SelectNodes("//sprt")
+  $gfxDatHContent = "// Auto-generated GFX_DAT_Pict, GFX_DAT_Scrl, and GFX_DAT_Sprt definitions`n"
+  foreach ($pict in $picts) {
+    $id = $pict.id
+    $gfxDatHContent += "const GFX_DAT_Pict_ROM ${id}_pict_rom = { &${id}, &${id}_Palettes };`n"
+  }
+  foreach ($scrl in $scrls) {
+    $id = $scrl.id
+    $gfxDatHContent += "const GFX_DAT_Scrl_ROM ${id}_scrl_rom = { &${id}, &${id}_Palettes };`n"
+  }
+  foreach ($sprt in $sprts) {
+    $id = $sprt.id
+    $gfxDatHContent += "const GFX_DAT_Sprt_ROM ${id}_sprt_rom = { &${id}, &${id}_Palettes };`n"
+  }
+  $gfxDatHContent | Out-File -FilePath "out/gfx_dat.h" -Encoding ASCII
+  Write-Host "Generated GFX_DAT_Pict, GFX_DAT_Scrl, and GFX_DAT_Sprt structures in out/gfx_dat.h" -ForegroundColor Green
+
+  # Ensure externs.h includes the generated header
+  $externsPath = "externs.h"
+  if (Test-Path $externsPath) {
+    $externsContent = Get-Content $externsPath -Raw
+    $includeLine = '#include "out/gfx_dat.h"'
+    if ($externsContent -notmatch [regex]::Escape($includeLine)) {
+      $externsContent = $externsContent -replace [regex]::Escape('#include "out/fixData.h"'), "#include ""out/fixData.h""`n#include ""out/gfx_dat.h"""
+      $externsContent = $externsContent -replace "`r`n", "`n"
+      $externsContent | Out-File -FilePath $externsPath -Encoding ASCII -NoNewline
+      Write-Host "Added #include ""out/gfx_dat.h"" to externs.h" -ForegroundColor Green
+    }
+  }
+
   # Check if char.bin was created at the specified location
   Write-Host "Checking for char file at: $charfilePath" -ForegroundColor Cyan
 
