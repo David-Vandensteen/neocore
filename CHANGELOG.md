@@ -5,6 +5,7 @@
   - Add .gitattributes (eol=lf)
   - Add docs/neocore.md
   - Add docs/wiki-neogeodev-org.txt
+  - Remove legacy code in sprite_id sample
   
 ## 3.4.2
 
