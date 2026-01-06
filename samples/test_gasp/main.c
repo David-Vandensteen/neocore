@@ -11,8 +11,8 @@ int main(void) {
 
   nc_gfx_init_and_display_animated_physic_sprite(
     &player,
-    &player_sprite,
-    &player_sprite_Palettes,
+    player_sprite_sprt_rom.spriteInfo,
+    player_sprite_sprt_rom.paletteInfo,
     100,
     100,
     0,

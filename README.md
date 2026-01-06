@@ -53,6 +53,7 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
 - [📖 Documentation & Resources](#documentation--resources)
   - [📚 C API Documentation](#documentation-of-neocore-c-lib)
   - [🎨 DATlib Assets](#datlib-assets)
+- [📊 Profiling](#profiling)
 - [🎵 Audio Configuration](#audio-configuration)
 - [🛠️ Advanced Development](#advanced-development)
   - [♻️ Hot Reload](#hot-reload)
@@ -73,10 +74,6 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
 
 ## 📅 Roadmap<a name="roadmap"></a>
 
-### 🟢 Completed (v3.4.1)
-- ✅ Upgrade Raine emulator to 0.97.5
-- ✅ Fix issue 211: Incorrect CUE file paths when generating ISO with MP3 CDDA tracks (mak dist:iso)
-
 ### 🟢 Completed (v3.4.0)
 - ✅ neocore version switcher script for standalone projects
 - ✅ One-liner command for project creation
@@ -87,17 +84,25 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
   - ✅ Add Neo-Geo CD MAME compatibility
   - ✅ Upgrade MAME for plugin API compatibility
 
+### 🟢 Completed (v3.4.1)
+- ✅ Upgrade Raine emulator to 0.97.5
+- ✅ Fix issue 211: Incorrect CUE file paths when generating ISO with MP3 CDDA tracks (mak dist:iso)
+
+### 🟢 Completed (v3.4.3)
+- ✅ DATlib JobMeter
+  - ✅ Sample demo: [job_meter](samples/job_meter/)
+- ✅ Automatic generation of a structure aggregating a pointer to sprite data in ROM  
+  and a pointer to palette information in ROM during sprite compilation
+
 ### 🟡 In Progress
-- 🔄 Handle DATlib JobMeter in NeoCore
 
 ### 🔵 Planned - Soon
-- 🔜 Runtime palette creation: instantiate sprites with palettes built in RAM _(may be delayed)_
-
+- 🔜 Runtime palette creation: instantiate sprites with palettes built in RAM _(may be delayed after NeoCore 4)_
 
 ### 🔵 Planned - Later
 - 🔜 NeoCore 4
   - Remove deprecated functions, macros and structures since NeoCore 3.1.1
-  - 💭 Split project.xml to separate user parameters from toolchain parameters
+  - Refactor nc_gfx* functions
 - 🔜 AES / MVS support (**5% completed**)
 - 🔜 Add basic modular C lib system for reusable functions and assets
 - 🔜 RGB palette handlers (**60% completed**)
@@ -109,6 +114,7 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
 - 🔜 DRAM asset management (unload/load from CD-ROM)
 
 ### 🧐 Under Consideration
+ - 💭 Split project.xml to separate user parameters from toolchain parameters
  - 💭 Video recording support (MAME MNG format with manual ffmpeg conversion to MP4)
  - 💭 XML WYSIWYG editor
  - 💭 Memory card support
@@ -492,7 +498,7 @@ From your project's `src` folder:
 
 ### 📚 C API Documentation<a name="documentation-of-neocore-c-lib"></a>
 
-- **[Doxygen Documentation](http://azertyvortex.free.fr/neocore-doxy/r14/neocore_8h.html)**
+- **[Doxygen Documentation](http://azertyvortex.free.fr/neocore-doxy/r15/neocore_8h.html)**
 - **[Migration Guide](docs/migration_guides/v2tov3/v2tov3.md)** - Breaking changes and migration from previous versions
 - **[Changelog](CHANGELOG.md)** - Version history
 
@@ -522,6 +528,67 @@ From your project's `src` folder:
 .\mak.bat framer     # Launch DATlib Framer
 .\mak.bat animator   # Launch DATlib Animator
 ```
+
+---
+
+## 📊 Profiling<a name="profiling"></a>
+
+### Job Meter - CPU Profiling Tool
+
+The Job Meter is a visual profiling tool from DATlib that helps developers understand CPU time distribution across different parts of their game loop. It displays a color-coded vertical bar on the right side of the screen, showing which operations are consuming frame time.
+
+![Job Meter Example](docs/images/samples/job_meter/job_meter.png)
+
+**Key Features:**
+- 🎨 **Color-coded profiling**: Each color represents a different operation
+- 📊 **Real-time visualization**: See CPU usage live as your game runs
+- 🎯 **Performance optimization**: Identify bottlenecks quickly
+
+**Quick Start:**
+
+```c
+#include <neocore.h>
+
+/* Initialize job meter after sprite setup */
+jobMeterSetup(true);
+
+while(1) {
+    /* Mark input handling section */
+    jobMeterColor(JOB_CYAN);
+    nc_gpu_update();
+    
+    /* Your input handling code */
+    
+    /* Mark scrolling section */
+    jobMeterColor(JOB_YELLOW);
+    /* Your scrolling code */
+    
+    /* Mark animation section */
+    jobMeterColor(JOB_BLUE);
+    /* Your animation code */
+    
+    /* Free CPU time */
+    jobMeterColor(JOB_GREEN);
+}
+```
+
+**Important Notes:**
+
+⚠️ **Debug Only**: Job meter should only be used in debug builds. On real hardware, changing colors during active display creates visible pixel artifacts.
+
+⚠️ **Initialization Order**: `jobMeterSetup()` must be called AFTER sprite and graphics initialization, not as the first function.
+
+**Complete Example:**
+
+Check the [job_meter sample](samples/job_meter/) for a fully interactive demonstration with:
+- Real-time CPU load adjustment
+- Multiple profiling sections
+- Visual feedback and color reference
+- Configurable artificial overhead
+
+**Learning Resources:**
+- 📚 [Job Meter Sample](samples/job_meter/README.md) - Complete interactive example
+- 📖 [DATlib Reference (PDF)](http://azertyvortex.free.fr/download/neocore/datlib-0.3-LibraryReference.pdf) - Full DATlib documentation
 
 ---
 

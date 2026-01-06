@@ -14,8 +14,8 @@ int main(void) {
 
   nc_gfx_init_and_display_animated_physic_sprite(
     &player,
-    &player_sprite,
-    &player_sprite_Palettes,
+    player_sprite_sprt_rom.spriteInfo,
+    player_sprite_sprt_rom.paletteInfo,
     48,
     16,
     0,
@@ -28,8 +28,8 @@ int main(void) {
   for (i = 0; i < ASTEROID_MAX; i++) {
     nc_gfx_init_and_display_physic_picture(
       &asteroids[i],
-      &asteroid_sprite,
-      &asteroid_sprite_Palettes,
+      asteroid_sprite_pict_rom.pictureInfo,
+      asteroid_sprite_pict_rom.paletteInfo,
       nc_math_random(300),
       nc_math_random(200),
       8,

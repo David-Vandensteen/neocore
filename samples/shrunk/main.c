@@ -6,14 +6,14 @@ int main(void) {
   static BYTE logo1_shrunk_x = 0;
   static BYTE logo2_shrunk_y = 0;
 
-  nc_gfx_init_picture(&logo1, &logo_sprite, &logo_sprite_Palettes);
-  nc_gfx_init_picture(&logo2, &logo_sprite, &logo_sprite_Palettes);
-  nc_gfx_init_picture(&logo3, &logo_sprite, &logo_sprite_Palettes);
+  nc_gfx_init_picture(&logo1, logo_sprite_pict_rom.pictureInfo, logo_sprite_pict_rom.paletteInfo);
+  nc_gfx_init_picture(&logo2, logo_sprite_pict_rom.pictureInfo, logo_sprite_pict_rom.paletteInfo);
+  nc_gfx_init_picture(&logo3, logo_sprite_pict_rom.pictureInfo, logo_sprite_pict_rom.paletteInfo);
   nc_log_init();
   nc_log_info_line("HORIZONTAL SHRUNK");
-  nc_gfx_init_picture(&logo1, &logo_sprite, &logo_sprite_Palettes);
-  nc_gfx_init_picture(&logo2, &logo_sprite, &logo_sprite_Palettes);
-  nc_gfx_init_picture(&logo3, &logo_sprite, &logo_sprite_Palettes);
+  nc_gfx_init_picture(&logo1, logo_sprite_pict_rom.pictureInfo, logo_sprite_pict_rom.paletteInfo);
+  nc_gfx_init_picture(&logo2, logo_sprite_pict_rom.pictureInfo, logo_sprite_pict_rom.paletteInfo);
+  nc_gfx_init_picture(&logo3, logo_sprite_pict_rom.pictureInfo, logo_sprite_pict_rom.paletteInfo);
   nc_gfx_display_picture(&logo1, 10, 20);
   nc_log_set_position(1, 10);
   nc_log_info("VERTICAL SHRUNK");

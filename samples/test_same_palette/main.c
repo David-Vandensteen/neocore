@@ -9,24 +9,24 @@ static GFX_Scroller backgroung;
 int main(void) {
   nc_gfx_init_and_display_scroller(
     &backgroung,
-    &background_sprite,
-    &background_sprite_Palettes,
+    background_sprite_scrl_rom.scrollerInfo,
+    background_sprite_scrl_rom.paletteInfo,
     0,
     0
   );
 
   nc_gfx_init_and_display_picture(
     &planet,
-    &planet04_sprite,
-    &background_sprite_Palettes,
+    planet04_sprite_pict_rom.pictureInfo,
+    background_sprite_scrl_rom.paletteInfo,
     100,
     150
   );
 
   nc_gfx_init_and_display_animated_sprite(
     &player,
-    &player_sprite,
-    &background_sprite_Palettes,
+    player_sprite_sprt_rom.spriteInfo,
+    background_sprite_scrl_rom.paletteInfo,
     150,
     10,
     PLAYER_SPRITE_ANIM_IDLE

@@ -90,7 +90,12 @@ void bullet_player_init() {
   state = false;
   for (i = 0; i < get_bullet_max(); i++) {
     sprites_state[i] = false;
-    nc_gfx_init_animated_physic_sprite(&sprites[i], &bullet_img, &bullet_img_Palettes, 8, 8, 0, 0);
+    nc_gfx_init_animated_physic_sprite(
+      &sprites[i],
+      bullet_img_sprt_rom.spriteInfo,
+      bullet_img_sprt_rom.paletteInfo,
+      8, 8, 0, 0
+    );
   }
 }
 

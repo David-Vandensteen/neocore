@@ -9,10 +9,10 @@ static void update();
 static GFX_Picture planet01, planet02, planet03, planet04;
 
 static void init() {
-  nc_gfx_init_picture(&planet01, &planet04_sprite, &planet04_sprite_Palettes);
-  nc_gfx_init_picture(&planet02, &planet04_sprite, &planet04_sprite_Palettes);
-  nc_gfx_init_picture(&planet03, &planet04_sprite, &planet04_sprite_Palettes);
-  nc_gfx_init_picture(&planet04, &planet04_sprite, &planet04_sprite_Palettes);
+  nc_gfx_init_picture(&planet01, planet04_sprite_pict_rom.pictureInfo, planet04_sprite_pict_rom.paletteInfo);
+  nc_gfx_init_picture(&planet02, planet04_sprite_pict_rom.pictureInfo, planet04_sprite_pict_rom.paletteInfo);
+  nc_gfx_init_picture(&planet03, planet04_sprite_pict_rom.pictureInfo, planet04_sprite_pict_rom.paletteInfo);
+  nc_gfx_init_picture(&planet04, planet04_sprite_pict_rom.pictureInfo, planet04_sprite_pict_rom.paletteInfo);
 }
 
 static void display() {
