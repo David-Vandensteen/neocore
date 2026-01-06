@@ -1,7 +1,7 @@
 ## 3.4.3
 
   - Automatic generation of a structure aggregating a pointer to sprite data in ROM and a pointer to palette information in ROM during sprite compilation
-    (out/gfx_data.c & h)
+    (checkout out/gfx_data.c & h after mak sprite)
   - Fix: Legacy function and type searches case-sensitive detection
   - Add job_meter sample
   - Remove legacy code in sprite_id sample
