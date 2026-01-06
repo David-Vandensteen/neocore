@@ -11,16 +11,16 @@ int main(void) {
   // Test automatic sprite allocation and store returned sprite indices
   background_sprite_id = nc_gfx_init_and_display_scroller(
     &background,
-    &background_sprite,
-    &background_sprite_Palettes,
+    background_sprite_scrl_rom.scrollerInfo,
+    background_sprite_scrl_rom.paletteInfo,
     0,
     0
   );
 
   planet_sprite_id = nc_gfx_init_and_display_picture(
     &planet,
-    &planet04_sprite,
-    &planet04_sprite_Palettes,
+    planet04_sprite_pict_rom.pictureInfo,
+    planet04_sprite_pict_rom.paletteInfo,
     20,
     100
   );
@@ -29,8 +29,8 @@ int main(void) {
   nc_gfx_display_with_sprite_id(50); // Force player to use sprite index 50
   player_sprite_id = nc_gfx_init_and_display_animated_sprite(
     &player,
-    &player_sprite,
-    &player_sprite_Palettes,
+    player_sprite_sprt_rom.spriteInfo,
+    player_sprite_sprt_rom.paletteInfo,
     10,
     200,
     PLAYER_SPRITE_ANIM_IDLE

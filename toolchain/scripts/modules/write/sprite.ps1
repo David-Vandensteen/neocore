@@ -12,12 +12,14 @@ function Watch-Error {
     Write-Host "ERROR: Invalid dimension detected in sprite" -ForegroundColor Red
     Write-Host "Build log contents:" -ForegroundColor Yellow
     $logContent | ForEach-Object { Write-Host "  $_" -ForegroundColor Gray }
+
     return $false
   }
   if (Select-String -Path "$buildPathProject\sprite.log" -Pattern "est pas valide") {
     Write-Host "ERROR: Invalid parameter detected" -ForegroundColor Red
     Write-Host "Build log contents:" -ForegroundColor Yellow
     $logContent | ForEach-Object { Write-Host "  $_" -ForegroundColor Gray }
+
     return $false
   }
 
@@ -25,6 +27,7 @@ function Watch-Error {
     Write-Host "ERROR: Sprite files rejected" -ForegroundColor Red
     Write-Host "Fix asset and remove *_reject file(s) in your project before launch a new build ..." -ForegroundColor Red
     Write-Host "Sprite reject..." -ForegroundColor Red
+    
     return $false
   }
 
@@ -251,6 +254,7 @@ function Write-Sprite {
     } else {
       Write-Host "ERROR: BuildChar.exe failed with exit code: $exitCode" -ForegroundColor Red
     }
+
     return $false
   }
 
@@ -258,6 +262,40 @@ function Write-Sprite {
   $xmlContent = [xml](Get-Content -Path $XMLFile)
   $charfilePath = $xmlContent.chardata.setup.charfile
   Write-Host "Expected char file path from XML: $charfilePath" -ForegroundColor Cyan
+
+  # Generate GFX_DAT_Pict, GFX_DAT_Scrl, and GFX_DAT_Sprt structures
+  $picts = $xmlContent.SelectNodes("//pict")
+  $scrls = $xmlContent.SelectNodes("//scrl")
+  $sprts = $xmlContent.SelectNodes("//sprt")
+  $gfxDatHContent = "#ifndef GFX_DAT_H`n#define GFX_DAT_H`n`n#include <neocore.h>`n`n// Auto-generated GFX_DAT_Pict, GFX_DAT_Scrl, and GFX_DAT_Sprt definitions`n"
+  $gfxDatCContent = "#include <neocore.h>`n#include ""externs.h""`n`n// Auto-generated GFX_DAT_Pict, GFX_DAT_Scrl, and GFX_DAT_Sprt definitions`n"
+  foreach ($pict in $picts) {
+    $id = $pict.id
+    $gfxDatHContent += "extern const GFX_DAT_Pict_ROM ${id}_pict_rom;`n"
+    $gfxDatCContent += "const GFX_DAT_Pict_ROM ${id}_pict_rom = { &${id}, &${id}_Palettes };`n"
+  }
+  foreach ($scrl in $scrls) {
+    $id = $scrl.id
+    $gfxDatHContent += "extern const GFX_DAT_Scrl_ROM ${id}_scrl_rom;`n"
+    $gfxDatCContent += "const GFX_DAT_Scrl_ROM ${id}_scrl_rom = { &${id}, &${id}_Palettes };`n"
+  }
+  foreach ($sprt in $sprts) {
+    $id = $sprt.id
+    $gfxDatHContent += "extern const GFX_DAT_Sprt_ROM ${id}_sprt_rom;`n"
+    $gfxDatCContent += "const GFX_DAT_Sprt_ROM ${id}_sprt_rom = { &${id}, &${id}_Palettes };`n"
+  }
+  $gfxDatHContent += "`n#endif`n"
+  $projectName = $xmlContent.project.name
+  $buildOutDir = "..\..\build\$projectName\out"
+  if (!(Test-Path $buildOutDir)) { New-Item -ItemType Directory -Force $buildOutDir }
+  $gfxDatHContent | Out-File -FilePath "$buildOutDir\gfx_dat.h" -Encoding ASCII
+  $gfxDatHContent | Out-File -FilePath "out/gfx_dat.h" -Encoding ASCII
+  $gfxDatCContent | Out-File -FilePath "$buildOutDir\gfx_dat.c" -Encoding ASCII
+  $gfxDatCContent | Out-File -FilePath "out/gfx_dat.c" -Encoding ASCII
+  Write-Host "Generated GFX_DAT_Pict, GFX_DAT_Scrl, and GFX_DAT_Sprt structures in out/gfx_dat.h and out/gfx_dat.c" -ForegroundColor Green
+
+  # Ensure externs.h includes the generated header
+  Assert-Externs
 
   # Check if char.bin was created at the specified location
   Write-Host "Checking for char file at: $charfilePath" -ForegroundColor Cyan

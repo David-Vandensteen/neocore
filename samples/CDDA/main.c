@@ -15,8 +15,16 @@ static BOOL isPause = false;
 
 static void init() {
   nc_sound_play_cdda(track_num);
-  nc_gfx_init_scroller(&spectrum02, &spectrum02_sprite, &spectrum02_sprite_Palettes);
-  nc_gfx_init_picture(&k7, &k7_sprite, &k7_sprite_Palettes);
+  nc_gfx_init_scroller(
+    &spectrum02,
+    spectrum02_sprite_scrl_rom.scrollerInfo,
+    spectrum02_sprite_scrl_rom.paletteInfo 
+  );
+  nc_gfx_init_picture(
+    &k7,
+    k7_sprite_pict_rom.pictureInfo,
+    k7_sprite_pict_rom.paletteInfo
+  );
   nc_joypad_set_edge_mode(true);
 }
 

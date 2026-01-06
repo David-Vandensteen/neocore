@@ -24,14 +24,18 @@ static void init() {
   init_mask();
   nc_gfx_init_animated_physic_sprite(
     &player,
-    &player_sprite,
-    &player_sprite_Palettes,
+    player_sprite_sprt_rom.spriteInfo,
+    player_sprite_sprt_rom.paletteInfo,
     10,
     10,
     0,
     0
   );
-  nc_gfx_init_picture(&peak, &peak_sprite, &peak_sprite_Palettes);
+  nc_gfx_init_picture(
+    &peak,
+    peak_sprite_pict_rom.pictureInfo,
+    peak_sprite_pict_rom.paletteInfo
+  );
 }
 
 static void display() {
@@ -44,7 +48,7 @@ static void display_mask_debug() {
   BYTE i = 0;
   GFX_Picture p;
   for (i = 0; i < PEAK_MASK_VECTOR_MAX; i++) {
-    nc_gfx_init_picture(&p, &dot_sprite, &dot_sprite_Palettes);
+    nc_gfx_init_picture(&p, dot_sprite_pict_rom.pictureInfo, dot_sprite_pict_rom.paletteInfo);
     nc_gfx_display_picture(&p, peak_mask[i].x, peak_mask[i].y);
   }
 }
