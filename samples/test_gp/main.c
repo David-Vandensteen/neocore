@@ -9,7 +9,11 @@ static void display();
 static void update();
 
 static void init() {
-  nc_gfx_init_picture(&asteroid, &asteroid_asset, &asteroid_asset_Palettes);
+  nc_gfx_init_picture(
+    &asteroid,
+    asteroid_asset_pict_rom.pictureInfo,
+    asteroid_asset_pict_rom.paletteInfo
+  );
 }
 
 static void display() {

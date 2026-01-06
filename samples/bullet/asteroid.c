@@ -7,7 +7,13 @@ static BYTE hit;
 
 void asteroid_init() {
   hit = 0;
-  nc_gfx_init_physic_picture(&asteroid, &asteroid_sprite, &asteroid_sprite_Palettes, 8, 8, 0, 0, AUTOBOX);
+  nc_gfx_init_physic_picture(
+    &asteroid,
+    asteroid_sprite_pict_rom.pictureInfo,
+    asteroid_sprite_pict_rom.paletteInfo,
+    8, 8, 0, 0,
+    AUTOBOX
+  );
 }
 
 void asteroid_display() {

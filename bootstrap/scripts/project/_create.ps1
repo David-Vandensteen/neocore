@@ -85,6 +85,16 @@ try {
   }
   Write-Host "  Git ignore file copied successfully" -ForegroundColor Green
 
+  # Copy .gitattributes
+  Write-Host "Copying Git attributes file..." -ForegroundColor Cyan
+  $gitattributesSource = "..\..\..\bootstrap\.gitattributes"
+  $gitattributesDest = "$Path\.gitattributes"
+  Copy-Item $gitattributesSource $gitattributesDest -Force
+  if (-not (Test-Path $gitattributesDest)) {
+    throw "Failed to copy .gitattributes"
+  }
+  Write-Host "  Git attributes file copied successfully" -ForegroundColor Green
+
   # Copy toolchain
   Write-Host "Copying NeoCore toolchain..." -ForegroundColor Cyan
   $toolchainSource = "..\..\..\toolchain"

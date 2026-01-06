@@ -8,8 +8,8 @@ static Position position;
 int main(void) {
   nc_gfx_init_and_display_scroller(
     &background,
-    &background_sprite,
-    &background_sprite_Palettes,
+    background_sprite_scrl_rom.scrollerInfo,
+    background_sprite_scrl_rom.paletteInfo,
     0,
     0
   );

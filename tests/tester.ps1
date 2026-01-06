@@ -33,6 +33,7 @@ function Main {
   BuildProject -Path "..\samples\custom_fix" -Rule $Rule
   BuildProject -Path "..\samples\DATdemo" -Rule $Rule
   BuildProject -Path "..\samples\hello" -Rule $Rule
+  BuildProject -Path "..\samples\job_meter" -Rule $Rule
   BuildProject -Path "..\samples\joypad" -Rule $Rule
   BuildProject -Path "..\samples\math" -Rule $Rule
   BuildProject -Path "..\samples\pal_backdrop" -Rule $Rule

@@ -7,7 +7,12 @@ int main(void) {
   static paletteInfo logo_swap_palette;
   BYTE i = 0;
 
-  nc_gfx_init_and_display_picture(&logo, &logo_sprite, &logo_sprite_Palettes, 50, 100);
+  nc_gfx_init_and_display_picture(
+    &logo,
+    logo_sprite_pict_rom.pictureInfo,
+    logo_sprite_pict_rom.paletteInfo,
+    50, 100
+  );
   logo_swap_palette.count = logo.paletteInfoDAT->count;
 
   for (i = 0; i < nc_math_bitwise_multiplication_16(logo.paletteInfoDAT->count); i++) { logo_swap_palette.data[i] = nc_math_random(0xFFFF); }

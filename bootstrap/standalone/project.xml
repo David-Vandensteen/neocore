@@ -10,6 +10,7 @@
   <gfx>
     <DAT>
       <chardata>
+        <!-- DO NOT EDIT : setup -->
         <setup>
           <starting_tile>256</starting_tile>
           <charfile>out\char.bin</charfile>
@@ -24,6 +25,7 @@
       </chardata>
       <fixdata>
         <chardata>
+          <!-- DO NOT EDIT : setup -->
           <setup fileType="fix">
             <charfile>out\fix.bin</charfile>
             <palfile>out\fixPals.s</palfile>

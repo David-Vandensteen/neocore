@@ -3,8 +3,9 @@
 
 static GFX_Picture neogeoLogo;
 
+
 int main(void) {
-  nc_gfx_init_and_display_picture(&neogeoLogo, &logo, &logo_Palettes, 100, 160);
+  nc_gfx_init_and_display_picture(&neogeoLogo, logo_pict_rom.pictureInfo, logo_pict_rom.paletteInfo, 100, 160);
 
   while(1) {
     nc_gpu_update();

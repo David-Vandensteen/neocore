@@ -33,6 +33,7 @@ Import-Module "$neocorePathAbs\toolchain\scripts\modules\assert\project\emulator
 Import-Module "$neocorePathAbs\toolchain\scripts\modules\assert\project\emulator\raine.ps1"
 Import-Module "$neocorePathAbs\toolchain\scripts\modules\assert\path.ps1"
 Import-Module "$neocorePathAbs\toolchain\scripts\modules\assert\program.ps1"
+Import-Module "$neocorePathAbs\toolchain\scripts\modules\assert\externs.ps1"
 
 # Manifest and dependency assertions
 Import-Module "$neocorePathAbs\toolchain\scripts\modules\assert\manifest.ps1"
