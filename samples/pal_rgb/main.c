@@ -18,8 +18,8 @@ static void init() {
 static void display() {
   nc_gfx_init_and_display_picture(
     &playfield,
-    &playfield_asset,
-    &playfield_asset_Palettes,
+    playfield_asset_pict_rom.pictureInfo,
+    playfield_asset_pict_rom.paletteInfo,
     0,
     0
   );

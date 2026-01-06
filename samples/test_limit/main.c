@@ -16,7 +16,7 @@ static GFX_Picture planets[PLANETS_MAX];
 
 static void init() {
   WORD i = 0;
-  for (i = 0; i < PLANETS_MAX; i++) nc_gfx_init_picture(&planets[i], &planet04_sprite, &planet04_sprite_Palettes);
+  for (i = 0; i < PLANETS_MAX; i++) nc_gfx_init_picture(&planets[i], planet04_sprite_pict_rom.pictureInfo, planet04_sprite_pict_rom.paletteInfo);
 }
 
 static void display() {

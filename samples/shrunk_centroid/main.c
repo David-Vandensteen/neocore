@@ -27,9 +27,9 @@ static void update_logo3();
 
 static void init() {
   nc_log_init();
-  nc_gfx_init_picture(&logo1, &logo_sprite, &logo_sprite_Palettes);
-  nc_gfx_init_picture(&logo2, &logo_sprite, &logo_sprite_Palettes);
-  nc_gfx_init_picture(&logo3, &logo_sprite, &logo_sprite_Palettes);
+  nc_gfx_init_picture(&logo1, logo_sprite_pict_rom.pictureInfo, logo_sprite_pict_rom.paletteInfo);
+  nc_gfx_init_picture(&logo2, logo_sprite_pict_rom.pictureInfo, logo_sprite_pict_rom.paletteInfo);
+  nc_gfx_init_picture(&logo3, logo_sprite_pict_rom.pictureInfo, logo_sprite_pict_rom.paletteInfo);
 }
 
 static void display() {
