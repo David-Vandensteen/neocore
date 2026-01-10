@@ -1012,28 +1012,11 @@ void nc_physic_update_mask(short x, short y, Position vec[], Position offset[], 
  //                                SOUND                                     //
 //--------------------------------------------------------------------------//
 
-/**
- * @defgroup Sound Audio & Sound
- * @brief Audio playback and sound management functions
- * @details Functions for CDDA music playback and ADPCM sound effects management.
- * @{
- */
-
-  //---------
- //    CDDA
-//-----------
-void nc_sound_pause_cdda();
-void nc_sound_resume_cdda();
-void nc_sound_play_cdda(BYTE track);
-#define nc_sound_stop_cdda() nc_sound_pause_cdda()
-
   //--------
  //  ADPCM
 //----------
 
 void nc_sound_stop_adpcm();
-
-/** @} */ // end of Sound group
 
   //----------------------------------------------------------------------------//
  //                                  JOYPAD                                    //
@@ -1081,6 +1064,7 @@ void nc_joypad_debug(BYTE id);
 /*---------------*/
 
 void nc_system_init();
+void nc_system_init_shadow();
 void nc_system_reset();
 WORD nc_system_get_free_ram_info();
 
@@ -1836,16 +1820,6 @@ void nc_get_relative_position(Position *position, Box box, Position world_coord)
   /*------------------------------*/
  /* LEGACY SOUND                 */
 /*------------------------------*/
-
-/** @deprecated Use nc_sound_play_cdda() instead */
-void nc_play_cdda(BYTE track);
-
-/** @deprecated Use nc_sound_pause_cdda() instead */
-#define nc_pause_cdda() nc_sound_pause_cdda()
-/** @deprecated Use nc_sound_resume_cdda() instead */
-#define nc_resume_cdda() nc_sound_resume_cdda()
-/** @deprecated Use nc_sound_stop_cdda() instead */
-#define nc_stop_cdda() nc_sound_stop_cdda()
 
 /** @deprecated Use nc_sound_stop_adpcm() instead */
 #define nc_stop_adpcm() nc_sound_stop_adpcm()

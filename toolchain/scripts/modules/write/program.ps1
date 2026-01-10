@@ -54,6 +54,19 @@ function Write-Program {
 
   Write-Host $env:path
 
+  # Remove existing PRG file if it exists
+  if (Test-Path $prgFile) {
+    Remove-Item $prgFile -Force
+    Write-Host "Removed existing $prgFile" -ForegroundColor Yellow
+  }
+
+  # Clean object files to ensure fresh build
+  $objectFiles = Get-ChildItem "$pathBuildName\*.o" -Recurse -ErrorAction SilentlyContinue
+  if ($objectFiles) {
+    $objectFiles | Remove-Item -Force
+    Write-Host "Cleaned $($objectFiles.Count) object file(s)" -ForegroundColor Yellow
+  }
+
   # Execute make with proper output handling
   Write-Host "Executing make command..." -ForegroundColor Cyan
   Write-Host "Command: make -f $MakeFile" -ForegroundColor Gray
