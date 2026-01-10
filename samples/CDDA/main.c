@@ -1,5 +1,5 @@
 #include <neocore.h>
-#include <math.h>
+#include <cdda.h>
 #include "externs.h"
 
 static void init();
