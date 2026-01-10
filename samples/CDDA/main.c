@@ -1,6 +1,9 @@
 #include <neocore.h>
-#include <cdda.h>
 #include "externs.h"
+
+#ifdef PLATFORM_CD
+  #include <cdda.h>
+#endif
 
 static void init();
 static void display();
@@ -14,7 +17,10 @@ static BYTE track_num = 2;
 static BOOL isPause = false;
 
 static void init() {
-  nc_sound_play_cdda(track_num);
+  #ifdef PLATFORM_CD
+    nc_sound_play_cdda(track_num);
+  #endif
+
   nc_gfx_init_scroller(
     &spectrum02,
     spectrum02_sprite_scrl_rom.scrollerInfo,
@@ -56,14 +62,26 @@ static void update() {
   }
   if (position_k7.x > 50) k7_direction = false;
   if (position_k7.x < 40) k7_direction = true;
-  if (nc_joypad_is_left(0) && track_num > 2) nc_sound_play_cdda(--track_num);
-  if (nc_joypad_is_right(0) && track_num < 5) nc_sound_play_cdda(++track_num);
+  if (nc_joypad_is_left(0) && track_num > 2) { 
+    #ifdef PLATFORM_CD
+      nc_sound_play_cdda(--track_num);
+    #endif
+  }
+  if (nc_joypad_is_right(0) && track_num < 5) {
+    #ifdef PLATFORM_CD
+      nc_sound_play_cdda(++track_num);
+    #endif
+  }
   if (nc_joypad_is_a(0)) {
     if (!isPause) {
-      nc_sound_pause_cdda();
+      #ifdef PLATFORM_CD
+        nc_sound_pause_cdda();
+      #endif
       isPause = true;
     } else {
-      nc_sound_resume_cdda();
+      #ifdef PLATFORM_CD
+        nc_sound_resume_cdda();
+      #endif
       isPause = false;
     }
   }
