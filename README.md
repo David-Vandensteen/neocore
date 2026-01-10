@@ -104,6 +104,11 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
   - Remove deprecated functions, macros and structures since NeoCore 3.1.1
   - Refactor nc_gfx* functions
 - 🔜 AES / MVS support (**5% completed**)
+  - ✅ Externalized CDDA functions (completed in v3.4.4)
+  - ✅ Added auto-generated `out/platform.h` to define the platform type (CD or Cartridge) (completed in v3.4.4)
+  - 🔜 Lib CD Makefile
+  - 🔜 Lib Cartridge Makefile
+  - 🔜 Generate hash and rom file for Mame
 - 🔜 Add basic modular C lib system for reusable functions and assets
 - 🔜 RGB palette handlers (**60% completed**)
   - Samples: `pal_backdrop`, `pal_rgb`, `pal_rgb_mixer`
@@ -400,50 +405,6 @@ This workflow change provides better performance for iterative development.
 ---
 
 ## 📦 Project Management<a name="project-management"></a>
-
-### 🆕 Create a New Project<a name="create-a-project"></a>
-
-#### Method 1: One-liner (Recommended)
-
-The fastest way to create a new project from anywhere.
-
-> ⚠️ **Important**: Avoid using spaces in project paths (e.g., use `C:\MyGame` instead of `C:\My Game`). Spaces can cause issues with the build tools.
-
-Create and enter your project directory:
-```cmd
-md C:\MyGame && cd C:\MyGame
-```
-
-Run the creation command:
-```cmd
-curl -L https://raw.githubusercontent.com/David-Vandensteen/neocore/master/bootstrap/scripts/project/create_from_oneliner.bat -o c.bat && c.bat && del c.bat
-```
-
-This will:
-1. Create and enter your project directory
-2. Download the creation script from GitHub
-3. Prompt you for a project name
-4. Set up the complete NeoCore project structure
-5. Clean up temporary files
-
-**Advantages:**
-- ✅ No need to clone the NeoCore repository
-- ✅ Always uses the latest stable version
-- ✅ Single command to copy and paste
-
-#### Method 2: Manual creation (Alternative)
-
-If you have already cloned the NeoCore repository:
-
-```cmd
-cd <neocore>\bootstrap\scripts\project
-.\create.bat -name MyGame -projectPath C:\temp\MyGame
-```
-
-**Available options:**
-- `-force`: Overwrite existing files
-- `-name`: Project name
-- `-projectPath`: Destination path
 
 ### 🆙 Upgrade an Existing Project<a name="upgrade-an-existing-project"></a>
 
