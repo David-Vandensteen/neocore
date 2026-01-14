@@ -125,7 +125,7 @@ static BOOL collide_point(short x, short y, Position vec[], BYTE vector_max) {
   return true;
 }
 
-static void init_shadow_system() {
+void nc_system_init_shadow() {
   if (is_init == false) {
     nc_system_init();
     is_init = true;
@@ -328,7 +328,7 @@ void nc_gfx_init_physic_picture(
   short box_height_offset,
   BOOL autobox_enabled
 ) {
-  init_shadow_system();
+  nc_system_init_shadow();
   nc_gfx_init_picture(&gfx_picture_physic->gfx_picture, pi, pali);
   gfx_picture_physic->autobox_enabled = autobox_enabled;
   if (gfx_picture_physic->autobox_enabled) {
@@ -341,7 +341,7 @@ void nc_gfx_init_picture(
   const pictureInfo *pictureInfo,
   const paletteInfo *paletteInfo
   ) {
-  init_shadow_system();
+  nc_system_init_shadow();
   gfx_picture->paletteInfoDAT = paletteInfo;
   gfx_picture->pictureInfoDAT = pictureInfo;
   gfx_picture->pixel_height = pictureInfo->tileHeight * 32;
@@ -353,7 +353,7 @@ void nc_gfx_init_animated_sprite(
   const spriteInfo *spriteInfo,
   const paletteInfo *paletteInfo
   ) {
-  init_shadow_system();
+  nc_system_init_shadow();
   gfx_animated_sprite->spriteInfoDAT = spriteInfo;
   gfx_animated_sprite->paletteInfoDAT = paletteInfo;
 };
@@ -367,7 +367,7 @@ void nc_gfx_init_animated_physic_sprite(
     short box_width_offset,
     short box_height_offset
   ) {
-  init_shadow_system();
+  nc_system_init_shadow();
   nc_physic_init_box(
     &gfx_animated_sprite_physic->box,
     box_witdh,
@@ -388,7 +388,7 @@ void nc_gfx_init_scroller(
   const scrollerInfo *scrollerInfo,
   const paletteInfo *paletteInfo
   ) {
-  init_shadow_system();
+  nc_system_init_shadow();
   gfx_scroller->scrollerInfoDAT = scrollerInfo;
   gfx_scroller->paletteInfoDAT = paletteInfo;
 }
@@ -865,7 +865,7 @@ void nc_gpu_clear_display() {
 /*------------------------------*/
 
 void nc_gpu_update() {
-  init_shadow_system();
+  nc_system_init_shadow();
   SCClose();
   nc_gpu_wait_vbl();
   nc_sound_update_adpcm_player();
@@ -1127,40 +1127,6 @@ void nc_physic_update_mask(short x, short y, Position vec[], Position offset[], 
  //                                SOUND                                     //
 //--------------------------------------------------------------------------//
 
-  //---------
- //    CDDA
-//-----------
-
-void nc_sound_play_cdda(BYTE track) {
-  init_shadow_system();
-  disableIRQ();
-  asm(
-    "loop_track_%=:              \n\t"
-    "move.b  %0,%%d0             \n\t"
-    "tst.b   0x10F6D9            \n\t"
-    "beq.s   loop_track_%=       \n\t"
-    "jsr     0xC0056A"
-    :
-    : "d"(track)
-    : "d0"
-  );
-  enableIRQ();
-}
-
-void nc_sound_pause_cdda() {
-  disableIRQ();
-  asm(" move.w #0x200,%d0");
-  asm(" jsr  0xC0056A");
-  enableIRQ();
-}
-
-void nc_sound_resume_cdda() {
-  disableIRQ();
-  asm(" move.w #0x300,%d0");
-  asm(" jsr  0xC0056A");
-  enableIRQ();
-}
-
   //--------
  //  ADPCM
 //----------
@@ -1275,7 +1241,7 @@ WORD nc_system_get_free_ram_info() {
 /*---------------*/
 
 void nc_log_init() {
-  init_shadow_system();
+  nc_system_init_shadow();
   log_x = LOG_X_INIT;
   log_y = LOG_Y_INIT;
   log_x_default = LOG_X_INIT;
@@ -2113,6 +2079,6 @@ void nc_packet_color16_to_rgb16(WORD packed_color, RGB16 *rgb_color) {
 }
 
 // Legacy Sound functions
-void nc_play_cdda(unsigned char track) {
-  nc_sound_play_cdda(track);
-}
+// void nc_play_cdda(unsigned char track) {
+//   nc_sound_play_cdda(track);
+// }
