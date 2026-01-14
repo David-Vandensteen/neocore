@@ -38,7 +38,7 @@ LIBS = -lneocore -lDATlib -lmath -lprocess -lc -lgcc
 # Compilation Flags #
 
 ASFLAGS = -m68000 --register-prefix-optional -I$(PROJECT_PATH)
-LDFLAGS = -Wl,-T$(NEO_GEO_SYSTEM) -Xlinker -Map=$(NEOBUILDTEMP)/output.map
+LDFLAGS = -Wl,-T$(NEO_GEO_SYSTEM) -Xlinker -Map=$(NEOBUILDTEMP)/output.map -fno-use-linker-plugin
 CCFLAGS = -m68000 -O3 -Wall -fomit-frame-pointer -ffast-math -fno-builtin -nostartfiles -nodefaultlibs -D__$(OUTPUT)__
 ARFLAGS = cr
 DEBUG = -g
