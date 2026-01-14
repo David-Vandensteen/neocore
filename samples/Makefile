@@ -11,7 +11,7 @@ OBJC = $(GCC_PATH)/objcopy
 BIN2O = $(GCC_PATH)/bin2elf
 GFXCC = $(GCC_PATH)/gfxcc
 FIXCNV = $(GCC_PATH)/m68k/bin/fixcnv
-
+SHELL = $(GCC_PATH)/sh.exe
 TMPDIR = $(TEMP)
 
 # Output: {cart, cd} *lower case* #

@@ -18,6 +18,7 @@ function Write-Program {
   Write-Host "Compiling program $PRGFile" -ForegroundColor Yellow
 
   $gccPath = Get-TemplatePath -Path $GCCPath
+  $gccPath = (Resolve-Path $gccPath).Path
   $binPath = Get-TemplatePath -Path $BinPath
   $makeFile = Get-TemplatePath -Path $MakeFile
   $prgFile = Get-TemplatePath -Path $PRGFile
@@ -73,8 +74,11 @@ function Write-Program {
   Write-Host "Log file: $pathBuildName\gcc.log" -ForegroundColor Gray
   Write-Host ""
 
+  # Convert Makefile path to Unix style for MSYS make
+  $makeFileUnix = $makeFile -replace 'C:\\', '/c/' -replace '\\', '/'
+
   # Use Start-Process for better output handling
-  $makeProcess = Start-Process -FilePath "make" -ArgumentList "-f", $MakeFile -NoNewWindow -PassThru -Wait -RedirectStandardOutput "$pathBuildName\gcc.log" -RedirectStandardError "$pathBuildName\gcc_error.log"
+  $makeProcess = Start-Process -FilePath "make" -ArgumentList "-f", $makeFileUnix -NoNewWindow -PassThru -Wait -RedirectStandardOutput "$pathBuildName\gcc.log" -RedirectStandardError "$pathBuildName\gcc_error.log"
   $makeExitCode = $makeProcess.ExitCode
 
   Write-Host "Make exit code: $makeExitCode" -ForegroundColor Cyan
