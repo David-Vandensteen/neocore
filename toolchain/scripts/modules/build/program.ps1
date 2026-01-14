@@ -48,10 +48,6 @@ function Build-Program {
         Write-Host "  (Robocopy exit code: $robocopyExitCode - some files/folders processed)" -ForegroundColor Gray
       }
     }
-
-    # Ensure externs.h includes necessary headers
-    Assert-Externs
-
   } catch {
     Write-Error "Failed to copy project files: $_"
     return $false

@@ -294,8 +294,8 @@ function Write-Sprite {
   $gfxDatCContent | Out-File -FilePath "out/gfx_dat.c" -Encoding ASCII
   Write-Host "Generated GFX_DAT_Pict, GFX_DAT_Scrl, and GFX_DAT_Sprt structures in out/gfx_dat.h and out/gfx_dat.c" -ForegroundColor Green
 
-  # Ensure externs.h includes the generated header
-  Assert-Externs
+  # Write externs.h includes the generated header
+  Write-Externs
 
   # Check if char.bin was created at the specified location
   Write-Host "Checking for char file at: $charfilePath" -ForegroundColor Cyan
