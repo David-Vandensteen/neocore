@@ -79,6 +79,7 @@ Import-Module "$neocorePathAbs\toolchain\scripts\modules\write\platform.ps1"
 Import-Module "$neocorePathAbs\toolchain\scripts\modules\write\program.ps1"
 Import-Module "$neocorePathAbs\toolchain\scripts\modules\write\sprite.ps1"
 Import-Module "$neocorePathAbs\toolchain\scripts\modules\write\wav.ps1"
+Import-Module "$neocorePathAbs\toolchain\scripts\modules\write\out\gfxDAT.ps1"
 
 # ============================================================================
 # INSTALL MODULES
