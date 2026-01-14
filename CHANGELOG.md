@@ -1,3 +1,12 @@
+## 3.4.4
+  - Externalized CDDA functions in preparation for integrating Neo-Geo Cartridge builds.  
+    To use CDDA functions, you must now include `<cdda.h>`.
+    Checkout CDDA in samples folder
+  - Added auto-generated `out/platform.h` to define the platform type (CD or Cartridge).  
+    *Note: only the CD platform is supported for now.*
+    Checkout CDDA in samples folder
+  - Fixed flushing of the object program cache.
+
 ## 3.4.3
 
   - Automatic generation of a structure aggregating a pointer to sprite data in ROM and a pointer to palette information in ROM during sprite compilation
