@@ -15,17 +15,17 @@ extern const FIXED _cos_tbl[512];
 extern const FIXED _tan_tbl[256];
 
 //-- Inline Functions ---------------------------------------------------------
-extern FIXED inline itofix(int x)
+static FIXED inline itofix(int x)
 { 
    return x << 16;
 }
 //------------------------------------------------------------------------------
-extern int inline fixtoi(FIXED x)
+static int inline fixtoi(FIXED x)
 { 
    return (x >> 16) + ((x & 0x8000) >> 15);
 }
 //------------------------------------------------------------------------------
-extern FIXED inline ftofix(double x)
+static FIXED inline ftofix(double x)
 { 
 	if (x > 32767.0)
 	{
@@ -40,27 +40,27 @@ extern FIXED inline ftofix(double x)
 	return (long)(x * 65536.0 + (x < 0 ? -0.5 : 0.5)); 
 }
 //------------------------------------------------------------------------------
-extern double inline fixtof(FIXED x)
+static double inline fixtof(FIXED x)
 { 
 	return (double)x / 65536.0; 
 }
 //------------------------------------------------------------------------------
-extern FIXED inline fcos(int x)
+static FIXED inline fcos(int x)
 {
 	return _cos_tbl[x & 0x1FF];
 }
 //------------------------------------------------------------------------------
-extern FIXED inline fsin(int x)
+static FIXED inline fsin(int x)
 { 
 	return _cos_tbl[(x - 0x80) & 0x1FF];
 }
 //------------------------------------------------------------------------------
-extern FIXED inline ftan(int x)
+static FIXED inline ftan(int x)
 { 
 	return _tan_tbl[x & 0xFF];
 }
 //------------------------------------------------------------------------------
-extern FIXED inline fadd(FIXED x, FIXED y)
+static FIXED inline fadd(FIXED x, FIXED y)
 {
 	FIXED result = x + y;
 
@@ -84,7 +84,7 @@ extern FIXED inline fadd(FIXED x, FIXED y)
 	}
 }
 //------------------------------------------------------------------------------
-extern FIXED inline fsub(FIXED x, FIXED y)
+static FIXED inline fsub(FIXED x, FIXED y)
 {
 	FIXED	result = x - y;
 
