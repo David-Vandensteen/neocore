@@ -9,10 +9,7 @@ function Build-NeocoreLib {
   }
 
   pushd $srcLibPath
-  .\build-neocore.bat `
-    -gccPath $buildPath\gcc\gcc-2.95.2 `
-    -includePath $includePath `
-    -libraryPath $buildPath\lib
+  .\build-neocore.bat
   if ($LASTEXITCODE -ne 0) {
     popd
     Write-Host "Neocore lib was not builded" -ForegroundColor Red

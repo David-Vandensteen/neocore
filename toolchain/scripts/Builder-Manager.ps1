@@ -77,7 +77,7 @@ function Main {
   Write-Host "Starting transcript log in $makLogPath" -ForegroundColor Cyan
   Start-Transcript -Path $makLogPath -Force | Out-Null
 
-  $gccPath = "..\..\build\gcc\gcc-2.95.2"
+  $gccPath = "..\..\build\gcc\gcc-13.2.0"
   Write-Host $gccPath
 
   if ($Config.project.compiler.path) { $gccPath = $Config.project.compiler.path }
