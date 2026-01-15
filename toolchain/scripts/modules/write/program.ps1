@@ -52,14 +52,14 @@ function Write-Program {
   $env:NEO_GEO_SYSTEM = $systemFile
 
   # Convert paths to Unix style for MSYS compatibility
-  $env:GCC_PATH = $env:GCC_PATH -replace 'C:\\', '/c/' -replace '\\', '/'
-  $env:PATHBUILD = $env:PATHBUILD -replace 'C:\\', '/c/' -replace '\\', '/'
-  $env:PROJECT_PATH = $env:PROJECT_PATH -replace 'C:\\', '/c/' -replace '\\', '/'
-  $env:INCLUDE_PATH = $env:INCLUDE_PATH -replace 'C:\\', '/c/' -replace '\\', '/'
-  $env:NEOCORE_INCLUDE_PATH = $env:NEOCORE_INCLUDE_PATH -replace 'C:\\', '/c/' -replace '\\', '/'
-  $env:LIBRARY_PATH = $env:LIBRARY_PATH -replace 'C:\\', '/c/' -replace '\\', '/'
-  $env:NEO_GEO_SYSTEM = $env:NEO_GEO_SYSTEM -replace 'C:\\', '/c/' -replace '\\', '/'
-  $env:FILEPRG = $env:FILEPRG -replace 'C:\\', '/c/' -replace '\\', '/'
+  $env:GCC_PATH = Get-PosixPath $env:GCC_PATH
+  $env:PATHBUILD = Get-PosixPath $env:PATHBUILD
+  $env:PROJECT_PATH = Get-PosixPath $env:PROJECT_PATH
+  $env:INCLUDE_PATH = Get-PosixPath $env:INCLUDE_PATH
+  $env:NEOCORE_INCLUDE_PATH = Get-PosixPath $env:NEOCORE_INCLUDE_PATH
+  $env:LIBRARY_PATH = Get-PosixPath $env:LIBRARY_PATH
+  $env:NEO_GEO_SYSTEM = Get-PosixPath $env:NEO_GEO_SYSTEM
+  $env:FILEPRG = Get-PosixPath $env:FILEPRG
 
   $env:path = "$gccPath;$binPath;$env:windir\System32;$env:windir\System32\WindowsPowerShell\v1.0\"
 
@@ -85,7 +85,7 @@ function Write-Program {
   Write-Host ""
 
   # Convert Makefile path to Unix style for MSYS make
-  $makeFileUnix = $makeFile -replace 'C:\\', '/c/' -replace '\\', '/'
+  $makeFileUnix = Get-PosixPath $makeFile
 
   # Use Start-Process for better output handling
   $makeProcess = Start-Process -FilePath "make" -ArgumentList "-f", $makeFileUnix -NoNewWindow -PassThru -Wait -RedirectStandardOutput "$pathBuildName\gcc.log" -RedirectStandardError "$pathBuildName\gcc_error.log"
