@@ -117,14 +117,8 @@ function Build-Program {
     return $false
   }
 
-  if ([string]::IsNullOrEmpty($Config.project.compiler.version)) {
-    Write-Error "Compiler version is not specified in project configuration. Please add <version> element in <compiler> section."
-    return $false
-  }
-
   # Resolve the configured GCC path
   Write-Host "Using configured GCC compiler..." -ForegroundColor Green
-  Write-Host "  Version: $($Config.project.compiler.version)" -ForegroundColor Cyan
   Write-Host "  Path (template): $($Config.project.compiler.path)" -ForegroundColor Gray
 
   $gccPath = Get-TemplatePath -Path $Config.project.compiler.path
