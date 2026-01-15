@@ -61,8 +61,6 @@
     </mame>
   </emulator>
   <compiler>
-    <name>gcc</name>
-    <version>13.2.0</version>
     <path>{{build}}\gcc\gcc-13.2.0</path>
     <includePath>{{neocore}}\src-lib\include</includePath>
     <libraryPath>{{build}}\lib</libraryPath>
