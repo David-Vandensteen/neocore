@@ -95,7 +95,11 @@ function Assert-Project {
       Write-Host "Project system file assertion failed" -ForegroundColor Red
       return $false
     }
+    Assert-ProjectCompiler
   }
+
+  # Reload config in case Assert-ProjectCompiler modified the XML
+  [xml]$Config = Get-Content -Path "project.xml"
 
   if ($Config.project.sound) {
   if ($Config.project.sound.cd.cdda) {
