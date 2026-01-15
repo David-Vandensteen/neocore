@@ -2,7 +2,7 @@ function MakDefault {
   Write-Host "Mak default" -ForegroundColor Cyan
 
   Write-Host "Writing platform header..." -ForegroundColor Cyan
-  Write-Platform
+  Write-OutPlatform
 
   $projectBuildPath = Resolve-TemplatePath -Path $Config.project.buildPath
   $projectName = $Config.project.name

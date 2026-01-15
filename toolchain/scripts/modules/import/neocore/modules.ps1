@@ -75,11 +75,11 @@ Import-Module "$neocorePathAbs\toolchain\scripts\modules\write\iso.ps1"
 Import-Module "$neocorePathAbs\toolchain\scripts\modules\write\mame.ps1"
 Import-Module "$neocorePathAbs\toolchain\scripts\modules\write\mp3.ps1"
 Import-Module "$neocorePathAbs\toolchain\scripts\modules\write\nsi.ps1"
-Import-Module "$neocorePathAbs\toolchain\scripts\modules\write\platform.ps1"
 Import-Module "$neocorePathAbs\toolchain\scripts\modules\write\program.ps1"
 Import-Module "$neocorePathAbs\toolchain\scripts\modules\write\sprite.ps1"
 Import-Module "$neocorePathAbs\toolchain\scripts\modules\write\wav.ps1"
 Import-Module "$neocorePathAbs\toolchain\scripts\modules\write\out\gfxDAT.ps1"
+Import-Module "$neocorePathAbs\toolchain\scripts\modules\write\out\platform.ps1"
 
 # ============================================================================
 # INSTALL MODULES
