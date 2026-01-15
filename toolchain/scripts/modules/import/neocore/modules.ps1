@@ -17,7 +17,7 @@ if ($global:neocorePathAbs) {
 # CORE UTILITIES
 # ============================================================================
 Import-Module "$neocorePathAbs\toolchain\scripts\modules\get\template-path.ps1"
-Import-Module "$neocorePathAbs\toolchain\scripts\modules\get\posixPath.ps1"
+Import-Module "$neocorePathAbs\toolchain\scripts\modules\get\posix-path.ps1"
 Import-Module "$neocorePathAbs\toolchain\scripts\modules\resolve\template-path.ps1"
 Import-Module "$neocorePathAbs\toolchain\scripts\modules\compare\filehash.ps1"
 
