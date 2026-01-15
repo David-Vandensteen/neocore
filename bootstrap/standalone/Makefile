@@ -11,7 +11,7 @@ OBJC = $(GCC_PATH)/objcopy
 BIN2O = $(GCC_PATH)/bin2elf
 GFXCC = $(GCC_PATH)/gfxcc
 FIXCNV = $(GCC_PATH)/m68k/bin/fixcnv
-
+SHELL = $(GCC_PATH)/sh.exe
 TMPDIR = $(TEMP)
 
 # Output: {cart, cd} *lower case* #
@@ -38,7 +38,7 @@ LIBS = -lneocore -lDATlib -lmath -lprocess -lc -lgcc
 # Compilation Flags #
 
 ASFLAGS = -m68000 --register-prefix-optional -I$(PROJECT_PATH)
-LDFLAGS = -Wl,-T$(NEO_GEO_SYSTEM) -Xlinker -Map=$(NEOBUILDTEMP)/output.map
+LDFLAGS = -Wl,-T$(NEO_GEO_SYSTEM) -Xlinker -Map=$(NEOBUILDTEMP)/output.map -fno-use-linker-plugin -Wl,--no-warn-rwx-segments
 CCFLAGS = -m68000 -O3 -Wall -fomit-frame-pointer -ffast-math -fno-builtin -nostartfiles -nodefaultlibs -D__$(OUTPUT)__
 ARFLAGS = cr
 DEBUG = -g
