@@ -34,8 +34,8 @@
       <path>{{build}}\bin</path>
     </findCommand>
     <gcc>
-      <url>http://azertyvortex.free.fr/download/neocore/gcc-r1.zip</url>
-      <path>{{build}}\gcc\gcc-2.95.2</path>
+      <url>http://azertyvortex.free.fr/download/neocore/gcc-13.2.0-r0.zip</url>
+      <path>{{build}}\gcc\gcc-13.2.0</path>
     </gcc>
     <mpg123>
       <url>http://azertyvortex.free.fr/download/neocore/current/mpg123.zip</url>

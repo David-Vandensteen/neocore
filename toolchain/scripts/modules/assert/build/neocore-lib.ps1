@@ -7,8 +7,8 @@ function Assert-BuildNeocoreLib {
     Write-Host "error : $srcLibPath not found" -ForegroundColor Red
     return $false
   }
-  if (-Not(Test-Path -Path "$($buildPath)\gcc\gcc-2.95.2")) {
-    Write-Host "error : $($buildPath)\gcc\gcc-2.95.2 not found" -ForegroundColor Red
+  if (-Not(Test-Path -Path "$($buildPath)\gcc\gcc-13.2.0")) {
+    Write-Host "error : $($buildPath)\gcc\gcc-13.2.0 not found" -ForegroundColor Red
     return $false
   }
   if (-Not(Test-Path -Path "$($buildPath)\lib")) {
