@@ -14,7 +14,27 @@ function Copy-Makefile {
     Write-Log -File $LogFile -Level "INFO" -Message "Starting Makefile update"
 
     $sourceMakefile = "$SourceNeocorePath\bootstrap\standalone\Makefile"
-    $targetMakefile = "$ProjectSrcPath\Makefile"
+    $projectXmlPath = "$ProjectSrcPath\project.xml"
+
+    # Check if project.xml exists
+    if (-not (Test-Path $projectXmlPath)) {
+        $errorMsg = "Project XML not found: $projectXmlPath"
+        Write-Host "  ERROR: $errorMsg" -ForegroundColor Red
+        Write-Log -File $LogFile -Level "ERROR" -Message $errorMsg
+        return $false
+    }
+
+    # Parse project.xml to get makefile path
+    [xml]$xml = Get-Content $projectXmlPath
+    $makefileRelative = $xml.project.makefile
+    if (-not $makefileRelative) {
+        $errorMsg = "Makefile path not specified in project.xml"
+        Write-Host "  ERROR: $errorMsg" -ForegroundColor Red
+        Write-Log -File $LogFile -Level "ERROR" -Message $errorMsg
+        return $false
+    }
+
+    $targetMakefile = Join-Path $ProjectSrcPath $makefileRelative
 
     # Check if source Makefile exists
     if (-not (Test-Path $sourceMakefile)) {

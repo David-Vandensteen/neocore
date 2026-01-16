@@ -31,6 +31,7 @@ if not "%ARG2%"=="no_update" (
   set "LATEST_SCRIPT_URL=https://raw.githubusercontent.com/David-Vandensteen/neocore/master/bootstrap/neocore-version-switcher.bat"  
   set "LATEST_SCRIPT_COPY_FILES_URL=https://raw.githubusercontent.com/David-Vandensteen/neocore/master/bootstrap/neocore-version-switcher/copy/files.ps1"
   set "LATEST_SCRIPT_WRITE_LOG_URL=https://raw.githubusercontent.com/David-Vandensteen/neocore/master/bootstrap/neocore-version-switcher/write/log.ps1"
+  set "LATEST_SCRIPT_COPY_MAKEFILE_URL=https://raw.githubusercontent.com/David-Vandensteen/neocore/master/bootstrap/scripts/project/upgrade/modules/copy/makefile.ps1"
 
   set "LATEST_SCRIPT=neocore-version-switcher-latest-spool.bat"
 
@@ -58,6 +59,12 @@ if not "%ARG2%"=="no_update" (
     echo Error: Failed to download latest write/log.ps1.
     goto :cleanup
   )
+  echo Downloading latest copy/makefile.ps1...
+  curl -L --max-time 30 --connect-timeout 10 !LATEST_SCRIPT_COPY_MAKEFILE_URL! -o "!NEOCORE_VERSION_SWITCHER_SPOOL!\copy\makefile.ps1"
+  if !errorlevel! neq 0 (
+    echo Error: Failed to download latest copy/makefile.ps1.
+    goto :cleanup
+  )
 
   if not exist !NEOCORE_VERSION_SWITCHER_SPOOL!\copy\files.ps1 (
     echo Error: copy/files.ps1 does not exist after download.
@@ -66,6 +73,11 @@ if not "%ARG2%"=="no_update" (
 
   if not exist !NEOCORE_VERSION_SWITCHER_SPOOL!\write\log.ps1 (
     echo Error: write/log.ps1 does not exist after download.
+    goto :cleanup
+  )
+
+  if not exist !NEOCORE_VERSION_SWITCHER_SPOOL!\copy\makefile.ps1 (
+    echo Error: copy/makefile.ps1 does not exist after download.
     goto :cleanup
   )
 
@@ -172,7 +184,13 @@ if exist "%~dp0neocore" (
 )
 
 echo Running upgrade script...
-powershell -ExecutionPolicy Bypass -Command "& { . '%~dp0!NEOCORE_VERSION_SWITCHER_SPOOL!\write\log.ps1'; . '%~dp0!NEOCORE_VERSION_SWITCHER_SPOOL!\copy\files.ps1'; Copy-NeocoreFiles -SourceNeocorePath '%GIT_REPO_PATH%' -ProjectNeocorePath '%~dp0neocore' -LogFile '%~dp0upgrade.log' }"
+powershell -ExecutionPolicy Bypass -Command "& { ^
+. '%~dp0!NEOCORE_VERSION_SWITCHER_SPOOL!\write\log.ps1'; ^
+. '%~dp0!NEOCORE_VERSION_SWITCHER_SPOOL!\copy\files.ps1'; ^
+. '%~dp0!NEOCORE_VERSION_SWITCHER_SPOOL!\copy\makefile.ps1'; ^
+Copy-NeocoreFiles -SourceNeocorePath '%GIT_REPO_PATH%' -ProjectNeocorePath '%~dp0neocore' -LogFile '%~dp0upgrade.log'; ^
+Copy-Makefile -ProjectSrcPath '%~dp0..' -SourceNeocorePath '%GIT_REPO_PATH%' -LogFile '%~dp0upgrade.log' ^
+}"
 set UPGRADE_ERROR=%errorlevel%
 if %UPGRADE_ERROR% neq 0 (
   echo Error: Upgrade script failed.
