@@ -16,6 +16,7 @@ echo Continuing...
 set "ARG1=%~1"
 set "ARG2=%~2"
 set "NEOCORE_VERSION_SWITCHER_SPOOL=neocore-version-switcher-spool"
+set "BRANCH=feat/upgrade-gcc"
 
 REM Check if argument is provided
 if "%ARG1%"=="" (
@@ -28,10 +29,10 @@ if "%ARG1%"=="" (
 if not "%ARG2%"=="no_update" (
   echo Downloading latest version of the script...
   echo.
-  set "LATEST_SCRIPT_URL=https://raw.githubusercontent.com/David-Vandensteen/neocore/master/bootstrap/neocore-version-switcher.bat"  
-  set "LATEST_SCRIPT_COPY_FILES_URL=https://raw.githubusercontent.com/David-Vandensteen/neocore/master/bootstrap/neocore-version-switcher/copy/files.ps1"
-  set "LATEST_SCRIPT_WRITE_LOG_URL=https://raw.githubusercontent.com/David-Vandensteen/neocore/master/bootstrap/neocore-version-switcher/write/log.ps1"
-  set "LATEST_SCRIPT_COPY_MAKEFILE_URL=https://raw.githubusercontent.com/David-Vandensteen/neocore/master/bootstrap/scripts/project/upgrade/modules/copy/makefile.ps1"
+  set "LATEST_SCRIPT_URL=https://raw.githubusercontent.com/David-Vandensteen/neocore/%BRANCH%/bootstrap/neocore-version-switcher.bat"  
+  set "LATEST_SCRIPT_COPY_FILES_URL=https://raw.githubusercontent.com/David-Vandensteen/neocore/%BRANCH%/bootstrap/neocore-version-switcher/copy/files.ps1"
+  set "LATEST_SCRIPT_WRITE_LOG_URL=https://raw.githubusercontent.com/David-Vandensteen/neocore/%BRANCH%/bootstrap/neocore-version-switcher/write/log.ps1"
+  set "LATEST_SCRIPT_COPY_MAKEFILE_URL=https://raw.githubusercontent.com/David-Vandensteen/neocore/%BRANCH%/bootstrap/neocore-version-switcher/copy/makefile.ps1"
 
   set "LATEST_SCRIPT=neocore-version-switcher-latest-spool.bat"
 
@@ -184,13 +185,12 @@ if exist "%~dp0neocore" (
 )
 
 echo Running upgrade script...
-powershell -ExecutionPolicy Bypass -Command "& { ^
-. '%~dp0!NEOCORE_VERSION_SWITCHER_SPOOL!\write\log.ps1'; ^
-. '%~dp0!NEOCORE_VERSION_SWITCHER_SPOOL!\copy\files.ps1'; ^
-. '%~dp0!NEOCORE_VERSION_SWITCHER_SPOOL!\copy\makefile.ps1'; ^
-Copy-NeocoreFiles -SourceNeocorePath '%GIT_REPO_PATH%' -ProjectNeocorePath '%~dp0neocore' -LogFile '%~dp0upgrade.log'; ^
-Copy-Makefile -ProjectSrcPath '%~dp0..' -SourceNeocorePath '%GIT_REPO_PATH%' -LogFile '%~dp0upgrade.log' ^
-}"
+if not exist "%~dp0src\project.xml" (
+  echo Error: project.xml not found in src
+  goto :cleanup
+)
+set "PS_COMMAND=. '%~dp0!NEOCORE_VERSION_SWITCHER_SPOOL!\write\log.ps1'; . '%~dp0!NEOCORE_VERSION_SWITCHER_SPOOL!\copy\files.ps1'; . '%~dp0!NEOCORE_VERSION_SWITCHER_SPOOL!\copy\makefile.ps1'; Copy-NeocoreFiles -SourceNeocorePath '%GIT_REPO_PATH%' -ProjectNeocorePath '%~dp0neocore' -LogFile '%~dp0upgrade.log'; Copy-Makefile -ProjectSrcPath '%~dp0src' -SourceNeocorePath '%GIT_REPO_PATH%' -LogFile '%~dp0upgrade.log'"
+powershell -ExecutionPolicy Bypass -Command "& { !PS_COMMAND! }"
 set UPGRADE_ERROR=%errorlevel%
 if %UPGRADE_ERROR% neq 0 (
   echo Error: Upgrade script failed.
