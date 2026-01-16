@@ -38,18 +38,6 @@ function Assert-Project {
     Write-Host "error : project.makefile not found" -ForegroundColor Red
     return $false
   }
-
-  # Overwrite the makefile file with bootstrap/standalone/Makefile
-  Write-Host "Overwriting makefile with bootstrap/standalone/Makefile..." -ForegroundColor Yellow
-  $sourceMakefile = "../../bootstrap/standalone/Makefile"
-  $targetMakefile = $Config.project.makefile
-  if (Test-Path -Path $sourceMakefile) {
-    Copy-Item -Path $sourceMakefile -Destination $targetMakefile -Force
-    Write-Host "Overwritten $targetMakefile with $sourceMakefile" -ForegroundColor Green
-  } else {
-    Write-Host "Source makefile $sourceMakefile not found" -ForegroundColor Red
-    return $false
-  }
   if (-Not($Config.project.neocorePath)) {
     Write-Host "error : project.neocorePath not found" -ForegroundColor Red
     return $false
