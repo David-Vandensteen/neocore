@@ -3,19 +3,19 @@ install: neocore
 AR = ar
 
 CFLAGS = -I$(INCLUDE_PATH) \
-				 -m68000 \
-				 -O3 \
-				 -Wall \
-				 -Wextra \
-				 -fomit-frame-pointer \
-				 -fdata-sections \
-				 -ffast-math \
-				 -ffunction-sections \
-				 -fno-builtin \
-				 -nostartfiles \
-				 -nodefaultlibs \
-				 -Wno-unused-parameter \
-				 -D__cd__
+         -m68000 \
+         -O3 \
+         -Wall \
+         -Wextra \
+         -fomit-frame-pointer \
+         -fdata-sections \
+         -ffast-math \
+         -ffunction-sections \
+         -fno-builtin \
+         -nostartfiles \
+         -nodefaultlibs \
+         -Wno-unused-parameter \
+         -D__cd__
 
 neocore: neocore.o cdda.o
 	$(AR) cr $(LIBRARY_PATH)/libneocore.a $(LIBRARY_PATH)/neocore.o $(LIBRARY_PATH)/cdda.o

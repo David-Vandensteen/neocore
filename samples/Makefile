@@ -39,24 +39,24 @@ LIBS = -lneocore -lDATlib -lmath -lprocess -lc -lgcc
 
 ASFLAGS = -m68000 --register-prefix-optional -I$(PROJECT_PATH)
 LDFLAGS = -Wl,-T$(NEO_GEO_SYSTEM) \
-					-Xlinker -Map=$(NEOBUILDTEMP)/output.map \
-					-fno-use-linker-plugin \
-					-Wl,--no-warn-rwx-segments \
-					-Wl,--gc-sections
+          -Xlinker -Map=$(NEOBUILDTEMP)/output.map \
+          -fno-use-linker-plugin \
+          -Wl,--no-warn-rwx-segments \
+          -Wl,--gc-sections
 
 CCFLAGS = -m68000 \
-					-O3 \
-					-Wall \
-					-Wextra \
-					-fomit-frame-pointer \
-					-fdata-sections \
-					-ffast-math \
-					-ffunction-sections \
-					-fno-builtin \
-					-nostartfiles \
-					-nodefaultlibs \
-					-Wno-unused-parameter \
-					-D__$(OUTPUT)__
+          -O3 \
+          -Wall \
+          -Wextra \
+          -fomit-frame-pointer \
+          -fdata-sections \
+          -ffast-math \
+          -ffunction-sections \
+          -fno-builtin \
+          -nostartfiles \
+          -nodefaultlibs \
+          -Wno-unused-parameter \
+          -D__$(OUTPUT)__
 					
 ARFLAGS = cr
 DEBUG = -g
