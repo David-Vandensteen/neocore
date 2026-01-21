@@ -95,21 +95,24 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
   and a pointer to palette information in ROM during sprite compilation
 
 ### 🟡 In Progress
+- 🔜 Hiding obsolete branches and tags in neocore version switcher script
+- 🔜 NeoCore 4
+  - 🔜 Remove deprecated functions, macros and structures since NeoCore 3.1.1
+  - 🔜 GCC 13 (**in progress : 50%**)
+  - 🔜 Migration guide
 
 ### 🔵 Planned - Soon
+- 🔜 Move src-lib/neocore.h into src-lib/include
 - 🔜 Runtime palette creation: instantiate sprites with palettes built in RAM _(may be delayed after NeoCore 4)_
 
 ### 🔵 Planned - Later
-- 🔜 NeoCore 4
-  - Remove deprecated functions, macros and structures since NeoCore 3.1.1
-  - Refactor nc_gfx* functions
+- 🔜 Refactor nc_gfx* functions
 - 🔜 AES / MVS support (**5% completed**)
   - ✅ Externalized CDDA functions (completed in v3.4.4)
   - ✅ Added auto-generated `out/platform.h` to define the platform type (CD or Cartridge) (completed in v3.4.4)
   - 🔜 Lib CD Makefile
   - 🔜 Lib Cartridge Makefile
   - 🔜 Generate hash and rom file for Mame
-- 🔜 Add basic modular C lib system for reusable functions and assets
 - 🔜 RGB palette handlers (**60% completed**)
   - Samples: `pal_backdrop`, `pal_rgb`, `pal_rgb_mixer`
 - 🔜 Joypad 2 support
@@ -119,6 +122,7 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
 - 🔜 DRAM asset management (unload/load from CD-ROM)
 
 ### 🧐 Under Consideration
+ - 💭 Add basic modular C lib system for reusable functions and assets
  - 💭 Split project.xml to separate user parameters from toolchain parameters
  - 💭 Video recording support (MAME MNG format with manual ffmpeg conversion to MP4)
  - 💭 XML WYSIWYG editor
