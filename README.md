@@ -371,9 +371,7 @@ int x = getValue();
 
 </details>
 
-### Build Steps (v3.0.0+)
-
-Starting with version 3.0.0, build steps are now explicit and must be executed manually for better control and performance optimization:
+### Build Steps
 
 #### Development Workflows
 
@@ -402,9 +400,9 @@ Starting with version 3.0.0, build steps are now explicit and must be executed m
 
 ### 🆙 Upgrade an Existing Project<a name="upgrade-an-existing-project"></a>
 
-> ⚠️ **Important**: Backup your project before upgrading. Check the [migration guide](docs/migration_guides/v2tov3/v2tov3.md) for breaking changes.
+> ⚠️ **Important**: Backup your project before upgrading.
 
-#### Method 1: Using Version Switcher (NeoCore 3.2.0+)
+#### Using Version Switcher
 
 The version switcher provides a simple way to upgrade or switch between NeoCore versions:
 
@@ -420,17 +418,6 @@ cd C:\temp\MyGame
 
 # List all available versions
 .\neocore-version-switcher.bat --list
-```
-
-#### Method 2: Manual Upgrade Script (NeoCore < 3.2.0)
-
-```cmd
-# 1. Remove build folder
-rd /S /Q C:\temp\MyGame\build
-
-# 2. Run upgrade script
-cd <neocore>\bootstrap\scripts\project
-.\upgrade.bat -projectSrcPath C:\temp\MyGame\src -projectNeocorePath C:\temp\MyGame\neocore
 ```
 
 ### 📤 Release a Project<a name="release-a-project"></a>
