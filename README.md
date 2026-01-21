@@ -25,11 +25,7 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
 - [💬 Discord](https://discord.com/channels/1330066799445676093/1330089958798790686)
 - [🐛 Report a Bug](https://github.com/David-Vandensteen/neocore/issues/new?labels=bug&template=bug_report.md)
 - [💡 Request a Feature](https://github.com/David-Vandensteen/neocore/issues/new?labels=enhancement&template=feature_request.md)
-- [📋 Migration from previous versions](docs/migration_guides/v2tov3/v2tov3.md)
-- [📚 API Documentation](http://azertyvortex.free.fr/neocore-doxy/r12/neocore_8h.html)
 - [📝 Changelog](CHANGELOG.md)
-
-> ⚠️ **Upgrading from v2.x?** This version includes **breaking changes**. Please check the [migration guide](docs/migration_guides/v2tov3/v2tov3.md) before upgrading from NeoCore 2.x to 3.x.
 
 ## 📚 Table of Contents
 - [🎯 Overview](#overview)
