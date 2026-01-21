@@ -384,23 +384,13 @@ Starting with version 3.0.0, build steps are now explicit and must be executed m
 .\mak.bat run:raine  # 🚀 Instant!
 ```
 
-#### Build Step Breakdown
+#### Build Step
 
 | Step | Command | Purpose | When to use |
 |------|---------|---------|-------------|
 | **1. Sprites** | `.\mak.bat sprite` | Generate sprite data from assets | When assets change |
 | **2. Compile** | `.\mak.bat` | Compile C code and link | When code changes |
 | **3. Run** | `.\mak.bat run:raine` | Launch in emulator | Always for testing |
-
-#### Performance Benefits
-
-- **🚀 Faster iteration**: Skip sprite generation when only code changes
-- **💾 Cache optimization**: Leverage build cache for unchanged components
-- **🎯 Granular control**: Build only what you need
-- **⏱️ Reduced build time**: Avoid unnecessary regeneration
-
-> **Migration Note**: In versions before 3.0.0, `mak run:raine` or `mak run:mame` automatically executed all build steps.\
-This workflow change provides better performance for iterative development.
 
 ---
 
