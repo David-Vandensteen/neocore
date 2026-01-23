@@ -34,14 +34,12 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
 - [🚀 Quick Start](#quick-start)
 - [⚙️ Command Reference](#command-reference)
   - [🔨 Development Cycle](#development-cycle)
+  - [C89/ANSI C Strict Compliance](#c89ansi-c-strict-compliance)
   - [🧪 Validation & Tools](#validation--tools)
   - [📦 Distribution](#distribution)
   - [ℹ️ Information](#information)
   - [🎮 Custom Emulator Profiles](#emulator-profiles)
   - [🐞 Debug Mode with ngdev Plugin](#debug-mode-with-ngdev-plugin)
-- [🔧 Development Workflow](#development-workflow)
-  - [C89/ANSI C Strict Compliance](#c89ansi-c-strict-compliance)
-  - [Build Steps (v3.0.0+)](#build-steps)
 - [📦 Project Management](#project-management)
   - [ Upgrade a Project](#upgrade-an-existing-project)
   - [📤 Release a Project](#release-a-project)
@@ -53,7 +51,6 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
 - [🛠️ Advanced Development](#advanced-development)
   - [♻️ Hot Reload](#hot-reload)
   - [🔧 Compile Library](#compiling-the-lib)
-  - [🌿 Branches & Versions](#pull-or-checkout-another-branches)
 - [🤝 Contribution](#contribute)
   - [🎮 Game Examples & Showcases](#examples)
 - [📚 Dependencies](#dependencies)
@@ -94,6 +91,7 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
 - 🔜 NeoCore 4
   - 🔜 Remove deprecated functions, macros and structures since NeoCore 3.1.1
   - 🔜 GCC 13 (**in progress : 50%**)
+  - 🔜 Embed math.h in NeoCore lib
   - 🔜 Migration guide
 
 ### 🔵 Planned - Soon
@@ -132,29 +130,9 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
 
 ## 🚀 Quick Start<a name="quick-start"></a>
 
-### Which method should I use?
-
-
-#### 🟢 Most users: **No cloning required!**
-
-If you want to **create your own NeoGeo CD game or app**, you do NOT need to clone this repository.
-
-👉 **Just use the one-liner below to initialize your project.**
-This will always fetch the latest stable version and set up everything for you automatically.
-
-#### 🛠️ When should you clone the repo?
-
-You only need to clone this repository if you want to:
-- Explore or run the included samples and demos
-- Contribute to the NeoCore toolchain or C library
-- Develop, debug, or customize the NeoCore internals
-
-For 99% of new projects, the one-liner is all you need!
-
-
 ### Three-Step Setup
 
-**2️⃣ Create Your Project**
+**1️⃣ Create Your Project**
 
 > 💡 **No need to clone or download NeoCore** - the script does everything for you!
 > 
@@ -173,7 +151,7 @@ cd src
 .\mak.bat sprite && .\mak.bat && .\mak.bat run:mame
 ```
 
-**3️⃣ Next Steps**
+**2️⃣ Next Steps**
 - 📖 **Important**: Review [C89 Compliance](#c89ansi-c-strict-compliance) rules before coding
 - 📋 See [Command Reference](#command-reference) for all build commands
 - 🎮 Explore [Custom Emulator Profiles](#emulator-profiles) for testing
@@ -185,7 +163,7 @@ cd src
 
 > ⚠️ **Warning**: The mak script overrides the PATH environment variable during compilation. If you encounter any problems after using it, simply close and restart a new command terminal.
 
-### 🔨 Development Cycle
+### 🔨 Development Cycle<a name="development-cycle"></a>
 
 **Building:**
 | Command | Description |
@@ -204,7 +182,87 @@ cd src
 | `.\mak.bat run:mame:debug` | Run with MAME in debug mode (ngdev plugin) |
 | `.\mak.bat serve:mame` | Run in hot reload mode |
 
-### 🧪 Validation & Tools
+#### Development Workflows
+
+```bash
+# Initial development (build everything)
+.\mak.bat sprite && .\mak.bat && .\mak.bat run:raine
+
+# Code-only modifications (sprites unchanged)
+.\mak.bat && .\mak.bat run:raine  # ⚡ Faster!
+
+# Quick test without recompilation
+.\mak.bat run:raine  # 🚀 Instant!
+```
+
+#### Build Step
+
+| Step | Command | Purpose | When to use |
+|------|---------|---------|-------------|
+| **1. Sprites** | `.\mak.bat sprite` | Generate sprite data from assets | When assets change |
+| **2. Compile** | `.\mak.bat` | Compile C code and link | When code changes |
+| **3. Run** | `.\mak.bat run:raine` | Launch in emulator | Always for testing |
+
+### C89/ANSI C Strict Compliance<a name="c89ansi-c-strict-compliance"></a>
+
+> ⚠️ **CRITICAL**: This project uses `gcc-2.95.2` and requires strict C89 (ANSI C) compliance.
+
+**Key Rules:**
+- Declare all variables at the beginning of blocks
+- Declare loop variables outside loops
+- No mixed declarations and code
+
+<details>
+<summary>📖 Click for C89 compliance examples</summary>
+
+**1. All variables must be declared at the beginning of blocks:**
+
+```c
+/* ✅ CORRECT */
+int function(void) {
+    int i;
+    char* buffer;
+
+    i = 0;
+    buffer = NULL;
+    /* code here */
+}
+
+/* ❌ WRONG - will not compile */
+int function(void) {
+    int i = 0;
+    doSomething();
+    char* buffer = NULL;  /* ERROR: declaration after statement */
+}
+```
+
+**2. Loop variables must be declared outside loops:**
+
+```c
+/* ✅ CORRECT */
+int i;
+for (i = 0; i < 10; i++) {
+    /* code */
+}
+
+/* ❌ WRONG */
+for (int i = 0; i < 10; i++) {  /* ERROR: C99+ feature */
+    /* code */
+}
+```
+
+**3. No inline variable initialization in declarations (unless constant):**
+
+```c
+/* ✅ CORRECT */
+int x;
+x = getValue();
+
+/* ❌ WRONG (unless getValue() is a constant) */
+int x = getValue();
+```
+
+</details>
 
 | Command | Description |
 |---------|-------------|
@@ -212,7 +270,7 @@ cd src
 | `.\mak.bat framer` | Launch DATlib Framer |
 | `.\mak.bat animator` | Launch DATlib Animator |
 
-### 📦 Distribution
+### 📦 Distribution<a name="distribution"></a>
 
 | Command | Description |
 |---------|-------------|
@@ -220,7 +278,7 @@ cd src
 | `.\mak.bat dist:mame` | Create MAME distribution package |
 | `.\mak.bat dist:exe` | Create Windows standalone executable |
 
-### ℹ️ Information
+### ℹ️ Information<a name="information"></a>
 
 | Command | Description |
 |---------|-------------|
@@ -283,7 +341,7 @@ Create custom config files in your project and reference them:
 .\mak.bat run:raine:full     # Fullscreen
 ```
 
-### 🐞 Debug Mode with ngdev Plugin
+### 🐞 Debug Mode with ngdev Plugin<a name="debug-mode-with-ngdev-plugin"></a>
 
 The `debug` profile provides enhanced Neo Geo CD debugging capabilities:
 
@@ -302,95 +360,7 @@ The `debug` profile provides enhanced Neo Geo CD debugging capabilities:
 
 ---
 
-## 🔧 Development Workflow
-
-### C89/ANSI C Strict Compliance
-
-> ⚠️ **CRITICAL**: This project uses `gcc-2.95.2` and requires strict C89 (ANSI C) compliance.
-
-**Key Rules:**
-- Declare all variables at the beginning of blocks
-- Declare loop variables outside loops
-- No mixed declarations and code
-
-<details>
-<summary>📖 Click for C89 compliance examples</summary>
-
-**1. All variables must be declared at the beginning of blocks:**
-
-```c
-/* ✅ CORRECT */
-int function(void) {
-    int i;
-    char* buffer;
-
-    i = 0;
-    buffer = NULL;
-    /* code here */
-}
-
-/* ❌ WRONG - will not compile */
-int function(void) {
-    int i = 0;
-    doSomething();
-    char* buffer = NULL;  /* ERROR: declaration after statement */
-}
-```
-
-**2. Loop variables must be declared outside loops:**
-
-```c
-/* ✅ CORRECT */
-int i;
-for (i = 0; i < 10; i++) {
-    /* code */
-}
-
-/* ❌ WRONG */
-for (int i = 0; i < 10; i++) {  /* ERROR: C99+ feature */
-    /* code */
-}
-```
-
-**3. No inline variable initialization in declarations (unless constant):**
-
-```c
-/* ✅ CORRECT */
-int x;
-x = getValue();
-
-/* ❌ WRONG (unless getValue() is a constant) */
-int x = getValue();
-```
-
-</details>
-
-### Build Steps
-
-#### Development Workflows
-
-```bash
-# Initial development (build everything)
-.\mak.bat sprite && .\mak.bat && .\mak.bat run:raine
-
-# Code-only modifications (sprites unchanged)
-.\mak.bat && .\mak.bat run:raine  # ⚡ Faster!
-
-# Quick test without recompilation
-.\mak.bat run:raine  # 🚀 Instant!
-```
-
-#### Build Step
-
-| Step | Command | Purpose | When to use |
-|------|---------|---------|-------------|
-| **1. Sprites** | `.\mak.bat sprite` | Generate sprite data from assets | When assets change |
-| **2. Compile** | `.\mak.bat` | Compile C code and link | When code changes |
-| **3. Run** | `.\mak.bat run:raine` | Launch in emulator | Always for testing |
-
----
-
-## 📦 Project Management<a name="project-management"></a>
+##  Project Management<a name="project-management"></a>
 
 ### 🆙 Upgrade an Existing Project<a name="upgrade-an-existing-project"></a>
 
@@ -651,14 +621,6 @@ Necessary if you modify NeoCore source code:
 ```cmd
 .\mak.bat clean
 .\mak.bat lib
-```
-
-### 🌿 Branches & Versions<a name="pull-or-checkout-another-branches"></a>
-
-> ⚠️ **Important**: Remove the `.\neocore\build` folder before compiling after a branch change to avoid cache conflicts.
-
-```cmd
-.\mak.bat clean:build
 ```
 
 ---
