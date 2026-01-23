@@ -52,7 +52,7 @@
  //                             STATIC                                       //
 //--------------------------------------------------------------------------//
 
-static Adpcm_player adpcm_player;
+static ADPCM_player adpcm_player;
 static BOOL is_init = false;
 static BOOL joypad_edge_mode = false;
 static WORD display_gfx_with_sprite_id = DISPLAY_GFX_WITH_SPRITE_ID_AUTO;
@@ -1495,7 +1495,7 @@ void nc_sound_init_adpcm() {
   init_adpcm_player();
 }
 
-Adpcm_player *nc_sound_get_adpcm_player() {
+ADPCM_player *nc_sound_get_adpcm_player() {
   return &adpcm_player;
 }
 
@@ -1803,7 +1803,7 @@ void nc_push_remaining_frame_adpcm_player(DWORD frame) {
   nc_sound_set_adpcm_remaining_frame(frame);
 }
 
-Adpcm_player *nc_get_adpcm_player() {
+ADPCM_player *nc_get_adpcm_player() {
   return nc_sound_get_adpcm_player();
 }
 

@@ -1,3 +1,6 @@
+## 3.4.5-rc (release candidate)
+  - Deprecate Sound_Adpcm_Player stuct, use Sound_ADPCM_Player instead
+
 ## 3.4.4
   - Externalized CDDA functions in preparation for integrating Neo-Geo Cartridge builds.  
     To use CDDA functions, you must now include `<cdda.h>`.
