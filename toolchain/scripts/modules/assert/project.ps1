@@ -71,32 +71,6 @@ function Assert-Project {
     Write-Host "error : project.compiler not found" -ForegroundColor Red
     return $false
   }
-  if (-Not($Config.project.compiler.path)) {
-    Write-Host "error : project.compiler.path not found" -ForegroundColor Red
-    return $false
-  }
-  if (-Not($Config.project.compiler.includePath)) {
-    Write-Host "error : project.compiler.includePath not found" -ForegroundColor Red
-    return $false
-  }
-  if (-Not($Config.project.compiler.libraryPath)) {
-    Write-Host "error : project.compiler.libraryPath not found" -ForegroundColor Red
-    return $false
-  }
-  if (-Not($Config.project.compiler.crtPath)) {
-    Write-Host "error : project.compiler.crtPath not found" -ForegroundColor Red
-    return $false
-  }
-  if (-Not($Config.project.compiler.systemFile)) {
-    Write-Host "error : project.compiler.systemFile not found" -ForegroundColor Red
-    return $false
-  } else {
-    if (-Not(Assert-ProjectCompilerSystemFile)) {
-      Write-Host "Project system file assertion failed" -ForegroundColor Red
-      return $false
-    }
-  }
-
   if ($Config.project.sound) {
   if ($Config.project.sound.cd.cdda) {
     if (-Not($Config.project.sound.cd.cdda.dist.iso.format)) {
@@ -136,23 +110,25 @@ function Assert-Project {
   if ($Config.project.emulator.raine.config.yuv) {
     Write-Host "Removing deprecated raine.config.yuv from project.xml..." -ForegroundColor Yellow
     $projectXmlPath = "project.xml"
-    
+
     if (Test-Path -Path $projectXmlPath) {
       [xml]$xmlContent = Get-Content -Path $projectXmlPath
-      
+
       if ($xmlContent.project.emulator.raine.config.yuv) {
         $yuvNode = $xmlContent.project.emulator.raine.config.SelectSingleNode("yuv")
         if ($yuvNode) {
           $yuvNode.ParentNode.RemoveChild($yuvNode) | Out-Null
           $xmlContent.Save((Resolve-Path $projectXmlPath).Path)
           Write-Host "Removed deprecated yuv config from project.xml" -ForegroundColor Green
-          
+
           # Reload the config
           [xml]$Config = Get-Content -Path $projectXmlPath
         }
       }
     }
   }
+
+  Assert-ProjectCompiler -Config $Config
 
   Write-Host "project config is compliant" -ForegroundColor Green
   return $true
