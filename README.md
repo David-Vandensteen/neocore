@@ -83,7 +83,7 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
 ### 🟢 Completed (v3.4.3)
 - ✅ DATlib JobMeter
   - ✅ Sample demo: [job_meter](samples/job_meter/)
-- ✅ Automatic generation of a structure aggregating a pointer to sprite data in ROM  
+- ✅ Automatic generation of a structure aggregating a pointer to sprite data in ROM
   and a pointer to palette information in ROM during sprite compilation
 
 ### 🟡 In Progress
@@ -135,7 +135,7 @@ It provides high-level functions over Neo Dev Kit and DATlib 0.3, and includes t
 **1️⃣ Create Your Project**
 
 > 💡 **No need to clone or download NeoCore** - the script does everything for you!
-> 
+>
 > ⚠️ Avoid spaces in paths (use `C:\MyGame` not `C:\My Game`)
 
 ```cmd
@@ -404,7 +404,7 @@ From your project's `src` folder:
 
 ### 📚 C API Documentation<a name="documentation-of-neocore-c-lib"></a>
 
-- **[Doxygen Documentation](http://azertyvortex.free.fr/neocore-doxy/r15/neocore_8h.html)**
+- **[Doxygen Documentation](http://azertyvortex.free.fr/neocore-doxy/r16/neocore_8h.html)**
 - **[Migration Guide](docs/migration_guides/v2tov3/v2tov3.md)** - Breaking changes and migration from previous versions
 - **[Changelog](CHANGELOG.md)** - Version history
 
