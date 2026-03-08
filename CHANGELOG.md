@@ -1,4 +1,4 @@
-## 3.4.5-rc (release candidate)
+## 3.4.5
   - Deprecate Sound_Adpcm_Player stuct, use Sound_ADPCM_Player instead
   - Remove useless project.compiler.name and version
 
