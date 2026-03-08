@@ -1,8 +1,12 @@
+## 3.4.5
+  - Deprecate Sound_Adpcm_Player stuct, use Sound_ADPCM_Player instead
+  - Remove useless project.compiler.name and version
+
 ## 3.4.4
-  - Externalized CDDA functions in preparation for integrating Neo-Geo Cartridge builds.  
+  - Externalized CDDA functions in preparation for integrating Neo-Geo Cartridge builds.
     To use CDDA functions, you must now include `<cdda.h>`.
     Checkout CDDA in samples folder
-  - Added auto-generated `out/platform.h` to define the platform type (CD or Cartridge).  
+  - Added auto-generated `out/platform.h` to define the platform type (CD or Cartridge).
     *Note: only the CD platform is supported for now.*
     Checkout CDDA in samples folder
   - Fixed flushing of the object program cache.
@@ -18,7 +22,7 @@
   - Add .gitattributes (eol=lf)
   - Add docs/neocore.md
   - Add docs/wiki-neogeodev-org.txt
-  
+
 ## 3.4.2
 
   - Use the chdman version deliver with mame
@@ -53,7 +57,7 @@
 ## 3.3.2
 
   - Fix issue 197: NeoCore 3.3.0 & 3.3.1 - neocore-version-switcher - failed to checkout and refactor neocore version switcher
-  
+
 ## 3.3.1
 
   - Fix URL in readme for project creation script

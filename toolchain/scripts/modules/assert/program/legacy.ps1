@@ -193,7 +193,8 @@ function Assert-ProgramLegacy {
   $legacyTypes = @{
     'GFX_Animated_Sprite_Physic' = 'GFX_Animated_Physic_Sprite'
     'GFX_Picture_Physic' = 'GFX_Physic_Picture'
-    'Adpcm_player' = 'Sound_Adpcm_Player'
+    'Adpcm_player' = 'Sound_ADPCM_Player'
+    'Sound_Adpcm_Player' = 'Sound_ADPCM_Player'
   }
 
   $warningCount = 0

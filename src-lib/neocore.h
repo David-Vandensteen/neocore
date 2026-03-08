@@ -322,15 +322,22 @@ typedef struct GFX_Scroller {
  * @brief ADPCM audio player state
  * @details Tracks the current state and remaining playback time for ADPCM sound effects
  *
- * @struct Sound_Adpcm_Player
- * @var Sound_Adpcm_Player::state Current playback state (IDLE or PLAYING)
- * @var Sound_Adpcm_Player::remaining_frame Number of frames remaining in current sound
+ * @struct Sound_ADPCM_Player
+ * @var Sound_ADPCM_Player::state Current playback state (IDLE or PLAYING)
+ * @var Sound_ADPCM_Player::remaining_frame Number of frames remaining in current sound
  *
  * @note Frame count is based on 60 FPS Neo Geo timing
  * @since 3.1.1
  *
  * @see nc_sound_get_adpcm_player(), nc_sound_update_adpcm_player()
  */
+typedef struct Sound_ADPCM_Player {
+  enum Sound_state state;
+  DWORD remaining_frame;
+} Sound_ADPCM_Player;
+
+// LEGACY: Keep old struct name for backward compatibility
+/** @deprecated Use Sound_ADPCM_Player instead */
 typedef struct Sound_Adpcm_Player {
   enum Sound_state state;
   DWORD remaining_frame;
@@ -1274,8 +1281,11 @@ void nc_log_rgb16(RGB16 *color);
 void nc_sound_init_adpcm();
 void nc_sound_update_adpcm_player();
 void nc_sound_set_adpcm_remaining_frame(DWORD frame);
-Sound_Adpcm_Player *nc_sound_get_adpcm_player();
 
+Sound_ADPCM_Player *nc_sound_get_adpcm_player();
+
+/** @deprecated Use Sound_ADPCM_Player instead */
+#define Sound_Adpcm_Player Sound_ADPCM_Player
 
 
 /** @} */ // end of Utilities group
@@ -1321,7 +1331,7 @@ typedef GFX_Animated_Physic_Sprite GFX_Animated_Sprite_Physic;
 typedef GFX_Physic_Picture GFX_Picture_Physic;
 
 /** @deprecated Use Sound_Adpcm_Player instead */
-typedef Sound_Adpcm_Player Adpcm_player;
+typedef Sound_Adpcm_Player ADPCM_player;
 
   /*------------------------------*/
  /* LEGACY GFX INIT              */
@@ -1834,7 +1844,7 @@ void nc_get_relative_position(Position *position, Box box, Position world_coord)
 void nc_push_remaining_frame_adpcm_player(DWORD frame);
 
 /** @deprecated Use nc_sound_get_adpcm_player() instead */
-Adpcm_player *nc_get_adpcm_player();
+ADPCM_player *nc_get_adpcm_player();
 
   /*------------------------------*/
  /* LEGACY JOYPAD                */
@@ -1982,7 +1992,7 @@ void nc_set_position_log(WORD _x, WORD _y);
 /** @deprecated Use nc_sound_set_adpcm_remaining_frame() instead */
 void nc_push_remaining_frame_adpcm_player(DWORD frame);
 /** @deprecated Use nc_sound_get_adpcm_player() instead */
-Adpcm_player *nc_get_adpcm_player();
+ADPCM_player *nc_get_adpcm_player();
 
 /** @deprecated Use nc_math_get_relative_position() instead */
 void nc_get_relative_position(Position *position, Box box, Position world_coord);
